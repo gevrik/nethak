@@ -52,7 +52,7 @@ void save_home( CHAR_DATA *ch )
 
 
        	sprintf( filename, "%s%c/%s.home", PLAYER_DIR, tolower(ch->name[0]),
-				 capitalize( ch->name ) );
+				 ch->name );
     	if ( ( fp = fopen( filename, "w" ) ) == NULL )
     	{
     	}
@@ -153,7 +153,7 @@ void save_char_obj( CHAR_DATA *ch )
 
     ch->save_time = current_time;
     sprintf( strsave, "%s%c/%s", PLAYER_DIR, tolower(ch->name[0]),
-				 capitalize( ch->name ) );
+				 ch->name );
 
     /*
      * Auto-backup pfile (can cause lag with high disk access situtations
@@ -161,7 +161,7 @@ void save_char_obj( CHAR_DATA *ch )
     if ( IS_SET( sysdata.save_flags, SV_BACKUP ) )
     {
 	sprintf( strback, "%s%c/%s", BACKUP_DIR, tolower(ch->name[0]),
-				 capitalize( ch->name ) );
+				 ch->name );
 	rename( strsave, strback );
     }
 
@@ -209,7 +209,7 @@ void save_clone( CHAR_DATA *ch )
 
     ch->save_time = current_time;
     sprintf( strsave, "%s%c/%s.clone", PLAYER_DIR, tolower(ch->name[0]),
-				 capitalize( ch->name ) );
+				 ch->name );
 
     /*
      * Auto-backup pfile (can cause lag with high disk access situtations
@@ -217,7 +217,7 @@ void save_clone( CHAR_DATA *ch )
     if ( IS_SET( sysdata.save_flags, SV_BACKUP ) )
     {
 	sprintf( strback, "%s%c/%s", BACKUP_DIR, tolower(ch->name[0]),
-				 capitalize( ch->name ) );
+				 ch->name );
 	rename( strsave, strback );
     }
 
@@ -669,13 +669,13 @@ bool load_char_obj( DESCRIPTOR_DATA *d, char *name, bool preload )
     ch->plr_home                        = NULL;
     found = FALSE;
     sprintf( strsave, "%s%c/%s", PLAYER_DIR, tolower(name[0]),
-			capitalize( name ) );
+			name );
     if ( stat( strsave, &fst ) != -1 )
     {
       if ( fst.st_size == 0 )
       {
 	sprintf( strsave, "%s%c/%s", BACKUP_DIR, tolower(name[0]),
-			capitalize( name ) );
+			name );
 	send_to_char( "Restoring your backup player file...", ch );
       }
       else
@@ -1757,7 +1757,7 @@ void do_last( CHAR_DATA *ch, char *argument )
 	send_to_char( "Usage: last <playername>\n\r", ch );
 	return;
     }
-    strcpy( name, capitalize(arg) );
+    strcpy( name, arg );
     sprintf( buf, "%s%c/%s", PLAYER_DIR, tolower(arg[0]), name );
     if ( stat( buf, &fst ) != -1 )
       sprintf( buf, "%s was last on: %s\r", name, ctime( &fst.st_mtime ) );
@@ -1790,7 +1790,7 @@ void write_corpses( CHAR_DATA *ch, char *name )
       {
         char buf[127];
 
-        sprintf(buf, "%s%s", CORPSE_DIR, capitalize(name));
+        sprintf(buf, "%s%s", CORPSE_DIR, name);
         if ( !(fp = fopen(buf, "w")) )
         {
           bug( "Write_corpses: Cannot open file.", 0 );
@@ -1809,7 +1809,7 @@ void write_corpses( CHAR_DATA *ch, char *name )
   {
     char buf[127];
 
-    sprintf(buf, "%s%s", CORPSE_DIR, capitalize(name));
+    sprintf(buf, "%s%s", CORPSE_DIR, name);
     remove(buf);
   }
   return;

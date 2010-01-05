@@ -27,11 +27,12 @@ const	char *	sector_name	[SECT_MAX]	=
 /*
 const	char *	sector_name	[SECT_MAX]	=
 {
-    "inside", "terminal", "data field", "data storage", "data mound", "data mountain", "water swim", "water noswim", 
+    "inside", "city", "field", "forest", "hills", "mountain", "water swim", "water noswim", 
     "underwater", "air", "desert", "unknown", "ocean floor", "underground",
     "scrub", "rocky", "savanna", "tundra", "glacial", "rainforest", "jungle", 
-    "swamp", "wetlands", "brush", "steppe", "subserver", "volcanic"
+    "swamp", "wetlands", "brush", "steppe", "farmland", "volcanic"
 };
+
 */
 
 void do_makeblade( CHAR_DATA *ch, char *argument )
@@ -279,37 +280,37 @@ void do_makeblaster( CHAR_DATA *ch, char *argument )
                 
                 if ( !checktool )
                 {
-                   send_to_char( "&R> you need toolkit to make a blaster\n\r", ch);
+                   send_to_char( "&R> you need a devkit\n\r", ch);
                    return;
                 }
  
                 if ( !checkdura )
                 {
-                   send_to_char( "&R> you need something to make it out of\n\r", ch);
+                   send_to_char( "&R> you a blaster class\n\r", ch);
                    return;
                 }
 
                 if ( !checkbatt )
                 {
-                   send_to_char( "&R> you need an utility subroutine for your blaster\n\r", ch);
+                   send_to_char( "&R> you need an utility subroutine\n\r", ch);
                    return;
                 }
                 
                 if ( !checkoven )
                 {
-                   send_to_char( "&R> you need a small furnace to heat the plastics\n\r", ch);
+                   send_to_char( "&R> you need a compiler\n\r", ch);
                    return;
                 }
                 
                 if ( !checkcirc )
                 {
-                   send_to_char( "&R> you need a small circuit board to control the firing mechanism\n\r", ch);
+                   send_to_char( "&R> you need a function variant one\n\r", ch);
                    return;
                 }
                 
                 if ( !checkcond )
                 {
-                   send_to_char( "&R> you still need a small superconductor\n\r", ch);
+                   send_to_char( "&R> you need a function variant two\n\r", ch);
                    return;
                 }
  
@@ -437,10 +438,11 @@ void do_makeblaster( CHAR_DATA *ch, char *argument )
     strcat( buf , " blaster");
     obj->name = STRALLOC( buf );
     strcpy( buf, arg );
+    strcat( buf , " [blaster]");
     STRFREE( obj->short_descr );
     obj->short_descr = STRALLOC( buf );        
     STRFREE( obj->description );
-    strcat( buf, " was carelessly misplaced here." );
+    strcat( buf, " [blaster] is stored here." );
     obj->description = STRALLOC( buf );
     CREATE( paf, AFFECT_DATA, 1 );
     paf->type               = -1;
@@ -2852,32 +2854,32 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
    {
       location->area->planet->citysize++;
       location->sector_type = SECT_CITY;
-      strcpy( buf , "terminal:" );
-      strcat( buf , ch->name );
+      strcpy( buf , ch->name );
+      strcat( buf , ":terminal" );
       strcpy( bufa , "a terminal node.\n\r" );
    }
    else if ( !str_cmp( argument, "database" ) )
    {
       location->area->planet->wilderness++;
       location->sector_type = location->area->planet->sector;
-      strcpy( buf , "database:" );
-      strcat( buf , ch->name );
+      strcpy( buf , ch->name );
+      strcat( buf , ":database" );
       strcpy( bufa , "a database node.\n\r" );
    }
    else if ( !str_cmp( argument, "inside" ) )
    {
       location->area->planet->citysize++;
       location->sector_type = SECT_INSIDE;   
-      strcpy( buf , "inside:" );
-      strcat( buf , ch->name );
+      strcpy( buf , ch->name );
+      strcat( buf , ":construct" );
       strcpy( bufa , "an inside node.\n\r" );
    }
    else if ( !str_cmp( argument, "subserver" ) )
    {
       location->area->planet->farmland++;
       location->sector_type = SECT_FARMLAND;
-      strcpy( buf , "subserver:" );
-      strcat( buf , ch->name );
+      strcpy( buf , ch->name );
+      strcat( buf , ":subserver" );
       strcpy( bufa , "a subserver node.\n\r" );
    }
 
@@ -2886,8 +2888,8 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
       location->area->planet->wilderness++;
       location->sector_type = SECT_UNDERGROUND;
       SET_BIT( location->room_flags , ROOM_DARK );
-      strcpy( buf , "datamine:" );
-      strcat( buf , ch->name );
+      strcpy( buf , ch->name );
+      strcat( buf , ":datamine" );
       strcpy( bufa , "a datamine node.\n\r" );
    }
    else if ( !str_cmp( argument, "info" ) )
@@ -2896,7 +2898,8 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
       location->sector_type = SECT_INSIDE;
       SET_BIT( location->room_flags , ROOM_INFO );
       SET_BIT( location->room_flags , ROOM_NO_MOB );
-      strcpy( buf , "info" );
+      strcpy( buf , ch->name );
+      strcat( buf , ":info" );
       strcpy( bufa , "an info node.\n\r" );
    }
    else if ( !str_cmp( argument, "mail" ) )
@@ -2905,7 +2908,8 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
       location->sector_type = SECT_INSIDE;
       SET_BIT( location->room_flags , ROOM_MAIL );
       SET_BIT( location->room_flags , ROOM_NO_MOB );
-      strcpy( buf , "mail" );
+      strcpy( buf , ch->name );
+      strcat( buf , ":mail" );
       strcpy( bufa , "a mail node.\n\r" );
    }
    else if ( !str_cmp( argument, "bank" ) )
@@ -2913,7 +2917,8 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
       location->area->planet->citysize++;
       location->sector_type = SECT_INSIDE;
       SET_BIT( location->room_flags , ROOM_BANK );
-      strcpy( buf , "bank" );
+      strcpy( buf , ch->name );
+      strcat( buf , ":bank" );
       strcpy( bufa , "a bank node.\n\r" );
    }
    else if ( !str_cmp( argument, "logout" ) )
@@ -2923,7 +2928,8 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
       SET_BIT( location->room_flags , ROOM_HOTEL );
       SET_BIT( location->room_flags , ROOM_SAFE );
       SET_BIT( location->room_flags , ROOM_NO_MOB );
-      strcpy( buf , "logout" );
+      strcpy( buf , ch->name );
+      strcat( buf , ":logout" );
       strcpy( bufa , "a logout node.\n\r" );
    }
    else if ( !str_cmp( argument, "trade" ) )
@@ -2932,7 +2938,8 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
       location->sector_type = SECT_INSIDE;
       SET_BIT( location->room_flags , ROOM_SAFE );
       SET_BIT( location->room_flags , ROOM_TRADE );
-      strcpy( buf , "trade" );
+      strcpy( buf , ch->name );
+      strcat( buf , ":trade" );
       strcpy( bufa , "a trade node.\n\r" );
    }
    else if ( !str_cmp( argument, "supply" ) )
@@ -2941,7 +2948,8 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
       location->sector_type = SECT_INSIDE;
       SET_BIT( location->room_flags , ROOM_SAFE );
       SET_BIT( location->room_flags , ROOM_SUPPLY );
-      strcpy( buf , "supply" );
+      strcpy( buf , ch->name );
+      strcat( buf , ":supply" );
       strcpy( bufa , "a supply node.\n\r" );
    }
    else if ( !str_cmp( argument, "pawn" ) )
@@ -2950,24 +2958,33 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
       location->sector_type = SECT_INSIDE;
       SET_BIT( location->room_flags , ROOM_SAFE );
       SET_BIT( location->room_flags , ROOM_PAWN );
-      strcpy( buf , "pawn" );
+      strcpy( buf , ch->name );
+      strcat( buf , ":pawn" );
       strcpy( bufa , "a pawn node.\n\r" );
    }
 
    else if ( !str_cmp( argument, "firewall" ) )
    {
-      if( location->area->planet->barracks >= 4 && ch->gold < 100000 )
+      //if( location->area->planet->barracks >= 4 && ch->gold < 100000 )
+      //{
+	//  send_to_char("> you do not have enough credits to build more firewall nodes\n\r", ch );
+	//  return;
+     // }
+
+      if( ch->gold < 20000 )
       {
-	  send_to_char("> you do not have enough credits to build more firewall nodes\n\r", ch );
+	  send_to_char("> insufficient funds [20k needed] - \n\r", ch );
 	  return;
       }
+
       location->area->planet->citysize++;
       location->sector_type = SECT_INSIDE;
       SET_BIT( location->room_flags , ROOM_BARRACKS );
-      if( location->area->planet->barracks > 4 )
-        ch->gold -= 100000;
+     // if( location->area->planet->barracks > 4 )
+        ch->gold -= 20000;
       location->area->planet->barracks++;
-      strcpy( buf , "firewall" );
+      strcpy( buf , ch->name );
+      strcat( buf , ":firewall" );
       strcpy( bufa , "a firewall node.\n\r" );
    }
 
@@ -2976,7 +2993,8 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
       location->area->planet->citysize++;
       location->sector_type = SECT_INSIDE;
       SET_BIT( location->room_flags , ROOM_EMPLOYMENT );
-      strcpy( buf , "employment" );
+      strcpy( buf , ch->name );
+      strcat( buf , ":employment" );
       strcpy( bufa , "an employment node.\n\r" );
    }
    else
@@ -3186,7 +3204,7 @@ void do_bridge ( CHAR_DATA *ch , char *argument )
    if ( argument[0] == '\0' )
    {
 	send_to_char( "> syntax: bridge <direction> <action> <argument>\n\r", ch );
-	send_to_char( "\n\r> action being one of the following:\n\r", ch );
+	send_to_char( "> action being one of the following:\n\r", ch );
 	send_to_char( "> connect, door, keycode\n\r", ch );
 	return;      
    }
@@ -3268,12 +3286,26 @@ void do_bridge ( CHAR_DATA *ch , char *argument )
 	  send_to_char( "> you cannot place locked doors around safe nodes\n\r", ch );
 	  return;
        }
+
+	texit = get_exit_to( xit->to_room, rev_dir[edir], ch->in_room->vnum );
        
+	if (!texit)
+       {
+	  send_to_char( "> there is no exit on the other side\n\r", ch );
+	  return;
+       }
+
+       if ( !IS_SET( texit->exit_info , EX_ISDOOR ) )
+       {
+ 	  send_to_char( "> there is no door on the other side\n\r", ch );
+	  return;      
+       }
+
        ekey = atoi( argument );
        ch_printf( ch , "> the lock code is now: %d" , ekey );
        xit->key = ekey;
 
-       texit = get_exit_to( xit->to_room, rev_dir[edir], ch->in_room->vnum );
+       //texit = get_exit_to( xit->to_room, rev_dir[edir], ch->in_room->vnum );
        if( texit )
 	  texit->key = ekey;
    

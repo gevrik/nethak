@@ -753,4 +753,25 @@ void do_prompt( CHAR_DATA *ch, char *argument )
   return;
 }
 
+void do_skills( CHAR_DATA *ch, char *argument )
+{
+    int sn;
+    //char level[MAX_STRING_LENGTH];
+
+    if( IS_NPC(ch) || !ch->pcdata )
+	return;
+
+    send_to_char("&Cskillsoft           level\n\r", ch );
+    send_to_char("&C-------------------------\n\r", ch );
+
+    	for ( sn = 0; sn < top_sn ; sn++ )
+    	   if ( ch->pcdata->learned[sn] > 0 )
+	   {
+		 ch_printf( ch,  "&G%-15s     &Y%d\n\r",
+		 skill_table[sn]->name,
+		 ch->pcdata->learned[sn] );
+	   }	     	 
+        send_to_char( "\n\r" , ch );
+}
+
 //done for Neuro

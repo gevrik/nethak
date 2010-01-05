@@ -1077,9 +1077,9 @@ void do_enlist( CHAR_DATA *ch, char *argument )
    			STRFREE( nRoom->name );
    			STRFREE( nRoom->description );
 
-			strcpy( buf , "home:" );		        
-			strcat( buf , ch->name );
-
+			strcpy( buf , ch->name );
+			strcat( buf , ":home" );		        
+			
    			nRoom->name = STRALLOC( buf );
    			nRoom->description = STRALLOC ( "use ENTER command to leave to system lobby.\n\ruse CONNECT to leave to specified node.\n\ruse BRIDGE commands to secure node.\n\r" );
    			nRoom->sector_type = SECT_DUNNO;
@@ -1111,14 +1111,14 @@ void do_enlist( CHAR_DATA *ch, char *argument )
    			STRFREE( lRoom->name );
    			STRFREE( lRoom->description );
 
-		        strcpy( bufa , "lobby:" );
-			strcat( bufa , ch->name );
-
+			strcpy( bufa , ch->name );
+		        strcat( bufa , ":lobby" );
+			
    			lRoom->name = STRALLOC( bufa );
    			lRoom->description = STRALLOC ( "user site lobby.\n\ruse ENTER command to leave to system lobby.\n\ruse CONSTRUCT commands to build.\n\r" );
    			lRoom->sector_type = SECT_DUNNO;
    			SET_BIT( lRoom->room_flags , ROOM_NO_MOB );
-			SET_BIT( nRoom->room_flags , ROOM_CAN_LAND );
+			SET_BIT( lRoom->room_flags , ROOM_CAN_LAND );
    
    			xit3 = make_exit( lRoom , ch->in_room , 10 );
    			xit3->keyword		= STRALLOC( "" );
@@ -1317,7 +1317,7 @@ void do_appoint ( CHAR_DATA *ch , char *argument )
     name[0] = UPPER(name[0]);
 
     sprintf( fname, "> %s%c/%s", PLAYER_DIR, tolower(name[0]),
-			capitalize( name ) );
+			name );
 
     if ( stat( fname, &fst ) == -1 )
     {

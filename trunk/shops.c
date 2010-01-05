@@ -436,7 +436,7 @@ void do_list( CHAR_DATA *ch, char *argument )
 		    send_to_char( "[price] {ref} item\n\r", ch );
 		}
 		ch_printf( ch, "[%5d] {%3d} %s\n\r",
-		    cost, oref, capitalize( obj->short_descr ) );
+		    cost, oref, obj->short_descr );
 	       }
 	    }
 	}

@@ -1991,16 +1991,16 @@ else
   }
 
   sprintf( buf, "%s%c/%s", PLAYER_DIR, tolower(arg[0]),
-          capitalize( arg ) );
+          arg );
   sprintf( buf2, "%s%c/%s", BACKUP_DIR, tolower(arg[0]),
-          capitalize( arg ) );
+          arg );
 
   rename( buf, buf2 );
 
   sprintf( buf, "%s%c/%s.clone", PLAYER_DIR, tolower(arg[0]),
-          capitalize( arg ) );
+          arg );
   sprintf( buf2, "%s%c/%s", PLAYER_DIR, tolower(arg[0]),
-          capitalize( arg ) );
+          arg );
 
   rename( buf, buf2 );
 

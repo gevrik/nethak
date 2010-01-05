@@ -341,39 +341,39 @@ void show_visible_affects_to_char( CHAR_DATA *victim, CHAR_DATA *ch )
         {
             set_char_color( AT_WHITE, ch );
             ch_printf( ch, "> %s shimmers beneath a dark aura\n\r",
-		IS_NPC( victim ) ? capitalize(victim->short_descr) : (victim->name) );
+		IS_NPC( victim ) ? victim->short_descr : (victim->name) );
         }
         else
         {
             set_char_color( AT_WHITE, ch );
             ch_printf( ch, "> %s is shrouded in flowing shadow and light\n\r",
-		IS_NPC( victim ) ? capitalize(victim->short_descr) : (victim->name) );
+		IS_NPC( victim ) ? victim->short_descr : (victim->name) );
         }
     }
     if ( IS_AFFECTED(victim, AFF_FIRESHIELD) )
     {
         set_char_color( AT_FIRE, ch );
         ch_printf( ch, "> %s is engulfed within a shield of virtual flames\n\r",
-	    IS_NPC( victim ) ? capitalize(victim->short_descr) : (victim->name) );
+	    IS_NPC( victim ) ? victim->short_descr : (victim->name) );
     }
     if ( IS_AFFECTED(victim, AFF_SHOCKSHIELD) )
     {
         set_char_color( AT_BLUE, ch );
 	ch_printf( ch, "> %s is surrounded by cascading torrents of energy\n\r",
-	    IS_NPC( victim ) ? capitalize(victim->short_descr) : (victim->name) );
+	    IS_NPC( victim ) ? victim->short_descr : (victim->name) );
     }
 /*Scryn 8/13*/
     if ( IS_AFFECTED(victim, AFF_ICESHIELD) )
     {
         set_char_color( AT_LBLUE, ch );
         ch_printf( ch, "> %s is ensphered by shards of glistening ice\n\r",
-	    IS_NPC( victim ) ? capitalize(victim->short_descr) : (victim->name) );
+	    IS_NPC( victim ) ? victim->short_descr : (victim->name) );
     }
     if ( IS_AFFECTED(victim, AFF_CHARM)       )
     {
 	set_char_color( AT_MAGIC, ch );
 	ch_printf( ch, "> %s looks ahead free of expression\n\r",
-	    IS_NPC( victim ) ? capitalize(victim->short_descr) : (victim->name) );
+	    IS_NPC( victim ) ? victim->short_descr : (victim->name) );
     }
     if ( !IS_NPC(victim) && !victim->desc
     &&    victim->switched && IS_AFFECTED(victim->switched, AFF_POSSESS) )
@@ -722,6 +722,7 @@ void do_look
     if ( !check_blind( ch ) )
 	return;
 
+/*
     if ( !IS_NPC(ch)
     &&   !IS_SET(ch->act, PLR_HOLYLIGHT)
     &&   !IS_AFFECTED(ch, AFF_TRUESIGHT)
@@ -732,6 +733,7 @@ void do_look
 	show_char_to_char( ch->in_room->first_person, ch );
 	return;
     }
+*/
 
     argument = one_argument( argument, arg1 );
     argument = one_argument( argument, arg2 );
@@ -1460,17 +1462,19 @@ void do_exits( CHAR_DATA *ch, char *argument )
 		   sprintf( buf + strlen(buf), "%-5s - %s\n\r",
 		    //capitalize( pexit->keyword ),
 		    pexit->keyword,
-		    room_is_dark( pexit->to_room )
-			?  "> too dark to tell"
-			: pexit->to_room->name );
+		    //room_is_dark( pexit->to_room )
+			//?  "> too dark to tell"
+			//: pexit->to_room->name );
+			pexit->to_room->name );
 		}
 		else
 		    sprintf( buf + strlen(buf), "%-5s - %s\n\r",
 		    //capitalize( dir_name[pexit->vdir] ),
 		    dir_name[pexit->vdir],
-		    room_is_dark( pexit->to_room )
-			?  "> too dark to tell"
-			: pexit->to_room->name );
+		    //room_is_dark( pexit->to_room )
+			//?  "> too dark to tell"
+			//: pexit->to_room->name );
+			pexit->to_room->name );
 	    }
 	    else
 	    {
@@ -2391,7 +2395,7 @@ void do_teach( CHAR_DATA *ch, char *argument )
 	    return;
 	}
 
-	if ( (victim->pcdata->num_skills - victim->pcdata->adept_skills) >= 5 )
+	if ( (victim->pcdata->num_skills - victim->pcdata->adept_skills) >= 7 )
 	{
 	    act( AT_TELL, "> $N needs to perfect some of the skills $E has before learning new ones", ch, NULL, victim, TO_CHAR );
 	    return;
