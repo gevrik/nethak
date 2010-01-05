@@ -1762,7 +1762,7 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 	 }
 
 	 sprintf( filename, "%s%c/%s.home", PLAYER_DIR, tolower(ch->name[0]),
-				 capitalize( ch->name ) );
+				 ch->name );
 	 if ( ( fph = fopen( filename, "r" ) ) != NULL )
 	 {
 	    int iNest;

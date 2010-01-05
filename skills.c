@@ -226,7 +226,7 @@ bool check_skill( CHAR_DATA *ch, char *command, char *argument )
 	    if ( argument[0] == '\0'
 	    &&  (victim=who_fighting(ch)) == NULL )
 	    {
-		ch_printf( ch, "%s who\n\r", capitalize( skill_table[sn]->name ) );
+		ch_printf( ch, "%s who\n\r", skill_table[sn]->name );
 		return TRUE;
 	    }
 	    else

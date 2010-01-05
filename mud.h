@@ -2870,6 +2870,7 @@ extern		struct act_prog_data *	mob_act_list;
  * Defined in act_*.c (mostly).
  */
 DECLARE_DO_FUN( do_arrest );
+DECLARE_DO_FUN( do_buyskill );
 DECLARE_DO_FUN( do_setwages );
 DECLARE_DO_FUN( do_war );
 DECLARE_DO_FUN( do_prototypes );
@@ -2892,6 +2893,7 @@ DECLARE_DO_FUN( do_pnet );
 DECLARE_DO_FUN( do_bridge );
 DECLARE_DO_FUN( do_construction );
 DECLARE_DO_FUN( do_survey );
+DECLARE_DO_FUN( do_skills );
 DECLARE_DO_FUN( do_landscape );
 DECLARE_DO_FUN( do_allsave );
 DECLARE_DO_FUN( do_setplanet );
@@ -2908,7 +2910,7 @@ DECLARE_DO_FUN( do_bank  );
 DECLARE_DO_FUN( do_hijack  );
 DECLARE_DO_FUN( do_pickshiplock  );
 DECLARE_DO_FUN( do_hail );
-DECLARE_DO_FUN( do_hax );
+DECLARE_DO_FUN( do_connect );
 DECLARE_DO_FUN( do_homerecall );
 DECLARE_DO_FUN( do_allships );
 DECLARE_DO_FUN( do_appoint );

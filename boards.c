@@ -789,7 +789,7 @@ void do_note( CHAR_DATA *ch, char *arg_passed, bool IS_MAIL )
         arg_passed[0] = UPPER(arg_passed[0]);
 
         sprintf( fname, "%s%c/%s", PLAYER_DIR, tolower(arg_passed[0]),
-                 capitalize( arg_passed ) );
+                 arg_passed );
  
 	if ( !IS_MAIL || stat( fname, &fst ) != -1 || !str_cmp(arg_passed, "all") )
 	{                                       

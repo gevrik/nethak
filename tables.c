@@ -94,6 +94,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_bug" ))		return do_bug;
 	if ( !str_cmp( name, "do_bury" ))		return do_bury;
 	if ( !str_cmp( name, "do_buy" ))		return do_buy;
+	if ( !str_cmp( name, "do_buyskill" ))		return do_buyskill;
 	if ( !str_cmp( name, "do_buyhome" ))            return do_buyhome;
 	if ( !str_cmp( name, "do_buyship" ))            return do_buyship;
 	break;
@@ -117,6 +118,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_cmdtable" ))		return do_cmdtable;
 	if ( !str_cmp( name, "do_commands" ))		return do_commands;
 	if ( !str_cmp( name, "do_compare" ))		return do_compare;
+	if ( !str_cmp( name, "do_connect" ))		return do_connect;
 	if ( !str_cmp( name, "do_config" ))		return do_config;
 	if ( !str_cmp( name, "do_consider" ))		return do_consider;
 	if ( !str_cmp( name, "do_construction" ))	return do_construction;
@@ -194,7 +196,6 @@ DO_FUN *skill_function( char *name )
 	break;
     case 'h':
 	if ( !str_cmp( name, "do_hail" ))		return do_hail;
-	if ( !str_cmp( name, "do_hax" ))		return do_hax;
 	if ( !str_cmp( name, "do_hedit" ))		return do_hedit;
 	if ( !str_cmp( name, "do_help" ))		return do_help;
 	if ( !str_cmp( name, "do_hide" ))		return do_hide;
@@ -421,6 +422,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_shutdown" ))		return do_shutdown;
 	if ( !str_cmp( name, "do_silence" ))		return do_silence;
 	if ( !str_cmp( name, "do_sit" ))		return do_sit;
+	if ( !str_cmp( name, "do_skills" ))		return do_skills;
 	if ( !str_cmp( name, "do_sla" ))		return do_sla;
 	if ( !str_cmp( name, "do_slay" ))		return do_slay;
 	if ( !str_cmp( name, "do_sleep" ))		return do_sleep;
@@ -519,7 +521,9 @@ char *spell_name( SPELL_FUN *spell )
 char *skill_name( DO_FUN *skill )
 {
     if ( skill == do_arrest )     return "do_arrest";
+    if ( skill == do_buyskill )     return "do_buyskill";
     if ( skill == do_war )     return "do_war";
+    if ( skill == do_connect )     return "do_connect";
     if ( skill == do_setwages )     return "do_setwages";
     if ( skill == do_prototypes )     return "do_prototypes";
     if ( skill == do_setprototype )     return "do_setprototype";
@@ -533,6 +537,7 @@ char *skill_name( DO_FUN *skill )
     if ( skill == do_gtell )     return "do_gtell";
     if ( skill == do_forget )     return "do_forget";
     if ( skill == do_survey )     return "do_survey";
+    if ( skill == do_skills )     return "do_skills";
     if ( skill == do_landscape )     return "do_landscape";
     if ( skill == do_construction )     return "do_construction";
     if ( skill == do_allsave )     return "do_allsave";
@@ -553,7 +558,6 @@ char *skill_name( DO_FUN *skill )
     if ( skill == do_makeplanet )     return "do_makeplanet";
     if ( skill == do_setplanet )     return "do_setplanet";
     if ( skill == do_hail )     return "do_hail";
-    if ( skill == do_hax )     return "do_hax";
     if ( skill == do_homerecall )     return "do_homerecall";
     if ( skill == do_appoint )     return "do_appoint";
     if ( skill == do_demote )     return "do_demote";

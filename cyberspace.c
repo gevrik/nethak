@@ -7,6 +7,65 @@
 #include <unistd.h>
 #include "mud.h"
 
+void do_buyskill( CHAR_DATA *ch, char *argument )
+{
+    
+    char arg[MAX_INPUT_LENGTH];
+    CHAR_DATA *victim;
+    int cost = 5000;
+    int sn;
+
+    one_argument( argument, arg );
+
+    if ( arg[0] == '\0' )
+    {
+	send_to_char( "> syntax: buyskill <skill>\n\r",	ch );
+	send_to_char( "> cost: 5,000c\n\r",	ch );
+	send_to_char( "> skills: aid, backstab, blades, blasters, codeblade, codeblaster, codecomlink, codecontainer, codedef, codelight, codeshield, codeutil, damboost, disguise, dodge, dualwield, firstaid, hide, peek, picklock, poisonmod, postguard, propaganda, quicktalk, reinforcements, second attack, steal, throw\n\r",	ch );
+	return;
+    }
+
+	if ( ch->gold < cost )
+	{
+	send_to_char( "> insufficient funds\n\r", ch );
+	return;
+	}
+
+
+	sn   = 0;
+	if ( ( sn = skill_lookup( arg ) ) < 0 )
+	{
+	send_to_char( "> no such skillsoft\n\r", ch );
+	return;
+	}
+
+	if ( ch->pcdata->learned[sn] >= 20 )
+	{
+	send_to_char( "> you already know that skill\n\r", ch );
+	return;
+	}
+
+	if ( ch->pcdata->num_skills >= get_curr_int(ch) )
+	{
+	    send_to_char( "> not intelligent enough yet\n\r", ch );
+	    return;
+	}
+
+	if ( (ch->pcdata->num_skills - ch->pcdata->adept_skills) >= 7 )
+	{
+	    send_to_char( "> you need to perfect another skill first\n\r", ch );
+	    return;
+	}
+
+	ch->gold     -= cost;
+	ch->pcdata->num_skills++;	
+	ch->pcdata->learned[sn] = 20;
+
+	send_to_char( "> skillsoft learned\n\r", ch );
+
+    return;
+}
+
 void do_homerecall( CHAR_DATA *ch, char *argument )
 {
 
@@ -25,30 +84,40 @@ void do_homerecall( CHAR_DATA *ch, char *argument )
 	send_to_char( "> you connect to your home node\n\r", ch );
 	char_from_room( ch );    
     	char_to_room( ch, ch->plr_home );
+	do_look( ch, "auto" );
 
 return;
 
 }
 
-void do_hax( CHAR_DATA *ch, char *argument )
+void do_connect( CHAR_DATA *ch, char *argument )
 {
     char arg[MAX_INPUT_LENGTH];
-    char arg2[MAX_INPUT_LENGTH];
-    char arg3[MAX_INPUT_LENGTH];
+    char arg1[MAX_INPUT_LENGTH];
+    int chance;
     PLANET_DATA * planet;
-    OBJ_DATA *wield;
-    ROOM_INDEX_DATA *location;
-    CHAR_DATA *fch;
-    CHAR_DATA *fch_next;
-    ROOM_INDEX_DATA *in_room;
-    int chance, seccode, cpuchance, supporti;
-    int att_bonus, roll_cpu, roll_player, xipa, xipa1;
-    int hackroll, hackroll_cpu, atthack_bonus;
-    int hack_chance, hack_chance_cpu, breakerbonus;
-    float support;
-    argument = one_argument( argument, arg );
-    argument = one_argument( argument, arg2 );
-    argument = one_argument( argument, arg3 );
+    bool pfound = FALSE;
+    ROOM_INDEX_DATA * room;
+    ROOM_INDEX_DATA * target_room;
+    ROOM_INDEX_DATA * in_room;
+    bool rfound = FALSE;
+
+	argument = one_argument( argument , arg );
+	argument = one_argument( argument , arg1 );
+
+    switch( ch->substate )
+    {
+	default:
+
+	in_room = ch->in_room;
+
+	    if ( ( room = find_location( ch, arg1 ) ) == in_room )
+	    {
+
+		send_to_char( "&RConnection already established.\n\r", ch );
+		return;
+    
+	    }
 
     if ( ch->fighting )
     {
@@ -56,7 +125,6 @@ void do_hax( CHAR_DATA *ch, char *argument )
 	return;
     }
 
-    in_room = ch->in_room;
 
     if ( !IS_SET( ch->in_room->room_flags, ROOM_CAN_LAND ) )
     {	
@@ -64,74 +132,127 @@ void do_hax( CHAR_DATA *ch, char *argument )
 	return;
     }
 
-    if ( arg[0] == '\0' )
-    {
-	send_to_char( "&R> please specify a target system\n\r", ch );
+        if ( arg[0] == '\0' )
+        {
+	   send_to_char( "> syntax: connect <system> <lobby>\n\r",	ch );
+	   send_to_char( "> specify <system>\n\r",	ch );
+           return;
+        }
+
+	planet = get_planet( arg );
+
+	if ( !planet )
+    	{
+	   send_to_char( "> no such system\n\r", ch );
+	   return;
+	}
+
+
+
+	if ( arg1[0] != '\0' )
+	{
+		for ( room = planet->area->first_room ; room ; room = room->next_in_area )
+		{
+			if ( IS_SET( room->room_flags , ROOM_CAN_LAND ) && !str_prefix( argument , room->name) )
+			{
+			rfound = TRUE;
+			//target_room = room->vnum;
+			break;
+			}
+		}
+	}
+
+	if ( !rfound )
+	{
+	send_to_char("&C> specify lobby\n\r",ch);
+	ch_printf( ch , "> choices for %s:\n\r\n\r", planet->name);
+		for ( room = planet->area->first_room ; room ; room = room->next_in_area )
+		if ( IS_SET( room->room_flags, ROOM_CAN_LAND ) )
+		ch_printf( ch , "%-15d  %s\n\r", room->vnum, room->name);
+		
 	return;
-    }
+        }
 
-    planet = get_planet( arg );
+	    add_timer( ch, TIMER_DO_FUN, 2,
+		       do_connect, 1 );
+	    send_to_char( "> you begin to connect\n\r", ch );
+	    ch->dest_buf = str_dup( arg );
+	    ch->dest_buf_2 = str_dup( arg1 );
+	    //send_to_char( "DEBUG after dest_buf\n\r", ch );
+	    return;
 
-    if ( !planet )
+	case 1:
+	    //send_to_char( "DEBUG in case 1\n\r", ch );
+	    if ( !ch->dest_buf )
+	    {
+		send_to_char( "> your connection was interrupted\n\r", ch );
+		bug( "do_connect: dest_buf NULL", 0 );
+		return;
+	    }
+	    if ( !ch->dest_buf_2 )
+	    {
+		send_to_char( "> your connection was interrupted\n\r", ch );
+		bug( "do_connect: dest_buf_2 NULL", 0 );
+		return;
+	    }
+
+	    //send_to_char( "DEBUG after debugs in case 1\n\r", ch );
+
+	    strcpy( arg, ch->dest_buf );
+	    DISPOSE( ch->dest_buf );
+	    strcpy( arg1, ch->dest_buf_2 );
+	    DISPOSE( ch->dest_buf_2 );
+	    
+	    send_to_char( "&Y> connection check complete.\n\r", ch );
+	    break;
+
+	case SUB_TIMER_DO_ABORT:
+	    DISPOSE( ch->dest_buf );
+	    DISPOSE( ch->dest_buf_2 );
+	    ch->substate = SUB_NONE;
+	    send_to_char( "> you stop connecting\n\r", ch );
+	    return;
+    	}
+
+	    //send_to_char( "DEBUG: before substate\n\r", ch );
+	
+	ch->substate = SUB_NONE;
+
+    	in_room = ch->in_room;
+
+    if ( ( room = find_location( ch, arg1 ) ) == NULL )
     {
-	send_to_char( "> no such system\n\r", ch );
-	return;
-    }
 
-    if ( ( location = find_location( ch, arg ) ) == NULL )
-    {
-
-	send_to_char( "&R> connection could not be established\n\r", ch );
+	send_to_char( "&R> connection could not be established.\n\r", ch );
 	return;
     
     }
 
-    if ( !IS_SET( location->room_flags, ROOM_CAN_LAND ) )
-    {
-	send_to_char( "&R> connection could not be established\n\r", ch );
-	return;
-    }
+		//send_to_char( "DEBUG: after substate\n\r", ch );
 
-	ch_printf( ch, "&Y> you connect to: %s@%s\n\r\n\r", location->name, location->area->name );
 
-    if ( ch->fighting )
-	stop_fighting( ch, TRUE );
+    		   send_to_char( "&Y> connection established\n\r\n\r", ch);
+		   
+    			ch->regoto = ch->in_room->vnum;
 
-    if ( !IS_SET(ch->act, PLR_WIZINVIS) )
-	{
-         if (ch->pcdata && ch->pcdata->bamfout[0] != '\0')
-               act( AT_IMMORT, "$T", ch, NULL, ch->pcdata->bamfout ,  TO_ROOM );
-          else  
-               act( AT_IMMORT, "$n $T", ch, NULL, "> starts connecting to another system",  TO_ROOM );
-	}
-	                              
-    ch->regoto = ch->in_room->vnum;
+		//send_to_char( "DEBUG: after regoto\n\r", ch );
 
-    char_from_room( ch );    
-    char_to_room( ch, location );
 
-   if ( !IS_SET(ch->act, PLR_WIZINVIS) )
-	{
-         if (ch->pcdata && ch->pcdata->bamfin[0] != '\0')
-             act( AT_IMMORT, "$T", ch, NULL, ch->pcdata->bamfin ,  TO_ROOM );
-         else  
-             act( AT_IMMORT, "$n $T", ch, NULL, "connects to this complex...",  TO_ROOM );
-	}                          
+    			char_from_room( ch );
 
-    do_look( ch, "auto" );
+		//send_to_char( "DEBUG: after char_from_room\n\r", ch );
 
-    if ( ch->in_room == in_room )
-      return;
-    for ( fch = in_room->first_person; fch; fch = fch_next )
-    {
-	fch_next = fch->next_in_room;
-	if ( fch->master == ch && IS_IMMORTAL(fch) )
-	{
-	    act( AT_ACTION, "> you follow $N", fch, NULL, ch, TO_CHAR );
-	    do_goto( fch, argument );
-	}
-    }
-    return;
+    
+    			char_to_room( ch, room );
+
+		//send_to_char( "DEBUG: after chartoroom\n\r", ch );
+
+
+			do_look( ch, "auto" );
+
+		//send_to_char( "DEBUG: after look\n\r", ch );
+
+                   return;
 }
 
 //done for Neuro

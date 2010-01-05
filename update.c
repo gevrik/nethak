@@ -19,7 +19,7 @@ int	mana_gain	args( ( CHAR_DATA *ch ) );
 int	move_gain	args( ( CHAR_DATA *ch ) );
 void	web_html_update	args( ( CHAR_DATA *ch ) );
 void	mobile_update	args( ( void ) );
-void	weather_update	args( ( void ) );
+//void	weather_update	args( ( void ) );
 void	update_taxes	args( ( void ) );
 void	char_update	args( ( void ) );
 void	obj_update	args( ( void ) );
@@ -649,6 +649,8 @@ void update_taxes( void )
 /*
  * Update the weather.
  */
+
+/*
 void weather_update( void )
 {
     char buf[MAX_STRING_LENGTH];
@@ -723,9 +725,8 @@ void weather_update( void )
 	}
         buf[0] = '\0';
     }
-    /*
-     * Weather change.
-     */
+
+
     if ( time_info.month >= 9 && time_info.month <= 16 )
 	diff = weather_info.mmhg >  985 ? -2 : 2;
     else
@@ -817,7 +818,7 @@ void weather_update( void )
     return;
 }
 
-
+*/
 
 /*
  * Update all chars, including mobs.
@@ -1174,7 +1175,7 @@ void obj_update( void )
                           bufptr );
             else
               sprintf( buf, corpse_descs[ UMIN( timerfrac - 1, 4 ) ],
-                          capitalize( bufptr ) );
+                          bufptr );
 
             STRFREE( obj->description );
             obj->description = STRALLOC( buf );

@@ -1271,7 +1271,7 @@ void do_mfind( CHAR_DATA *ch, char *argument )
 	    {
 		nMatch++;
 		pager_printf( ch, "[%5d] %s\n\r",
-		    pMobIndex->vnum, capitalize( pMobIndex->short_descr ) );
+		    pMobIndex->vnum, pMobIndex->short_descr );
 	    }
 
     if ( nMatch )
@@ -1346,7 +1346,7 @@ void do_ofind( CHAR_DATA *ch, char *argument )
 	    {
 		nMatch++;
 		pager_printf( ch, "[%5d] %s\n\r",
-		    pObjIndex->vnum, capitalize( pObjIndex->short_descr ) );
+		    pObjIndex->vnum, pObjIndex->short_descr );
 	    }
 
     if ( nMatch )
@@ -3066,7 +3066,7 @@ void do_loadup( CHAR_DATA *ch, char *argument )
     name[0] = UPPER(name[0]);
 
     sprintf( fname, "%s%c/%s", PLAYER_DIR, tolower(name[0]),
-			capitalize( name ) );
+			name );
     if ( stat( fname, &fst ) != -1 )
     {
 	CREATE( d, DESCRIPTOR_DATA, 1 );
@@ -3093,8 +3093,8 @@ void do_loadup( CHAR_DATA *ch, char *argument )
 	d->character		= NULL;	
 	DISPOSE( d->outbuf );
 	DISPOSE( d );
-	ch_printf(ch, "Player %s loaded from room %ld.\n\r", capitalize( name ),old_room_vnum );
-	sprintf(buf, "%s appears from nowhere, eyes glazed over.\n\r", capitalize( name ) );
+	ch_printf(ch, "Player %s loaded from room %ld.\n\r", name,old_room_vnum );
+	sprintf(buf, "%s appears from nowhere, eyes glazed over.\n\r", name );
         act( AT_IMMORT, buf, ch, NULL, NULL, TO_ROOM );
 	send_to_char( "Done.\n\r", ch );
 	return;
@@ -3539,9 +3539,9 @@ void do_destroy( CHAR_DATA *ch, char *argument )
   }
   
   sprintf( buf, "%s%c/%s", PLAYER_DIR, tolower(arg[0]),
-          capitalize( arg ) );
+          arg );
   sprintf( buf2, "%s%c/%s", BACKUP_DIR, tolower(arg[0]),
-          capitalize( arg ) );
+          arg );
   if ( !rename( buf, buf2 ) )
   {
     set_char_color( AT_RED, ch );
