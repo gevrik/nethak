@@ -155,6 +155,115 @@ void do_mp_offer_job( CHAR_DATA *ch, char *argument )
 }
 
 
+void do_mp_offer_agent( CHAR_DATA *ch, char *argument )
+{
+    char        arg[MAX_INPUT_LENGTH];
+    char        buf[MAX_STRING_LENGTH];
+    CHAR_DATA  *victim;
+    PLANET_DATA * dPlanet = NULL;
+    int pCount = 0;
+    int rCount;
+    OBJ_INDEX_DATA * pObjIndex;
+    OBJ_DATA * obj;
+    
+  if ( IS_AFFECTED( ch, AFF_CHARM ) )
+      return;
+
+    one_argument( argument, arg );
+
+    if ( arg[0] == '\0' )
+    {
+	send_to_char( "Offer a job to who?\n\r", ch );
+	return;
+    }
+
+    if ( ( victim = get_char_room( ch, arg ) ) == NULL )
+    {
+	send_to_char( "They aren't here.\n\r", ch );
+	return;
+    }
+
+    if ( IS_NPC( victim ) )
+    {
+	send_to_char( "Mobiles can't take jobs!\n\r", ch);
+	return;
+    }
+
+    if ( !IS_NPC( ch ) )
+    {
+	send_to_char( ">>> invalid command\n\r", ch);
+	return;
+    }
+    
+    if ( !ch->in_room || !ch->in_room->area || !ch->in_room->area->planet )
+    {
+          do_say( ch , "I have no jobs to offer you at this time!" );
+          return;
+    }
+    
+    /* package job */
+    {  
+       if ( ( pObjIndex = get_obj_index( 101 ) ) == NULL )
+       {
+          do_say( ch , "I have no jobs to offer you at this time!" );
+          return;
+       }
+         
+       for ( dPlanet = first_planet ; dPlanet ; dPlanet = dPlanet->next )
+           pCount++;
+           
+       rCount = number_range( 1 , pCount );
+       
+       pCount = 0;
+       
+       for ( dPlanet = first_planet ; dPlanet ; dPlanet = dPlanet->next )
+           if ( ++pCount == rCount )
+               break;
+       
+       if( !dPlanet || dPlanet == ch->in_room->area->planet || dPlanet == first_planet )
+       {
+          do_say( ch , "I have no jobs to offer you at this time!" );
+          return;
+       }
+
+	   if( IS_SET( dPlanet->flags, PLANET_HIDDEN ) )
+       {
+          do_say( ch , "> there are no jobs at this time" );
+          return;
+       }
+
+       sprintf( buf , "virus %s" , dPlanet->name );
+       
+       if ( get_obj_world( ch, buf ) )
+       {
+          do_say( ch , "I have no jobs to offer you at this time!" );
+          return;
+       }
+
+       obj = create_object( pObjIndex , 1 );
+       STRFREE( obj->name );
+       obj->name = STRALLOC( buf );
+       STRFREE( obj->short_descr );
+       sprintf( buf , "a virus marked %s" , dPlanet->name );
+       obj->short_descr = STRALLOC( buf );
+       
+       sprintf( buf , "> upload this virus to a terminal in the system %s." , dPlanet->name );
+       do_say( ch , buf );
+  
+       act( AT_ACTION, "> $n gives $p to $N", ch, obj, victim, TO_NOTVICT );
+       act( AT_ACTION, "> $n gives you $p",   ch, obj, victim, TO_VICT    );
+       act( AT_ACTION, "> you give $p to $N", ch, obj, victim, TO_CHAR    );
+       obj = obj_to_char( obj, victim );
+      
+       return;
+    }
+
+    do_say( ch , "I have no jobs to offer you at this time!" );
+
+    return;
+}
+
+
 /* A trivial rehack of do_mstat.  This doesnt show all the data, but just
  * enough to identify the mob and give its basic condition.  It does however,
  * show the MUDprograms which are set.

@@ -179,7 +179,7 @@ typedef ch_ret	SPELL_FUN	args( ( int sn, int level, CHAR_DATA *ch, void *vo ) );
 #define MAX_LEVEL		  105
 #define MAX_CLAN		   50
 #define MAX_PLANET		 1000
-#define MAX_PLANET_CLAN		 1000
+#define MAX_PLANET_CLAN		  100
 #define MAX_PLANET_SYSTEM	 1000
 #define MAX_SHIP                 1000
 #define MAX_SHIP_ROOMS             25
@@ -3252,6 +3252,7 @@ DECLARE_DO_FUN(	do_yell		);
 DECLARE_DO_FUN( do_zones	);
 
 /* mob prog stuff */
+DECLARE_DO_FUN( do_mp_offer_agent );
 DECLARE_DO_FUN( do_mp_offer_job );
 DECLARE_DO_FUN( do_mp_close_passage );
 DECLARE_DO_FUN( do_mp_damage );

@@ -263,6 +263,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_mp_close_passage" ))	return do_mp_close_passage;
 	if ( !str_cmp( name, "do_mp_damage" ))		return do_mp_damage;
 	if ( !str_cmp( name, "do_mp_deposit" ))		return do_mp_deposit;
+	if ( !str_cmp( name, "do_mp_offer_agent" ))	return do_mp_offer_agent;
 	if ( !str_cmp( name, "do_mp_offer_job" ))	return do_mp_offer_job;
 	if ( !str_cmp( name, "do_mp_open_passage" ))	return do_mp_open_passage;
 	if ( !str_cmp( name, "do_mp_practice" ))	return do_mp_practice;
@@ -754,6 +755,7 @@ char *skill_name( DO_FUN *skill )
     if ( skill == do_minvoke )		return "do_minvoke";
     if ( skill == do_mlist )		return "do_mlist";
     if ( skill == do_mount )		return "do_mount";
+    if ( skill == do_mp_offer_agent )	return "do_mp_offer_agent";
     if ( skill == do_mp_offer_job )	return "do_mp_offer_job";
     if ( skill == do_mp_close_passage )	return "do_mp_close_passage";
     if ( skill == do_mp_damage )	return "do_mp_damage";

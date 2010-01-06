@@ -136,7 +136,7 @@ void make_corpse( CHAR_DATA *ch, CHAR_DATA *killer )
     }
 
     /* Added corpse name - make locate easier , other skills */
-    sprintf( buf, "corpse %s", name );
+    sprintf( buf, "%s [flatline]", name );
     STRFREE( corpse->name );
     corpse->name = STRALLOC( buf );
 

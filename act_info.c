@@ -619,16 +619,16 @@ void show_char_to_char( CHAR_DATA *list, CHAR_DATA *ch )
 	if ( rch == ch )
 	    continue;
 
-	if ( can_see( ch, rch ) )
-	{
+	//if ( can_see( ch, rch ) )
+	//{
 	    show_char_to_char_0( rch, ch );
-	}
-	else if ( room_is_dark( ch->in_room )
-	&&        IS_AFFECTED(rch, AFF_INFRARED ) )
-	{
-	    set_char_color( AT_BLOOD, ch );
-	    send_to_char( "> the red form of an entity is here\n\r", ch );
-	}
+	//}
+	//else if ( room_is_dark( ch->in_room )
+	//&&        IS_AFFECTED(rch, AFF_INFRARED ) )
+	//{
+	//    set_char_color( AT_BLOOD, ch );
+	//    send_to_char( "> the red form of an entity is here\n\r", ch );
+	//}
     }
 
     return;
@@ -745,18 +745,17 @@ void do_look
     {
        SHIP_DATA * ship;
 
+	send_to_char( "&Y>&c node:&w\n\r", ch );
 	/* 'look' or 'look auto' */
-	set_char_color( AT_YELLOW, ch);
-	send_to_char("> ", ch);
-	set_char_color( AT_RMNAME, ch);
+	set_char_color( AT_LBLUE, ch);
 	send_to_char( ch->in_room->area->planet->starsystem->name, ch);
 	set_char_color( AT_YELLOW, ch);
 	send_to_char(".", ch);
-	set_char_color( AT_RMNAME, ch);
+	set_char_color( AT_LBLUE, ch);
 	send_to_char( ch->in_room->area->planet->name, ch);
 	set_char_color( AT_YELLOW, ch);
 	send_to_char(".", ch);
-	set_char_color( AT_RMNAME, ch);
+	set_char_color( AT_LBLUE, ch);
 	send_to_char( ch->in_room->name, ch);
 	set_char_color(AT_WHITE, ch);
 
@@ -793,7 +792,10 @@ void do_look
 	        do_exits( ch, "" );
 
 	//show_ships_to_char( ch->in_room->first_ship, ch );
+    	//strcpy( buf, fAuto ? "&Y>&c connections:&w" : "&Y>&c connections:&w\n\r" );
+	send_to_char( "\n\r&Y>&c objects:&w\n\r", ch );
 	show_list_to_char( ch->in_room->first_content, ch, FALSE, FALSE );
+	send_to_char( "\n\r&Y>&c entities:&w\n\r", ch );
 	show_char_to_char( ch->in_room->first_person,  ch );
 
 	if ( str_cmp( arg1, "auto" ) )
@@ -1485,7 +1487,7 @@ void do_exits( CHAR_DATA *ch, char *argument )
     }
 
     if ( !found )
-	strcat( buf, fAuto ? " none\n\r" : "None\n\r" );
+	strcat( buf, fAuto ? "" : "" );
     else
       if ( fAuto )
 	strcat( buf, "\n\r" );

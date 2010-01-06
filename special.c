@@ -123,7 +123,7 @@ bool spec_fido( CHAR_DATA *ch )
 	if ( corpse->item_type != ITEM_CORPSE_NPC )
 	    continue;
 
-    act( AT_ACTION, "> $n savagely devours a corpse", ch, NULL, NULL, TO_ROOM );
+    act( AT_ACTION, "> $n erases some flatline", ch, NULL, NULL, TO_ROOM );
 	for ( obj = corpse->first_content; obj; obj = obj_next )
 	{
 	    obj_next = obj->next_content;
