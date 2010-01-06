@@ -989,11 +989,14 @@ void do_makeplanet( CHAR_DATA *ch, char *argument )
 //    if (  number_percent() < 20 )
 //	return;
 
-    sector = 0;
-    while ( sector == 0 || sector == SECT_WATER_SWIM
+    sector = 18;
+
+/*
+    while ( sector == 0 || sector == 0 || sector == SECT_WATER_SWIM
     || sector == SECT_WATER_NOSWIM || sector == SECT_UNDERWATER
     || sector == SECT_FARMLAND )
         sector = number_range( SECT_FIELD , SECT_MAX-1 );
+*/
 
     pArea = NULL;
     planet = NULL;

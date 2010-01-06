@@ -505,7 +505,7 @@ void reset_all( )
                    SET_BIT(mob->affected_by, AFF_INFRARED);
             if ( pRoomIndex->area->planet->governed_by )
             {
-                sprintf( tmpbuf , "ICE [%s] guards the node\n\r" , pRoomIndex->area->planet->governed_by->name );
+                sprintf( tmpbuf , "guard ICE [%s]\n\r" , pRoomIndex->area->planet->governed_by->name );
                 STRFREE( mob->long_descr );
                 mob->long_descr = STRALLOC( tmpbuf );
                 mob->mob_clan  = pRoomIndex->area->planet->governed_by;
@@ -518,13 +518,12 @@ void reset_all( )
         if ( !pRoomIndex->area || !pRoomIndex->area->planet )
            continue;
 
-        anumber = number_bits( 2 );
+        anumber = number_bits( 9 );
         
         if ( pRoomIndex->sector_type != SECT_CITY &&  pRoomIndex->sector_type != SECT_WATER_NOSWIM  
         &&  pRoomIndex->sector_type != SECT_WATER_SWIM &&  pRoomIndex->sector_type != SECT_UNDERWATER
         &&  pRoomIndex->sector_type != SECT_DUNNO  &&  pRoomIndex->sector_type != SECT_AIR        
-        &&  pRoomIndex->sector_type != SECT_INSIDE  &&  pRoomIndex->sector_type != SECT_GLACIAL
-        && !pRoomIndex->last_content && number_bits(3) == 0 )
+        &&  pRoomIndex->sector_type != SECT_INSIDE && !pRoomIndex->last_content && number_bits(3) == 0 )
         {
             switch ( pRoomIndex->sector_type )
             {
@@ -585,6 +584,28 @@ void reset_all( )
                       vnum = OBJ_VNUM_SEAWEED;
                    else
                       vnum = OBJ_VNUM_RESIN;
+                   break;
+
+                case SECT_GLACIAL: 
+		anumber = number_range(0,8);
+		  if ( anumber == 0 )
+		    vnum = OBJ_VNUM_FRUIT;
+		  else if ( anumber == 1 )
+		    vnum = OBJ_VNUM_ROOT;
+		  else if ( anumber == 2 )
+		    vnum = OBJ_VNUM_CRYSTAL;
+		  else if ( anumber == 3 )
+		    vnum = OBJ_VNUM_ROOT;
+		  else if ( anumber == 4 )
+		    vnum = OBJ_VNUM_METAL;
+		  else if ( anumber == 5 )
+		    vnum = OBJ_VNUM_HEMP;
+		  else if ( anumber == 6 )
+		    vnum = OBJ_VNUM_RESIN;
+		  else if ( anumber == 7 )
+		    vnum = OBJ_VNUM_MUSHROOM;
+		  else
+		    vnum = OBJ_VNUM_GOLD;
                    break;
                 
                 case SECT_OCEANFLOOR: 
@@ -716,61 +737,68 @@ void reset_all( )
               switch( number_bits( 4 ) )
               {
                 default:
-                  mob->long_descr = STRALLOC( "a service program is running here.\n\r" );
-                  break;
+                  mob->long_descr = STRALLOC( "communication program\n\r" );
+                mob->gold = number_range( 10 , 20 );  
+		break;
 
                 case 0:
-                  mob->long_descr = STRALLOC( "an organization decker is hanging out here.\n\r" );
-                  mob->gold = number_range( 1 , 100 );
+                  mob->long_descr = STRALLOC( "entertainment program\n\r" );
+                  mob->gold = number_range( 20 , 50 );
                   break;
 
                 case 1:
-                  mob->long_descr = STRALLOC( "another organization decker smiles at you.\n\r" );
+                  mob->long_descr = STRALLOC( "finance program\n\r" );
+		  mob->gold = number_range( 20 , 100 );
                   break;
 
                 case 2:
-                  mob->long_descr = STRALLOC( "a server process is stored here.\n\r" );
+                  mob->long_descr = STRALLOC( "multimedia program\n\r" );
+		mob->gold = number_range( 10 , 20 );  
                   break;
 
 
                 case 3:
-                  mob->long_descr = STRALLOC( "an utility program is stored here.\n\r" );
+                  mob->long_descr = STRALLOC( "news program\n\r" );
                   mob->gold = number_range( 20 , 50 );
                   break;
                   
                 case 4:
-                  mob->long_descr = STRALLOC( "an application is stored here.\n\r" );
-                  mob->gold = number_range( 20 , 50 );
+                  mob->long_descr = STRALLOC( "productivity program\n\r" );
+                  mob->gold = number_range( 10 , 20 );  
                   break;
               }
            else
               switch( number_bits( 3 ) )
               {
                 default:
-                  mob->long_descr = STRALLOC( "a service program is running here.\n\r" );
-                  break;
+                  mob->long_descr = STRALLOC( "communication program\n\r" );
+                mob->gold = number_range( 10 , 20 );  
+		break;
 
                 case 0:
-                  mob->long_descr = STRALLOC( "an organization decker is hanging out here.\n\r" );
-                  mob->gold = number_range( 1 , 100 );
+                  mob->long_descr = STRALLOC( "entertainment program\n\r" );
+                  mob->gold = number_range( 20 , 50 );
                   break;
 
                 case 1:
-                  mob->long_descr = STRALLOC( "another organization decker smiles at you.\n\r\n\r" );
+                  mob->long_descr = STRALLOC( "finance program\n\r" );
+		  mob->gold = number_range( 20 , 100 );
                   break;
 
                 case 2:
-                  mob->long_descr = STRALLOC( "a server process is stored here.\n\r" );
+                  mob->long_descr = STRALLOC( "multimedia program\n\r" );
+		mob->gold = number_range( 10 , 20 );  
                   break;
+
 
                 case 3:
-                  mob->long_descr = STRALLOC( "a utility program is stored here.\n\r" );
+                  mob->long_descr = STRALLOC( "news program\n\r" );
                   mob->gold = number_range( 20 , 50 );
                   break;
-
+                  
                 case 4:
-                  mob->long_descr = STRALLOC( "an application is stored here.\n\r" );
-                  mob->gold = number_range( 20 , 50 );
+                  mob->long_descr = STRALLOC( "productivity program\n\r" );
+                  mob->gold = number_range( 10 , 20 );  
                   break;
               }
            char_to_room(mob, pRoomIndex);
@@ -889,6 +917,7 @@ void reset_all( )
               break;
 
            case SECT_RAINFOREST:
+           case SECT_GLACIAL:
            case SECT_JUNGLE:
            case SECT_SWAMP:
            case SECT_WETLANDS:

@@ -727,7 +727,7 @@ void do_clans( CHAR_DATA *ch, char *argument )
     int count = 0;
     int pCount, revenue;
 
-    ch_printf( ch, "&Worganization                                       systems   score\n\r");
+    ch_printf( ch, "&Worganization             systems   score\n\r");
     for ( clan = first_clan; clan; clan = clan->next )
     {
         pCount = 0;
@@ -740,7 +740,7 @@ void do_clans( CHAR_DATA *ch, char *argument )
             revenue += get_taxes(planet)/720;
           }
 
-        ch_printf( ch, "&Y%-50s %-3d       %d\n\r",
+        ch_printf( ch, "&Y%-24s %-3d       %d\n\r",
                   clan->name,  pCount, revenue );
         count++;
     }

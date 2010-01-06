@@ -296,6 +296,50 @@ int mprog_do_ifcheck( char *ifcheck, CHAR_DATA *mob, CHAR_DATA *actor,
   {
     return (number_percent() <= atoi(cvar));
   }
+   if( !str_cmp( chck, "mobinarea" ) )
+   {
+      int vnum = atoi( cvar );
+      int world_count;
+      int found_count;
+      CHAR_DATA *tmob;
+      MOB_INDEX_DATA *m_index;
+
+      if( vnum < 1 || vnum > 32767 )
+      {
+         progbug( "Bad vnum to 'mobinarea'", mob );
+         return BERR;
+      }
+
+      m_index = get_mob_index( vnum );
+
+      if( !m_index )
+         world_count = 0;
+      else
+         world_count = m_index->count;
+
+      lhsvl = 0;
+      found_count = 0;
+
+      for( tmob = first_char; tmob && found_count != world_count; tmob = tmob->next )
+      {
+         if( IS_NPC( tmob ) && tmob->pIndexData->vnum == vnum )
+         {
+            found_count++;
+
+            if( tmob->in_room->area == mob->in_room->area )
+               lhsvl++;
+         }
+      }
+      rhsvl = atoi( rval );
+
+      if( rhsvl < 0 )
+         rhsvl = 0;
+      if( !*opr )
+         strcpy( opr, "==" );
+
+      return mprog_veval( lhsvl, opr, rhsvl, mob );
+   }
+
   if ( !str_cmp(chck, "mobinroom") )
   {
     int vnum = atoi(cvar);
@@ -318,6 +362,7 @@ int mprog_do_ifcheck( char *ifcheck, CHAR_DATA *mob, CHAR_DATA *actor,
       strcpy( opr, "==" );
     return mprog_veval(lhsvl, opr, rhsvl, mob);
   }
+
   if ( !str_cmp(chck, "timeskilled") )
   {
     MOB_INDEX_DATA *pMob;
@@ -711,6 +756,56 @@ int mprog_do_ifcheck( char *ifcheck, CHAR_DATA *mob, CHAR_DATA *actor,
     {
       return mprog_veval(get_curr_lck(chkchar), opr, atoi(rval), mob);
     }
+if (!str_cmp(chck, "iscarrying")) 
+   {
+    OBJ_DATA *pObj;
+    int vnum = atoi(rval);
+
+    if (vnum < 1 || vnum > 2097152000) 
+    {
+      progbug("iscarrying: bad vnum", mob) ;
+      return BERR ;
+    }
+
+    if (str_cmp(opr, "==")) 
+    {
+      progbug("iscarrying: bad check: only == supported", mob) ;
+      return BERR ;
+    }
+
+    for (pObj = chkchar->first_carrying; pObj; pObj = pObj->next_content)
+      if (pObj->pIndexData->vnum == vnum)
+        return TRUE ;
+
+    return FALSE ;
+   }
+   if ( !str_cmp(chck, "iswearing") ) {
+    OBJ_DATA *pObj;
+    int vnum = atoi(rval);
+    int iWear; 
+
+    if ( vnum < 1 || vnum > 2097152000 ) {
+        progbug("iswearing: bad vnum", mob);
+        return BERR;
+    }
+
+    if (str_cmp(opr, "==")) {
+        progbug("iswearing: bad check: only == supported", mob);
+        return BERR ;
+    }
+
+    for ( iWear = 0; iWear < MAX_WEAR; iWear++ ) {
+      for ( pObj = chkchar->first_carrying; pObj; pObj = pObj->next_content ) {
+	if ( pObj->wear_loc == iWear ) {
+	  if (pObj->pIndexData->vnum == vnum) {
+                    return TRUE ;
+	  }
+	}
+      }
+    }
+
+    return FALSE ;
+   }
   }
   if ( chkobj )
   {

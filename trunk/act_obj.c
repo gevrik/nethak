@@ -21,6 +21,7 @@ void	get_obj		args( ( CHAR_DATA *ch, OBJ_DATA *obj,
 bool	remove_obj	args( ( CHAR_DATA *ch, int iWear, bool fReplace ) );
 void	wear_obj	args( ( CHAR_DATA *ch, OBJ_DATA *obj, bool fReplace, sh_int wear_bit ) );
 bool    job_trigger     args( ( CHAR_DATA *victim, CHAR_DATA *ch, OBJ_DATA *obj ) );
+bool    agent_trigger     args( ( CHAR_DATA *victim, CHAR_DATA *ch, OBJ_DATA *obj ) );
 
 
 /*
@@ -161,7 +162,7 @@ void do_get( CHAR_DATA *ch, char *argument )
     /* Get type. */
     if ( arg1[0] == '\0' )
     {
-	send_to_char( "> get what\n\r", ch );
+	send_to_char( "> get [object]\n\r", ch );
 	return;
     }
 
@@ -176,7 +177,7 @@ void do_get( CHAR_DATA *ch, char *argument )
 	    obj = get_obj_list( ch, arg1, ch->in_room->first_content );
 	    if ( !obj )
 	    {
-		act( AT_PLAIN, "> no $T here", ch, NULL, arg1, TO_CHAR );
+		act( AT_PLAIN, "> $T not found", ch, NULL, arg1, TO_CHAR );
 		return;
 	    }
 	    separate_obj(obj);
@@ -229,9 +230,9 @@ void do_get( CHAR_DATA *ch, char *argument )
 	    if ( !found )
 	    {
 		if ( fAll )
-		  send_to_char( "> i see nothing here\n\r", ch );
+		  send_to_char( "> object not found\n\r", ch );
 		else
-		  act( AT_PLAIN, "> i see no $T here", ch, NULL, chk, TO_CHAR );
+		  act( AT_PLAIN, "> $T not found", ch, NULL, chk, TO_CHAR );
 	    }
 	    else
 	    if ( IS_SET( sysdata.save_flags, SV_GET ) )
@@ -249,7 +250,7 @@ void do_get( CHAR_DATA *ch, char *argument )
 
 	if ( ( container = get_obj_here( ch, arg2 ) ) == NULL )
 	{
-	    act( AT_PLAIN, "> i see no $T here", ch, NULL, arg2, TO_CHAR );
+	    act( AT_PLAIN, "> $T not found", ch, NULL, arg2, TO_CHAR );
 	    return;
 	}
 
@@ -258,12 +259,12 @@ void do_get( CHAR_DATA *ch, char *argument )
 	default:
 	    if ( !IS_OBJ_STAT( container, ITEM_COVERING ) )
 	    {
-		send_to_char( "> that is not a container\n\r", ch );
+		send_to_char( "> object not a container\n\r", ch );
 		return;
 	    }
 	    if ( ch->carry_weight + container->weight > can_carry_w( ch ) )
 	    {
-		send_to_char( "> it is too heavy for you to lift\n\r", ch );
+		send_to_char( "> object too large\n\r", ch );
 		return;
 	    }
 	    break;
@@ -278,7 +279,7 @@ void do_get( CHAR_DATA *ch, char *argument )
 	if ( !IS_OBJ_STAT(container, ITEM_COVERING )
 	&&    IS_SET(container->value[1], CONT_CLOSED) )
 	{
-	    act( AT_PLAIN, "> the $d is closed", ch, NULL, container->name, TO_CHAR );
+	    act( AT_PLAIN, "> $d is closed", ch, NULL, container->name, TO_CHAR );
 	    return;
 	}
 
@@ -289,8 +290,8 @@ void do_get( CHAR_DATA *ch, char *argument )
 	    if ( !obj )
 	    {
 		act( AT_PLAIN, IS_OBJ_STAT(container, ITEM_COVERING) ?
-			"> i see nothing like that beneath the $T" :
-			"> i see nothing like that in the $T",
+			"> object not beneath $T" :
+			"> object not in $T",
 			ch, NULL, arg2, TO_CHAR );
 		return;
 	    }
@@ -309,7 +310,7 @@ void do_get( CHAR_DATA *ch, char *argument )
 	    /* 'get all container' or 'get all.obj container' */
 	    if ( IS_OBJ_STAT( container, ITEM_DONATION ) )
 	    {
-		send_to_char( "> the gods frown upon such an act of greed\n\r", ch );
+		send_to_char( "> invalid command\n\r", ch );
 		return;
 	    }
 	    if ( !str_cmp(arg1, "all") )
@@ -348,13 +349,13 @@ void do_get( CHAR_DATA *ch, char *argument )
 	    {
 		if ( fAll )
 		  act( AT_PLAIN, IS_OBJ_STAT(container, ITEM_COVERING) ?
-			"> i see nothing beneath the $T" :
-			"> i see nothing in the $T",
+			"> object not beneath $T" :
+			"> object not in $T",
 			ch, NULL, arg2, TO_CHAR );
 		else
 		  act( AT_PLAIN, IS_OBJ_STAT(container, ITEM_COVERING) ?
-			"> i see nothing like that beneath the $T" :
-			"> i see nothing like that in the $T",
+			"> object not beneath $T" :
+			"> object not in $T",
 			ch, NULL, arg2, TO_CHAR );
 	    }
 
@@ -401,7 +402,7 @@ void do_put( CHAR_DATA *ch, char *argument )
 
     if ( arg1[0] == '\0' || arg2[0] == '\0' )
     {
-	send_to_char( "> put what in what\n\r", ch );
+	send_to_char( "> put [object] in [container]\n\r", ch );
 	return;
     }
 
@@ -416,7 +417,7 @@ void do_put( CHAR_DATA *ch, char *argument )
 
     if ( ( container = get_obj_here( ch, arg2 ) ) == NULL )
     {
-	act( AT_PLAIN, "> i see no $T here", ch, NULL, arg2, TO_CHAR );
+	act( AT_PLAIN, "> $T not found", ch, NULL, arg2, TO_CHAR );
 	return;
     }
 
@@ -427,7 +428,7 @@ void do_put( CHAR_DATA *ch, char *argument )
     {
 	if ( ch->carry_weight + container->weight > can_carry_w( ch ) )
 	{
-	    send_to_char( "> it is too heavy for you to lift\n\r", ch );
+	    send_to_char( "> object is too large\n\r", ch );
 	    return;
 	}
     }
@@ -435,7 +436,7 @@ void do_put( CHAR_DATA *ch, char *argument )
     {
 	if ( container->item_type != ITEM_CONTAINER )
 	{
-	    send_to_char( "> that is not a container\n\r", ch );
+	    send_to_char( "> object is not a container\n\r", ch );
 	    return;
 	}
 
@@ -451,7 +452,7 @@ void do_put( CHAR_DATA *ch, char *argument )
 	/* 'put obj container' */
 	if ( ( obj = get_obj_carry( ch, arg1 ) ) == NULL )
 	{
-	    send_to_char( "> you do not have that item\n\r", ch );
+	    send_to_char( "> object not found\n\r", ch );
 	    return;
 	}
 
@@ -883,7 +884,7 @@ void do_give( CHAR_DATA *ch, char *argument )
     act( AT_ACTION, "> you give $p to $N", ch, obj, victim, TO_CHAR    );
     obj = obj_to_char( obj, victim );
 
-    if ( job_trigger( victim, ch, obj ) == FALSE )
+    if ( job_trigger( victim, ch, obj ) == FALSE  &&  agent_trigger( victim, ch, obj ) == FALSE )
          mprog_give_trigger( victim, ch, obj );
 
     if ( IS_SET( sysdata.save_flags, SV_GIVE ) && !char_died(ch) )
@@ -2201,6 +2202,44 @@ bool  job_trigger( CHAR_DATA *victim, CHAR_DATA *ch, OBJ_DATA *obj )
         return FALSE;
 
      sprintf( buf , "package %s" , victim->in_room->area->planet->name );
+
+     if ( str_cmp ( buf , obj->name ) )
+        return FALSE;
+
+     do_say( victim, "> thank you" );
+     ch->gold += 1000;
+
+     act( AT_GOLD, "> $N gives you 1000 credits" , ch, NULL, victim, TO_CHAR  );
+     act( AT_GOLD, "> $N gives $n some credits",  ch, NULL, victim, TO_NOTVICT );
+     act( AT_GOLD, "> you give $n some credits",  ch, NULL, victim, TO_VICT  );
+
+     separate_obj( obj );
+     obj_from_char( obj );
+     extract_obj( obj );
+     
+     return TRUE;         
+}
+
+bool  agent_trigger( CHAR_DATA *victim, CHAR_DATA *ch, OBJ_DATA *obj )
+{
+     char buf[MAX_STRING_LENGTH];
+
+     if( !IS_NPC( victim ) || !victim->pIndexData )
+        return FALSE;
+
+     if ( victim->pIndexData->vnum != 32 )
+        return FALSE;
+
+     if( IS_NPC( ch ) || !ch->pcdata )
+        return FALSE;
+
+     if ( !obj->pIndexData || obj->pIndexData->vnum != 101 )
+        return FALSE;
+
+     if ( !victim->in_room || !victim->in_room->area || !victim->in_room->area->planet )
+        return FALSE;
+
+     sprintf( buf , "virus %s" , victim->in_room->area->planet->name );
 
      if ( str_cmp ( buf , obj->name ) )
         return FALSE;
