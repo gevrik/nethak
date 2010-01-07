@@ -1923,15 +1923,16 @@ bool room_is_dark( ROOM_INDEX_DATA *pRoomIndex )
 	return FALSE;
 
     if ( IS_SET(pRoomIndex->room_flags, ROOM_DARK) )
-	return TRUE;
+	return FALSE;
 
     if ( pRoomIndex->sector_type == SECT_INSIDE
-    ||   pRoomIndex->sector_type == SECT_CITY )
+    ||   pRoomIndex->sector_type == SECT_CITY
+    ||   pRoomIndex->sector_type == SECT_GLACIAL )
 	return FALSE;
 
     if ( weather_info.sunlight == SUN_SET
     ||   weather_info.sunlight == SUN_DARK )
-	return TRUE;
+	return FALSE;
 
     return FALSE;
 }

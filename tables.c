@@ -431,6 +431,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_slist" ))		return do_slist;
 	if ( !str_cmp( name, "do_slookup" ))		return do_slookup;
 	if ( !str_cmp( name, "do_snipe" ))		return do_snipe;
+	if ( !str_cmp( name, "do_sneak" ))		return do_sneak;
 	if ( !str_cmp( name, "do_snoop" ))		return do_snoop;
 	if ( !str_cmp( name, "do_sober" ))		return do_sober;
 	if ( !str_cmp( name, "do_socials" ))		return do_socials;
@@ -885,6 +886,7 @@ char *skill_name( DO_FUN *skill )
     if ( skill == do_slice )		return "do_slice";
     if ( skill == do_slist )		return "do_slist";
     if ( skill == do_slookup )		return "do_slookup";
+    if ( skill == do_sneak )		return "do_sneak";
     if ( skill == do_snoop )		return "do_snoop";
     if ( skill == do_sober )		return "do_sober";
     if ( skill == do_socials )		return "do_socials";

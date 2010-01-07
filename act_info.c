@@ -1099,7 +1099,7 @@ void do_look
 
 void show_condition( CHAR_DATA *ch, CHAR_DATA *victim )
 {
-    char buf[MAX_STRING_LENGTH];
+    //char buf[MAX_STRING_LENGTH];
     int percent;
 
     if ( victim->max_hit > 0 )
@@ -1107,12 +1107,13 @@ void show_condition( CHAR_DATA *ch, CHAR_DATA *victim )
     else
         percent = -1;
 
-    strcpy( buf, "> " );
-    strcpy( buf, PERS(victim, ch) );
+    //strcpy( buf, "> " );
+    //strcat( buf, PERS(victim, ch) );
 
     if ( IS_NPC ( victim ) && IS_SET( victim->act , ACT_DROID ) )
     {
 
+	/*
          if ( percent >= 100 ) strcat( buf, " is in perfect condition\n\r"  );
     else if ( percent >=  90 ) strcat( buf, " is slightly scratched\n\r" );
     else if ( percent >=  80 ) strcat( buf, " has a few scrapes\n\r"     );
@@ -1124,26 +1125,38 @@ void show_condition( CHAR_DATA *ch, CHAR_DATA *victim )
     else if ( percent >=  20 ) strcat( buf, " has smoke coming out of it\n\r"       );
     else if ( percent >=  10 ) strcat( buf, " is almost completely broken\n\r"        );
     else                       strcat( buf, " is about to EXPLODE\n\r"              );
+	*/
+
+	ch_printf( ch , "> %s is at %d integrity\n\r", victim->name, percent);
 
     }
     else
     {
 
-         if ( percent >= 100 ) strcat( buf, " is in perfect health\n\r"  );
-    else if ( percent >=  90 ) strcat( buf, " is slightly scratched\n\r" );
-    else if ( percent >=  80 ) strcat( buf, " has a few bruises\n\r"     );
-    else if ( percent >=  70 ) strcat( buf, " has some cuts\n\r"         );
-    else if ( percent >=  60 ) strcat( buf, " has several wounds\n\r"    );
-    else if ( percent >=  50 ) strcat( buf, " has many nasty wounds\n\r" );
-    else if ( percent >=  40 ) strcat( buf, " is bleeding freely\n\r"    );
-    else if ( percent >=  30 ) strcat( buf, " is covered in blood\n\r"   );
-    else if ( percent >=  20 ) strcat( buf, " is leaking guts\n\r"       );
-    else if ( percent >=  10 ) strcat( buf, " is almost dead\n\r"        );
-    else                       strcat( buf, " is DYING\n\r"              );
+
+	/*
+         if ( percent >= 100 ) strcat( buf, " is at ~100% integrity\n\r"  );
+    else if ( percent >=  90 ) strcat( buf, " is at ~95 integrity\n\r" );
+    else if ( percent >=  80 ) strcat( buf, " is at ~85% integrity\n\r"     );
+    else if ( percent >=  70 ) strcat( buf, " is at ~75% integrity\n\r"         );
+    else if ( percent >=  60 ) strcat( buf, " is at ~65% integrity\n\r"    );
+    else if ( percent >=  50 ) strcat( buf, " is at ~55% integrity\n\r" );
+    else if ( percent >=  40 ) strcat( buf, " is at ~45% integrity\n\r"    );
+    else if ( percent >=  30 ) strcat( buf, " is at ~35% integrity\n\r"   );
+    else if ( percent >=  20 ) strcat( buf, " is at ~25% integrity\n\r"       );
+    else if ( percent >=  10 ) strcat( buf, " is at ~15% integrity\n\r"        );
+    else                       strcat( buf, " is at ~5% integrity\n\r"              );
+	*/
+
+//	strcat( buf, " is at " );
+//	strcat( buf, percent );
+//	strcat( buf, "% integrity" );
+
+	ch_printf( ch , "> %s is at %d%% integrity\n\r", victim->name, percent);
 
     }
-    buf[0] = UPPER(buf[0]);
-    send_to_char( buf, ch );
+    //buf[0] = UPPER(buf[0]);
+    //send_to_char( buf, ch );
     return;
 }
 

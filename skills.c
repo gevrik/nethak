@@ -1105,6 +1105,13 @@ void learn_from_success( CHAR_DATA *ch, int sn )
 	else if ( percent > chance )
 	  learn = 1;
 	ch->pcdata->learned[sn] = UMIN( adept, ch->pcdata->learned[sn] + learn );
+
+		if(learn > 0)
+		{	
+	        ch_printf( ch, "> you have advanced %s by %d%%\n\r",
+		skill_table[sn]->name, learn);
+		}
+
 	if ( ch->pcdata->learned[sn] >= adept )	 /* fully learned! */
 	{
      	    set_char_color( AT_WHITE, ch );
@@ -1953,10 +1960,13 @@ void do_sneak( CHAR_DATA *ch, char *argument )
 	af.bitvector = AFF_SNEAK;
 	affect_to_char( ch, &af );
 	learn_from_success( ch, gsn_sneak );
+	send_to_char( "&G> stealth mode active&w\n\r", ch );
     }
     else
+	{
 	learn_from_failure( ch, gsn_sneak );
-
+	send_to_char( "&R> mode change failed&w\n\r", ch );
+	}
     return;
 }
 

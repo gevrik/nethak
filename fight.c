@@ -1512,7 +1512,7 @@ ch_ret damage( CHAR_DATA *ch, CHAR_DATA *victim, int dam, int dt )
 	    if ( IS_SET(ch->act, PLR_AUTOGOLD) )
 	    {
 		init_gold = ch->gold;
-		do_get( ch, "credits flatline" );
+		do_get( ch, "credits corpse" );
 		new_gold = ch->gold;
 		gold_diff = (new_gold - init_gold);
 		if (gold_diff > 0)
@@ -1522,9 +1522,9 @@ ch_ret damage( CHAR_DATA *ch, CHAR_DATA *victim, int dam, int dt )
 		}
 	    }
 	    if ( IS_SET(ch->act, PLR_AUTOLOOT) )
-		do_get( ch, "all flatline" );
+		do_get( ch, "all corpse" );
 	    else
-		do_look( ch, "in flatline" );
+		do_look( ch, "in corpse" );
 
 	}
 
