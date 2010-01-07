@@ -2855,7 +2855,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
       location->area->planet->citysize++;
       location->sector_type = SECT_CITY;
       strcpy( buf , ch->name );
-      strcat( buf , ":terminal" );
+      strcat( buf , "&Y.&Cterminal" );
       strcpy( bufa , "a terminal node.\n\r" );
    }
    else if ( !str_cmp( argument, "database" ) )
@@ -2863,7 +2863,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
       location->area->planet->wilderness++;
       location->sector_type = location->area->planet->sector;
       strcpy( buf , ch->name );
-      strcat( buf , ":database" );
+      strcat( buf , "&Y.&Cdatabase" );
       strcpy( bufa , "a database node.\n\r" );
    }
    else if ( !str_cmp( argument, "inside" ) )
@@ -2871,7 +2871,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
       location->area->planet->citysize++;
       location->sector_type = SECT_INSIDE;   
       strcpy( buf , ch->name );
-      strcat( buf , ":construct" );
+      strcat( buf , "&Y.&Cconstruct" );
       strcpy( bufa , "an inside node.\n\r" );
    }
    else if ( !str_cmp( argument, "subserver" ) )
@@ -2879,7 +2879,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
       location->area->planet->farmland++;
       location->sector_type = SECT_FARMLAND;
       strcpy( buf , ch->name );
-      strcat( buf , ":subserver" );
+      strcat( buf , "&Y.&Csubserver" );
       strcpy( bufa , "a subserver node.\n\r" );
    }
 
@@ -2889,7 +2889,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
       location->sector_type = SECT_UNDERGROUND;
       SET_BIT( location->room_flags , ROOM_DARK );
       strcpy( buf , ch->name );
-      strcat( buf , ":datamine" );
+      strcat( buf , "&Y.&Cdatamine" );
       strcpy( bufa , "a datamine node.\n\r" );
    }
    else if ( !str_cmp( argument, "info" ) )
@@ -2899,7 +2899,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
       SET_BIT( location->room_flags , ROOM_INFO );
       SET_BIT( location->room_flags , ROOM_NO_MOB );
       strcpy( buf , ch->name );
-      strcat( buf , ":info" );
+      strcat( buf , "&Y.&Cinfo" );
       strcpy( bufa , "an info node.\n\r" );
    }
    else if ( !str_cmp( argument, "mail" ) )
@@ -2909,7 +2909,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
       SET_BIT( location->room_flags , ROOM_MAIL );
       SET_BIT( location->room_flags , ROOM_NO_MOB );
       strcpy( buf , ch->name );
-      strcat( buf , ":mail" );
+      strcat( buf , "&Y.&Cmail" );
       strcpy( bufa , "a mail node.\n\r" );
    }
    else if ( !str_cmp( argument, "bank" ) )
@@ -2918,7 +2918,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
       location->sector_type = SECT_INSIDE;
       SET_BIT( location->room_flags , ROOM_BANK );
       strcpy( buf , ch->name );
-      strcat( buf , ":bank" );
+      strcat( buf , "&Y.&Cbank" );
       strcpy( bufa , "a bank node.\n\r" );
    }
    else if ( !str_cmp( argument, "logout" ) )
@@ -2929,7 +2929,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
       SET_BIT( location->room_flags , ROOM_SAFE );
       SET_BIT( location->room_flags , ROOM_NO_MOB );
       strcpy( buf , ch->name );
-      strcat( buf , ":logout" );
+      strcat( buf , "&Y.&Clogout" );
       strcpy( bufa , "a logout node.\n\r" );
    }
    else if ( !str_cmp( argument, "trade" ) )
@@ -2939,7 +2939,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
       SET_BIT( location->room_flags , ROOM_SAFE );
       SET_BIT( location->room_flags , ROOM_TRADE );
       strcpy( buf , ch->name );
-      strcat( buf , ":trade" );
+      strcat( buf , "&Y.&Ctrade" );
       strcpy( bufa , "a trade node.\n\r" );
    }
    else if ( !str_cmp( argument, "supply" ) )
@@ -2949,7 +2949,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
       SET_BIT( location->room_flags , ROOM_SAFE );
       SET_BIT( location->room_flags , ROOM_SUPPLY );
       strcpy( buf , ch->name );
-      strcat( buf , ":supply" );
+      strcat( buf , "&Y.&Csupply" );
       strcpy( bufa , "a supply node.\n\r" );
    }
    else if ( !str_cmp( argument, "pawn" ) )
@@ -2959,7 +2959,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
       SET_BIT( location->room_flags , ROOM_SAFE );
       SET_BIT( location->room_flags , ROOM_PAWN );
       strcpy( buf , ch->name );
-      strcat( buf , ":pawn" );
+      strcat( buf , "&Y.&Cpawn" );
       strcpy( bufa , "a pawn node.\n\r" );
    }
 
@@ -2984,7 +2984,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
         ch->gold -= 20000;
       location->area->planet->barracks++;
       strcpy( buf , ch->name );
-      strcat( buf , ":firewall" );
+      strcat( buf , "&Y.&Cfirewall" );
       strcpy( bufa , "a firewall node.\n\r" );
    }
 
@@ -2994,7 +2994,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
       location->sector_type = SECT_INSIDE;
       SET_BIT( location->room_flags , ROOM_EMPLOYMENT );
       strcpy( buf , ch->name );
-      strcat( buf , ":employment" );
+      strcat( buf , "&Y.&Cemployment" );
       strcpy( bufa , "an employment node.\n\r" );
    }
    else
@@ -3071,7 +3071,7 @@ void do_construction ( CHAR_DATA *ch , char *argument )
    }
 
    if( !IS_IMMORTAL(ch) )
-   if ( ch->in_room->area->planet->size >= 400 )
+   if ( ch->in_room->area->planet->size >= 1000 )
    {
 	send_to_char( "> this system is too big - go construct somewhere else\n\r", ch );
 	return;   
