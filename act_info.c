@@ -1451,7 +1451,7 @@ void do_exits( CHAR_DATA *ch, char *argument )
 	    {
 		if ( IS_SET(pexit->exit_info, EX_CLOSED) )
 		{
-		    sprintf( buf + strlen(buf), "%-5s - [closed]\n\r",
+		    sprintf( buf + strlen(buf), "&W%-5s - [closed]\n\r",
 		    dir_name[pexit->vdir] );
 		}
 		else if ( IS_SET(pexit->exit_info, EX_WINDOW) )
@@ -1461,7 +1461,7 @@ void do_exits( CHAR_DATA *ch, char *argument )
 		}
 		else if ( IS_SET(pexit->exit_info, EX_xAUTO) )
 		{
-		   sprintf( buf + strlen(buf), "%-5s - %s\n\r",
+		   sprintf( buf + strlen(buf), "&W%-5s - &C%s\n\r",
 		    //capitalize( pexit->keyword ),
 		    pexit->keyword,
 		    //room_is_dark( pexit->to_room )
@@ -1470,7 +1470,7 @@ void do_exits( CHAR_DATA *ch, char *argument )
 			pexit->to_room->name );
 		}
 		else
-		    sprintf( buf + strlen(buf), "%-5s - %s\n\r",
+		    sprintf( buf + strlen(buf), "&W%-5s - &C%s\n\r",
 		    //capitalize( dir_name[pexit->vdir] ),
 		    dir_name[pexit->vdir],
 		    //room_is_dark( pexit->to_room )
@@ -1480,7 +1480,7 @@ void do_exits( CHAR_DATA *ch, char *argument )
 	    }
 	    else
 	    {
-	        sprintf( buf + strlen(buf), " %s",
+	        sprintf( buf + strlen(buf), " &C%s",
 		    dir_name[pexit->vdir] );
 	    }
 	}

@@ -673,11 +673,11 @@ void do_showclan( CHAR_DATA *ch, char *argument )
     			clan->atwar );
     ch_printf( ch, "&Wmembers: &G%d\n\r",
     			clan->members);
-    ch_printf( ch, "&Wdecks: &G%d\n\r",
-    			clan->spacecraft);
-    ch_printf( ch, "&Wboosters: &G%d\n\r",
-    			clan->vehicles);
-    ch_printf( ch, "&systems: &G%d\n\r",
+//    ch_printf( ch, "&Wdecks: &G%d\n\r",
+//    			clan->spacecraft);
+//    ch_printf( ch, "&Wboosters: &G%d\n\r",
+//    			clan->vehicles);
+    ch_printf( ch, "&Wsystems: &G%d\n\r",
     			pCount);
     ch_printf( ch, "&Waverage cpu health: &G%d\n\r",
     			support);
@@ -1031,14 +1031,18 @@ void do_enlist( CHAR_DATA *ch, char *argument )
 	CLAN_DATA *clan;
 	ROOM_INDEX_DATA *nRoom;
 	ROOM_INDEX_DATA *lRoom;
+	ROOM_INDEX_DATA *cRoom;
 	char buf[MAX_STRING_LENGTH];
 	char bufa[MAX_STRING_LENGTH];
+	char bufb[MAX_STRING_LENGTH];
 	ROOM_INDEX_DATA * location;
 	location = ch->in_room;
     	EXIT_DATA * xit2;
     	EXIT_DATA * xit3;
     	EXIT_DATA * xit4;
     	EXIT_DATA * xit5;
+    	EXIT_DATA * xit6;
+    	EXIT_DATA * xit7;
 
 	if ( IS_NPC(ch) || !ch->pcdata )
 	{
@@ -1048,7 +1052,7 @@ void do_enlist( CHAR_DATA *ch, char *argument )
 
 	if ( ch->pcdata->clan )
 	{
-		ch_printf( ch , "> you will have to resign from %s before you can join a new organization\n\r", ch->pcdata->clan->name );
+		ch_printf( ch , "> you cannot join another organization right now\n\r", ch->pcdata->clan->name );
 		return;
 	}
 
@@ -1058,10 +1062,12 @@ void do_enlist( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
-	for ( clan = first_clan; clan; clan = clan->next )
-	{
-		if ( ch->in_room->vnum == clan->enlistroom )
-		{
+	clan = ch->in_room->area->planet->governed_by;
+
+//	for ( clan = first_clan; clan; clan = clan->next )
+//	{
+//		if ( ch->in_room->vnum == clan->enlistroom )
+//		{
 			//SET_BIT( ch->speaks, LANG_CLAN );
 			++clan->members;
 			STRFREE( ch->pcdata->clan_name );
@@ -1078,7 +1084,7 @@ void do_enlist( CHAR_DATA *ch, char *argument )
    			STRFREE( nRoom->description );
 
 			strcpy( buf , ch->name );
-			strcat( buf , ":home" );		        
+			strcat( buf , "&Y.&Chome" );		        
 			
    			nRoom->name = STRALLOC( buf );
    			nRoom->description = STRALLOC ( "use ENTER command to leave to system lobby.\n\ruse CONNECT to leave to specified node.\n\ruse BRIDGE commands to secure node.\n\r" );
@@ -1096,7 +1102,7 @@ void do_enlist( CHAR_DATA *ch, char *argument )
 
    			//SET_BIT( ch->in_room->area->flags , AFLAG_MODIFIED );
 
-			send_to_char( "> new player home node created\n\r", ch );   
+			//send_to_char( "> new player home node created\n\r", ch );   
 
       			nRoom->area->planet->citysize++;
       			nRoom->sector_type = SECT_INSIDE;
@@ -1112,13 +1118,14 @@ void do_enlist( CHAR_DATA *ch, char *argument )
    			STRFREE( lRoom->description );
 
 			strcpy( bufa , ch->name );
-		        strcat( bufa , ":lobby" );
+		        strcat( bufa , "&Y.&Clobby" );
 			
    			lRoom->name = STRALLOC( bufa );
-   			lRoom->description = STRALLOC ( "user site lobby.\n\ruse ENTER command to leave to system lobby.\n\ruse CONSTRUCT commands to build.\n\r" );
+   			lRoom->description = STRALLOC ( "site lobby.\n\ruse ENTER command to leave to system lobby.\n\r" );
    			lRoom->sector_type = SECT_DUNNO;
    			SET_BIT( lRoom->room_flags , ROOM_NO_MOB );
 			SET_BIT( lRoom->room_flags , ROOM_CAN_LAND );
+			SET_BIT( lRoom->room_flags , ROOM_NOPEDIT );
    
    			xit3 = make_exit( lRoom , ch->in_room , 10 );
    			xit3->keyword		= STRALLOC( "" );
@@ -1142,12 +1149,50 @@ void do_enlist( CHAR_DATA *ch, char *argument )
 
    			SET_BIT( ch->in_room->area->flags , AFLAG_MODIFIED );
 
-			send_to_char( "> new player home node created\n\r", ch );   
+			//send_to_char( "> new home node created\n\r", ch );   
 
       			lRoom->area->planet->citysize++;
       			lRoom->sector_type = SECT_INSIDE;
 
 //endlobbyroom
+
+//firstconstroom
+
+			cRoom = make_room( ++top_r_vnum );
+   			cRoom->area = ch->in_room->area;
+  			LINK( cRoom , ch->in_room->area->first_room , ch->in_room->area->last_room , next_in_area , prev_in_area );
+   			STRFREE( cRoom->name );
+   			STRFREE( cRoom->description );
+
+			strcpy( bufb , ch->name );
+		        strcat( bufb , "&Y.&Cdatabase" );
+			
+   			cRoom->name = STRALLOC( bufb );
+   			cRoom->description = STRALLOC ( "database node.\n\ruse CONSTRUCT commands to build.\n\r" );
+   			cRoom->sector_type = SECT_DUNNO;
+   
+   			xit6 = make_exit( cRoom , lRoom , DIR_SOUTH );
+   			xit6->keyword		= STRALLOC( "" );
+   			xit6->description	= STRALLOC( "" );
+   			xit6->key		= -1;
+   			xit6->exit_info	= 0;
+
+   			xit7 = make_exit( lRoom , cRoom , DIR_NORTH );
+   			xit7->keyword		= STRALLOC( "" );
+   			xit7->description	= STRALLOC( "" );
+   			xit7->key		= -1;
+   			xit7->exit_info	= 0;
+
+   			ch->in_room->area->planet->size++;
+
+   			SET_BIT( ch->in_room->area->flags , AFLAG_MODIFIED );
+
+			send_to_char( "> new home node created\n\r", ch );   
+
+      			cRoom->area->planet->wilderness++;
+      			cRoom->sector_type = SECT_GLACIAL;
+
+//endfirstconstroom
 
      			fold_area( nRoom->area, nRoom->area->filename, FALSE );
 
@@ -1157,11 +1202,11 @@ void do_enlist( CHAR_DATA *ch, char *argument )
 			char_to_room( ch, nRoom );
 			do_look( ch, "auto" );
 			return;
-		}
-	}
+		//}
+	//}
 
-	send_to_char( "> they do not seem to be recruiting right now\n\r", ch );
-	return;
+	//send_to_char( "> they do not seem to be recruiting right now\n\r", ch );
+	//return;
 
 }
 

@@ -1000,8 +1000,8 @@ void do_makeplanet( CHAR_DATA *ch, char *argument )
 
     pArea = NULL;
     planet = NULL;
-    px = number_range ( -10 , 10 ) * 1000;
-    py = number_range ( -10 , 10 ) * 1000;
+    px = number_range ( 1 , 21 );
+    py = number_range ( 1 , 13 );
     pz = number_range ( -10 , 10 ) * 1000;
     CREATE( planet, PLANET_DATA, 1 );
     LINK( planet, first_planet, last_planet, next, prev );
