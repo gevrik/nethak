@@ -56,6 +56,8 @@ void do_mp_offer_job( CHAR_DATA *ch, char *argument )
     int rCount;
     OBJ_INDEX_DATA * pObjIndex;
     OBJ_DATA * obj;
+    CLAN_DATA *clan;
+    CLAN_DATA *tclan;
     
   if ( IS_AFFECTED( ch, AFF_CHARM ) )
       return;
@@ -119,10 +121,24 @@ void do_mp_offer_job( CHAR_DATA *ch, char *argument )
 
 	   if( IS_SET( dPlanet->flags, PLANET_HIDDEN ) )
        {
-          do_say( ch , "> there are no jobs at this time" );
+          do_say( ch , "I have no jobs to offer you at this time!" );
           return;
        }
+	
+	if(victim->pcdata->clan)
+	{
 
+	clan = victim->pcdata->clan;
+	tclan = dPlanet->governed_by;
+
+	//	ch_printf( victim, "DEBUG: clan: %s tclan: %s\n\r", clan->atwar, tclan->name );
+
+		if( nifty_is_name( clan->atwar,  tclan->name ) )
+      		 {
+        	  do_say( ch , "I have no jobs to offer you at this time! [war]" );
+      		    return;
+     		  }
+	}
        sprintf( buf , "package %s" , dPlanet->name );
        
        if ( get_obj_world( ch, buf ) )
@@ -165,6 +181,8 @@ void do_mp_offer_agent( CHAR_DATA *ch, char *argument )
     int rCount;
     OBJ_INDEX_DATA * pObjIndex;
     OBJ_DATA * obj;
+    CLAN_DATA *clan;
+    CLAN_DATA *tclan;
     
   if ( IS_AFFECTED( ch, AFF_CHARM ) )
       return;
@@ -232,6 +250,17 @@ void do_mp_offer_agent( CHAR_DATA *ch, char *argument )
           return;
        }
 
+	clan = victim->pcdata->clan;
+	tclan = dPlanet->governed_by;
+
+//	ch_printf( victim, "DEBUG: clan: %s tclan: %s\n\r", clan->atwar, tclan->name );
+
+	if( !nifty_is_name( clan->atwar,  tclan->name ) )
+       {
+          do_say( ch , "I have no jobs to offer you at this time! [no war]" );
+          return;
+       }
+
        sprintf( buf , "virus %s" , dPlanet->name );
        
        if ( get_obj_world( ch, buf ) )
@@ -247,7 +276,7 @@ void do_mp_offer_agent( CHAR_DATA *ch, char *argument )
        sprintf( buf , "a virus marked %s" , dPlanet->name );
        obj->short_descr = STRALLOC( buf );
        
-       sprintf( buf , "> upload this virus to a terminal in the system %s." , dPlanet->name );
+       sprintf( buf , "> infect dataminer program in system: %s." , dPlanet->name );
        do_say( ch , buf );
   
        act( AT_ACTION, "> $n gives $p to $N", ch, obj, victim, TO_NOTVICT );

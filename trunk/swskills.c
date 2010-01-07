@@ -1036,7 +1036,7 @@ void do_makearmor( CHAR_DATA *ch, char *argument )
     		   send_to_char( "&G> you begin the long process of coding a defensive module\n\r", ch);
     		   act( AT_PLAIN, "> $n takes $s parser, some code fragments and begins to work", ch,
 		        NULL, argument , TO_ROOM );
-		   add_timer ( ch , TIMER_DO_FUN , 2 , do_makearmor , 1 ); // 10 to 2
+		   add_timer ( ch , TIMER_DO_FUN , 10 , do_makearmor , 1 ); // 10 to 2
     		   ch->dest_buf = str_dup(arg);
     		   ch->dest_buf_2 = str_dup(arg2);
     		   return;
@@ -3149,6 +3149,7 @@ void do_construction ( CHAR_DATA *ch , char *argument )
    
 }
 
+/*
 void do_bridge ( CHAR_DATA *ch , char *argument )
 {
     CLAN_DATA * clan;
@@ -3395,6 +3396,219 @@ else if ( !str_cmp( arg2 , "delete" ) )
    
    SET_BIT( ch->in_room->area->flags , AFLAG_MODIFIED );
    
+}
+
+*/
+
+void do_bridge ( CHAR_DATA *ch , char *argument )
+{
+    CLAN_DATA * clan;
+    int chance, ll;
+    char arg1[MAX_INPUT_LENGTH];
+    char arg2[MAX_INPUT_LENGTH];
+    EXIT_DATA   *xit, *texit;
+    int   evnum, edir, ekey;
+    ROOM_INDEX_DATA *toroom;
+    char buf[MAX_STRING_LENGTH];
+
+    if ( IS_NPC(ch) || !ch->pcdata || !ch->in_room )
+    	return;
+
+    clan = ch->pcdata->clan;
+
+    if ( !clan )
+    {
+	send_to_char( "> you need to be in an organization\n\r", ch );
+	return;
+    }
+
+    if ( (ch->pcdata && ch->pcdata->bestowments
+    &&    is_name("build", ch->pcdata->bestowments))
+    || nifty_is_name( ch->name, clan->leaders  ) )
+	;
+    else
+    {
+	send_to_char( "> you need access to construct\n\r", ch );
+	return;
+    }
+
+   if ( !ch->in_room->area || !ch->in_room->area->planet ||
+   clan != ch->in_room->area->planet->governed_by      )
+   {
+	send_to_char( "> you cannot construct in this system\n\r", ch );
+	return;
+   }
+
+   if ( IS_SET( ch->in_room->room_flags , ROOM_NOPEDIT ) )
+   {
+	   send_to_char( "> you cannot edit this room\n\r", ch );
+	   return;
+    }
+
+   if ( ch->gold < 250 )
+   {
+	send_to_char( "> insufficient funds [250 needed]\n\r", ch );
+	return;
+   }
+
+   argument = one_argument( argument , arg1 );
+   if ( argument[0] == '\0' )
+   {
+	send_to_char( "> syntax: bridge <direction> <action> <argument>\n\r", ch );
+	send_to_char( "> action being one of the following:\n\r", ch );
+	send_to_char( "> connect, door, keycode\n\r", ch );
+	return;
+   }
+   argument = one_argument( argument , arg2 );
+
+   chance = (int) (ch->pcdata->learned[gsn_bridge]);
+   if ( number_percent( ) > chance )
+   {
+	send_to_char( "> you fail to bridge\n\r", ch );
+        ch->gold -= 10;
+	return;
+   }
+
+   edir = get_dir(arg1);
+   xit = get_exit(ch->in_room, edir);
+
+   if ( !str_cmp( arg2 , "connect" ) )
+   {
+       if ( xit )
+       {
+ 	  send_to_char( "> connection already exists\n\r", ch );
+	  return;
+       }
+       evnum = atoi( argument );
+       if ( (toroom = get_room_index( evnum )) == NULL )
+       {
+            ch_printf( ch, "> non-existant room: %d\n\r", evnum );
+            return;
+       }
+       if ( ch->in_room->area != toroom->area )
+       {
+            ch_printf( ch, "> %d is not in this system\n\r" , evnum );
+            return;
+       }
+       if ( IS_SET(toroom->room_flags, ROOM_NOPEDIT ) )
+       {
+            ch_printf( ch, "> %d cannot be edited\n\r" , evnum );
+            return;
+       }
+       texit = get_exit( toroom, rev_dir[edir] );
+       if ( texit )
+       {
+            ch_printf( ch, "> %d already has an entrance from that direction\n\r" , evnum );
+            return;
+       }
+
+      xit = make_exit( ch->in_room, toroom, edir );
+      xit->keyword		= STRALLOC( "" );
+      xit->description	= STRALLOC( "" );
+      xit->key		= -1;
+      xit->exit_info	= 0;
+      texit = make_exit( toroom , ch->in_room  , rev_dir[edir] );
+      texit->keyword		= STRALLOC( "" );
+      texit->description	= STRALLOC( "" );
+      texit->key		= -1;
+      texit->exit_info	= 0;
+
+      sprintf( buf , "> construction code opens a connection to the %s" , dir_name[edir] );
+      echo_to_room( AT_WHITE, ch->in_room, buf );
+      sprintf( buf , "> construction code opens a connection to the %s" , dir_name[rev_dir[edir]] );
+      echo_to_room( AT_WHITE, toroom , buf );
+   }
+   else if ( !str_cmp( arg2 , "keycode" ) )
+   {
+       if ( !xit )
+       {
+ 	  send_to_char( "> no exit in that direction\n\r", ch );
+	  return;
+       }
+
+       if ( !IS_SET( xit->exit_info , EX_ISDOOR ) )
+       {
+ 	  send_to_char( "> no door in that direction\n\r", ch );
+	  return;
+       }
+
+       ekey = atoi( argument );
+
+       if ( ekey < 1 )
+       {
+    	   send_to_char( "> invalid code\n\r", ch );
+    	   return;
+       }
+
+       ch_printf( ch , "> code is now: %d" , ekey );
+       xit->key = ekey;
+
+   }
+   else if ( !str_cmp( arg2 , "door" ) )
+   {
+       if ( !xit )
+       {
+ 	  send_to_char( "> no exit in that direction\n\r", ch );
+	  return;
+       }
+
+       if ( !IS_SET( xit->exit_info , EX_ISDOOR ) )
+       {
+          sprintf( buf , "> construction code builds a door to the %s" , dir_name[edir] );
+          echo_to_room( AT_WHITE, ch->in_room, buf );
+          SET_BIT(  xit->exit_info , EX_ISDOOR );
+          texit = get_exit_to( xit->to_room, rev_dir[edir], ch->in_room->vnum );
+          if ( texit )
+          {
+             sprintf( buf , "> construction code builds a door to the %s" , dir_name[rev_dir[edir]] );
+             echo_to_room( AT_WHITE, xit->to_room, buf );
+             SET_BIT(  texit->exit_info , EX_ISDOOR );
+          }
+       }
+
+       else
+
+		   {
+
+    	   if ( texit && !IS_SET(texit->exit_info, EX_SECRET) )
+    			   {
+    		 	  send_to_char( "> cannot remove door with keycode\n\r", ch );
+    			  return;
+    			   }
+
+    	   if ( !IS_SET(xit->exit_info, EX_SECRET) )
+    			   {
+    		 	  send_to_char( "> cannot remove door with keycode\n\r", ch );
+    			  return;
+    			   }
+
+          sprintf( buf , "> construction code removes the door to the %s" , dir_name[edir] );
+          echo_to_room( AT_WHITE, ch->in_room, buf );
+          REMOVE_BIT(  xit->exit_info , EX_ISDOOR );
+          texit = get_exit_to( xit->to_room, rev_dir[edir], ch->in_room->vnum );
+
+          if ( texit )
+          {
+             sprintf( buf , "> construction code removes the door to the %s" , dir_name[rev_dir[edir]] );
+             echo_to_room( AT_WHITE, xit->to_room, buf );
+             REMOVE_BIT(  texit->exit_info , EX_ISDOOR );
+          }
+		  }
+
+   }
+   else
+   {
+        do_bridge( ch , "" );
+        return;
+   }
+
+   ch->gold -= 250;
+
+   for ( ll = 1 ; ll <= 20 ; ll++ )
+       learn_from_success( ch , gsn_bridge );
+
+   SET_BIT( ch->in_room->area->flags , AFLAG_MODIFIED );
+
 }
 
 

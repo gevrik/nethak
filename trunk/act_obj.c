@@ -2227,7 +2227,7 @@ bool  agent_trigger( CHAR_DATA *victim, CHAR_DATA *ch, OBJ_DATA *obj )
      if( !IS_NPC( victim ) || !victim->pIndexData )
         return FALSE;
 
-     if ( victim->pIndexData->vnum != 32 )
+     if ( victim->pIndexData->vnum != MOB_VNUM_DATAMINER )
         return FALSE;
 
      if( IS_NPC( ch ) || !ch->pcdata )
@@ -2244,16 +2244,15 @@ bool  agent_trigger( CHAR_DATA *victim, CHAR_DATA *ch, OBJ_DATA *obj )
      if ( str_cmp ( buf , obj->name ) )
         return FALSE;
 
-     do_say( victim, "> thank you" );
-     ch->gold += 1000;
-
-     act( AT_GOLD, "> $N gives you 1000 credits" , ch, NULL, victim, TO_CHAR  );
-     act( AT_GOLD, "> $N gives $n some credits",  ch, NULL, victim, TO_NOTVICT );
-     act( AT_GOLD, "> you give $n some credits",  ch, NULL, victim, TO_VICT  );
+     do_say( victim, "memory corruption detected" );
+     ch->gold += 2000;
 
      separate_obj( obj );
      obj_from_char( obj );
      extract_obj( obj );
+	send_to_char( "&w> the dataminer program is unloaded from the node\r\n", ch );
+	send_to_char( "&w> 2,000 credits received\r\n", ch );
+	extract_char( victim, TRUE );
      
      return TRUE;         
 }

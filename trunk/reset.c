@@ -182,6 +182,8 @@ void reset_all( )
              vnum = MOB_VNUM_TECHNICIAN;
         if ( IS_SET(pRoomIndex->room_flags, ROOM_EMPLOYMENT ) )
              vnum = MOB_VNUM_JOB_OFFICER;
+        if ( IS_SET(pRoomIndex->room_flags, ROOM_INFO ) )
+             vnum = 32;
         
         if ( vnum > 0 )
         {
@@ -917,7 +919,6 @@ void reset_all( )
               break;
 
            case SECT_RAINFOREST:
-           case SECT_GLACIAL:
            case SECT_JUNGLE:
            case SECT_SWAMP:
            case SECT_WETLANDS:
@@ -929,6 +930,22 @@ void reset_all( )
                 vnum = MOB_VNUM_SCAVENGER;
               else if ( anumber == 3 )
                 vnum = MOB_VNUM_PREDITOR;
+              else
+                vnum = MOB_VNUM_INSECT;
+              break;
+
+	case SECT_GLACIAL:
+		anumber = number_range(0,5);
+		if ( anumber == 0 )
+			vnum = MOB_VNUM_SMALL_ANIMAL;
+              else if ( anumber == 1 )
+                vnum = MOB_VNUM_BIRD;
+              else if ( anumber == 2 )
+                vnum = MOB_VNUM_SCAVENGER;
+              else if ( anumber == 3 )
+                vnum = MOB_VNUM_PREDITOR;
+              else if ( anumber == 4 )
+                vnum = MOB_VNUM_DATAMINER;
               else
                 vnum = MOB_VNUM_INSECT;
               break;

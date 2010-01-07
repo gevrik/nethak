@@ -300,13 +300,21 @@ const	struct	liq_type	liq_table	[LIQ_MAX]	=
 
 char *	const	attack_table	[13] =
 {
+    "attack",
+    "attack",  "attack",  "attack", "attack", "attack",
+    "attack",  "attack", "attack", "attack", "attack",
+    "attack", "attack"
+};
+
+/*
+char *	const	attack_table	[13] =
+{
     "hit",
     "slice",  "stab",  "slash", "whip", "claw",
     "blast",  "pound", "crush", "shot", "bite",
     "pierce", "suction"
 };
-
-
+*/
 
 /*
  * The skill and spell table.

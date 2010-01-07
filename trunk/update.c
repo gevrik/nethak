@@ -43,20 +43,20 @@ CHAR_DATA *	timechar;
 
 char * corpse_descs[] =
    {
-     "the flatline of %s will soon be gone",
-     "the flatline of %s lies here",
-     "the flatline of %s lies here",
-     "the flatline of %s lies here",
-     "the flatline of %s lies here."
+     "flatine of %s",
+     "flatine of %s",
+     "flatine of %s",
+     "flatine of %s",
+     "flatine of %s"
    };
 
 char * d_corpse_descs[] =
    {
-     "the flatline %s will soon be gone",
-     "the flatline %s are here",
-     "the flatline %s are here",
-     "the flatline %s are here",
-     "the flatline %s are here."
+     "flatine of %s",
+     "flatine of %s",
+     "flatine of %s",
+     "flatine of %s",
+     "flatine of %s"
    };
 
 extern int      top_exit;
@@ -1172,10 +1172,10 @@ void obj_update( void )
             obj->value[2] = timerfrac;
             if ( obj->item_type == ITEM_DROID_CORPSE )
               sprintf( buf, d_corpse_descs[ UMIN( timerfrac - 1, 4 ) ],
-                          bufptr );
+		 bufptr );
             else
               sprintf( buf, corpse_descs[ UMIN( timerfrac - 1, 4 ) ],
-                          bufptr );
+ 		bufptr );
 
             STRFREE( obj->description );
             obj->description = STRALLOC( buf );

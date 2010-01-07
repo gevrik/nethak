@@ -923,6 +923,7 @@ struct	smaug_affect
 #define MOB_VNUM_SHIP_GUARD		28
 #define MOB_VNUM_ALIEN			29
 #define MOB_VNUM_JOB_OFFICER		30
+#define MOB_VNUM_DATAMINER		33
 
 /*
  * ACT bits for mobs.
