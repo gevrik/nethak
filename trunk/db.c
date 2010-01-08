@@ -1077,7 +1077,7 @@ void load_rooms( AREA_DATA *tarea, FILE *fp )
 	int iHash;
 	bool tmpBootDb;
 	bool oldroom;
-	int x1, x2, x3, x4, x5, x6;
+	int x1, x2, x3, x4, x5, x6, x7;
 
 	letter				= fread_letter( fp );
 	if ( letter != '#' )
@@ -1142,15 +1142,16 @@ void load_rooms( AREA_DATA *tarea, FILE *fp )
 
 	/* Area number			  fread_number( fp ); */
 	ln = fread_line( fp );
-	x1=x2=x3=x4=x5=x6=0;
-	sscanf( ln, "%d %d %d %d %d %d",
-	      &x1, &x2, &x3, &x4, &x5, &x6 );
+	x1=x2=x3=x4=x5=x6=x7=0;
+	sscanf( ln, "%d %d %d %d %d %d %d",
+	      &x1, &x2, &x3, &x4, &x5, &x6, &x7 );
 
 	pRoomIndex->room_flags		= x2;
 	pRoomIndex->sector_type		= x3;
 	pRoomIndex->tele_delay		= x4;
 	pRoomIndex->tele_vnum		= x5;
 	pRoomIndex->tunnel		= x6;
+	pRoomIndex->seccode		= x7;
 
 	if (pRoomIndex->sector_type < 0 || pRoomIndex->sector_type == SECT_MAX)
 	{

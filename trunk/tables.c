@@ -116,6 +116,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_closebay" ))  		return do_closebay;
 	if ( !str_cmp( name, "do_closehatch"  ))        return do_closehatch;
 	if ( !str_cmp( name, "do_cmdtable" ))		return do_cmdtable;
+	if ( !str_cmp( name, "do_coding" ))		return do_coding;
 	if ( !str_cmp( name, "do_commands" ))		return do_commands;
 	if ( !str_cmp( name, "do_compare" ))		return do_compare;
 	if ( !str_cmp( name, "do_connect" ))		return do_connect;
@@ -287,12 +288,15 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_mpjunk" ))		return do_mpjunk;
 	if ( !str_cmp( name, "do_mpkill" ))		return do_mpkill;
 	if ( !str_cmp( name, "do_mpmload" ))		return do_mpmload;
+	if ( !str_cmp( name, "do_mpmset" ))		return do_mpmset;
 	if ( !str_cmp( name, "do_mpnothing" ))		return do_mpnothing;
 	if ( !str_cmp( name, "do_mpoload" ))		return do_mpoload;
 	if ( !str_cmp( name, "do_mppkset" ))		return do_mppkset;
 	if ( !str_cmp( name, "do_mppurge" ))		return do_mppurge;
 	if ( !str_cmp( name, "do_mpstat" ))		return do_mpstat;
 	if ( !str_cmp( name, "do_mptransfer" ))		return do_mptransfer;
+	if(  !str_cmp( name, "do_mpquestcomplete" )) return do_mpquestcomplete;
+	if(  !str_cmp( name, "do_mpsetquest" )) return do_mpsetquest;
 	if ( !str_cmp( name, "do_mset" ))		return do_mset;
 	if ( !str_cmp( name, "do_mstat" ))		return do_mstat;
 	if ( !str_cmp( name, "do_murde" ))		return do_murde;
@@ -653,6 +657,7 @@ char *skill_name( DO_FUN *skill )
     if ( skill == do_climb )		return "do_climb";
     if ( skill == do_close )		return "do_close";
     if ( skill == do_cmdtable )		return "do_cmdtable";
+    if ( skill == do_coding )		return "do_coding";
     if ( skill == do_commands )		return "do_commands";
     if ( skill == do_compare )		return "do_compare";
     if ( skill == do_config )		return "do_config";
@@ -783,12 +788,15 @@ char *skill_name( DO_FUN *skill )
     if ( skill == do_mpjunk )		return "do_mpjunk";
     if ( skill == do_mpkill )		return "do_mpkill";
     if ( skill == do_mpmload )		return "do_mpmload";
+    if ( skill == do_mpmset )		return "do_mpmset";
     if ( skill == do_mpnothing )	return "do_mpnothing";
     if ( skill == do_mpoload )		return "do_mpoload";
     if ( skill == do_mppkset )		return "do_mppkset";
     if ( skill == do_mppurge )		return "do_mppurge";
     if ( skill == do_mpstat )		return "do_mpstat";
     if ( skill == do_mptransfer )	return "do_mptransfer";
+    if ( skill == do_mpquestcomplete )  return "do_mpquestcomplete";
+    if ( skill == do_mpsetquest ) 	return "do_mpsetquest";
     if ( skill == do_mset )		return "do_mset";
     if ( skill == do_mstat )		return "do_mstat";
     if ( skill == do_murde )		return "do_murde";

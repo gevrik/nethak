@@ -184,6 +184,84 @@ bool mprog_veval( int lhs, char *opr, int rhs, CHAR_DATA *mob )
 
 }
 
+
+/*
+	new quest shizat
+*/
+
+#define DT_QUEST_DIR "../quests/"
+
+void MarkQuestComplete(char *quest, CHAR_DATA *player);
+bool CheckQuestComplete(char *quest, CHAR_DATA *player);
+
+/*
+	MarkQuestComplete
+	Appends the line passed to it to the player's quest file.
+	Note that it could duplicate quests if marked more than once,
+	so use if questcomplete before calling this.
+*/
+void MarkQuestComplete(char *quest, CHAR_DATA *player)
+{
+	char quest_file[100];
+	FILE * fw;
+
+	strcpy(quest_file, DT_QUEST_DIR);
+	strcat(quest_file, player->name);
+	strcat(quest_file, ".qdt");
+	
+	fw = NULL;
+	fw = fopen(quest_file,"a");
+
+	fprintf(fw, "%s\n",quest);
+	printf("stuck %s in %s - correct?\n",quest,quest_file);
+	fclose(fw);
+}
+
+/*
+	CheckQuestComplete
+
+	finds the quest entry in /quests/player_name.qdt, and returns 1 if
+	found.
+*/
+bool CheckQuestComplete(char *quest, CHAR_DATA *player)
+{
+	char quest_file[100];
+	char read_string[100];
+	bool bFound;
+	FILE * read;
+
+	strcpy(quest_file, DT_QUEST_DIR);
+	strcat(quest_file, player->name);
+	strcat(quest_file, ".qdt");
+
+	read = fopen(quest_file, "r");
+
+	bFound = 0;
+
+	if(read==NULL)
+	{
+	return FALSE;
+	}
+	while(fgets(read_string,99,read) != NULL)
+	{
+		if(read_string[strlen(read_string)-1] == '\n')
+		{
+			read_string[strlen(read_string)-1]='\0';
+		}
+
+		if( !str_cmp(quest,read_string) )
+		{
+			bFound = 1;
+			//ch_printf( player, "> quest: %s\n\r", quest);
+			//ch_printf( player, "> file: %s\n\r", read_string);
+			break;
+		}
+	}
+	//ch_printf( player, "> quest: %s\n\r", quest);
+	//ch_printf( player, "> file: %s\n\r", read_string);
+	return bFound;
+}
+
 /* This function performs the evaluation of the if checks.  It is
  * here that you can add any ifchecks which you so desire. Hopefully
  * it is clear from what follows how one would go about adding your
@@ -362,6 +440,12 @@ int mprog_do_ifcheck( char *ifcheck, CHAR_DATA *mob, CHAR_DATA *actor,
       strcpy( opr, "==" );
     return mprog_veval(lhsvl, opr, rhsvl, mob);
   }
+
+	// usage: if questcomplete($n) == QuestName
+	if( !str_cmp(chck, "questcomplete") )
+	{ 
+		return(CheckQuestComplete(rval,chkchar));
+	}
 
   if ( !str_cmp(chck, "timeskilled") )
   {
@@ -706,7 +790,7 @@ int mprog_do_ifcheck( char *ifcheck, CHAR_DATA *mob, CHAR_DATA *actor,
     if ( !str_cmp(chck, "doingquest") )
     {
       return IS_NPC(actor) ? FALSE :
-          mprog_veval(chkchar->pcdata->quest_number, opr, atoi(rval), mob);
+          mprog_veval(chkchar->pcdata->queststatus, opr, atoi(rval), mob);
     }
     if ( !str_cmp(chck, "ishelled") )
     {
@@ -2943,6 +3027,102 @@ void obj_act_update( void )
     DISPOSE(runner);
   }
   return;
+}
+
+void do_mpquestcomplete( CHAR_DATA *ch, char *argument )
+{
+    char       arg[ MAX_INPUT_LENGTH ];
+    CHAR_DATA *victim;
+ 
+    if ( !IS_NPC( ch ) || IS_AFFECTED( ch, AFF_CHARM ))
+    {
+          send_to_char( "Huh?\n\r", ch );
+          return;
+    }
+ 
+    argument = one_argument( argument, arg );
+ 
+    if ( arg[0] == '\0' )
+    {
+	progbug( "Mpquestcomplete - No argument", ch );
+	return;
+    }
+ 
+    if ( !( victim = get_char_room( ch, arg ) ) )
+    {
+	progbug( "Mpquestcomplete - victim does not exist", ch );
+	return;
+    }
+
+	if( IS_NPC(victim) )
+	{
+		send_to_char("Mobs can't have quests!\n\r",ch);
+		return;
+	}
+
+    if ( argument[0] == '\0' )
+	{
+		progbug( "Mpquestcomplete - no quest to complete",ch);
+		return;
+	}
+
+	if(argument[strlen(argument)-1] == '\0')
+	{
+		argument[strlen(argument)-1] = '\0';
+	}
+
+	MarkQuestComplete(argument, victim);
+
+}
+
+void do_mpsetquest( CHAR_DATA *ch, char *argument )
+{
+    char       arg[ MAX_INPUT_LENGTH ];
+    CHAR_DATA *victim;
+ 
+    if ( !IS_NPC( ch ) || IS_AFFECTED( ch, AFF_CHARM ))
+    {
+          send_to_char( "Huh?\n\r", ch );
+          return;
+    }
+ 
+    argument = one_argument( argument, arg );
+ 
+    if ( arg[0] == '\0' )
+    {
+	progbug( "Mpquestset - No argument", ch );
+	return;
+    }
+ 
+    if ( !( victim = get_char_room( ch, arg ) ) )
+    {
+	progbug( "Mpquestset - victim does not exist", ch );
+	return;
+    }
+
+	if( IS_NPC(victim) )
+	{
+		send_to_char("cannot set on mobs!\n\r",ch);
+		return;
+	}
+
+    if ( argument[0] == '\0' )
+	{
+		progbug( "Mpquestset - specify the integer for quest",ch);
+		return;
+	}
+
+	/*
+	if(argument[strlen(argument)-1] == '\0')
+	{
+		argument[strlen(argument)-1] = '\0';
+	}
+	*/
+
+	victim->pcdata->queststatus = atoi(argument);
+
+	//MarkQuestComplete(argument, victim);
+
 }
 
 //not needed for Neuro

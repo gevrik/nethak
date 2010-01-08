@@ -177,6 +177,7 @@ void do_mp_offer_agent( CHAR_DATA *ch, char *argument )
     char        buf[MAX_STRING_LENGTH];
     CHAR_DATA  *victim;
     PLANET_DATA * dPlanet = NULL;
+    PLANET_DATA * planet = NULL;
     int pCount = 0;
     int rCount;
     OBJ_INDEX_DATA * pObjIndex;
@@ -246,14 +247,22 @@ void do_mp_offer_agent( CHAR_DATA *ch, char *argument )
 
 	   if( IS_SET( dPlanet->flags, PLANET_HIDDEN ) )
        {
-          do_say( ch , "> there are no jobs at this time" );
+          do_say( ch , "There are no jobs at this time" );
           return;
        }
 
 	clan = victim->pcdata->clan;
 	tclan = dPlanet->governed_by;
+	planet = ch->in_room->area->planet;
 
 //	ch_printf( victim, "DEBUG: clan: %s tclan: %s\n\r", clan->atwar, tclan->name );
+
+	if( victim->pcdata->clan->name != planet->governed_by->name )
+       {
+          do_say( ch , "I only offer jobs to members of my organization." );
+          return;
+       }
+
 
 	if( !nifty_is_name( clan->atwar,  tclan->name ) )
        {
@@ -276,7 +285,7 @@ void do_mp_offer_agent( CHAR_DATA *ch, char *argument )
        sprintf( buf , "a virus marked %s" , dPlanet->name );
        obj->short_descr = STRALLOC( buf );
        
-       sprintf( buf , "> infect dataminer program in system: %s." , dPlanet->name );
+       sprintf( buf , "Infect a dataminer in the city grid of %s with this virus." , dPlanet->name );
        do_say( ch , buf );
   
        act( AT_ACTION, "> $n gives $p to $N", ch, obj, victim, TO_NOTVICT );

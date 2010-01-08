@@ -446,7 +446,7 @@ struct  frc_app_type
 #define AT_SAY		   AT_LBLUE
 #define AT_GOSSIP	   AT_LBLUE
 #define AT_YELL	           AT_WHITE
-#define AT_TELL		   AT_BLOOD
+#define AT_TELL		   AT_GREEN
 #define AT_HIT		   AT_WHITE
 #define AT_HITME	   AT_YELLOW
 #define AT_OOC             AT_YELLOW
@@ -1440,7 +1440,7 @@ typedef enum
 #define R16			BV16
 #define ROOM_NOPEDIT		BV17 /* players can't edit */
 #define R18			BV18
-#define ROOM_RESTAURANT		BV19
+#define ROOM_RESTAURANT		BV19 /* used as coding node */
 #define ROOM_PLR_HOME		BV20
 #define ROOM_EMPTY_HOME 	BV21
 #define R22			BV22
@@ -1452,7 +1452,7 @@ typedef enum
 #define ROOM_EMPLOYMENT         BV28
 #define ROOM_SPACECRAFT         BV29
 // #define R30		     	BV30
-#define ROOM_RECRUIT			BV30
+#define ROOM_RECRUIT		BV30
 #define ROOM_AUCTION            BV31
 
 /*
@@ -1958,6 +1958,7 @@ struct	pc_data
     sh_int		num_skills;
     sh_int		adept_skills;
     int			cyber;
+    int			queststatus;
 };
 
 
@@ -2171,7 +2172,8 @@ struct	room_index_data
     sh_int		sector_type;
     long		tele_vnum;
     sh_int		tele_delay;
-    sh_int		tunnel;		     /* max people that will fit */
+    sh_int		tunnel;
+    int			seccode;		     /* max people that will fit */
 };
 
 /*
@@ -3023,6 +3025,7 @@ DECLARE_DO_FUN(	do_climb	);
 DECLARE_DO_FUN(	do_close	);
 DECLARE_DO_FUN(	do_cmdtable	);
 DECLARE_DO_FUN(	do_cmenu	);
+DECLARE_DO_FUN(	do_coding	);
 DECLARE_DO_FUN(	do_commands	);
 DECLARE_DO_FUN(	do_compare	);
 DECLARE_DO_FUN(	do_config	);
@@ -3253,6 +3256,8 @@ DECLARE_DO_FUN(	do_yell		);
 DECLARE_DO_FUN( do_zones	);
 
 /* mob prog stuff */
+DECLARE_DO_FUN( do_mpquestcomplete );
+DECLARE_DO_FUN( do_mpsetquest );
 DECLARE_DO_FUN( do_mp_offer_agent );
 DECLARE_DO_FUN( do_mp_offer_job );
 DECLARE_DO_FUN( do_mp_close_passage );

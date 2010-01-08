@@ -1108,7 +1108,7 @@ void learn_from_success( CHAR_DATA *ch, int sn )
 
 		if(learn > 0)
 		{	
-	        ch_printf( ch, "> you have advanced %s by %d%%\n\r",
+	        ch_printf( ch, "> you have advanced &G%s&w by &Y%d%%&w\n\r",
 		skill_table[sn]->name, learn);
 		}
 

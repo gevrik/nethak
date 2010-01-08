@@ -1326,6 +1326,24 @@ void do_mset( CHAR_DATA *ch, char *argument )
 	return;
     }
 
+    if ( !str_cmp( arg2, "queststatus" ) )
+    {
+	if ( IS_NPC(victim) )
+	{
+	    send_to_char( "Not on NPC's.\n\r", ch );
+	    return;
+	}
+
+	if ( value < 0 || value > 500 )
+	{
+	    send_to_char( "The current quest range is 0 to 500.\n\r", ch );
+	    return;
+	}
+
+	victim->pcdata->queststatus = value;
+	return;
+    }
+
     if ( !str_cmp( arg2, "qpa" ) )
     {
 	if ( IS_NPC(victim) )
@@ -3177,7 +3195,7 @@ void do_redit( CHAR_DATA *ch, char *argument )
 	send_to_char( "  name desc ed rmed\n\r",			ch );
 	send_to_char( "  exit bexit exdesc exflags exname exkey\n\r",	ch );
 	send_to_char( "  flags sector teledelay televnum tunnel\n\r",	ch );
-	send_to_char( "  exdistance\n\r",				ch );
+	send_to_char( "  seccode exdistance\n\r",			ch );
 	return;
     }
 
@@ -3272,6 +3290,19 @@ void do_redit( CHAR_DATA *ch, char *argument )
 	}
 	location->tunnel = URANGE( 0, atoi(argument), 1000 );
 	send_to_char( "Done.\n\r", ch );
+	return;
+    }
+
+    if ( !str_cmp( arg, "seccode" ) )
+    {
+	if ( !argument || argument[0] == '\0' )
+	{
+	   send_to_char( "sets the security code for this node\n\r", ch );
+	   send_to_char( "syntax: redit seccode <value>\n\r", ch );
+	   return;
+	}
+	location->seccode = atoi(argument);
+	send_to_char( "code set.\n\r", ch );
 	return;
     }
 
@@ -4646,12 +4677,13 @@ void fold_area( AREA_DATA *tarea, char *filename, bool install )
 	fprintf( fpout, "#%ld\n",	vnum				);
 	fprintf( fpout, "%s~\n",	room->name			);
 	fprintf( fpout, "%s~\n",	strip_cr( room->description )	);
-	if ( (room->tele_delay > 0 && room->tele_vnum > 0) || room->tunnel > 0 )
-	  fprintf( fpout, "0 %d %d %d %ld %d\n",	room->room_flags,
+	if ( (room->tele_delay > 0 && room->tele_vnum > 0) || room->tunnel > 0 || room->seccode > 0 )
+	  fprintf( fpout, "0 %d %d %d %ld %d %d\n",	room->room_flags,
 						room->sector_type,
 						room->tele_delay,
 						room->tele_vnum,
-						room->tunnel		);
+						room->tunnel,
+						room->seccode	);
 	else
 	  fprintf( fpout, "0 %d %d\n",	room->room_flags,
 					room->sector_type	);

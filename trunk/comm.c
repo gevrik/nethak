@@ -646,7 +646,7 @@ void new_descriptor( int new_desc )
     set_alarm( 20 );
     if ( ( desc = accept( new_desc, (struct sockaddr *) &sock, &size) ) < 0 )
     {
-	perror( "New_descriptor: accept");
+	perror( "New_descriptormsg: accept");
 	set_alarm( 0 );
 	return;
     }
@@ -1520,6 +1520,7 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
                  d->user );
 	log_string_plus( log_buf, LOG_COMM );
 	show_title(d);
+	//ch->pcdata->quest_curr = ch->pcdata->queststatus; 
 	if ( ch->pcdata->area )
 		do_loadarea (ch , "" );
 
