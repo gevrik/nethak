@@ -880,13 +880,14 @@ void do_rstat( CHAR_DATA *ch, char *argument )
 	location->area ? location->area->filename : "None????" );
 
     ch_printf( ch,
-	"Vnum: %ld.  Sector: %d.  Light: %d.  TeleDelay: %d.  TeleVnum: %ld  Tunnel: %d.\n\r",
+	"Vnum: %ld.  Sector: %d.  Light: %d.  TeleDelay: %d.  TeleVnum: %ld  Tunnel: %d Seccode: %d\n\r",
 	location->vnum,
 	location->sector_type,
 	location->light,
 	location->tele_delay,
 	location->tele_vnum,
-	location->tunnel );
+	location->tunnel,
+	location->seccode );
 
     ch_printf( ch, "Room flags: %s\n\r",
 	flag_string(location->room_flags, r_flags) );

@@ -458,6 +458,9 @@ void fwrite_char( CHAR_DATA *ch, FILE *fp )
 		ch->pcdata->killed[sn].count );
     }
 
+	if ( ch->pcdata->queststatus )
+	  fprintf( fp, "Quest      %d\n",	ch->pcdata->queststatus	);
+
     fprintf( fp, "End\n\n" );
     return;
 }
@@ -1179,6 +1182,10 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload )
 		fMatch = TRUE;
 		break;
 	    }
+	    break;
+
+	case 'Q':
+	    KEY( "Quest", ch->pcdata->queststatus, fread_number( fp ) );
 	    break;
 
 	case 'R':

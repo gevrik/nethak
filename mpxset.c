@@ -1041,7 +1041,7 @@ if ( !str_cmp( arg2, "makefw" ) )
 	victim->pcdata->learned[gsn_makeshield] = 20;
 	return;
     }
-
+/*
 if ( !str_cmp( arg2, "inquire" ) )
     {
 	if ( IS_NPC(victim) )
@@ -1073,7 +1073,7 @@ if ( !str_cmp( arg2, "slicebank" ) )
 	victim->pcdata->learned[gsn_slicebank] = 10;
 	return;
     }
-
+*/
 if ( !str_cmp( arg2, "climb" ) )
     {
 	if ( IS_NPC(victim) )
