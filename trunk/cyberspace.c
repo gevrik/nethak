@@ -97,11 +97,9 @@ void do_connect( CHAR_DATA *ch, char *argument )
     char arg[MAX_INPUT_LENGTH];
     char arg1[MAX_INPUT_LENGTH];
     char arg2[MAX_INPUT_LENGTH];
-    //int seccode;
+
     PLANET_DATA * planet;
-    //bool pfound = FALSE;
     ROOM_INDEX_DATA * room;
-    //ROOM_INDEX_DATA * target_room;
     ROOM_INDEX_DATA * in_room;
     bool rfound = FALSE;
 
@@ -114,6 +112,8 @@ void do_connect( CHAR_DATA *ch, char *argument )
 	default:
 
 	in_room = ch->in_room;
+	room = find_location( ch, arg1 );
+
 
 	    if ( ( room = find_location( ch, arg1 ) ) == in_room )
 	    {
@@ -121,6 +121,12 @@ void do_connect( CHAR_DATA *ch, char *argument )
 		send_to_char( "&RConnection already established.\n\r", ch );
 		return;
     
+	    }
+
+	    if ( !IS_SET( room->room_flags, ROOM_CAN_LAND ) )
+	    {
+	  	send_to_char( "&R> you need to connect to an io node\n\r", ch );
+		return;
 	    }
 
     if ( ch->fighting )
@@ -157,6 +163,7 @@ void do_connect( CHAR_DATA *ch, char *argument )
 		{
 			if ( IS_SET( room->room_flags , ROOM_CAN_LAND ) && !str_prefix( argument , room->name) )
 			{
+
 			rfound = TRUE;
 			//target_room = room->vnum;
 			break;

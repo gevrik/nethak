@@ -908,7 +908,7 @@ struct	smaug_affect
 #define MOB_VNUM_FISH			13
 #define MOB_VNUM_CITIZEN		14
 #define MOB_VNUM_SUPPLIER 		15
-#define MOB_VNUM_WAITER 		16
+#define MOB_VNUM_WAITER 		32
 #define MOB_VNUM_CONTROLLER		17
 #define MOB_VNUM_BARTENDER		18
 #define MOB_VNUM_MECHANIC		19
