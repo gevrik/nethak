@@ -170,7 +170,7 @@ void reset_all( )
              vnum = MOB_VNUM_SUPPLIER;
         if ( IS_SET(pRoomIndex->room_flags, ROOM_PAWN ) )
              vnum = MOB_VNUM_PAWNER;
-        if ( IS_SET(pRoomIndex->room_flags, ROOM_RESTAURANT ) )
+        if ( IS_SET(pRoomIndex->room_flags, ROOM_HOTEL ) )
              vnum = MOB_VNUM_WAITER;
         if ( IS_SET(pRoomIndex->room_flags, ROOM_GARAGE ) )
              vnum = MOB_VNUM_MECHANIC;
@@ -182,8 +182,8 @@ void reset_all( )
              vnum = MOB_VNUM_TECHNICIAN;
         if ( IS_SET(pRoomIndex->room_flags, ROOM_EMPLOYMENT ) )
              vnum = MOB_VNUM_JOB_OFFICER;
-        if ( IS_SET(pRoomIndex->room_flags, ROOM_INFO ) )
-             vnum = 32;
+        //if ( IS_SET(pRoomIndex->room_flags, ROOM_INFO ) )
+        //     vnum = 32;
         
         if ( vnum > 0 )
         {

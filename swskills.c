@@ -2807,26 +2807,27 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
    if ( argument[0] == '\0' )
    {
 	send_to_char( "> syntax: MODIFY  <node type>  <new node name>\n\r", ch );
-	send_to_char( "<node type> may be one of the following:\n\r\n\r", ch );
+	send_to_char( " <node type> may be one of the following:\n\r\n\r", ch );
+	send_to_char( " (commands costs 500 credits unless listed otherwise.\n\r\n\r", ch );
 	
 	send_to_char( "database     - generates resources\n\r", ch );
 	send_to_char( "subserver    - supports terminals\n\r", ch );
 	send_to_char( "terminal     - generates funds\n\r", ch );	
 	//send_to_char( "platform     - ships land here\n\r", ch );
 	//send_to_char( "shipyard     - ships are built here\n\r", ch );
-	send_to_char( "inside       - somewhere inside\n\r", ch );
+	//send_to_char( "inside       - somewhere inside\n\r", ch );
 	//send_to_char( "house        - may be used as a private node\n\r", ch );
-	send_to_char( "datamine     - dug out tunnel\n\r", ch );
-	send_to_char( "info         - message and information node\n\r", ch );
-	send_to_char( "mail         - mail node\n\r", ch );
-	send_to_char( "logout       - users can leave game here\n\r", ch );
+	//send_to_char( "datamine     - dug out tunnel\n\r", ch );
+	//send_to_char( "info         - message and information node\n\r", ch );
+	//send_to_char( "mail         - mail node\n\r", ch );
+	send_to_char( "agent        - users can get jobs here\n\r", ch );
 	send_to_char( "trade        - users can sell resources\n\r", ch );
 	send_to_char( "supply       - supply node\n\r", ch );
 	send_to_char( "pawn         - will trade useful code\n\r", ch );
-	//send_to_char( "restaurant   - food is bought here\n\r", ch );
+	send_to_char( "coding	    - users can code classes here\n\r", ch );
 	//send_to_char( "bar          - liquor is sold here\n\r", ch );
 	//send_to_char( "control      - control tower for patrol ships\n\r", ch );
-	send_to_char( "firewall     - generates ICE\n\r", ch );
+	send_to_char( "firewall     - generates ICE [Cost: 20,000]\n\r", ch );
 	//send_to_char( "garage       - vehicles are built here\n\r", ch );
 	send_to_char( "bank         - banking node\n\r", ch );
 	send_to_char( "employment   - job office\n\r", ch );
@@ -2921,7 +2922,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
       strcat( buf , "&Y.&Cbank" );
       strcpy( bufa , "a bank node.\n\r" );
    }
-   else if ( !str_cmp( argument, "logout" ) )
+   else if ( !str_cmp( argument, "agent" ) )
    {
       location->area->planet->citysize++;
       location->sector_type = SECT_INSIDE;
@@ -2929,8 +2930,8 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
       SET_BIT( location->room_flags , ROOM_SAFE );
       SET_BIT( location->room_flags , ROOM_NO_MOB );
       strcpy( buf , ch->name );
-      strcat( buf , "&Y.&Clogout" );
-      strcpy( bufa , "a logout node.\n\r" );
+      strcat( buf , "&Y.&Cagent" );
+      strcpy( bufa , "an agent node.\n\r" );
    }
    else if ( !str_cmp( argument, "trade" ) )
    {
@@ -2961,6 +2962,17 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
       strcpy( buf , ch->name );
       strcat( buf , "&Y.&Cpawn" );
       strcpy( bufa , "a pawn node.\n\r" );
+   }
+
+   else if ( !str_cmp( argument, "coding" ) )
+   {
+      location->area->planet->citysize++;
+      location->sector_type = SECT_INSIDE;
+      SET_BIT( location->room_flags , ROOM_SAFE );
+      SET_BIT( location->room_flags , ROOM_RESTAURANT );
+      strcpy( buf , ch->name );
+      strcat( buf , "&Y.&Ccoding" );
+      strcpy( bufa , "a coding node.\n\r" );
    }
 
    else if ( !str_cmp( argument, "firewall" ) )

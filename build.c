@@ -46,8 +46,8 @@ char *	const	r_flags	[] =
 {
 "dark", "reserved", "nomob", "indoors", "can_land", "garage", "control",
 "trade", "bank", "r9", "safe", "mail", "information", "r13",
-"shipyard", "barracks", "r16", "no_edit", "r18", "restaurant",
-"plr_home", "empty_home", "r22", "hotel", "nofloor", "pawn", "supply",
+"shipyard", "barracks", "r16", "no_edit", "r18", "coding",
+"plr_home", "empty_home", "r22", "agent", "nofloor", "pawn", "supply",
 "bar", "employment", "spacecraft", "recruit", "auction"
 };
 
@@ -3352,7 +3352,7 @@ void do_redit( CHAR_DATA *ch, char *argument )
            send_to_char( "private, safe, petshop, norecall, donation, nodropall, silence,\n\r", ch );
            send_to_char( "logspeach, nodrop, clanstoreroom, plr_home, empty_home, teleport\n\r", ch );
            send_to_char( "nofloor\n\r", ch );
-           send_to_char( "spacecraft, auction, no_drive, can_land, can_fly, hotel\n\r", ch );
+           send_to_char( "spacecraft, auction, no_drive, can_land, can_fly, coding, agent\n\r", ch );
            return;
 	}
 	while ( argument[0] != '\0' )

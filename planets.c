@@ -745,9 +745,9 @@ void do_makeplanet( CHAR_DATA *ch, char *argument )
 	     else if ( rnum == 18 )
 	     {
 	        //strcpy( buf , planet->name );
-	        strcpy( buf , "logout" );
+	        strcpy( buf , "agent" );
 	        location->name = STRALLOC( buf );
-                strcpy( buf , "you can safely log out here.\n\r" );
+                strcpy( buf , "you can get missions here.\n\r" );
 	        location->description = STRALLOC(buf);
              	location->sector_type = SECT_INSIDE;
 		SET_BIT( location->room_flags , ROOM_INDOORS );
