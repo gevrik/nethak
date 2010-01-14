@@ -656,6 +656,7 @@ void do_makeplanet( CHAR_DATA *ch, char *argument )
     char filename[MAX_STRING_LENGTH];
     char pname[MAX_STRING_LENGTH];
     char * description = NULL;
+    char * owner = NULL;
     bool destok = TRUE;
     int rnum, sector, px, py, pz;
     ROOM_INDEX_DATA *location;
@@ -700,11 +701,14 @@ void do_makeplanet( CHAR_DATA *ch, char *argument )
 	     location->area = pArea;
 	     STRFREE( location->description );
 	     STRFREE( location->name );
+	     STRFREE( location->owner );
+
+	     location->owner = STRALLOC( "government" );
 
          if ( rnum == 12 )
 	     {
 	        location->name = STRALLOC( "supply" );
-                strcpy( buf , "this is where you can buy and sell.\n\r" );
+                strcpy( buf , "the city grid's public supply node.\n\r" );
 	        location->description = STRALLOC(buf);
              	location->sector_type = SECT_INSIDE;
 		SET_BIT( location->room_flags , ROOM_INDOORS );
@@ -720,7 +724,7 @@ void do_makeplanet( CHAR_DATA *ch, char *argument )
 	     {
 	        strcpy( buf , "lobby" );
 	        location->name = STRALLOC( buf );
-                strcpy( buf , "the system's lobby node.\n\r" );
+                strcpy( buf , "the city grid's public lobby node.\n\r" );
 	        location->description = STRALLOC(buf);
              	location->sector_type = SECT_INSIDE;
 		SET_BIT( location->room_flags , ROOM_INDOORS );
@@ -733,7 +737,7 @@ void do_makeplanet( CHAR_DATA *ch, char *argument )
 	     else if ( rnum == 14 )
 	     {
 	        location->name = STRALLOC( "io" );
-                strcpy( buf , "this is where you connect or disconnect.\n\r" );
+                strcpy( buf , "the city grid's main io node.\n\r" );
 	        location->description = STRALLOC(buf);
              	location->sector_type = SECT_CITY;
 		SET_BIT( location->room_flags , ROOM_SHIPYARD );
@@ -747,7 +751,7 @@ void do_makeplanet( CHAR_DATA *ch, char *argument )
 	        //strcpy( buf , planet->name );
 	        strcpy( buf , "agent" );
 	        location->name = STRALLOC( buf );
-                strcpy( buf , "you can get missions here.\n\r" );
+                strcpy( buf , "the city grid's public agent node.\n\r" );
 	        location->description = STRALLOC(buf);
              	location->sector_type = SECT_INSIDE;
 		SET_BIT( location->room_flags , ROOM_INDOORS );
@@ -762,7 +766,7 @@ void do_makeplanet( CHAR_DATA *ch, char *argument )
 	        //strcpy( buf , planet->name );
 	        strcpy( buf , "employment" );
             location->name = STRALLOC( buf );
-            strcpy( buf , "get jobs here.\n\r" );
+            strcpy( buf , "the city grid's public employment node.\n\r" );
 	        location->description = STRALLOC(buf);
             location->sector_type = SECT_INSIDE;
 		SET_BIT( location->room_flags , ROOM_EMPLOYMENT );

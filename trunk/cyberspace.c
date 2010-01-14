@@ -123,12 +123,6 @@ void do_connect( CHAR_DATA *ch, char *argument )
     
 	    }
 
-	    if ( !IS_SET( room->room_flags, ROOM_CAN_LAND ) )
-	    {
-	  	send_to_char( "&R> you need to connect to an io node\n\r", ch );
-		return;
-	    }
-
     if ( ch->fighting )
     {
 	send_to_char( "> you cannot connect in combat\n\r", ch );
@@ -148,7 +142,11 @@ void do_connect( CHAR_DATA *ch, char *argument )
 	   send_to_char( "> specify <system>\n\r",	ch );
            return;
         }
-
+	    if ( arg1[0] != '\0' && !IS_SET( room->room_flags, ROOM_CAN_LAND ) )
+	    {
+	  	send_to_char( "&R> you need to connect to an io node\n\r", ch );
+		return;
+	    }
 	planet = get_planet( arg );
 
 	if ( !planet )

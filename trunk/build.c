@@ -3195,7 +3195,7 @@ void do_redit( CHAR_DATA *ch, char *argument )
 	send_to_char( "  name desc ed rmed\n\r",			ch );
 	send_to_char( "  exit bexit exdesc exflags exname exkey\n\r",	ch );
 	send_to_char( "  flags sector teledelay televnum tunnel\n\r",	ch );
-	send_to_char( "  seccode exdistance\n\r",			ch );
+	send_to_char( "  seccode exdistance level owner\n\r",			ch );
 	return;
     }
 
@@ -3303,6 +3303,32 @@ void do_redit( CHAR_DATA *ch, char *argument )
 	}
 	location->seccode = atoi(argument);
 	send_to_char( "code set.\n\r", ch );
+	return;
+    }
+
+    if ( !str_cmp( arg, "owner" ) )
+    {
+	if ( !argument || argument[0] == '\0' )
+	{
+	   send_to_char( "sets the owner for this node\n\r", ch );
+	   send_to_char( "syntax: redit owner <name>\n\r", ch );
+	   return;
+	}
+	location->owner = argument;
+	send_to_char( "owner set.\n\r", ch );
+	return;
+    }
+
+    if ( !str_cmp( arg, "level" ) )
+    {
+	if ( !argument || argument[0] == '\0' )
+	{
+	   send_to_char( "sets the security level for this node\n\r", ch );
+	   send_to_char( "syntax: redit level <value>\n\r", ch );
+	   return;
+	}
+	location->level = atoi(argument);
+	send_to_char( "level set.\n\r", ch );
 	return;
     }
 
@@ -4677,13 +4703,15 @@ void fold_area( AREA_DATA *tarea, char *filename, bool install )
 	fprintf( fpout, "#%ld\n",	vnum				);
 	fprintf( fpout, "%s~\n",	room->name			);
 	fprintf( fpout, "%s~\n",	strip_cr( room->description )	);
-	if ( (room->tele_delay > 0 && room->tele_vnum > 0) || room->tunnel > 0 || room->seccode > 0 )
-	  fprintf( fpout, "0 %d %d %d %ld %d %d\n",	room->room_flags,
+	fprintf( fpout, "%s~\n",	room->owner			);
+	if ( (room->tele_delay > 0 && room->tele_vnum > 0) || room->tunnel > 0 || room->seccode > 0 || room->level > 0 )
+	  fprintf( fpout, "0 %d %d %d %ld %d %d %d\n",	room->room_flags,
 						room->sector_type,
 						room->tele_delay,
 						room->tele_vnum,
 						room->tunnel,
-						room->seccode	);
+						room->seccode,
+						room->level );
 	else
 	  fprintf( fpout, "0 %d %d\n",	room->room_flags,
 					room->sector_type	);

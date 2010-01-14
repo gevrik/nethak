@@ -171,7 +171,7 @@ void reset_all( )
         if ( IS_SET(pRoomIndex->room_flags, ROOM_PAWN ) )
              vnum = MOB_VNUM_PAWNER;
         if ( IS_SET(pRoomIndex->room_flags, ROOM_HOTEL ) )
-             vnum = 32;
+             vnum = MOB_VNUM_WAITER;
         if ( IS_SET(pRoomIndex->room_flags, ROOM_GARAGE ) )
              vnum = MOB_VNUM_MECHANIC;
         if ( IS_SET(pRoomIndex->room_flags, ROOM_CONTROL ) )
@@ -213,17 +213,22 @@ void reset_all( )
 	    	if ( ( IS_SET(pRoomIndex->room_flags, ROOM_NOPEDIT) && vnum == MOB_VNUM_TRADER ) 
 	    	||  vnum == MOB_VNUM_SUPPLIER )
 	        {
-      		   if ( vnum != MOB_VNUM_SUPPLIER || number_bits(1) == 0 ) 
+      		   /*
+	    		if ( vnum != MOB_VNUM_SUPPLIER || number_bits(1) == 0 )
       		   {
+
       		     if ( !(pObjIndex = get_obj_index(OBJ_VNUM_LIGHT)) )
       			{
         		   bug( "Reset_all: Missing default light (%d)", OBJ_VNUM_LIGHT );
       			   return;
       			}
-                     obj = create_object(pObjIndex, 1);
+
+					 obj = create_object(pObjIndex, 1);
                      SET_BIT(obj->extra_flags, ITEM_INVENTORY);
                      obj = obj_to_char(obj, mob);
                    }
+      		   */
+
       		   if ( vnum != MOB_VNUM_SUPPLIER || number_bits(1) == 0 ) 
       		   {
       		     if ( !(pObjIndex = get_obj_index(OBJ_VNUM_COMLINK)) )
@@ -235,6 +240,8 @@ void reset_all( )
                      SET_BIT(obj->extra_flags, ITEM_INVENTORY);
                      obj = obj_to_char(obj, mob);
                    }
+
+      		   /*
                    if ( vnum != MOB_VNUM_SUPPLIER || number_bits(1) == 0 ) 
       		   {
         	     if ( !(pObjIndex = get_obj_index(OBJ_VNUM_CANTEEN)) )
@@ -246,7 +253,9 @@ void reset_all( )
                      SET_BIT(obj->extra_flags, ITEM_INVENTORY);
                      obj = obj_to_char(obj, mob);
                    }
-      		   if ( vnum != MOB_VNUM_SUPPLIER || number_bits(1) == 0 ) 
+				*/
+
+                   if ( vnum != MOB_VNUM_SUPPLIER || number_bits(1) == 0 )
       		   {
                      if ( !(pObjIndex = get_obj_index(OBJ_VNUM_SHOVEL)) )
       			{
@@ -313,7 +322,7 @@ void reset_all( )
                      obj = create_object(pObjIndex, 1);
                      obj = obj_to_char(obj, mob);
                      SET_BIT(obj->extra_flags, ITEM_INVENTORY);
-	           }
+                   }
 	        }
 	    
 	    
@@ -536,6 +545,7 @@ void reset_all( )
                       vnum = OBJ_VNUM_HEMP;
                    break;
 
+                   /*
                 case SECT_FARMLAND:
                    if ( anumber == 0 )
                       vnum = OBJ_VNUM_FRUIT;
@@ -546,6 +556,7 @@ void reset_all( )
                    else
                       vnum = OBJ_VNUM_PLANT;
                    break;
+                   */
                    
                 case SECT_FOREST:
                 case SECT_BRUSH:
