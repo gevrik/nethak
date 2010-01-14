@@ -1052,7 +1052,7 @@ void do_enlist( CHAR_DATA *ch, char *argument )
 
 	if ( ch->pcdata->clan )
 	{
-		ch_printf( ch , "> you cannot join another organization right now\n\r", ch->pcdata->clan->name );
+		send_to_char( "> you already belong to a clan\n\r", ch );
 		return;
 	}
 
@@ -1088,6 +1088,7 @@ void do_enlist( CHAR_DATA *ch, char *argument )
 			
    			nRoom->name = STRALLOC( buf );
    			nRoom->description = STRALLOC ( "use ENTER command to leave to system lobby.\n\ruse CONNECT to leave to specified node.\n\ruse BRIDGE commands to secure node.\n\r" );
+   			nRoom->owner = STRALLOC( ch->name );
    			nRoom->sector_type = SECT_DUNNO;
    			SET_BIT( nRoom->room_flags , ROOM_NO_MOB );
 			//SET_BIT( nRoom->room_flags , ROOM_CAN_LAND );
@@ -1122,6 +1123,7 @@ void do_enlist( CHAR_DATA *ch, char *argument )
 			
    			lRoom->name = STRALLOC( bufa );
    			lRoom->description = STRALLOC ( "site lobby.\n\ruse ENTER command to leave to system lobby.\n\r" );
+   			lRoom->owner = STRALLOC( ch->name );
    			lRoom->sector_type = SECT_DUNNO;
    			SET_BIT( lRoom->room_flags , ROOM_NO_MOB );
 			SET_BIT( lRoom->room_flags , ROOM_CAN_LAND );
@@ -1169,6 +1171,7 @@ void do_enlist( CHAR_DATA *ch, char *argument )
 			
    			cRoom->name = STRALLOC( bufb );
    			cRoom->description = STRALLOC ( "database node.\n\ruse CONSTRUCT commands to build.\n\r" );
+   			cRoom->owner = STRALLOC( ch->name );
    			cRoom->sector_type = SECT_DUNNO;
    
    			xit6 = make_exit( cRoom , lRoom , DIR_SOUTH );

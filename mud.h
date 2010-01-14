@@ -2173,7 +2173,9 @@ struct	room_index_data
     long		tele_vnum;
     sh_int		tele_delay;
     sh_int		tunnel;
-    int			seccode;		     /* max people that will fit */
+    int			seccode;
+    char * 		owner;
+    sh_int		level;
 };
 
 /*

@@ -257,6 +257,13 @@ void do_mp_offer_agent( CHAR_DATA *ch, char *argument )
 
 //	ch_printf( victim, "DEBUG: clan: %s tclan: %s\n\r", clan->atwar, tclan->name );
 
+	if ( !victim->pcdata->clan )
+	{
+		do_say( ch , "You do not belong to a clan." );
+		return;
+	}
+
+
 	if( victim->pcdata->clan->name != planet->governed_by->name )
        {
           do_say( ch , "I only offer jobs to members of my organization." );

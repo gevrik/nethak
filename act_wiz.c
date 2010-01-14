@@ -889,6 +889,11 @@ void do_rstat( CHAR_DATA *ch, char *argument )
 	location->tunnel,
 	location->seccode );
 
+    ch_printf( ch,
+	"Level: %d.  Owner: %s.\n\r",
+	location->level,
+	location->owner );
+
     ch_printf( ch, "Room flags: %s\n\r",
 	flag_string(location->room_flags, r_flags) );
     ch_printf( ch, "Description:\n\r%s", location->description );

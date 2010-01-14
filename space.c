@@ -1221,7 +1221,7 @@ void do_starsystems( CHAR_DATA *ch, char *argument )
 
     if ( !count )
     {
-        send_to_char( "There are no starsystems currently formed.\n\r", ch );
+        send_to_char( "There are no regions formed.\n\r", ch );
 	return;
     }
 }

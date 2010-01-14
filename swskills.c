@@ -91,7 +91,7 @@ void do_makeblade( CHAR_DATA *ch, char *argument )
 
                 if ( !checkbatt )
                 {
-                   send_to_char( "&R> you need an utility subroutine\n\r", ch);
+                   send_to_char( "&R> you need an utility patch\n\r", ch);
                    return;
                 }
                 
@@ -3134,6 +3134,7 @@ void do_construction ( CHAR_DATA *ch , char *argument )
    STRFREE( nRoom->description );
    nRoom->name = STRALLOC( "raw" );
    nRoom->description = STRALLOC ( "use MODIFY command to customize node\n\r" );
+   nRoom->owner = STRALLOC( ch->name );
    nRoom->sector_type = SECT_DUNNO;
    SET_BIT( nRoom->room_flags , ROOM_NO_MOB );
    
