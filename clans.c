@@ -1108,7 +1108,8 @@ void do_enlist( CHAR_DATA *ch, char *argument )
       			nRoom->area->planet->citysize++;
       			nRoom->sector_type = SECT_INSIDE;
       			SET_BIT( nRoom->room_flags , ROOM_PLR_HOME );
-			SET_BIT( nRoom->room_flags , ROOM_HOTEL );
+      			SET_BIT( location->room_flags , ROOM_NOPEDIT );
+      			//SET_BIT( nRoom->room_flags , ROOM_HOTEL );
 
 //lobbyroom
 

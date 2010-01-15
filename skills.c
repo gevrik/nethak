@@ -2062,7 +2062,7 @@ void do_recall( CHAR_DATA *ch, char *argument )
 	stop_fighting( ch, TRUE );
     }
 
-    act( AT_ACTION, "> $n disappears in a swirl of the Force", ch, NULL, NULL, TO_ROOM );
+    act( AT_ACTION, "> $n disappears.", ch, NULL, NULL, TO_ROOM );
     char_from_room( ch );
     char_to_room( ch, location );
     if ( ch->mount )
@@ -2070,7 +2070,7 @@ void do_recall( CHAR_DATA *ch, char *argument )
 	char_from_room( ch->mount );
 	char_to_room( ch->mount, location );
     }
-    act( AT_ACTION, "> $n appears in a swirl of the Force", ch, NULL, NULL, TO_ROOM );
+    act( AT_ACTION, "> $n materializes in the node", ch, NULL, NULL, TO_ROOM );
     do_look( ch, "auto" );
 
     return;

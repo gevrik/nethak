@@ -719,7 +719,7 @@ void do_goto( CHAR_DATA *ch, char *argument )
          if (ch->pcdata && ch->pcdata->bamfin[0] != '\0')
              act( AT_IMMORT, "$T", ch, NULL, ch->pcdata->bamfin ,  TO_ROOM );
          else
-             act( AT_IMMORT, "$n $T", ch, NULL, "enters in a swirl of the Force.",  TO_ROOM );
+             act( AT_IMMORT, "$n $T", ch, NULL, "materializes in the node.",  TO_ROOM );
    }
 
     do_look( ch, "auto" );

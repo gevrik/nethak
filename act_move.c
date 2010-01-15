@@ -1384,7 +1384,7 @@ void do_lock( CHAR_DATA *ch, char *argument )
 	if ( pexit->key < 0 )
 	    { send_to_char( "> it cannot be locked\n\r",     ch ); return; }
 	if ( atoi(argument) != pexit->key )
-	    { send_to_char( "> wrong combination\n\r",       ch ); return; }
+	    { send_to_char( "> wrong code\n\r",       ch ); return; }
 	if ( IS_SET(pexit->exit_info, EX_LOCKED) )
 	    { send_to_char( "> it is already locked\n\r",    ch ); return; }
 
@@ -1408,7 +1408,7 @@ void do_lock( CHAR_DATA *ch, char *argument )
 	if ( obj->value[2] < 0 )
 	    { send_to_char( "> it cannot be locked\n\r",     ch ); return; }
 	if ( atoi(argument) != obj->value[2] )
-	    { send_to_char( "> wrong combination\n\r",       ch ); return; }
+	    { send_to_char( "> wrong code\n\r",       ch ); return; }
 	if ( IS_SET(obj->value[1], CONT_LOCKED) )
 	    { send_to_char( "> it is already locked\n\r",    ch ); return; }
 
