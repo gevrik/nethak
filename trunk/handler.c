@@ -2027,8 +2027,8 @@ bool can_see( CHAR_DATA *ch, CHAR_DATA *victim )
 	if ( IS_AFFECTED(ch, AFF_BLIND) )
 	  return FALSE;
 
-	if ( room_is_dark( ch->in_room ) && !IS_AFFECTED(ch, AFF_INFRARED) )
-	  return FALSE;
+	//if ( room_is_dark( ch->in_room ) && !IS_AFFECTED(ch, AFF_INFRARED) )
+	//  return FALSE;
 
 	if ( IS_AFFECTED(victim, AFF_HIDE)
 	&&   !IS_AFFECTED(ch, AFF_DETECT_HIDDEN)

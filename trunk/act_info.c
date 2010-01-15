@@ -407,10 +407,11 @@ void show_char_to_char_0( CHAR_DATA *victim, CHAR_DATA *ch )
     if ( (!IS_NPC(victim) && IS_SET(victim->act, PLR_WIZINVIS))
       || (IS_NPC(victim) && IS_SET(victim->act, ACT_MOBINVIS)) )
     {
-        if (!IS_NPC(victim))
+        if (!IS_NPC(victim) ){
 	sprintf( buf1,"[Invis %d] ", victim->pcdata->wizinvis );
-        else sprintf( buf1,"[Mobinvis %d] ", victim->mobinvis);
-	strcat( buf, buf1 );
+        }
+        else { sprintf( buf1,"[Mobinvis %d] ", victim->mobinvis);
+	strcat( buf, buf1 ); }
     }
     if ( IS_AFFECTED(victim, AFF_INVISIBLE)   ) strcat( buf, "[invis] "      );
     if ( IS_AFFECTED(victim, AFF_HIDE)        ) strcat( buf, "[hide] "       );
@@ -619,10 +620,10 @@ void show_char_to_char( CHAR_DATA *list, CHAR_DATA *ch )
 	if ( rch == ch )
 	    continue;
 
-	//if ( can_see( ch, rch ) )
-	//{
+	if ( can_see( ch, rch ) )
+	{
 	    show_char_to_char_0( rch, ch );
-	//}
+	}
 	//else if ( room_is_dark( ch->in_room )
 	//&&        IS_AFFECTED(rch, AFF_INFRARED ) )
 	//{
@@ -1464,7 +1465,7 @@ void do_exits( CHAR_DATA *ch, char *argument )
 	    {
 		if ( IS_SET(pexit->exit_info, EX_CLOSED) )
 		{
-		    sprintf( buf + strlen(buf), "&W%-5s - [closed]\n\r",
+		    sprintf( buf + strlen(buf), "&W%-5s - [codegate]\n\r",
 		    dir_name[pexit->vdir] );
 		}
 		else if ( IS_SET(pexit->exit_info, EX_WINDOW) )

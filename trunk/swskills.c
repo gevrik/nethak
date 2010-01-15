@@ -2743,7 +2743,6 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
  	return;
     }
 
-
    switch( ch->substate )
    {
 	default:
@@ -2755,6 +2754,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 		bug( "landscape: sub_room_desc: NULL ch->dest_buf", 0 );
 		location = ch->in_room;
 	  }
+
 	  STRFREE( location->description );
 	  location->description = copy_buffer( ch );
 	  stop_editing( ch );
@@ -2777,6 +2777,12 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
    {
 	send_to_char( "> you need to be part of an organization before you can do that\n\r", ch );
 	return;         
+   }
+
+   if( strcmp(location->owner, ch->name) )
+   {
+	send_to_char( "&R> this is not your node&w\n\r", ch );
+	return;
    }
 
    if ( (ch->pcdata && ch->pcdata->bestowments
@@ -3495,7 +3501,7 @@ void do_bridge ( CHAR_DATA *ch , char *argument )
        evnum = atoi( argument );
        if ( (toroom = get_room_index( evnum )) == NULL )
        {
-            ch_printf( ch, "> non-existant room: %d\n\r", evnum );
+            ch_printf( ch, "> non-existent room: %d\n\r", evnum );
             return;
        }
        if ( ch->in_room->area != toroom->area )
@@ -3549,12 +3555,19 @@ void do_bridge ( CHAR_DATA *ch , char *argument )
 
        if ( ekey < 1 )
        {
-    	   send_to_char( "> invalid code\n\r", ch );
+    	   send_to_char( "> invalid code [must be a positive number]\n\r", ch );
     	   return;
        }
 
-       ch_printf( ch , "> code is now: %d" , ekey );
+       ch_printf( ch , "> code is now: %d\n\r" , ekey );
        xit->key = ekey;
+
+       texit = get_exit_to( xit->to_room, rev_dir[edir], ch->in_room->vnum );
+
+       if ( texit )
+       {
+          texit->key = ekey;
+       }
 
    }
    else if ( !str_cmp( arg2 , "door" ) )
@@ -3616,6 +3629,8 @@ void do_bridge ( CHAR_DATA *ch , char *argument )
    }
 
    ch->gold -= 250;
+
+   send_to_char( "> 250c spent\n\r", ch );
 
    for ( ll = 1 ; ll <= 20 ; ll++ )
        learn_from_success( ch , gsn_bridge );
