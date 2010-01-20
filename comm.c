@@ -865,6 +865,11 @@ void close_socket( DESCRIPTOR_DATA *dclose, bool force )
          && dclose->connected <= CON_NOTE_FINISH) )
     {
     	act( AT_ACTION, "> $n has lost $s link", ch, NULL, NULL, TO_ROOM );
+
+        char bufText[MAX_STRING_LENGTH];
+        sprintf( bufText , "> %s has lost link" , ch->name );
+        echo_to_all( AT_LBLUE , bufText , ECHOTAR_ALL );
+
     	ch->desc = NULL;
     }
 	else
@@ -1278,6 +1283,7 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
     char *pwdnew;
     char *p;
     //int sn;
+    int i;
     BAN_DATA *pban;
     bool fOld, chk;
     OBJ_DATA *obj;
@@ -1307,6 +1313,9 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 	    close_socket( d, FALSE );
 	    return;
 	}
+
+	 for(i = 0; argument[ i ]; i++)
+	    argument[i] = tolower(argument[ i ]);
 
 	argument[0] = UPPER(argument[0]);
 	if ( !check_parse_name( argument ) )
@@ -1821,10 +1830,12 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 
          }
     }
-
+    char bufText[MAX_STRING_LENGTH];
     act( AT_ACTION, "> $n has entered the game", ch, NULL, NULL, TO_ROOM );
+    sprintf( bufText , "> %s has logged in" , ch->name );
+    echo_to_all( AT_LBLUE , bufText , ECHOTAR_ALL );
     do_look( ch, "auto" );
-    //do_global_boards( ch, "" );
+    do_global_boards( ch, "" );
     ch->pcdata->board = &boards[DEFAULT_BOARD];
     mail_count(ch);
     break;

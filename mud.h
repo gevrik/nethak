@@ -3369,7 +3369,8 @@ int	fprintf		args( ( FILE *stream, const char *format, ... ) );
 #if 	defined(SYSV)
 */
 size_t 	fread		args( ( void *ptr, size_t size, size_t n,
-/*				FILE *stream ) );
+				FILE *stream ) );
+/*
 #else
 int	fread		args( ( void *ptr, int size, int n, FILE *stream ) );
 #endif

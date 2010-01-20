@@ -1927,7 +1927,7 @@ else
       ROOM_INDEX_DATA *room = victim->plr_home;
 
       STRFREE( room->name );
-      room->name = STRALLOC( "an empty node" );
+      room->name = STRALLOC( "unusedhome" );
 
       REMOVE_BIT( room->room_flags , ROOM_PLR_HOME );
       SET_BIT( room->room_flags , ROOM_EMPTY_HOME );

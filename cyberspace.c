@@ -21,7 +21,7 @@ void do_buyskill( CHAR_DATA *ch, char *argument )
     {
 	send_to_char( "> syntax: buyskill <skill>\n\r",	ch );
 	send_to_char( "> cost: 5,000c\n\r",	ch );
-	send_to_char( "> skills: aid, backstab, blades, blasters, codeblade, codeblaster, codecomlink, codecontainer, codedef, codelight, codeshield, codeutil, damboost, disguise, dodge, dualwield, firstaid, hide, peek, picklock, poisonmod, postguard, propaganda, quicktalk, reinforcements, second attack, steal, throw\n\r",	ch );
+	send_to_char( "> skills: aid, backstab, blades, blasters, codeblade, codeblaster, codecontainer, codedef, codeshield, codeutil, damboost, disguise, dodge, dualwield, firstaid, hide, peek, picklock, poisonmod, postguard, propaganda, quicktalk, reinforcements, second attack, sneak, steal, throw\n\r",	ch );
 	return;
     }
 
@@ -142,11 +142,7 @@ void do_connect( CHAR_DATA *ch, char *argument )
 	   send_to_char( "> specify <system>\n\r",	ch );
            return;
         }
-	    if ( arg1[0] != '\0' && !IS_SET( room->room_flags, ROOM_CAN_LAND ) )
-	    {
-	  	send_to_char( "&R> you need to connect to an io node\n\r", ch );
-		return;
-	    }
+
 	planet = get_planet( arg );
 
 	if ( !planet )
@@ -155,15 +151,15 @@ void do_connect( CHAR_DATA *ch, char *argument )
 	   return;
 	}
 
-	if ( arg1[0] != '\0' )
+	if ( atoi(arg1) != '\0' )
 	{
 		for ( room = planet->area->first_room ; room ; room = room->next_in_area )
 		{
-			if ( IS_SET( room->room_flags , ROOM_CAN_LAND ) && !str_prefix( argument , room->name) )
+			if ( IS_SET( room->room_flags , ROOM_CAN_LAND ) && ( atoi(arg1) == room->vnum ) )
 			{
 
 			rfound = TRUE;
-			//target_room = room->vnum;
+
 			break;
 			}
 		}

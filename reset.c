@@ -612,11 +612,11 @@ void reset_all( )
 		  else if ( anumber == 4 )
 		    vnum = OBJ_VNUM_METAL;
 		  else if ( anumber == 5 )
-		    vnum = OBJ_VNUM_HEMP;
+		    vnum = 31;
 		  else if ( anumber == 6 )
 		    vnum = OBJ_VNUM_RESIN;
 		  else if ( anumber == 7 )
-		    vnum = OBJ_VNUM_MUSHROOM;
+		    vnum = 31;
 		  else
 		    vnum = OBJ_VNUM_GOLD;
                    break;

@@ -63,12 +63,12 @@
 
 GLOBAL_BOARD_DATA boards[MAX_BOARD] =
 {
-    { "General",  	"General discussion",            0,     1,     "all", DEF_INCLUDE, 60, NULL, FALSE },
-    { "News",		"News of recent events",         0,     200, "all", DEF_NORMAL, 60, NULL, FALSE },
-    { "Questions",	"FAQ's, Questions, Help",        0,     1,     "all", DEF_NORMAL, 60, NULL, FALSE },
-    { "Announce", 	"Announcements from AI",		 0,     200, "all", DEF_NORMAL, 60, NULL, FALSE },
-    { "Immortal",   "AI discussion",		       200,	    200, "all", DEF_INCLUDE, 21, NULL, FALSE },
-    { "Personal", 	"Personal messages",	      	 0,     1,     "all", DEF_EXCLUDE,28, NULL, FALSE },
+    { "General",  	"General",            0,     1,     "all", DEF_INCLUDE, 60, NULL, FALSE },
+    { "News",		"News",         0,     200, "all", DEF_NORMAL, 60, NULL, FALSE },
+    { "Questions",	"Questions",        0,     1,     "all", DEF_NORMAL, 60, NULL, FALSE },
+    { "Announce", 	"Announce",		 0,     200, "all", DEF_NORMAL, 60, NULL, FALSE },
+    { "AI",   		"AI",		       200,	    200, "all", DEF_INCLUDE, 21, NULL, FALSE },
+    { "Personal", 	"Personal",	      	 0,     1,     "all", DEF_EXCLUDE,28, NULL, FALSE },
 };
 
 /* The prompt that the character is given after finishing a note with ~ or END */
@@ -279,15 +279,16 @@ void show_note_to_char (CHAR_DATA *ch, NOTE_DATA *note, int num)
              "&B(&W%4d&B) &W&W%s&w&B: &W%s&w\n\r"
              "&W&CDate&B:&W  %s\n\r"
              "&W&CTo&B:&W    %s\n\r"
-             "&B---------------------------------------------------------------------------&W\n\r"
+             "&B--------------------------------------------------&W\n\r"
              "&W%s\n\r"
-	     "&B---------------------------------------------------------------------------&W\n\r",
+    		 "&B--------------------------------------------------&W\n\r",
              num, note->sender, note->subject,
              note->date,
              note->to_list,
              note->text );
 
-    send_to_char( "&B---------------------------------------------------------------------------&W\n\r", ch );
+    send_to_char(
+    		"&B---------------------------------------------------&W\n\r", ch );
     send_to_char_color (buf,ch);
 }
 
@@ -786,13 +787,14 @@ void do_global_boards (CHAR_DATA *ch, char *argument)
 
         count = 1;
 	send_to_char("\n\r", ch );
-        send_to_char_color ("&B+-------------------------- &CGlobal Board System &B--------------------------+&W\n\r",ch);
+        send_to_char_color (""
+        		"&B+--------------- &CGlobal Board System&B ---------------+&W\n\r",ch);
         for (i = 0; i < MAX_BOARD; i++)
         {
             unread = unread_notes (ch,&boards[i]); /* how many unread notes? */
             if (unread != BOARD_NOACCESS)
             {
-                sprintf (buf, "&B| &W%2.2d&B) &W%-22.22s&B|&w &C%-32.32s&B| &CPosts&B: &W%s%2.2d &B|&W\n\r",
+                sprintf (buf, "&B| &W%2.2d&B) &W%-16.22s&B|&w &C%-16.32s&B| &CPosts&B: &W%s%2.2d &B|&W\n\r",
                          count, boards[i].short_name, boards[i].long_name, 
 			 unread ? "&G" : "&W", unread);
                 send_to_char_color (buf,ch);
@@ -800,7 +802,8 @@ void do_global_boards (CHAR_DATA *ch, char *argument)
             } /* if has access */
 
         } /* for each board */
-        send_to_char_color ("&B+-------------------------------------------------------------------------+&W\n\r",ch);
+        send_to_char_color (
+        		"&B+---------------------------------------------------+&W\n\r",ch);
 
         if( ch->pcdata->board == NULL )
             ch->pcdata->board = &boards[DEFAULT_BOARD];

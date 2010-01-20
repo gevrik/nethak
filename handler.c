@@ -1701,6 +1701,7 @@ OBJ_DATA *get_obj_here( CHAR_DATA *ch, char *argument )
 	return obj;
 
     return NULL;
+
 }
 
 
