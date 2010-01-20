@@ -286,13 +286,13 @@ void do_makeblaster( CHAR_DATA *ch, char *argument )
  
                 if ( !checkdura )
                 {
-                   send_to_char( "&R> you a blaster class\n\r", ch);
+                   send_to_char( "&R> you need a blaster class\n\r", ch);
                    return;
                 }
 
                 if ( !checkbatt )
                 {
-                   send_to_char( "&R> you need an utility subroutine\n\r", ch);
+                   send_to_char( "&R> you need an utility patch\n\r", ch);
                    return;
                 }
                 
@@ -852,7 +852,7 @@ void do_makejewelry( CHAR_DATA *ch, char *argument )
                 
                 if ( !checkmetal )
                 {
-                   send_to_char( "&R> you need a game class\n\r", ch);
+                   send_to_char( "&R> you need an application class\n\r", ch);
                    return;
                 }
 
@@ -1019,7 +1019,7 @@ void do_makearmor( CHAR_DATA *ch, char *argument )
                 
                 if ( !checkfab )
                 {
-                   send_to_char( "&R> you need some kind of code fragment\n\r", ch);
+                   send_to_char( "&R> you need some kind of defensive class\n\r", ch);
                    return;
                 }
  
@@ -1376,7 +1376,7 @@ void do_makecontainer( CHAR_DATA *ch, char *argument )
                 
                 if ( !checkfab )
                 {
-                   send_to_char( "&R> you need some sort of code fragment\n\r", ch);
+                   send_to_char( "&R> you need some sort of def class\n\r", ch);
                    return;
                 }
  
@@ -1417,7 +1417,7 @@ void do_makecontainer( CHAR_DATA *ch, char *argument )
     		DISPOSE( ch->dest_buf );
     		DISPOSE( ch->dest_buf_2 );
     		ch->substate = SUB_NONE;    		                                   
-    	        send_to_char("&R> you are interupted and fail to finish your work\n\r", ch);
+    	        send_to_char("&R> you are interrupted and fail to finish your work\n\r", ch);
     	        return;
     }
     
@@ -2933,8 +2933,6 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
       location->area->planet->citysize++;
       location->sector_type = SECT_INSIDE;
       SET_BIT( location->room_flags , ROOM_HOTEL );
-      SET_BIT( location->room_flags , ROOM_SAFE );
-      SET_BIT( location->room_flags , ROOM_NO_MOB );
       strcpy( buf , ch->name );
       strcat( buf , "&Y.&Cagent" );
       strcpy( bufa , "an agent node.\n\r" );
@@ -3447,7 +3445,7 @@ void do_bridge ( CHAR_DATA *ch , char *argument )
 	;
     else
     {
-	send_to_char( "> you need access to construct\n\r", ch );
+	send_to_char( "> you need access to bridge\n\r", ch );
 	return;
     }
 

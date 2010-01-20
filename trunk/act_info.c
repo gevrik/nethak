@@ -1540,16 +1540,16 @@ void do_time( CHAR_DATA *ch, char *argument )
 
     set_char_color( AT_YELLOW, ch );
     ch_printf( ch,
-	"> it is %d o'clock %s, %s, %d%s %s\n\r"
-        "> the game started up at:    %s\r"
+	//"> it is %d o'clock %s, %s, %d%s %s\n\r"
+        "> the game started up at:   %s\r"
         "> the system time (E.S.T.): %s\r"
         "> next reboot is set for:   %s\r",
 
-	(time_info.hour % 12 == 0) ? 12 : time_info.hour % 12,
-	time_info.hour >= 12 ? "pm" : "am",
-	day_name[day % 7],
-	day, suf,
-	month_name[time_info.month],
+	//(time_info.hour % 12 == 0) ? 12 : time_info.hour % 12,
+	//time_info.hour >= 12 ? "pm" : "am",
+	//day_name[day % 7],
+	//day, suf,
+	//month_name[time_info.month],
 	str_boot_time,
 	(char *) ctime( &current_time ),
 	reboot_time

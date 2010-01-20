@@ -50,6 +50,7 @@ void do_mp_offer_job( CHAR_DATA *ch, char *argument )
 {
     char        arg[MAX_INPUT_LENGTH];
     char        buf[MAX_STRING_LENGTH];
+    char        bufa;
     CHAR_DATA  *victim;
     PLANET_DATA * dPlanet = NULL;
     int pCount = 0;
@@ -113,18 +114,12 @@ void do_mp_offer_job( CHAR_DATA *ch, char *argument )
            if ( ++pCount == rCount )
                break;
        
-       if( !dPlanet || dPlanet == ch->in_room->area->planet || dPlanet == first_planet )
+       if( !dPlanet || dPlanet == ch->in_room->area->planet || dPlanet == first_planet || IS_SET( dPlanet->flags, PLANET_HIDDEN ) )
        {
           do_say( ch , "I have no jobs to offer you at this time!" );
           return;
        }
 
-	   if( IS_SET( dPlanet->flags, PLANET_HIDDEN ) )
-       {
-          do_say( ch , "I have no jobs to offer you at this time!" );
-          return;
-       }
-	
 	if(victim->pcdata->clan)
 	{
 
@@ -135,17 +130,19 @@ void do_mp_offer_job( CHAR_DATA *ch, char *argument )
 
 		if( nifty_is_name( clan->atwar,  tclan->name ) )
       		 {
-        	  do_say( ch , "I have no jobs to offer you at this time! [war]" );
+        	  do_say( ch , "I have no jobs to offer you at this time!" );
       		    return;
      		  }
 	}
-       sprintf( buf , "package %s" , dPlanet->name );
-       
-       if ( get_obj_world( ch, buf ) )
-       {
-          do_say( ch , "I have no jobs to offer you at this time!" );
-          return;
-       }
+
+    sprintf( buf , "package %s" , dPlanet->name );
+
+    //if ( get_obj_world( ch, buf ) )
+    	if ( get_obj_here( ch, buf ) )
+    {
+       do_say( ch , "Deliver the package that is lying in this node." );
+       return;
+    }
 
        obj = create_object( pObjIndex , 1 );
        STRFREE( obj->name );
@@ -279,9 +276,9 @@ void do_mp_offer_agent( CHAR_DATA *ch, char *argument )
 
        sprintf( buf , "virus %s" , dPlanet->name );
        
-       if ( get_obj_world( ch, buf ) )
+       if ( get_obj_here( ch, buf ) )
        {
-          do_say( ch , "I have no jobs to offer you at this time!" );
+          do_say( ch , "Deliver the virus that is stored in this node." );
           return;
        }
 

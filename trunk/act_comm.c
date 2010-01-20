@@ -1131,6 +1131,10 @@ void do_quit( CHAR_DATA *ch, char *argument )
     act( AT_BYE, "> $n has left cyberspace", ch, NULL, NULL, TO_ROOM );
     set_char_color( AT_GREY, ch);
 
+    char bufText[MAX_STRING_LENGTH];
+    sprintf( bufText , "> %s has quit" , ch->name );
+    echo_to_all( AT_LBLUE , bufText , ECHOTAR_ALL );
+
     sprintf( log_buf, "> %s has quit", ch->name );
     quitting_char = ch;
     save_char_obj( ch );
