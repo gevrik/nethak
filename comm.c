@@ -1834,8 +1834,8 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
     act( AT_ACTION, "> $n has entered the game", ch, NULL, NULL, TO_ROOM );
     sprintf( bufText , "> %s has logged in" , ch->name );
     echo_to_all( AT_LBLUE , bufText , ECHOTAR_ALL );
-    do_look( ch, "auto" );
     do_global_boards( ch, "" );
+    do_look( ch, "auto" );
     ch->pcdata->board = &boards[DEFAULT_BOARD];
     mail_count(ch);
     break;
