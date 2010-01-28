@@ -750,33 +750,33 @@ void reset_all( )
               switch( number_bits( 4 ) )
               {
                 default:
-                  mob->long_descr = STRALLOC( "communication program\n\r" );
+                  mob->long_descr = STRALLOC( "program [communication]\n\r" );
                 mob->gold = number_range( 10 , 20 );  
 		break;
 
                 case 0:
-                  mob->long_descr = STRALLOC( "entertainment program\n\r" );
+                  mob->long_descr = STRALLOC( "program [entertainment]\n\r" );
                   mob->gold = number_range( 20 , 50 );
                   break;
 
                 case 1:
-                  mob->long_descr = STRALLOC( "finance program\n\r" );
+                  mob->long_descr = STRALLOC( "program [finance]\n\r" );
 		  mob->gold = number_range( 20 , 100 );
                   break;
 
                 case 2:
-                  mob->long_descr = STRALLOC( "multimedia program\n\r" );
+                  mob->long_descr = STRALLOC( "program [multimedia]\n\r" );
 		mob->gold = number_range( 10 , 20 );  
                   break;
 
 
                 case 3:
-                  mob->long_descr = STRALLOC( "news program\n\r" );
+                  mob->long_descr = STRALLOC( "program [news]\n\r" );
                   mob->gold = number_range( 20 , 50 );
                   break;
                   
                 case 4:
-                  mob->long_descr = STRALLOC( "productivity program\n\r" );
+                  mob->long_descr = STRALLOC( "program [productivity]\n\r" );
                   mob->gold = number_range( 10 , 20 );  
                   break;
               }
@@ -784,33 +784,33 @@ void reset_all( )
               switch( number_bits( 3 ) )
               {
                 default:
-                  mob->long_descr = STRALLOC( "communication program\n\r" );
+                  mob->long_descr = STRALLOC( "program [communication]\n\r" );
                 mob->gold = number_range( 10 , 20 );  
 		break;
 
                 case 0:
-                  mob->long_descr = STRALLOC( "entertainment program\n\r" );
+                  mob->long_descr = STRALLOC( "program [entertainment]\n\r" );
                   mob->gold = number_range( 20 , 50 );
                   break;
 
                 case 1:
-                  mob->long_descr = STRALLOC( "finance program\n\r" );
+                  mob->long_descr = STRALLOC( "program [finance]\n\r" );
 		  mob->gold = number_range( 20 , 100 );
                   break;
 
                 case 2:
-                  mob->long_descr = STRALLOC( "multimedia program\n\r" );
+                  mob->long_descr = STRALLOC( "program [multimedia]\n\r" );
 		mob->gold = number_range( 10 , 20 );  
                   break;
 
 
                 case 3:
-                  mob->long_descr = STRALLOC( "news program\n\r" );
+                  mob->long_descr = STRALLOC( "program [news]\n\r" );
                   mob->gold = number_range( 20 , 50 );
                   break;
                   
                 case 4:
-                  mob->long_descr = STRALLOC( "productivity program\n\r" );
+                  mob->long_descr = STRALLOC( "program [productivity]\n\r" );
                   mob->gold = number_range( 10 , 20 );  
                   break;
               }

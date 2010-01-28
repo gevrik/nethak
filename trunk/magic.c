@@ -1038,7 +1038,7 @@ void do_cast( CHAR_DATA *ch, char *argument )
 	
 	if ( !IS_NPC(ch) && ch->mana < mana )
 	{
-	    send_to_char( "The force is not strong enough within you.\n\r", ch );
+	    send_to_char( "you need more energy.\n\r", ch );
 	    return;
 	}
 	if ( skill->participants <= 1 )
