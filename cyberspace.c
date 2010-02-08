@@ -176,8 +176,12 @@ void do_homerecall( CHAR_DATA *ch, char *argument )
 
 	if( !ch->plr_home )
 	{
-	send_to_char( "> you do not have a home node\n\r", ch );
-	return;
+		send_to_char( "> you connect to the straylight lobby\n\r", ch );
+		act(AT_GREEN, "> $n connects to straylight lobby", ch, NULL, NULL, TO_ROOM );
+		char_from_room( ch );
+	    char_to_room( ch, get_room_index( ROOM_VNUM_STRAY ) );
+		do_look( ch, "auto" );
+		return;
 	}
 
 	send_to_char( "> you connect to your home node\n\r", ch );
@@ -417,5 +421,193 @@ void do_coding( CHAR_DATA *ch, char *argument )
 
         return;
 }
+
+
+void do_decompile( CHAR_DATA *ch, char *argument )
+{
+    char arg[MAX_INPUT_LENGTH];
+    char arg2[MAX_INPUT_LENGTH];
+    char buf[MAX_STRING_LENGTH];
+    OBJ_INDEX_DATA *pObjIndex = NULL;
+    int level, chance;
+    bool checksew, checkfab;
+    OBJ_DATA *obj;
+    OBJ_DATA *material;
+    int value;
+
+    argument = one_argument( argument, arg );
+    //strcpy( arg2 , argument );
+
+
+    switch( ch->substate )
+    {
+    	default:
+
+    	    if ( !IS_SET( ch->in_room->room_flags, ROOM_RESTAURANT ) )
+    	    {
+    	  	send_to_char( "&R> you need to be in a coding node\n\r", ch );
+    		return;
+    	    }
+
+    		if ( str_cmp( arg, "def" )
+    		&& str_cmp( arg, "blaster" )
+    		&& str_cmp( arg, "blade" )
+    		&& str_cmp( arg, "function" )
+    		&& str_cmp( arg, "util" )
+    		&& str_cmp( arg, "patch" )
+    		&& str_cmp( arg, "app" ) )
+    		{
+        		send_to_char( "&R> you cannot decompile that, try:\n\r&w", ch);
+        		send_to_char( "&R> def, blaster, blade, function,\n\r&w", ch);
+        		send_to_char( "&R> util, app or patch\n\r&w", ch);
+        		return;
+    		}
+
+
+    	        checksew = FALSE;
+                checkfab = FALSE;
+
+                for ( obj = ch->last_carrying; obj; obj = obj->prev_content )
+                {
+                  if (obj->item_type == ITEM_FOOD || obj->item_type == ITEM_RESOURCE)
+                    checkfab = TRUE;
+                  if (obj->item_type == ITEM_OVEN)
+          	    checksew = TRUE;
+                }
+
+                if ( !checkfab )
+                {
+                   send_to_char( "&R> you need some sort of file\n\r", ch);
+                   return;
+                }
+
+                if ( !checksew )
+                {
+                   send_to_char( "&R> you need a compiler\n\r", ch);
+                   return;
+                }
+
+    	        chance = IS_NPC(ch) ? ch->top_level
+	                 : (int) (ch->pcdata->learned[gsn_spacecraft]);
+                if ( number_percent( ) < chance )
+    		{
+    		   send_to_char( "&G> you begin the long process of decompiling\n\r", ch);
+    		   act( AT_PLAIN, "> $n takes $s compiler as well as some code and begins to work", ch,
+		        NULL, argument , TO_ROOM );
+    		   add_timer ( ch , TIMER_DO_FUN , 10 , do_decompile , 1 );
+    		   ch->dest_buf = str_dup(arg);
+    		   return;
+	        }
+	        send_to_char("&R> you cannot figure out what to do\n\r",ch);
+	        learn_from_failure( ch, gsn_spacecraft );
+    	   	return;
+
+    	case 1:
+    		if ( !ch->dest_buf )
+    		     return;
+    		strcpy(arg, ch->dest_buf);
+    		DISPOSE( ch->dest_buf);
+    		break;
+
+    	case SUB_TIMER_DO_ABORT:
+    		DISPOSE( ch->dest_buf );
+    		ch->substate = SUB_NONE;
+    	        send_to_char("&R> you are interrupted and fail to finish your work\n\r", ch);
+    	        return;
+    }
+
+    ch->substate = SUB_NONE;
+
+    level = IS_NPC(ch) ? ch->top_level : (int) (ch->pcdata->learned[gsn_spacecraft]);
+
+    checksew = FALSE;
+    checkfab = FALSE;
+
+    for ( obj = ch->last_carrying; obj; obj = obj->prev_content )
+    {
+       if (obj->item_type == ITEM_OVEN)
+          checksew = TRUE;
+       if ((obj->item_type == ITEM_FOOD && checkfab == FALSE) || (obj->item_type == ITEM_RESOURCE && checkfab == FALSE))
+       {
+          checkfab = TRUE;
+          separate_obj( obj );
+          obj_from_char( obj );
+          material = obj;
+       }
+    }
+
+    if ( ( !checkfab ) || ( !checksew ) )
+    {
+       send_to_char( "&R> you could not decompile anything useful\n\r", ch);
+       learn_from_failure( ch, gsn_spacecraft );
+       return;
+    }
+
+    int afumble = number_range(0,5);
+
+    if ( afumble < 2 )
+    {
+       send_to_char( "&R> you could not decompile anything useful\n\r", ch);
+       learn_from_failure( ch, gsn_spacecraft );
+       return;
+    }
+
+    obj = material;
+
+	send_to_char( "&Y> you coded:\n\r\n\r", ch);
+
+	if ( !str_cmp( arg, "def" ) )
+			{
+			pObjIndex = get_obj_index( number_range( OBJ_VNUM_FIRST_FABRIC , OBJ_VNUM_LAST_FABRIC  ) );
+			}
+	else if ( !str_cmp( arg, "blaster" ) )
+			{
+			pObjIndex = get_obj_index( 31 );
+			}
+	else if ( !str_cmp( arg, "blade" ) )
+			{
+				int anumber = number_range(0,5);
+				if ( anumber == 0 )
+					pObjIndex = get_obj_index( 58 );
+				else
+					pObjIndex = get_obj_index( 34 );
+			}
+	else if ( !str_cmp( arg, "function" ) )
+			{
+
+			int anumber = number_range(0,1);
+			if ( anumber == 0 )
+			  pObjIndex = get_obj_index( 37 );
+			else
+			  pObjIndex = get_obj_index( 38 );
+
+			}
+	else if ( !str_cmp( arg, "util" ) )
+			{
+			pObjIndex = get_obj_index( 35 );
+			}
+	else if ( !str_cmp( arg, "patch" ) )
+			{
+			pObjIndex = get_obj_index( 61 );
+			}
+	else if ( !str_cmp( arg, "app" ) )
+			{
+			pObjIndex = get_obj_index( 59 );
+			}
+
+    obj = create_object(pObjIndex, 1);
+    SET_BIT(obj->extra_flags, ITEM_INVENTORY);
+    obj = obj_to_char(obj, ch);
+
+    ch_printf( ch , "%s\n\r\n\r", obj->name);
+
+    send_to_char( "&G> you finish decompiling&w\n\r", ch);
+    act( AT_PLAIN, "> $n finishes decompiling", ch,
+         NULL, argument , TO_ROOM );
+
+        learn_from_success( ch, gsn_spacecraft );
+
+}
+
 
 //done for Neuro
