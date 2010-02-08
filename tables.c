@@ -228,6 +228,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_land"))                return do_land;
 	if ( !str_cmp( name, "do_landscape"))           return do_landscape;
 	if ( !str_cmp( name, "do_launch"))              return do_launch;
+	if ( !str_cmp( name, "do_layout"))              return do_layout;
 	if ( !str_cmp( name, "do_leave" ))		return do_leave;
 	if ( !str_cmp( name, "do_leaveship" ))		return do_leaveship;
 	if ( !str_cmp( name, "do_level" ))		return do_level;
@@ -732,6 +733,7 @@ char *skill_name( DO_FUN *skill )
     if ( skill == do_last )		return "do_last";
     if ( skill == do_land )             return "do_land";
     if ( skill == do_launch )		return "do_launch";
+    if ( skill == do_layout )		return "do_layout";
     if ( skill == do_leave )		return "do_leave";
     if ( skill == do_leaveship )	return "do_leaveship";
     if ( skill == do_level )		return "do_level";

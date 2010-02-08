@@ -602,6 +602,7 @@ void update_taxes( void )
      CHAR_DATA *ch;
      CHAR_DATA *och;
      int pay;
+     int paya;
 
     for ( planet = first_planet; planet; planet = planet->next )
     {
@@ -641,6 +642,48 @@ void update_taxes( void )
 
         ch_printf( ch, "> %d credits received from [%s]\n\r" ,
         pay , clan->name );
+
+        paya = UMIN(  och->pcdata->qtaxnodes , clan->funds );
+        paya = UMAX(  paya , 0 );
+        clan->funds -= paya;
+        och->pcdata->bank += paya;
+
+        ch_printf( ch, "> %d credits received for nodes\n\r" ,
+        paya );
+
+    }
+}
+
+void update_taxnodes( void )
+{
+     PLANET_DATA *planet;
+     CLAN_DATA *clan;
+     DESCRIPTOR_DATA *d;
+     CHAR_DATA *ch;
+     CHAR_DATA *och;
+     int pay;
+     int paya;
+
+    for ( d = last_descriptor; d; d = d->prev )
+    {
+	if ( (d->connected != CON_PLAYING && d->connected != CON_EDITING)
+	|| d->original)
+	    continue;
+	ch    = d->character;
+	och   = d->original ? d->original : d->character;
+
+        if ( !och->pcdata || !och->pcdata->clan )
+           continue;
+
+        clan = och->pcdata->clan;
+
+        paya = UMIN(  och->pcdata->qtaxnodes , clan->funds );
+        paya = UMAX(  paya , 0 );
+        clan->funds -= paya;
+        och->pcdata->bank += paya;
+
+        ch_printf( ch, "> %d credits received for nodes\n\r" ,
+        paya );
 
     }
 }
@@ -1691,6 +1734,7 @@ void update_handler( void )
     {
 	pulse_area	= number_range( PULSE_AREA / 2, 3 * PULSE_AREA / 2 );
 	reset_all( );
+	update_taxnodes();
     }
 
     if ( --pulse_savearea     <= 0 )

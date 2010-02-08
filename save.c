@@ -461,6 +461,10 @@ void fwrite_char( CHAR_DATA *ch, FILE *fp )
 	if ( ch->pcdata->queststatus )
 	  fprintf( fp, "Quest      %d\n",	ch->pcdata->queststatus	);
 
+	if ( ch->pcdata->qtaxnodes )
+	  fprintf( fp, ""
+			  "Qtaxnodes      %d\n",	ch->pcdata->qtaxnodes	);
+
     fprintf( fp, "End\n\n" );
     return;
 }
@@ -1185,7 +1189,8 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload )
 	    break;
 
 	case 'Q':
-	    KEY( "Quest", ch->pcdata->queststatus, fread_number( fp ) );
+		KEY( "Qtaxnodes", ch->pcdata->qtaxnodes, fread_number( fp ) );
+		KEY( "Quest", ch->pcdata->queststatus, fread_number( fp ) );
 	    break;
 
 	case 'R':

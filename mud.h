@@ -191,8 +191,8 @@ typedef ch_ret	SPELL_FUN	args( ( int sn, int level, CHAR_DATA *ch, void *vo ) );
 #define PULSE_TICK		  ( 70 * PULSE_PER_SECOND)
 #define PULSE_AUCTION             ( 10 * PULSE_PER_SECOND)
 #define PULSE_SPACE               ( 10 * PULSE_PER_SECOND)
-#define PULSE_TAXES               ( 60 * PULSE_MINUTE)
-#define PULSE_AREA		  ( 15 * PULSE_MINUTE)
+#define PULSE_TAXES               ( 15 * PULSE_MINUTE)
+#define PULSE_AREA		  ( 3 * PULSE_MINUTE)
 /*
  * Command logging types.
  */
@@ -1959,6 +1959,7 @@ struct	pc_data
     sh_int		adept_skills;
     int			cyber;
     int			queststatus;
+    int			qtaxnodes;
 };
 
 
@@ -2877,6 +2878,7 @@ extern		struct act_prog_data *	mob_act_list;
 DECLARE_DO_FUN( do_arrest );
 DECLARE_DO_FUN( do_buyskill );
 DECLARE_DO_FUN( do_setwages );
+DECLARE_DO_FUN( do_layout );
 DECLARE_DO_FUN( do_war );
 DECLARE_DO_FUN( do_prototypes );
 DECLARE_DO_FUN( do_setprototype );
