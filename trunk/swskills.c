@@ -1867,6 +1867,12 @@ void do_disguise( CHAR_DATA *ch, char *argument )
 	return;
     }
     
+    if ( !str_cmp( argument, "Wintermute" ) || !str_cmp( argument, "Wintermute " ))
+    {
+	ch_printf( ch, "> %s would not like that\n\r", argument );
+	return;
+    }
+
     chance = (int) (ch->pcdata->learned[gsn_disguise]);
     
     if ( number_percent( ) > chance )
@@ -1881,6 +1887,8 @@ void do_disguise( CHAR_DATA *ch, char *argument )
     smash_tilde( argument );
     set_title( ch, argument );
     send_to_char( "Ok\n\r", ch );
+    learn_from_success( ch , gsn_disguise );
+
 }
 
 void do_first_aid( CHAR_DATA *ch, char *argument )
@@ -2633,11 +2641,11 @@ void do_propaganda ( CHAR_DATA *ch , char *argument )
        
     planet = ch->in_room->area->planet;
         
-    sprintf( buf, ", and the evils of %s" , planet->governed_by ? planet->governed_by->name : "their current leaders" );
-    ch_printf( ch, "> you speak to them about the benifits of the %s%s\n\r", ch->pcdata->clan->name,
+    sprintf( buf, ", and delete some of the %s code" , planet->governed_by ? planet->governed_by->name : "AI" );
+    ch_printf( ch, "> you inject some code from %s%s\n\r", ch->pcdata->clan->name,
         planet->governed_by == clan ? "" : buf );
-    act( AT_ACTION, "> $n speaks about his organization\n\r", ch, NULL, victim, TO_VICT    );
-    act( AT_ACTION, "> $n tells $N about their organization\n\r",  ch, NULL, victim, TO_NOTVICT );
+    act( AT_ACTION, "> $n injects some organization code\n\r", ch, NULL, victim, TO_VICT    );
+    act( AT_ACTION, "> $n injects $N with their organization code\n\r",  ch, NULL, victim, TO_NOTVICT );
 
     WAIT_STATE( ch, skill_table[gsn_propaganda]->beats );
 
@@ -2822,7 +2830,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 	//send_to_char( "platform     - ships land here\n\r", ch );
 	//send_to_char( "shipyard     - ships are built here\n\r", ch );
 	//send_to_char( "inside       - somewhere inside\n\r", ch );
-	//send_to_char( "house        - may be used as a private node\n\r", ch );
+	send_to_char( "home         - may be used as a private node\n\r", ch );
 	//send_to_char( "datamine     - dug out tunnel\n\r", ch );
 	//send_to_char( "info         - message and information node\n\r", ch );
 	//send_to_char( "mail         - mail node\n\r", ch );
@@ -2864,6 +2872,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
       strcpy( buf , ch->name );
       strcat( buf , "&Y.&Cterminal" );
       strcpy( bufa , "a terminal node.\n\r" );
+      ch->pcdata->qtaxnodes = ch->pcdata->qtaxnodes + 1;
    }
    else if ( !str_cmp( argument, "database" ) )
    {
@@ -2872,6 +2881,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
       strcpy( buf , ch->name );
       strcat( buf , "&Y.&Cdatabase" );
       strcpy( bufa , "a database node.\n\r" );
+      ch->pcdata->qtaxnodes = ch->pcdata->qtaxnodes + 1;
    }
    else if ( !str_cmp( argument, "inside" ) )
    {
@@ -2888,8 +2898,17 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
       strcpy( buf , ch->name );
       strcat( buf , "&Y.&Csubserver" );
       strcpy( bufa , "a subserver node.\n\r" );
+      ch->pcdata->qtaxnodes = ch->pcdata->qtaxnodes + 1;
    }
-
+   else if ( !str_cmp( argument, "home" ) )
+   {
+      location->area->planet->citysize++;
+      location->sector_type = SECT_INSIDE;
+      SET_BIT( location->room_flags , ROOM_EMPTY_HOME );
+      SET_BIT( location->room_flags , ROOM_NO_MOB );
+      strcpy( buf , "&Chomenode" );
+      strcpy( bufa , "use BUYHOME to buy this node for 10k.\n\r" );
+   }
    else if ( !str_cmp( argument, "datamine" ) )
    {
       location->area->planet->wilderness++;
@@ -3161,7 +3180,7 @@ void do_construction ( CHAR_DATA *ch , char *argument )
     
    SET_BIT( ch->in_room->area->flags , AFLAG_MODIFIED );
    
-   sprintf( buf , "> construction code begins to build a new node to the %s" , dir_name[edir] );
+   sprintf( buf , "> construction command builds a new node to: %s" , dir_name[edir] );
    echo_to_room( AT_WHITE, ch->in_room, buf );
    
 }

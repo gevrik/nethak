@@ -599,7 +599,7 @@ void start_editing( CHAR_DATA *ch, char *data )
 	   else
 	   if ( c == '\r' );
 	   else
-	   if ( c == '\n' || lpos > 78)
+	   if ( c == '\n' || lpos > 48)
 	   {
 		edit->line[lines][lpos] = '\0';
 		lines++;
@@ -4247,7 +4247,7 @@ void edit_buffer( CHAR_DATA *ch, char *argument )
 
 	    temp_buf[p] = '\0';
 	    end_mark = p;
-	    p = 75;
+	    p = 45;
 	    old_p =0;
 	    edit->on_line =0;
 	    edit->numlines =0;
@@ -4258,7 +4258,7 @@ void edit_buffer( CHAR_DATA *ch, char *argument )
 	          p--;
 
 	        if ( p == old_p )
-	          p +=75;
+	          p +=45;
 
 	        if ( p > end_mark )
 	          p = end_mark;
@@ -4275,7 +4275,7 @@ void edit_buffer( CHAR_DATA *ch, char *argument )
 	        edit->numlines++;
 
 	        old_p = p+1 ;
-	        p += 75;
+	        p += 45;
 
 	    }
 
@@ -4414,7 +4414,7 @@ void edit_buffer( CHAR_DATA *ch, char *argument )
    else
    {
         int b_end;
-        int bm = 75;
+        int bm = 45;
         int bp = 0;
         int ep =0;
 
@@ -4429,7 +4429,7 @@ void edit_buffer( CHAR_DATA *ch, char *argument )
 	       bm--;
 
 	    if ( bm == bp )
-	       bm += 75;
+	       bm += 45;
 
 	    if ( bm > b_end )
 	       bm = b_end;
@@ -4442,7 +4442,7 @@ void edit_buffer( CHAR_DATA *ch, char *argument )
 	        ep++;
             }
 
-            bm = bp+75;
+            bm = bp+45;
             bp ++;
 
             edit->line[edit->on_line][ep] = '\0';

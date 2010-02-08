@@ -7,6 +7,105 @@
 #include <unistd.h>
 #include "mud.h"
 
+void do_layout( CHAR_DATA *ch, char *argument )
+{
+
+    CLAN_DATA * clan;
+    OBJ_DATA *obj;
+    OBJ_DATA *obj_next;
+    EXIT_DATA *xit;
+    ROOM_INDEX_DATA * location;
+    int chance;
+    char arg[MAX_INPUT_LENGTH];
+
+    if ( IS_NPC(ch) || !ch->pcdata )
+    	return;
+
+    if ( !ch->desc )
+	return;
+
+   switch( ch->substate )
+   {
+	default:
+	  break;
+	case SUB_ROOM_DESC:
+	  location = ch->dest_buf;
+	  if ( !location )
+	  {
+		bug( "landscape: sub_room_desc: NULL ch->dest_buf", 0 );
+		location = ch->in_room;
+	  }
+	  STRFREE( location->description );
+	  location->description = copy_buffer( ch );
+	  stop_editing( ch );
+	  ch->substate = ch->tempnum;
+          if ( strlen( location->description ) > 150 ) {
+   	     learn_from_success( ch , gsn_landscape );
+         learn_from_success( ch , gsn_landscape );
+          }
+          else
+          {
+  	     send_to_char( "That node description is too short.\n\r", ch );
+  	     send_to_char( "Your skill level diminishes with your laziness.\n\r", ch );
+             if ( ch->pcdata->learned[gsn_landscape] > 50 )
+                ch->pcdata->learned[gsn_landscape] -= 5;
+          }
+          SET_BIT( location->area->flags , AFLAG_MODIFIED );
+	  for ( obj = ch->in_room->first_content; obj; obj = obj_next )
+	  {
+	    obj_next = obj->next_content;
+	    extract_obj( obj );
+	  }
+          echo_to_room( AT_WHITE, location , "You begin coding..." );
+	  return;
+   }
+
+   location = ch->in_room;
+   clan = ch->pcdata->clan;
+
+   if ( !clan )
+   {
+	send_to_char( "You need to be part of an clan before you can do that!\n\r", ch );
+	return;
+   }
+
+   if ( (ch->pcdata && ch->pcdata->bestowments
+   &&    is_name("build", ch->pcdata->bestowments))
+   || nifty_is_name( ch->name, clan->leaders  ) )
+	;
+   else
+   {
+	send_to_char( "Your clan hasn't given you permission to edit their complexes!\n\r", ch );
+	return;
+   }
+
+   if( strcmp(location->owner, ch->name) )
+   {
+	send_to_char( "&R> this is not your node&w\n\r", ch );
+	return;
+   }
+
+   if ( !location->area || !location->area->planet ||
+   clan != location->area->planet->governed_by  )
+   {
+	send_to_char( "You may only code nodes in complexes that your clan controls!\n\r", ch );
+	return;
+   }
+
+   if ( IS_SET( location->room_flags , ROOM_NOPEDIT ) )
+   {
+	send_to_char( "Sorry, but you may not code this room.\n\r", ch );
+	return;
+   }
+
+    ch->substate = SUB_ROOM_DESC;
+    ch->dest_buf = location;
+    start_editing( ch, location->description );
+    return;
+
+}
+
+
 void do_buyskill( CHAR_DATA *ch, char *argument )
 {
     

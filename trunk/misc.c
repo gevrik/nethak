@@ -26,8 +26,20 @@ void do_buyhome( CHAR_DATA *ch, char *argument )
          
      if ( ch->plr_home != NULL )
      {
-         send_to_char( "&R> you already have a home\n\r&w", ch);
-         return;   
+         //send_to_char( "&R> you already have a home\n\r&w", ch);
+         //return;
+
+         ROOM_INDEX_DATA *rooma = ch->plr_home;
+
+         STRFREE( rooma->name );
+         rooma->name = STRALLOC( "unusedhome" );
+
+         REMOVE_BIT( rooma->room_flags , ROOM_PLR_HOME );
+         SET_BIT( rooma->room_flags , ROOM_EMPTY_HOME );
+
+         if ( rooma->area )
+             fold_area( rooma->area, rooma->area->filename, FALSE );
+
      }
      
      room = ch->in_room;
@@ -47,9 +59,9 @@ void do_buyhome( CHAR_DATA *ch, char *argument )
          return;   
      }
      
-     if ( ch->gold < 100000 )
+     if ( ch->gold < 10000 )
      {
-         send_to_char( "&R> this room costs 100000 credits\n\r&w", ch);
+         send_to_char( "&R> this room costs 10.000 credits\n\r&w", ch);
          return;   
      }
      
@@ -63,11 +75,12 @@ void do_buyhome( CHAR_DATA *ch, char *argument )
      STRFREE( room->name );
      room->name = STRALLOC( argument );
 
-     ch->gold -= 100000;
+     ch->gold -= 10000;
      
      REMOVE_BIT( room->room_flags , ROOM_EMPTY_HOME );
      SET_BIT( room->room_flags , ROOM_PLR_HOME );
-     SET_BIT( room->room_flags , ROOM_HOTEL );
+     //SET_BIT( room->room_flags , ROOM_HOTEL );
+     SET_BIT( room->room_flags , ROOM_NOPEDIT );
      
      fold_area( room->area, room->area->filename, FALSE );
 

@@ -1087,10 +1087,11 @@ void do_enlist( CHAR_DATA *ch, char *argument )
 			strcat( buf , "&Y.&Chome" );		        
 			
    			nRoom->name = STRALLOC( buf );
-   			nRoom->description = STRALLOC ( "use ENTER command to leave to system lobby.\n\ruse CONNECT to leave to specified node.\n\ruse BRIDGE commands to secure node.\n\r" );
+   			nRoom->description = STRALLOC ( "this is your home node.\n\ruse ENTER command to leave to system lobby.\n\ruse HOME to come back here.\n\rgo UP to go to your IO node and lobby.\n\r" );
    			nRoom->owner = STRALLOC( ch->name );
    			nRoom->sector_type = SECT_DUNNO;
    			SET_BIT( nRoom->room_flags , ROOM_NO_MOB );
+   			SET_BIT( lRoom->room_flags , ROOM_NOPEDIT );
 			//SET_BIT( nRoom->room_flags , ROOM_CAN_LAND );
    
    			xit2 = make_exit( nRoom , ch->in_room  , 10 );
@@ -1197,6 +1198,8 @@ void do_enlist( CHAR_DATA *ch, char *argument )
       			cRoom->sector_type = SECT_GLACIAL;
 
 //endfirstconstroom
+
+      			ch->pcdata->qtaxnodes = ch->pcdata->qtaxnodes + 1;
 
      			fold_area( nRoom->area, nRoom->area->filename, FALSE );
 
