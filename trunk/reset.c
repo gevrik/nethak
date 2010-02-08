@@ -602,9 +602,9 @@ void reset_all( )
                 case SECT_GLACIAL: 
 		anumber = number_range(0,8);
 		  if ( anumber == 0 )
-		    vnum = OBJ_VNUM_FRUIT;
+		    vnum = OBJ_VNUM_FRUIT; // chat log
 		  else if ( anumber == 1 )
-		    vnum = OBJ_VNUM_ROOT;
+		    vnum = OBJ_VNUM_ROOT; // info file
 		  else if ( anumber == 2 )
 		    vnum = OBJ_VNUM_CRYSTAL;
 		  else if ( anumber == 3 )
@@ -619,7 +619,7 @@ void reset_all( )
 		    vnum = 31;
 		  else
 		    vnum = OBJ_VNUM_GOLD;
-                   break;
+          break;
                 
                 case SECT_OCEANFLOOR: 
                    if ( anumber <=1 )

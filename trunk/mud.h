@@ -1414,6 +1414,7 @@ typedef enum
 #define ROOM_VNUM_SCHOOL              6
 #define ROOM_NEWBIE_SHIPYARD	      5
 #define ROOM_VNUM_JAIL		      19
+#define ROOM_VNUM_STRAY		      33
 
 /*
  * Room flags.           Holy cow!  Talked about stripped away..
@@ -3037,6 +3038,7 @@ DECLARE_DO_FUN(	do_consider	);
 DECLARE_DO_FUN( do_credits	);
 DECLARE_DO_FUN(	do_cset		);
 DECLARE_DO_FUN(	do_cyber	);
+DECLARE_DO_FUN(	do_decompile	);
 DECLARE_DO_FUN(	do_deny		);
 DECLARE_DO_FUN(	do_description	);
 DECLARE_DO_FUN( do_destro       );

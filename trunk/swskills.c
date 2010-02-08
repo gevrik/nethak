@@ -2612,6 +2612,20 @@ void do_propaganda ( CHAR_DATA *ch , char *argument )
 	return;
     }
 
+    if ( IS_SET( ch->in_room->room_flags, ROOM_HOTEL ) )
+    {
+	set_char_color( AT_MAGIC, ch );
+	send_to_char( "> this is not a good place to do that\n\r", ch );
+	return;
+    }
+
+    if ( IS_SET( ch->in_room->room_flags, ROOM_EMPLOYMENT ) )
+    {
+	set_char_color( AT_MAGIC, ch );
+	send_to_char( "> this is not a good place to do that\n\r", ch );
+	return;
+    }
+
     if ( ch->position == POS_FIGHTING )
     {
         send_to_char( "> interesting combat technique\n\r" , ch );

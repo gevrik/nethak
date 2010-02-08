@@ -128,7 +128,8 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_cyber" ))		return do_cyber;
 	break;
     case 'd':
-	if ( !str_cmp( name, "do_demote" ))		return do_demote;
+    	if ( !str_cmp( name, "do_decompile" ))		return do_decompile;
+    	if ( !str_cmp( name, "do_demote" ))		return do_demote;
 	if ( !str_cmp( name, "do_deny" ))		return do_deny;
 	if ( !str_cmp( name, "do_description" ))	return do_description;
 	if ( !str_cmp( name, "do_designship" ))		return do_designship;
@@ -666,6 +667,7 @@ char *skill_name( DO_FUN *skill )
     if ( skill == do_credits )		return "do_credits";
     if ( skill == do_cset )		return "do_cset";
     if ( skill == do_cyber )		return "do_cyber";
+    if ( skill == do_decompile )		return "do_decompile";
     if ( skill == do_deny )		return "do_deny";
     if ( skill == do_description )	return "do_description";
     if ( skill == do_destro )		return "do_destro";
