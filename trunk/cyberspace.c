@@ -181,6 +181,7 @@ void do_homerecall( CHAR_DATA *ch, char *argument )
 	}
 
 	send_to_char( "> you connect to your home node\n\r", ch );
+	act(AT_GREEN, "> $n connects to their home node", ch, NULL, NULL, TO_ROOM );
 	char_from_room( ch );    
     	char_to_room( ch, ch->plr_home );
 	do_look( ch, "auto" );
@@ -349,6 +350,8 @@ void do_connect( CHAR_DATA *ch, char *argument )
 		   
     			ch->regoto = ch->in_room->vnum;
 
+    			act(AT_GREEN, "> $n connects to another system", ch, NULL, NULL, TO_ROOM );
+
     			char_from_room( ch );
     
     			char_to_room( ch, room );
@@ -406,10 +409,12 @@ void do_coding( CHAR_DATA *ch, char *argument )
 	
         pObjIndex = get_obj_index( number_range( OBJ_VNUM_FIRST_FABRIC , OBJ_VNUM_LAST_FABRIC  ) );
         
-	obj = create_object(pObjIndex, 1);
+        obj = create_object(pObjIndex, 1);
         SET_BIT(obj->extra_flags, ITEM_INVENTORY);
         obj = obj_to_char(obj, ch);
         
+        ch_printf( ch , "%s:\n\r\n\r", obj->name);
+
         return;
 }
 
