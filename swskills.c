@@ -2827,7 +2827,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 	send_to_char( "database     - generates resources\n\r", ch );
 	send_to_char( "subserver    - supports terminals\n\r", ch );
 	send_to_char( "terminal     - generates funds\n\r", ch );	
-	//send_to_char( "platform     - ships land here\n\r", ch );
+	send_to_char( "ionode       - users can connect here\n\r", ch );
 	//send_to_char( "shipyard     - ships are built here\n\r", ch );
 	//send_to_char( "inside       - somewhere inside\n\r", ch );
 	send_to_char( "home         - may be used as a private node\n\r", ch );
@@ -2955,6 +2955,15 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
       strcpy( buf , ch->name );
       strcat( buf , "&Y.&Cagent" );
       strcpy( bufa , "an agent node.\n\r" );
+   }
+   else if ( !str_cmp( argument, "ionode" ) )
+   {
+      location->area->planet->citysize++;
+      location->sector_type = SECT_CITY;
+      SET_BIT( location->room_flags , ROOM_CAN_LAND );
+      strcpy( buf , ch->name );
+      strcat( buf , "&Y.&Cio" );
+      strcpy( bufa , "an io node.\n\r" );
    }
    else if ( !str_cmp( argument, "trade" ) )
    {
