@@ -1237,6 +1237,10 @@ typedef enum { SEX_NEUTRAL, SEX_MALE, SEX_FEMALE } sex_types;
 #define OBJ_VNUM_DRIED_FRUIT	     27
 #define OBJ_VNUM_AMMO                28
 #define OBJ_VNUM_FIRST_PART	     29  /* first randomly placed object */
+
+#define OBJ_VNUM_DEVKIT		30
+#define OBJ_VNUM_COMPILER		33
+
 #define OBJ_VNUM_LAST_PART	     38  /* last randomly placed object */
 
 #define OBJ_VNUM_FRUIT		     51

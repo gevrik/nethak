@@ -558,7 +558,9 @@ void do_decompile( CHAR_DATA *ch, char *argument )
 
 	if ( !str_cmp( arg, "def" ) )
 			{
-			pObjIndex = get_obj_index( number_range( OBJ_VNUM_FIRST_FABRIC , OBJ_VNUM_LAST_FABRIC  ) );
+			int decklevel = ( ch->pcdata->learned[gsn_spacecraft] / 10 );
+			pObjIndex = get_obj_index( number_range( OBJ_VNUM_FIRST_FABRIC , ( 89 + decklevel) ) );
+			ch_printf( ch , "%d\n\r\n\r", decklevel);
 			}
 	else if ( !str_cmp( arg, "blaster" ) )
 			{

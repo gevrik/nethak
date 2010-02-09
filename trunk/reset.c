@@ -213,13 +213,13 @@ void reset_all( )
 	    	if ( ( IS_SET(pRoomIndex->room_flags, ROOM_NOPEDIT) && vnum == MOB_VNUM_TRADER ) 
 	    	||  vnum == MOB_VNUM_SUPPLIER )
 	        {
-      		   /*
+
 	    		if ( vnum != MOB_VNUM_SUPPLIER || number_bits(1) == 0 )
       		   {
 
-      		     if ( !(pObjIndex = get_obj_index(OBJ_VNUM_LIGHT)) )
+      		     if ( !(pObjIndex = get_obj_index(OBJ_VNUM_COMPILER)) )
       			{
-        		   bug( "Reset_all: Missing default light (%d)", OBJ_VNUM_LIGHT );
+        		   bug( "Reset_all: Missing default compiler (%d)", OBJ_VNUM_COMPILER );
       			   return;
       			}
 
@@ -227,7 +227,21 @@ void reset_all( )
                      SET_BIT(obj->extra_flags, ITEM_INVENTORY);
                      obj = obj_to_char(obj, mob);
                    }
-      		   */
+
+	    		if ( vnum != MOB_VNUM_SUPPLIER || number_bits(1) == 0 )
+      		   {
+
+      		     if ( !(pObjIndex = get_obj_index(OBJ_VNUM_DEVKIT)) )
+      			{
+        		   bug( "Reset_all: Missing default devkit (%d)", OBJ_VNUM_DEVKIT );
+      			   return;
+      			}
+
+					 obj = create_object(pObjIndex, 1);
+                     SET_BIT(obj->extra_flags, ITEM_INVENTORY);
+                     obj = obj_to_char(obj, mob);
+                   }
+
 
       		   if ( vnum != MOB_VNUM_SUPPLIER || number_bits(1) == 0 ) 
       		   {
@@ -241,19 +255,19 @@ void reset_all( )
                      obj = obj_to_char(obj, mob);
                    }
 
-      		   /*
+
                    if ( vnum != MOB_VNUM_SUPPLIER || number_bits(1) == 0 ) 
       		   {
-        	     if ( !(pObjIndex = get_obj_index(OBJ_VNUM_CANTEEN)) )
+        	     if ( !(pObjIndex = get_obj_index(OBJ_VNUM_SEWKIT)) )
       			{
-        		   bug( "Reset_all: Missing default canteen (%d)", OBJ_VNUM_CANTEEN );
+        		   bug( "Reset_all: Missing default parser (%d)", OBJ_VNUM_SEWKIT );
       			   return;
       			}
                      obj = create_object(pObjIndex, 1);
                      SET_BIT(obj->extra_flags, ITEM_INVENTORY);
                      obj = obj_to_char(obj, mob);
                    }
-				*/
+
 
                    if ( vnum != MOB_VNUM_SUPPLIER || number_bits(1) == 0 )
       		   {
