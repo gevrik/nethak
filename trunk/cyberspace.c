@@ -613,4 +613,48 @@ void do_decompile( CHAR_DATA *ch, char *argument )
 }
 
 
+void do_renamenode( CHAR_DATA *ch, char *argument )
+{
+    char arg [MAX_INPUT_LENGTH];
+    char buf [MAX_STRING_LENGTH];
+    ROOM_INDEX_DATA	*location;
+    int cost = 100;
+
+	location = ch->in_room;
+
+    if( strcmp(location->owner, ch->name) )
+    {
+ 	send_to_char( "&R> this is not your node&w\n\r", ch );
+ 	return;
+    }
+
+	if ( ch->gold < cost )
+	{
+	send_to_char( "> &Rinsufficient funds [100c needed]&w\n\r", ch );
+	return;
+	}
+
+	if ( argument[0] == '\0' )
+	{
+	   send_to_char( "> set the node name. costs 100c.\n\r", ch );
+	   send_to_char( "> a very brief single line node description.\n\r", ch );
+	   send_to_char( "> syntax: rename <name>\n\r", ch );
+	   return;
+	}
+
+	if ( !check_parse_name( argument ) )
+	{
+		send_to_char( "> &Rinvalid name&w\n\r", ch );
+	    return;
+	}
+
+	ch->gold     -= cost;
+
+	STRFREE( location->name );
+	location->name = STRALLOC( argument );
+	send_to_char( "> &Gnode name set&w [100c spent]\n\r", ch);
+	return;
+
+}
+
 //done for Neuro

@@ -371,6 +371,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_regoto" ))		return do_regoto;
 	if ( !str_cmp( name, "do_remove" ))		return do_remove;
 	if ( !str_cmp( name, "do_rempilot" ))           return do_rempilot;
+	if ( !str_cmp( name, "do_renamenode" ))           return do_renamenode;
 	if ( !str_cmp( name, "do_rentship" ))           return do_rentship;
 	if ( !str_cmp( name, "do_repair" ))		return do_repair;
 	if ( !str_cmp( name, "do_repairset" ))		return do_repairset;
@@ -845,6 +846,7 @@ char *skill_name( DO_FUN *skill )
     if ( skill == do_redit )		return "do_redit";
     if ( skill == do_regoto )		return "do_regoto";
     if ( skill == do_remove )		return "do_remove";
+    if ( skill == do_renamenode )		return "do_renamenode";
     if ( skill == do_repair )		return "do_repair";
     if ( skill == do_repairset )	return "do_repairset";
     if ( skill == do_repairshops )	return "do_repairshops";
