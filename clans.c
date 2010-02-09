@@ -555,6 +555,14 @@ void do_setclan( CHAR_DATA *ch, char *argument )
 	return;
     }
 
+    if ( !strcmp( arg2, "wages" ) )
+    {
+	clan->salary = atoi( argument );
+	send_to_char( "Done\n\r", ch );
+	save_clan( clan );
+	return;
+    }
+
     if ( !strcmp( arg2, "funds" ) )
     {
 	clan->funds = atoi( argument );

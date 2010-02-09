@@ -2223,6 +2223,7 @@ bool  job_trigger( CHAR_DATA *victim, CHAR_DATA *ch, OBJ_DATA *obj )
 bool  agent_trigger( CHAR_DATA *victim, CHAR_DATA *ch, OBJ_DATA *obj )
 {
      char buf[MAX_STRING_LENGTH];
+     PLANET_DATA *planet;
 
      if( !IS_NPC( victim ) || !victim->pIndexData )
         return FALSE;
@@ -2247,12 +2248,16 @@ bool  agent_trigger( CHAR_DATA *victim, CHAR_DATA *ch, OBJ_DATA *obj )
      do_say( victim, "memory corruption detected" );
      ch->gold += 2000;
 
+     planet = ch->in_room->area->planet;
+
+
      separate_obj( obj );
      obj_from_char( obj );
      extract_obj( obj );
 	send_to_char( "&w> the dataminer program is unloaded from the node\r\n", ch );
 	send_to_char( "&w> 2,000 credits received\r\n", ch );
 	extract_char( victim, TRUE );
+	planet->pop_support -= 1;
      
      return TRUE;         
 }
