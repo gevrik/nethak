@@ -170,7 +170,8 @@ void do_homerecall( CHAR_DATA *ch, char *argument )
 
 	if ( ch->fighting )
 	{
-	send_to_char( "> you cannot recall in combat\n\r", ch );
+	send_to_char( "> you to try flee from combat\n\r", ch );
+	do_flee( ch, "" );
 	return;
 	}
 
