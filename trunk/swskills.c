@@ -3129,7 +3129,7 @@ void do_construction ( CHAR_DATA *ch , char *argument )
    }
 
    if( !IS_IMMORTAL(ch) )
-   if ( ch->in_room->area->planet->size >= 1000 )
+   if ( ch->in_room->area->planet->size >= 800 )
    {
 	send_to_char( "> this system is too big - go construct somewhere else\n\r", ch );
 	return;   
