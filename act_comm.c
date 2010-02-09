@@ -386,8 +386,8 @@ void talk_channel( CHAR_DATA *ch, char *argument, int channel, const char *verb 
       
       if ( IS_IMMORTAL( ch ) )
           ch_comlink = TRUE;
-      if ( ch->pcdata->cyber & CYBER_COMM )
-         ch_comlink = TRUE;
+      //if ( ch->pcdata->cyber & CYBER_COMM )
+      //   ch_comlink = TRUE;
       else
         for ( obj = ch->last_carrying; obj; obj = obj->prev_content )
         {
