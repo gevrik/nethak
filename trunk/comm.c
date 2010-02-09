@@ -1714,8 +1714,8 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 	    obj_to_char( obj, ch );
 	    equip_char( ch, obj, WEAR_WIELD );
 
-	    obj = create_object( get_obj_index(OBJ_VNUM_LIGHT), 0 );
-	    obj_to_char( obj, ch );
+	    //obj = create_object( get_obj_index(OBJ_VNUM_LIGHT), 0 );
+	    //obj_to_char( obj, ch );
 
             /* comlink */
 
@@ -1834,7 +1834,7 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
     act( AT_ACTION, "> $n has entered the game", ch, NULL, NULL, TO_ROOM );
     sprintf( bufText , "> %s has logged in" , ch->name );
     echo_to_all( AT_LBLUE , bufText , ECHOTAR_ALL );
-    do_global_boards( ch, "" );
+    //do_global_boards( ch, "" );
     do_look( ch, "auto" );
     ch->pcdata->board = &boards[DEFAULT_BOARD];
     mail_count(ch);

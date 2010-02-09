@@ -20,6 +20,11 @@ void do_buyhome( CHAR_DATA *ch, char *argument )
          return;   
      }
 
+ 	if ( !ch->pcdata->clan )
+ 	{
+ 		send_to_char( "> you do not belong to an organization\n\r", ch );
+ 		return;
+ 	}
          
      if ( IS_NPC(ch) || !ch->pcdata )
          return;

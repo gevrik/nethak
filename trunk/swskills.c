@@ -2866,7 +2866,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
    chance = (int) (ch->pcdata->learned[gsn_landscape]);
    if ( number_percent( ) > chance )
    {
-	send_to_char( "> you cannot quite get the desired effect\n\r", ch );
+	send_to_char( "&R> you fail to modify. try again!&w\n\r", ch );
 	return;   
    }
    
@@ -3166,7 +3166,7 @@ void do_construction ( CHAR_DATA *ch , char *argument )
    chance = (int) (ch->pcdata->learned[gsn_construction]);
    if ( number_percent( ) > chance )
    {
-	send_to_char( "> you cannot quite get the desired effect\n\r", ch );
+	send_to_char( "> you fail to construct. try again!\n\r", ch );
         ch->gold -= 5;
 	return;   
    }
