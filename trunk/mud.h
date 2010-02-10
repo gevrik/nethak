@@ -1668,7 +1668,7 @@ struct timer_data
 #define CHANNEL_SYSTEM             BV12
 #define CHANNEL_GNET               BV13
 #define CHANNEL_PNET               BV14
-
+#define CHANNEL_HINT               BV20
 #define CHANNEL_CLANTALK	   CHANNEL_CLAN
 
 /* Area defines - Scryn 8/11

@@ -2750,6 +2750,11 @@ void do_channels( CHAR_DATA *ch, char *argument )
 		: " -newbie",
 		ch );
 
+	send_to_char( !IS_SET(ch->deaf, CHANNEL_HINT)
+	      	? " +HINT"
+		: " -hint",
+		ch );
+
 	if ( IS_IMMORTAL(ch) )
 	{
 	    send_to_char( !IS_SET(ch->deaf, CHANNEL_LOG)
@@ -2795,6 +2800,7 @@ void do_channels( CHAR_DATA *ch, char *argument )
 	else if ( !str_cmp( arg+1, "build"    ) ) bit = CHANNEL_BUILD;
 	else if ( !str_cmp( arg+1, "monitor"  ) ) bit = CHANNEL_MONITOR;
 	else if ( !str_cmp( arg+1, "newbie"   ) ) bit = CHANNEL_NEWBIE;
+	else if ( !str_cmp( arg+1, "hint"   ) ) bit = CHANNEL_HINT;
 	else if ( !str_cmp( arg+1, "yell"     ) ) bit = CHANNEL_YELL;
 	else if ( !str_cmp( arg+1, "comm"     ) ) bit = CHANNEL_COMM;
 	else if ( !str_cmp( arg+1, "pnet"     ) ) bit = CHANNEL_PNET;

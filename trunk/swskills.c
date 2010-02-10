@@ -3479,7 +3479,9 @@ void do_bridge ( CHAR_DATA *ch , char *argument )
     EXIT_DATA   *xit, *texit;
     int   evnum, edir, ekey;
     ROOM_INDEX_DATA *toroom;
+    ROOM_INDEX_DATA *location;
     char buf[MAX_STRING_LENGTH];
+
 
     if ( IS_NPC(ch) || !ch->pcdata || !ch->in_room )
     	return;
@@ -3637,8 +3639,6 @@ void do_bridge ( CHAR_DATA *ch , char *argument )
           texit = get_exit_to( xit->to_room, rev_dir[edir], ch->in_room->vnum );
           if ( texit )
           {
-             sprintf( buf , "> construction code builds a door to the %s" , dir_name[rev_dir[edir]] );
-             echo_to_room( AT_WHITE, xit->to_room, buf );
              SET_BIT(  texit->exit_info , EX_ISDOOR );
           }
        }
@@ -3647,30 +3647,10 @@ void do_bridge ( CHAR_DATA *ch , char *argument )
 
 		   {
 
-    	   if ( texit && !IS_SET(texit->exit_info, EX_SECRET) )
-    			   {
-    		 	  send_to_char( "> cannot remove door with keycode\n\r", ch );
-    			  return;
-    			   }
+ 		 	  send_to_char( "> &Rcannot remove existing connection gate&w\n\r", ch );
+ 			  return;
 
-    	   if ( !IS_SET(xit->exit_info, EX_SECRET) )
-    			   {
-    		 	  send_to_char( "> cannot remove door with keycode\n\r", ch );
-    			  return;
-    			   }
-
-          sprintf( buf , "> construction code removes the door to the %s" , dir_name[edir] );
-          echo_to_room( AT_WHITE, ch->in_room, buf );
-          REMOVE_BIT(  xit->exit_info , EX_ISDOOR );
-          texit = get_exit_to( xit->to_room, rev_dir[edir], ch->in_room->vnum );
-
-          if ( texit )
-          {
-             sprintf( buf , "> construction code removes the door to the %s" , dir_name[rev_dir[edir]] );
-             echo_to_room( AT_WHITE, xit->to_room, buf );
-             REMOVE_BIT(  texit->exit_info , EX_ISDOOR );
-          }
-		  }
+		   }
 
    }
    else
