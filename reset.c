@@ -79,7 +79,7 @@ void reset_all( )
                {
                 sprintf( dBuf , "(GCHAT) user: %s is being infected by AI viruses" , dPlanet->name );    
                 echo_to_all( AT_LBLUE , dBuf , ECHOTAR_ALL );
-                for( mCount = 0 ; mCount < 20 ; mCount++ )
+                for( mCount = 0 ; mCount < 10 ; mCount++ )
                 {
                   mob = create_mobile( pMobIndex );
                   char_to_room( mob, pRoomIndex );
@@ -835,6 +835,7 @@ void reset_all( )
         if ( pRoomIndex->area->planet->wildlife >  pRoomIndex->area->planet->wilderness )
               continue;  
 
+        /*
         if ( pRoomIndex->sector_type > SECT_CITY && number_bits( 16 ) == 0 )
         {
               if ( (pMobIndex = get_mob_index(MOB_VNUM_DRAGON)) )
@@ -858,6 +859,7 @@ void reset_all( )
                   continue;
               }
         }
+        */
 
         anumber = number_bits( 3 );
         
