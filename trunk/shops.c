@@ -500,7 +500,7 @@ void do_sell( CHAR_DATA *ch, char *argument )
 
     clan = ch->in_room->area->planet->governed_by;
     int clanfundsmin;
-    clanfundsmin = 1000000;
+    clanfundsmin = 100000;
 
     	if ( clan->funds < clanfundsmin )
    	 {
@@ -524,8 +524,9 @@ void do_sell( CHAR_DATA *ch, char *argument )
    	 sprintf( buf, "> you sell $p for %d credit%s",
 	cost, cost == 1 ? "" : "s" );
     	act( AT_ACTION, buf, ch, obj, NULL, TO_CHAR );
+    	int gain = cost * 2;
     	ch->gold     += cost;
-    	clan->funds -= cost;
+    	clan->funds  += gain;
     	if ( clan->funds < 0 )
 		clan->funds = 0;
 
