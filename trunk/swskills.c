@@ -3541,6 +3541,13 @@ void do_bridge ( CHAR_DATA *ch , char *argument )
 	return;
    }
 
+   location = ch->in_room;
+   if( strcmp(location->owner, ch->name) )
+   {
+	send_to_char( "&R> this is not your node&w\n\r", ch );
+	return;
+   }
+
    edir = get_dir(arg1);
    xit = get_exit(ch->in_room, edir);
 
@@ -3562,11 +3569,13 @@ void do_bridge ( CHAR_DATA *ch , char *argument )
             ch_printf( ch, "> %d is not in this system\n\r" , evnum );
             return;
        }
+
        if ( IS_SET(toroom->room_flags, ROOM_NOPEDIT ) )
        {
             ch_printf( ch, "> %d cannot be edited\n\r" , evnum );
             return;
        }
+
        texit = get_exit( toroom, rev_dir[edir] );
        if ( texit )
        {
