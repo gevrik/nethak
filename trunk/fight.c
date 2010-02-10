@@ -1475,12 +1475,13 @@ ch_ret damage( CHAR_DATA *ch, CHAR_DATA *victim, int dam, int dt )
 
 	if ( !npcvict )
 	{
-	    sprintf( log_buf, "%s killed by %s at %ld",
+	    sprintf( log_buf, ">>> %s WAS FLATLINED BY %s AT %ld",
 		victim->name,
 		(IS_NPC(ch) ? ch->short_descr : ch->name),
 		victim->in_room->vnum );
 	    log_string( log_buf );
 	    to_channel( log_buf, CHANNEL_MONITOR, "Monitor", 2 );
+	    echo_to_all(AT_CARNAGE, log_buf, ECHOTAR_ALL);
 
 	}
 	else
@@ -1902,7 +1903,7 @@ else
     set_char_color( AT_DIEMSG, victim );
     do_help(victim, "_DIEMSG_" );
 
-
+/*
 
     for ( ship = first_ship; ship; ship = ship->next )
     {
@@ -1921,7 +1922,9 @@ else
 
     }
 
+*/
 
+    /*
     if ( victim->plr_home )
     {
       ROOM_INDEX_DATA *room = victim->plr_home;
@@ -1970,7 +1973,7 @@ else
   {
     DESCRIPTOR_DATA *d;
 
-    /* Make sure they are not halfway logged in. */
+    // Make sure they are not halfway logged in.
     for ( d = first_descriptor; d; d = d->next )
       if ( (victim = d->character) && !IS_NPC(victim)  )
         break;
@@ -2003,6 +2006,48 @@ else
           arg );
 
   rename( buf, buf2 );
+
+  */
+
+    extract_char( victim, FALSE );
+    if ( !victim )
+    {
+      bug( "oops! raw_kill: extract_char destroyed pc char", 0 );
+      return;
+    }
+
+    while ( victim->first_affect )
+	affect_remove( victim, victim->first_affect );
+    victim->resistant   = 0;
+    victim->susceptible = 0;
+    victim->immune      = 0;
+    victim->carry_weight= 0;
+    victim->armor	= 100;
+    victim->mod_str	= 0;
+    victim->mod_dex	= 0;
+    victim->mod_wis	= 0;
+    victim->mod_int	= 0;
+    victim->mod_con	= 0;
+    victim->mod_cha	= 0;
+    victim->mod_lck   	= 0;
+    victim->damroll	= 0;
+    victim->hitroll	= 0;
+    victim->mental_state = -10;
+    victim->alignment	= URANGE( -1000, victim->alignment, 1000 );
+    victim->saving_spell_staff = 0;
+    victim->position	= POS_RESTING;
+    victim->hit		= UMAX( 1, victim->hit  );
+    victim->mana	= UMAX( 1, victim->mana );
+    victim->move	= UMAX( 1, victim->move );
+
+    //victim->pcdata->condition[COND_FULL]   = 12;
+    //victim->pcdata->condition[COND_THIRST] = 12;
+
+    char_to_room( victim, get_room_index( ROOM_VNUM_STRAY ) );
+	do_look( victim, "auto" );
+
+    if ( IS_SET( sysdata.save_flags, SV_DEATH ) )
+	save_char_obj( victim );
 
   return;
 
