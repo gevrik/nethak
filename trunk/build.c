@@ -3195,7 +3195,7 @@ void do_redit( CHAR_DATA *ch, char *argument )
 	send_to_char( "  name desc ed rmed\n\r",			ch );
 	send_to_char( "  exit bexit exdesc exflags exname exkey\n\r",	ch );
 	send_to_char( "  flags sector teledelay televnum tunnel\n\r",	ch );
-	send_to_char( "  seccode exdistance level owner\n\r",			ch );
+	send_to_char( "  seccode exdistance level owner\n\r",	ch );
 	return;
     }
 
@@ -3377,7 +3377,7 @@ void do_redit( CHAR_DATA *ch, char *argument )
            send_to_char( "dark, nomob, indoors, nomagic, bank,\n\r", ch );
            send_to_char( "private, safe, petshop, norecall, donation, nodropall, silence,\n\r", ch );
            send_to_char( "logspeach, nodrop, clanstoreroom, plr_home, empty_home, teleport\n\r", ch );
-           send_to_char( "nofloor\n\r", ch );
+           send_to_char( "nofloor, publicio\n\r", ch );
            send_to_char( "spacecraft, auction, no_drive, can_land, can_fly, coding, agent\n\r", ch );
            return;
 	}

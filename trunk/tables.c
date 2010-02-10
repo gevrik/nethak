@@ -405,6 +405,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_scan" ))		return do_scan;
 	if ( !str_cmp( name, "do_score" ))		return do_score;
 	if ( !str_cmp( name, "do_search" ))		return do_search;
+	if ( !str_cmp( name, "do_securenode" ))		return do_securenode;
 	if ( !str_cmp( name, "do_sedit" ))		return do_sedit;
 	if ( !str_cmp( name, "do_sell" ))		return do_sell;
 	if ( !str_cmp( name, "do_sellship" ))           return do_sellship;
@@ -875,6 +876,7 @@ char *skill_name( DO_FUN *skill )
     if ( skill == do_scan )		return "do_scan";
     if ( skill == do_score )		return "do_score";
     if ( skill == do_search )		return "do_search";
+    if ( skill == do_securenode )		return "do_securenode";
     if ( skill == do_sedit )		return "do_sedit";
     if ( skill == do_sell )		return "do_sell";
     if ( skill == do_set_boot_time )	return "do_set_boot_time";
