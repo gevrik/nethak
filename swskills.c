@@ -3647,8 +3647,19 @@ void do_bridge ( CHAR_DATA *ch , char *argument )
 
 		   {
 
- 		 	  send_to_char( "> &Rcannot remove existing connection gate&w\n\r", ch );
- 			  return;
+ 		 	  //send_to_char( "> &Rcannot remove existing connection gate&w\n\r", ch );
+ 			  //return;
+
+           sprintf( buf , "> construction code removes door at: %s" , dir_name[edir] );
+           echo_to_room( AT_WHITE, ch->in_room, buf );
+           REMOVE_BIT(  xit->exit_info , EX_ISDOOR );
+           xit->key = -1;
+           texit = get_exit_to( xit->to_room, rev_dir[edir], ch->in_room->vnum );
+           if ( texit )
+           {
+              REMOVE_BIT(  texit->exit_info , EX_ISDOOR );
+              texit->key = -1;
+           }
 
 		   }
 
