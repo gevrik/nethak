@@ -98,6 +98,8 @@ void do_layout( CHAR_DATA *ch, char *argument )
 	return;
    }
 
+   SET_BIT( ch->in_room->area->flags , AFLAG_MODIFIED );
+
     ch->substate = SUB_ROOM_DESC;
     ch->dest_buf = location;
     start_editing( ch, location->description );
@@ -235,7 +237,7 @@ void do_connect( CHAR_DATA *ch, char *argument )
     }
 
 
-    if ( !IS_SET( ch->in_room->room_flags, ROOM_CAN_LAND ) )
+    if ( !IS_SET( ch->in_room->room_flags, ROOM_CAN_LAND ) && !IS_SET( ch->in_room->room_flags, ROOM_PUBLICIO ) )
     {	
   	send_to_char( "&R> you need to be in an io node\n\r", ch );
 	return;
@@ -260,7 +262,7 @@ void do_connect( CHAR_DATA *ch, char *argument )
 	{
 		for ( room = planet->area->first_room ; room ; room = room->next_in_area )
 		{
-			if ( IS_SET( room->room_flags , ROOM_CAN_LAND ) && ( atoi(arg1) == room->vnum ) )
+			if ( ( IS_SET( room->room_flags , ROOM_CAN_LAND ) && ( atoi(arg1) == room->vnum ) ) || ( IS_SET( room->room_flags , ROOM_PUBLICIO ) && ( atoi(arg1) == room->vnum ) ) )
 			{
 
 			rfound = TRUE;
@@ -276,7 +278,10 @@ void do_connect( CHAR_DATA *ch, char *argument )
 	ch_printf( ch , "> choices for %s:\n\r\n\r", planet->name);
 		for ( room = planet->area->first_room ; room ; room = room->next_in_area )
 		if ( IS_SET( room->room_flags, ROOM_CAN_LAND ) )
-		ch_printf( ch , "%-15d  %s\n\r", room->vnum, room->name);
+		ch_printf( ch , "%-15d  %s &C[&Rprot&C]&w\n\r", room->vnum, room->name);
+		for ( room = planet->area->first_room ; room ; room = room->next_in_area )
+		if ( IS_SET( room->room_flags, ROOM_PUBLICIO ) )
+		ch_printf( ch , "%-15d  %s &C[&Gpublic&C]&w\n\r", room->vnum, room->name);
 		
 	return;
         }
@@ -653,6 +658,75 @@ void do_renamenode( CHAR_DATA *ch, char *argument )
 	STRFREE( location->name );
 	location->name = STRALLOC( argument );
 	send_to_char( "> &Gnode name set&w [100c spent]\n\r", ch);
+	SET_BIT( ch->in_room->area->flags , AFLAG_MODIFIED );
+	return;
+
+}
+
+void do_securenode( CHAR_DATA *ch, char *argument )
+{
+    char arg [MAX_INPUT_LENGTH];
+    char buf [MAX_STRING_LENGTH];
+    ROOM_INDEX_DATA	*location;
+    int chance;
+
+    location = ch->in_room;
+
+	if ( !argument || argument[0] == '\0' )
+	{
+	   send_to_char( "sets the security code for this node\n\r", ch );
+	   send_to_char( "syntax: secure <seccode>\n\r", ch );
+	   return;
+	}
+
+	   if( !IS_IMMORTAL(ch) )
+	   {
+	   if ( IS_SET( ch->in_room->room_flags , ROOM_NOPEDIT ) )
+	   {
+		   send_to_char( "> you may not edit this node\n\r", ch );
+		   return;
+	    }
+	   }
+
+	   if( strcmp(location->owner, ch->name) )
+	   {
+		send_to_char( "&R> this is not your node&w\n\r", ch );
+		return;
+	   }
+
+	   if ( ch->gold < 1000 )
+	   {
+		send_to_char( "> &Rinsufficient funds [1000 needed]&w\n\r", ch );
+		return;
+	   }
+
+    if ( !IS_SET( ch->in_room->room_flags, ROOM_CAN_LAND ) )
+    {
+  	send_to_char( "&R> you need to be in an io node\n\r", ch );
+	return;
+    }
+
+    if ( IS_SET( ch->in_room->room_flags, ROOM_PUBLICIO ) )
+    {
+  	send_to_char( "&R> this is a public io node\n\r", ch );
+	return;
+    }
+
+    chance = (int) (ch->pcdata->learned[gsn_landscape]);
+    if ( number_percent( ) > chance )
+    {
+ 	send_to_char( "> &Ryou fail. try again!&w\n\r", ch );
+ 	return;
+    }
+
+    ch->gold -= 1000;
+
+	location->seccode = atoi(argument);
+	send_to_char( "> &Gcode set. 1000c spent.&w\n\r", ch );
+
+	SET_BIT( ch->in_room->area->flags , AFLAG_MODIFIED );
+
+	learn_from_success( ch , gsn_landscape );
 	return;
 
 }

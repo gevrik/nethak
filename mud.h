@@ -1448,7 +1448,7 @@ typedef enum
 #define ROOM_RESTAURANT		BV19 /* used as coding node */
 #define ROOM_PLR_HOME		BV20
 #define ROOM_EMPTY_HOME 	BV21
-#define R22			BV22
+#define ROOM_PUBLICIO		BV22 /* used for public io nodes */
 #define ROOM_HOTEL      	BV23
 #define ROOM_NOFLOOR		BV24
 #define ROOM_PAWN	        BV25
@@ -3200,6 +3200,7 @@ DECLARE_DO_FUN(	do_say		);
 DECLARE_DO_FUN( do_scan         );
 DECLARE_DO_FUN(	do_score	);
 DECLARE_DO_FUN( do_search	);
+DECLARE_DO_FUN(	do_securenode );
 DECLARE_DO_FUN(	do_sedit	);
 DECLARE_DO_FUN(	do_sell		);
 DECLARE_DO_FUN( do_set_boot_time);

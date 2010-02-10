@@ -452,8 +452,8 @@ void talk_channel( CHAR_DATA *ch, char *argument, int channel, const char *verb 
 	break;
     case CHANNEL_CLANTALK:
 	set_char_color( AT_CLAN, ch );
-	ch_printf( ch, "[OPCS] %s: '%s'\n\r", ch->name, argument );
-	sprintf( buf, "[OPCS] %s: '$t'", IS_IMMORTAL(ch) ? "$n" : ch->name  );
+	ch_printf( ch, "[ORG] %s: '%s'\n\r", ch->name, argument );
+	sprintf( buf, "[ORG] %s: '$t'", IS_IMMORTAL(ch) ? "$n" : ch->name  );
 	break;
     case CHANNEL_SHIP:
         set_char_color( AT_SHIP, ch );

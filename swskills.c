@@ -2740,6 +2740,7 @@ void  clear_roomtype( ROOM_INDEX_DATA * location )
       REMOVE_BIT( location->room_flags , ROOM_GARAGE );
       REMOVE_BIT( location->room_flags , ROOM_BANK );
       REMOVE_BIT( location->room_flags , ROOM_EMPLOYMENT );
+
 }
 
 void do_landscape ( CHAR_DATA *ch , char *argument )
@@ -2841,7 +2842,8 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 	send_to_char( "database     - generates resources\n\r", ch );
 	send_to_char( "subserver    - supports terminals\n\r", ch );
 	send_to_char( "terminal     - generates funds\n\r", ch );	
-	send_to_char( "ionode       - users can connect here\n\r", ch );
+	send_to_char( "ionode       - protected io node\n\r", ch );
+	send_to_char( "publicio     - public io node\n\r", ch );
 	//send_to_char( "shipyard     - ships are built here\n\r", ch );
 	//send_to_char( "inside       - somewhere inside\n\r", ch );
 	send_to_char( "home         - may be used as a private node\n\r", ch );
@@ -2978,6 +2980,15 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
       strcpy( buf , ch->name );
       strcat( buf , "&Y.&Cio" );
       strcpy( bufa , "an io node.\n\r" );
+   }
+   else if ( !str_cmp( argument, "publicio" ) )
+   {
+      location->area->planet->citysize++;
+      location->sector_type = SECT_CITY;
+      SET_BIT( location->room_flags , ROOM_PUBLICIO );
+      strcpy( buf , ch->name );
+      strcat( buf , "&Y.&Cio" );
+      strcpy( bufa , "a public io node.\n\r" );
    }
    else if ( !str_cmp( argument, "trade" ) )
    {
@@ -3138,7 +3149,7 @@ void do_construction ( CHAR_DATA *ch , char *argument )
    if( !IS_IMMORTAL(ch) )
    if ( IS_SET( ch->in_room->room_flags , ROOM_NOPEDIT ) )
    {
-	   send_to_char( "> you may not edit this room\n\r", ch );
+	   send_to_char( "> you may not edit this node\n\r", ch );
 	   return;   
     }
     }
@@ -3203,7 +3214,7 @@ void do_construction ( CHAR_DATA *ch , char *argument )
     
    SET_BIT( ch->in_room->area->flags , AFLAG_MODIFIED );
    
-   sprintf( buf , "> construction command builds a new node to: %s" , dir_name[edir] );
+   sprintf( buf , "> a new node appears in this dir: %s" , dir_name[edir] );
    echo_to_room( AT_WHITE, ch->in_room, buf );
    
 }

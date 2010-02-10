@@ -496,8 +496,7 @@ void reset_all( )
             continue; 
         }
 
-        if ( ( IS_SET( pRoomIndex->room_flags, ROOM_SHIPYARD ) 
-        || IS_SET( pRoomIndex->room_flags, ROOM_CAN_LAND ) )
+        if ( IS_SET( pRoomIndex->room_flags, ROOM_CAN_LAND )
         && pRoomIndex->area && pRoomIndex->area->planet)
         {
             char tmpbuf[MAX_STRING_LENGTH];
