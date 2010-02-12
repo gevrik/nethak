@@ -1150,7 +1150,6 @@ void do_makeshield( CHAR_DATA *ch, char *argument )
     	        checktool = FALSE;
                 checkbatt = FALSE;
                 checkcond = FALSE;
-                checkcirc = FALSE;
                 checkgems = FALSE;
 
                 for ( obj = ch->last_carrying; obj; obj = obj->prev_content )     
@@ -1175,7 +1174,7 @@ void do_makeshield( CHAR_DATA *ch, char *argument )
  
                 if ( !checkbatt )
                 {
-                   send_to_char( "&R> you need an utility subroutine\n\r", ch);
+                   send_to_char( "&R> you need an utility patch\n\r", ch);
                    return;
                 }
                 
@@ -2749,6 +2748,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
     OBJ_DATA *obj;
     OBJ_DATA *obj_next;
     ROOM_INDEX_DATA * location;
+    EXIT_DATA   *xit, *texit;
     int chance;
     //char arg[MAX_INPUT_LENGTH];
     char buf[MAX_STRING_LENGTH];
@@ -2918,6 +2918,14 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
    }
    else if ( !str_cmp( argument, "home" ) )
    {
+
+       for( xit = location->first_exit; xit; xit = xit->next )
+	if( IS_SET( xit->to_room->room_flags, ROOM_BARRACKS ) )
+	{
+	   send_to_char("> &Ryou cannot put home nodes around firewalls&w\n\r", ch );
+	   return;
+	}
+
       location->area->planet->citysize++;
       location->sector_type = SECT_INSIDE;
       SET_BIT( location->room_flags , ROOM_EMPTY_HOME );
@@ -3045,6 +3053,27 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 	  send_to_char("> insufficient funds [20k needed] - \n\r", ch );
 	  return;
       }
+
+      for( xit = location->first_exit; xit; xit = xit->next )
+	if( IS_SET( xit->to_room->room_flags, ROOM_SAFE ) )
+	{
+	   send_to_char("&R> safe node nearby.&w\n\r", ch );
+	   return;
+	}
+
+      for( xit = location->first_exit; xit; xit = xit->next )
+	if( IS_SET( xit->to_room->room_flags, ROOM_PLR_HOME ) )
+	{
+	   send_to_char("&R> home node nearby.&w\n\r", ch );
+	   return;
+	}
+
+      for( xit = location->first_exit; xit; xit = xit->next )
+	if( IS_SET( xit->to_room->room_flags, ROOM_EMPTY_HOME ) )
+	{
+	   send_to_char("&R> unused home node nearby.&w\n\r", ch );
+	   return;
+	}
 
       location->area->planet->citysize++;
       location->sector_type = SECT_INSIDE;
