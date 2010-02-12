@@ -26,13 +26,13 @@ H_FILES = mud.h bet.h gboard.h
 
 all:
 #	co $(H_FILES)
-	make swr
+	make ../../neuro/bin/swr
 #	rm -f $(H_FILES)
 
-swr: $(O_FILES)
-	rm -f swr
-	$(CC) $(L_FLAGS) -o swr $(O_FILES) -lm     -lcrypt
-	chmod g+w swr
+../../neuro/bin/swr: $(O_FILES)
+	rm -f ../../neuro/bin/swr
+	$(CC) $(L_FLAGS) -o ../../neuro/bin/swr $(O_FILES) -lm     -lcrypt
+	chmod g+w ../../neuro/bin/swr
 	chmod g+w $(O_FILES)
 
 .c.o: mud.h

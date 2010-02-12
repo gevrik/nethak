@@ -194,7 +194,6 @@ void do_makeblade( CHAR_DATA *ch, char *argument )
     STRFREE( obj->short_descr );
     obj->short_descr = STRALLOC( buf );        
     STRFREE( obj->description );
-    strcat( buf, " [blade] is stored here." );
     obj->description = STRALLOC( buf );
     CREATE( paf, AFFECT_DATA, 1 );
     paf->type               = -1;
@@ -224,7 +223,7 @@ void do_makeblade( CHAR_DATA *ch, char *argument )
                                                                     
     obj = obj_to_char( obj, ch );
                                                             
-    send_to_char( "&G> you finish coding and look at your newly created blade module&w\n\r", ch);
+    send_to_char( "&G> you finish coding a blade module&w\n\r", ch);
     act( AT_PLAIN, "> $n finishes coding a blade module", ch,
          NULL, argument , TO_ROOM );
         
@@ -442,7 +441,6 @@ void do_makeblaster( CHAR_DATA *ch, char *argument )
     STRFREE( obj->short_descr );
     obj->short_descr = STRALLOC( buf );        
     STRFREE( obj->description );
-    strcat( buf, " [blaster] is stored here." );
     obj->description = STRALLOC( buf );
     CREATE( paf, AFFECT_DATA, 1 );
     paf->type               = -1;
@@ -887,7 +885,7 @@ void do_makejewelry( CHAR_DATA *ch, char *argument )
     		DISPOSE( ch->dest_buf );
     		DISPOSE( ch->dest_buf_2 );
     		ch->substate = SUB_NONE;    		                                   
-    	        send_to_char("&R> you are interupted and fail to finish your work\n\r", ch);
+    	        send_to_char("&R> you are interrupted and fail to finish your work\n\r", ch);
     	        return;
     }
     
@@ -950,7 +948,6 @@ void do_makejewelry( CHAR_DATA *ch, char *argument )
     STRFREE( obj->short_descr );
     obj->short_descr = STRALLOC( buf );        
     STRFREE( obj->description );
-    strcat( buf, " [util] is stored here." );
     obj->description = STRALLOC( buf );
     obj->value[0] = obj->value[1];      
     obj->cost *= 10;
@@ -1107,6 +1104,7 @@ void do_makearmor( CHAR_DATA *ch, char *argument )
     strcpy( buf, arg2 );
     obj->name = STRALLOC( buf );
     strcpy( buf, arg2 );
+    strcat( buf, " [def]" );
     STRFREE( obj->short_descr );
     obj->short_descr = STRALLOC( buf );        
     STRFREE( obj->description );
@@ -1307,7 +1305,6 @@ void do_makeshield( CHAR_DATA *ch, char *argument )
     STRFREE( obj->short_descr );
     obj->short_descr = STRALLOC( buf );        
     STRFREE( obj->description );
-    strcat( buf, " [shield] is stored here." );
     obj->description = STRALLOC( buf );
     obj->value[0] = (int) (level/10+gemtype*2);      /* condition */
     obj->value[1] = (int) (level/10+gemtype*2);      /* armor */
@@ -1463,10 +1460,10 @@ void do_makecontainer( CHAR_DATA *ch, char *argument )
     strcpy( buf, arg2 );
     obj->name = STRALLOC( buf );
     strcpy( buf, arg2 );
+    strcat( buf, " [cont]" );
     STRFREE( obj->short_descr );
     obj->short_descr = STRALLOC( buf );        
     STRFREE( obj->description );
-    strcat( buf, " was dropped here." );
     obj->description = STRALLOC( buf );
     obj->value[0] = level;
     obj->value[1] = 0;
@@ -2739,6 +2736,7 @@ void  clear_roomtype( ROOM_INDEX_DATA * location )
       REMOVE_BIT( location->room_flags , ROOM_GARAGE );
       REMOVE_BIT( location->room_flags , ROOM_BANK );
       REMOVE_BIT( location->room_flags , ROOM_EMPLOYMENT );
+      REMOVE_BIT( location->room_flags , ROOM_PUBLICIO );
 
 }
 
