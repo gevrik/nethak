@@ -464,8 +464,8 @@ void do_decompile( CHAR_DATA *ch, char *argument )
     		&& str_cmp( arg, "app" ) )
     		{
         		send_to_char( "&R> you cannot decompile that, try:\n\r&w", ch);
-        		send_to_char( "&R> def, blaster, blade, function,\n\r&w", ch);
-        		send_to_char( "&R> util, app or patch\n\r&w", ch);
+        		send_to_char( "> def, blaster, blade, function,\n\r", ch);
+        		send_to_char( "> util, app or patch\n\r", ch);
         		return;
     		}
 
@@ -574,11 +574,7 @@ void do_decompile( CHAR_DATA *ch, char *argument )
 			}
 	else if ( !str_cmp( arg, "blade" ) )
 			{
-				int anumber = number_range(0,5);
-				if ( anumber == 0 )
-					pObjIndex = get_obj_index( 58 );
-				else
-					pObjIndex = get_obj_index( 34 );
+			pObjIndex = get_obj_index( 34 );
 			}
 	else if ( !str_cmp( arg, "function" ) )
 			{
@@ -730,5 +726,51 @@ void do_securenode( CHAR_DATA *ch, char *argument )
 	return;
 
 }
+
+	void do_examineobject( CHAR_DATA *ch, char *argument )
+	{
+	    char arg[MAX_INPUT_LENGTH];
+	    AFFECT_DATA *paf;
+	    OBJ_DATA *obj;
+	    char *pdesc;
+
+	    one_argument( argument, arg );
+
+	    if ( arg[0] == '\0' )
+	    {
+		send_to_char( "> &Yspecify object&w\n\r", ch );
+		return;
+	    }
+	    if ( arg[0] != '\'' && arg[0] != '"' && strlen(argument) > strlen(arg) )
+		strcpy( arg, argument );
+
+	    if ( (obj = find_obj(ch, argument, TRUE)) == NULL )
+	    {
+
+		return;
+	    }
+
+	    ch_printf( ch, "> &Gname:&W %s\n\r", obj->short_descr );
+	    ch_printf( ch, "> &Gtype:&W %s\n\r", item_type_name( obj ) );
+	    ch_printf( ch, "> &Gwght:&W %d/%d\n\r", 1, obj->weight, get_obj_weight( obj ) );
+	    ch_printf( ch, "> &Gcost:&W %d &Glevel:&W %d\n\r", obj->cost, obj->level );
+
+	    if (obj->value[3] == WEAPON_BLASTER )
+	    {
+
+	    ch_printf( ch, "> &Gcond:&W %d  &Gldmg:&W %d  &Ghdam:&W %d\n\r", obj->value[0], obj->value[1], obj->value[2] );
+
+	    for ( paf = obj->first_affect; paf; paf = paf->next )
+		ch_printf( ch, "> &Yaffects %s by %d (extra)&w\n\r",
+		    affect_loc_name( paf->location ), paf->modifier );
+
+	    for ( paf = obj->pIndexData->first_affect; paf; paf = paf->next )
+		ch_printf( ch, "> &Yaffects %s by %d&w\n\r",
+		    affect_loc_name( paf->location ), paf->modifier );
+	    }
+
+
+	    return;
+	}
 
 //done for Neuro

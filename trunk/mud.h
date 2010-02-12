@@ -3201,6 +3201,7 @@ DECLARE_DO_FUN( do_scan         );
 DECLARE_DO_FUN(	do_score	);
 DECLARE_DO_FUN( do_search	);
 DECLARE_DO_FUN(	do_securenode );
+DECLARE_DO_FUN(	do_examineobject );
 DECLARE_DO_FUN(	do_sedit	);
 DECLARE_DO_FUN(	do_sell		);
 DECLARE_DO_FUN( do_set_boot_time);

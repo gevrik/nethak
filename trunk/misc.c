@@ -16,13 +16,13 @@ void do_buyhome( CHAR_DATA *ch, char *argument )
 
      if ( !ch->in_room->area )
      {
-         send_to_char( "&R> this is not a safe place to live\n\r&w", ch);
+         send_to_char( "> &Rthis is not a safe place to live&w\n\r", ch);
          return;   
      }
 
  	if ( !ch->pcdata->clan )
  	{
- 		send_to_char( "> you do not belong to an organization\n\r", ch );
+ 		send_to_char( "> &Ryou do not belong to an organization&w\n\r", ch );
  		return;
  	}
          
@@ -134,7 +134,7 @@ void do_ammo( CHAR_DATA *ch, char *argument )
       {
         if ( obj->value[0] > wield->value[5] )
         {
-            send_to_char( "> that cartridge is too big for your blaster", ch);
+            send_to_char( "> that patch is not suitable for your blaster", ch);
             return;
         }
         unequip_char( ch, obj );
@@ -151,7 +151,7 @@ void do_ammo( CHAR_DATA *ch, char *argument )
            {
                  if ( obj->value[0] > wield->value[5] )
                  {
-                    send_to_char( "> that cartridge is too big for your blaster", ch);
+                    send_to_char( "> that patch is not suitable for your blaster", ch);
                     continue;
                  }
                  checkammo = TRUE;
@@ -165,12 +165,12 @@ void do_ammo( CHAR_DATA *ch, char *argument )
     
       if (!checkammo)
       {
-        send_to_char( "&R> you do not seem to have any ammo to reload your blaster with\n\r&w", ch);
+        send_to_char( "&R> you do not seem to have any patch to reload your blaster with\n\r&w", ch);
         return;
       }
       
-      ch_printf( ch, "> you replace your ammunition cartridge\n\r> your blaster is charged with %d shots at high power to %d shots on low\n\r", charge/5, charge );
-      act( AT_PLAIN, "> $n replaces the ammunition cell in $p", ch, wield, NULL, TO_ROOM );
+      ch_printf( ch, "> you patch your blaster\n\r> your blaster is charged with %d shots at high power to %d shots on low\n\r", charge/5, charge );
+      act( AT_PLAIN, "> $n patches their $p", ch, wield, NULL, TO_ROOM );
 	
     }
     else
@@ -178,7 +178,7 @@ void do_ammo( CHAR_DATA *ch, char *argument )
     
       if ( obj && obj->item_type != ITEM_BATTERY )
       {
-        send_to_char( "&R> your hands are too full to replace the power cell\n\r&w", ch);
+        send_to_char( "&R> your hands are too full to patch that\n\r&w", ch);
         return;
       }
     
@@ -207,7 +207,7 @@ void do_ammo( CHAR_DATA *ch, char *argument )
     
       if (!checkammo)
       {
-        send_to_char( "&R> you do not seem to have a power cell\n\r&w", ch);
+        send_to_char( "&R> you do not seem to have a suitable patch\n\r&w", ch);
         return;
       }
       
@@ -219,13 +219,13 @@ void do_ammo( CHAR_DATA *ch, char *argument )
       }
       else if (wield->value[3] == WEAPON_VIBRO_BLADE )
       {
-         ch_printf( ch, "> you replace your power cell\n\r> your blade module is charged to %d/%d units\n\r", charge, charge );
-         act( AT_PLAIN, "> $n replaces the power cell in $p", ch, wield, NULL, TO_ROOM );
+         ch_printf( ch, "> you patch your blade\n\r> your blade module is charged to %d/%d units\n\r", charge, charge );
+         act( AT_PLAIN, "> $n patches their $p", ch, wield, NULL, TO_ROOM );
       }
       else
       {
          ch_printf( ch, "> you feel very foolish\n\r" );
-         act( AT_PLAIN, "> $n tries to jam a power cell into $p", ch, wield, NULL, TO_ROOM );
+         act( AT_PLAIN, "> $n tries to patch their $p", ch, wield, NULL, TO_ROOM );
       }
     }
     

@@ -85,13 +85,13 @@ char *	const	area_flags	[] =
 char *	const	o_types	[] =
 {
 "none", "light", "weapon", "armor", "furniture",
-"trash", "container", "paper", "drinkcon", "food",
+"misc", "container", "paper", "drinkcon", "resourcea",
 "money", "pen", "corpse", "corpse_pc", "fountain",
-"scraps", "lockpick", "ammo", "shovel", "lens",
-"crystal", "plastic", "battery", "toolkit", "metal",
-"oven", "mirror", "circuit", "superconductor", "comlink",
-"medpac", "fabric", "rare_metal", "magnet",  "thread",
-"device", "droid_corpse", "resource"
+"scraps", "lockpick", "patch", "dataminer", "lens",
+"utility_class", "blaster_class", "utility_patch", "devkit", "blade_class",
+"compiler", "artefact", "func_var_one", "func_var_two", "comlink",
+"medpac", "def_class", "app_class", "magnet",  "parser",
+"device", "droid_corpse", "resourceb"
 };
 
 char *	const	a_types	[] =

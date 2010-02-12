@@ -386,6 +386,7 @@ void do_induct( CHAR_DATA *ch, char *argument )
     act( AT_MAGIC, "> you induct $N into $t", ch, clan->name, victim, TO_CHAR );
     act( AT_MAGIC, "> $n inducts $N into $t", ch, clan->name, victim, TO_NOTVICT );
     act( AT_MAGIC, "> $n inducts you into $t", ch, clan->name, victim, TO_VICT );
+    victim->pcdata->bestowments = str_dup( "build" );
     save_char_obj( victim );
     return;
 }
@@ -1085,137 +1086,137 @@ void do_enlist( CHAR_DATA *ch, char *argument )
 			ch_printf( ch, "> welcome to %s\n\r", clan->name );
 			save_clan ( clan );
 
-			nRoom = make_room( ++top_r_vnum );
-   			nRoom->area = ch->in_room->area;
-  			LINK( nRoom , ch->in_room->area->first_room , ch->in_room->area->last_room , next_in_area , prev_in_area );
-   			STRFREE( nRoom->name );
-   			STRFREE( nRoom->description );
+//			nRoom = make_room( ++top_r_vnum );
+//   			nRoom->area = ch->in_room->area;
+//  			LINK( nRoom , ch->in_room->area->first_room , ch->in_room->area->last_room , next_in_area , prev_in_area );
+//   			STRFREE( nRoom->name );
+//   			STRFREE( nRoom->description );
+//
+//			strcpy( buf , ch->name );
+//			strcat( buf , "&Y.&Chome" );
+//
+//   			nRoom->name = STRALLOC( buf );
+//   			nRoom->description = STRALLOC ( "this is your home node.\n\ruse ENTER command to leave to system lobby.\n\ruse HOME to come back here.\n\rgo UP to go to your IO node and lobby.\n\r" );
+//   			nRoom->owner = STRALLOC( ch->name );
+//   			nRoom->sector_type = SECT_DUNNO;
+//   			SET_BIT( nRoom->room_flags , ROOM_NO_MOB );
+//   			SET_BIT( lRoom->room_flags , ROOM_NOPEDIT );
+//			//SET_BIT( nRoom->room_flags , ROOM_CAN_LAND );
+//
+//   			xit2 = make_exit( nRoom , ch->in_room  , 10 );
+//   			xit2->keyword		= STRALLOC( "" );
+//   			xit2->description	= STRALLOC( "" );
+//   			xit2->key		= -1;
+//   			xit2->exit_info	= 133120;
+//
+//   			ch->in_room->area->planet->size++;
+//
+//   			//SET_BIT( ch->in_room->area->flags , AFLAG_MODIFIED );
+//
+//			//send_to_char( "> new player home node created\n\r", ch );
+//
+//      			nRoom->area->planet->citysize++;
+//      			nRoom->sector_type = SECT_INSIDE;
+//      			SET_BIT( nRoom->room_flags , ROOM_PLR_HOME );
+//      			SET_BIT( nRoom->room_flags , ROOM_NOPEDIT );
+//      			//SET_BIT( nRoom->room_flags , ROOM_HOTEL );
+//
+////lobbyroom
+//
+//			lRoom = make_room( ++top_r_vnum );
+//   			lRoom->area = ch->in_room->area;
+//  			LINK( lRoom , ch->in_room->area->first_room , ch->in_room->area->last_room , next_in_area , prev_in_area );
+//   			STRFREE( lRoom->name );
+//   			STRFREE( lRoom->description );
+//
+//			strcpy( bufa , ch->name );
+//		        strcat( bufa , "&Y.&Clobby" );
+//
+//   			lRoom->name = STRALLOC( bufa );
+//   			lRoom->description = STRALLOC ( "site lobby.\n\ruse ENTER command to leave to system lobby.\n\r" );
+//   			lRoom->owner = STRALLOC( ch->name );
+//   			lRoom->sector_type = SECT_DUNNO;
+//   			SET_BIT( lRoom->room_flags , ROOM_NO_MOB );
+//			SET_BIT( lRoom->room_flags , ROOM_CAN_LAND );
+//			SET_BIT( lRoom->room_flags , ROOM_NOPEDIT );
+//
+//   			xit3 = make_exit( lRoom , ch->in_room , 10 );
+//   			xit3->keyword		= STRALLOC( "" );
+//   			xit3->description	= STRALLOC( "" );
+//   			xit3->key		= -1;
+//   			xit3->exit_info	= 133120;
+//
+//   			xit4 = make_exit( lRoom , nRoom , DIR_DOWN );
+//   			xit4->keyword		= STRALLOC( "" );
+//   			xit4->description	= STRALLOC( "" );
+//   			xit4->key		= -1;
+//   			xit4->exit_info	= 0;
+//
+//   			xit5 = make_exit( nRoom , lRoom , DIR_UP );
+//   			xit5->keyword		= STRALLOC( "" );
+//   			xit5->description	= STRALLOC( "" );
+//   			xit5->key		= -1;
+//   			xit5->exit_info	= 0;
+//
+//   			ch->in_room->area->planet->size++;
+//
+//   			SET_BIT( ch->in_room->area->flags , AFLAG_MODIFIED );
+//
+//			//send_to_char( "> new home node created\n\r", ch );
+//
+//      			lRoom->area->planet->citysize++;
+//      			lRoom->sector_type = SECT_INSIDE;
+//
+////endlobbyroom
+//
+////firstconstroom
+//
+//			cRoom = make_room( ++top_r_vnum );
+//   			cRoom->area = ch->in_room->area;
+//  			LINK( cRoom , ch->in_room->area->first_room , ch->in_room->area->last_room , next_in_area , prev_in_area );
+//   			STRFREE( cRoom->name );
+//   			STRFREE( cRoom->description );
+//
+//			strcpy( bufb , ch->name );
+//		        strcat( bufb , "&Y.&Cdatabase" );
+//
+//   			cRoom->name = STRALLOC( bufb );
+//   			cRoom->description = STRALLOC ( "database node.\n\ruse CONSTRUCT commands to build.\n\r" );
+//   			cRoom->owner = STRALLOC( ch->name );
+//   			cRoom->sector_type = SECT_DUNNO;
+//
+//   			xit6 = make_exit( cRoom , lRoom , DIR_SOUTH );
+//   			xit6->keyword		= STRALLOC( "" );
+//   			xit6->description	= STRALLOC( "" );
+//   			xit6->key		= -1;
+//   			xit6->exit_info	= 0;
+//
+//   			xit7 = make_exit( lRoom , cRoom , DIR_NORTH );
+//   			xit7->keyword		= STRALLOC( "" );
+//   			xit7->description	= STRALLOC( "" );
+//   			xit7->key		= -1;
+//   			xit7->exit_info	= 0;
+//
+//   			ch->in_room->area->planet->size++;
+//
+//   			SET_BIT( ch->in_room->area->flags , AFLAG_MODIFIED );
+//
+//			send_to_char( "> new home node created\n\r", ch );
+//
+//      			cRoom->area->planet->wilderness++;
+//      			cRoom->sector_type = SECT_GLACIAL;
+//
+////endfirstconstroom
 
-			strcpy( buf , ch->name );
-			strcat( buf , "&Y.&Chome" );		        
-			
-   			nRoom->name = STRALLOC( buf );
-   			nRoom->description = STRALLOC ( "this is your home node.\n\ruse ENTER command to leave to system lobby.\n\ruse HOME to come back here.\n\rgo UP to go to your IO node and lobby.\n\r" );
-   			nRoom->owner = STRALLOC( ch->name );
-   			nRoom->sector_type = SECT_DUNNO;
-   			SET_BIT( nRoom->room_flags , ROOM_NO_MOB );
-   			SET_BIT( lRoom->room_flags , ROOM_NOPEDIT );
-			//SET_BIT( nRoom->room_flags , ROOM_CAN_LAND );
-   
-   			xit2 = make_exit( nRoom , ch->in_room  , 10 );
-   			xit2->keyword		= STRALLOC( "" );
-   			xit2->description	= STRALLOC( "" );
-   			xit2->key		= -1;
-   			xit2->exit_info	= 133120;
+      			//ch->pcdata->qtaxnodes = ch->pcdata->qtaxnodes + 1;
 
-   			ch->in_room->area->planet->size++;
-
-   			//SET_BIT( ch->in_room->area->flags , AFLAG_MODIFIED );
-
-			//send_to_char( "> new player home node created\n\r", ch );   
-
-      			nRoom->area->planet->citysize++;
-      			nRoom->sector_type = SECT_INSIDE;
-      			SET_BIT( nRoom->room_flags , ROOM_PLR_HOME );
-      			SET_BIT( nRoom->room_flags , ROOM_NOPEDIT );
-      			//SET_BIT( nRoom->room_flags , ROOM_HOTEL );
-
-//lobbyroom
-
-			lRoom = make_room( ++top_r_vnum );
-   			lRoom->area = ch->in_room->area;
-  			LINK( lRoom , ch->in_room->area->first_room , ch->in_room->area->last_room , next_in_area , prev_in_area );
-   			STRFREE( lRoom->name );
-   			STRFREE( lRoom->description );
-
-			strcpy( bufa , ch->name );
-		        strcat( bufa , "&Y.&Clobby" );
-			
-   			lRoom->name = STRALLOC( bufa );
-   			lRoom->description = STRALLOC ( "site lobby.\n\ruse ENTER command to leave to system lobby.\n\r" );
-   			lRoom->owner = STRALLOC( ch->name );
-   			lRoom->sector_type = SECT_DUNNO;
-   			SET_BIT( lRoom->room_flags , ROOM_NO_MOB );
-			SET_BIT( lRoom->room_flags , ROOM_CAN_LAND );
-			SET_BIT( lRoom->room_flags , ROOM_NOPEDIT );
-   
-   			xit3 = make_exit( lRoom , ch->in_room , 10 );
-   			xit3->keyword		= STRALLOC( "" );
-   			xit3->description	= STRALLOC( "" );
-   			xit3->key		= -1;
-   			xit3->exit_info	= 133120;
-
-   			xit4 = make_exit( lRoom , nRoom , DIR_DOWN );
-   			xit4->keyword		= STRALLOC( "" );
-   			xit4->description	= STRALLOC( "" );
-   			xit4->key		= -1;
-   			xit4->exit_info	= 0;
-
-   			xit5 = make_exit( nRoom , lRoom , DIR_UP );
-   			xit5->keyword		= STRALLOC( "" );
-   			xit5->description	= STRALLOC( "" );
-   			xit5->key		= -1;
-   			xit5->exit_info	= 0;
-
-   			ch->in_room->area->planet->size++;
-
-   			SET_BIT( ch->in_room->area->flags , AFLAG_MODIFIED );
-
-			//send_to_char( "> new home node created\n\r", ch );   
-
-      			lRoom->area->planet->citysize++;
-      			lRoom->sector_type = SECT_INSIDE;
-
-//endlobbyroom
-
-//firstconstroom
-
-			cRoom = make_room( ++top_r_vnum );
-   			cRoom->area = ch->in_room->area;
-  			LINK( cRoom , ch->in_room->area->first_room , ch->in_room->area->last_room , next_in_area , prev_in_area );
-   			STRFREE( cRoom->name );
-   			STRFREE( cRoom->description );
-
-			strcpy( bufb , ch->name );
-		        strcat( bufb , "&Y.&Cdatabase" );
-			
-   			cRoom->name = STRALLOC( bufb );
-   			cRoom->description = STRALLOC ( "database node.\n\ruse CONSTRUCT commands to build.\n\r" );
-   			cRoom->owner = STRALLOC( ch->name );
-   			cRoom->sector_type = SECT_DUNNO;
-   
-   			xit6 = make_exit( cRoom , lRoom , DIR_SOUTH );
-   			xit6->keyword		= STRALLOC( "" );
-   			xit6->description	= STRALLOC( "" );
-   			xit6->key		= -1;
-   			xit6->exit_info	= 0;
-
-   			xit7 = make_exit( lRoom , cRoom , DIR_NORTH );
-   			xit7->keyword		= STRALLOC( "" );
-   			xit7->description	= STRALLOC( "" );
-   			xit7->key		= -1;
-   			xit7->exit_info	= 0;
-
-   			ch->in_room->area->planet->size++;
-
-   			SET_BIT( ch->in_room->area->flags , AFLAG_MODIFIED );
-
-			send_to_char( "> new home node created\n\r", ch );   
-
-      			cRoom->area->planet->wilderness++;
-      			cRoom->sector_type = SECT_GLACIAL;
-
-//endfirstconstroom
-
-      			ch->pcdata->qtaxnodes = ch->pcdata->qtaxnodes + 1;
-
-     			fold_area( nRoom->area, nRoom->area->filename, FALSE );
-
-     			ch->plr_home = nRoom;
-     			do_save( ch , "" );
-    			char_from_room( ch );    
-			char_to_room( ch, nRoom );
-			do_look( ch, "auto" );
+//     			fold_area( nRoom->area, nRoom->area->filename, FALSE );
+//
+//     			ch->plr_home = nRoom;
+//     			do_save( ch , "" );
+//    			char_from_room( ch );
+//			char_to_room( ch, nRoom );
+//			do_look( ch, "auto" );
 			return;
 		//}
 	//}
