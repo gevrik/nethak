@@ -175,6 +175,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_forget" ))		return do_forget;
 	if ( !str_cmp( name, "do_forceclose" ))		return do_forceclose;
 	if ( !str_cmp( name, "do_form_password" ))	return do_form_password;
+	if ( !str_cmp( name, "do_foundorg" ))	return do_foundorg;
 	if ( !str_cmp( name, "do_freeze" ))		return do_freeze;
 	break;
     case 'g':
@@ -207,6 +208,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_hlist" ))		return do_hlist;
 	if ( !str_cmp( name, "do_holylight" ))		return do_holylight;
 	if ( !str_cmp( name, "do_homerecall" ))		return do_homerecall;
+	if ( !str_cmp( name, "do_homestray" ))		return do_homestray;
 	if ( !str_cmp( name, "do_homepage" ))		return do_homepage;
 	if ( !str_cmp( name, "do_hset" ))		return do_hset;
 	if ( !str_cmp( name, "do_hyperspace" ))         return do_hyperspace;
@@ -570,6 +572,8 @@ char *skill_name( DO_FUN *skill )
     if ( skill == do_setplanet )     return "do_setplanet";
     if ( skill == do_hail )     return "do_hail";
     if ( skill == do_homerecall )     return "do_homerecall";
+    if ( skill == do_homestray )     return "do_homestray";
+    if ( skill == do_foundorg )     return "do_foundorg";
     if ( skill == do_appoint )     return "do_appoint";
     if ( skill == do_demote )     return "do_demote";
     if ( skill == do_empower )     return "do_empower";

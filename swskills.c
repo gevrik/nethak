@@ -2753,7 +2753,8 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
     //char arg[MAX_INPUT_LENGTH];
     char buf[MAX_STRING_LENGTH];
     char bufa[MAX_STRING_LENGTH];
-    
+    PLANET_DATA *planet;
+
     if ( IS_NPC(ch) || !ch->pcdata )
     	return;
 
@@ -2795,34 +2796,40 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
      
    location = ch->in_room;
    clan = ch->pcdata->clan;
+   planet = ch->in_room->area->planet;
 
-   if ( !clan )
-   {
-	send_to_char( "> you need to be part of an organization before you can do that\n\r", ch );
-	return;         
-   }
+	if ( !IS_SET( planet->flags, PLANET_NOCAP ) )
+	{
+
+		   if ( !clan )
+		   {
+			send_to_char( "> you need to be part of an organization before you can do that\n\r", ch );
+			return;
+		   }
+
+		   if ( (ch->pcdata && ch->pcdata->bestowments
+		   &&    is_name("build", ch->pcdata->bestowments))
+		   || nifty_is_name( ch->name, clan->leaders  ) )
+			;
+		   else
+		   {
+			send_to_char( "> your organization has not given you permission to modify their systems\n\r", ch );
+			return;
+		   }
+
+		   if ( !location->area || !location->area->planet ||
+		   clan != location->area->planet->governed_by  )
+		   {
+			send_to_char( "> you may only modify nodes in systems that your organization controls\n\r", ch );
+			return;
+		   }
+
+	}
 
    if( strcmp(location->owner, ch->name) )
    {
 	send_to_char( "&R> this is not your node&w\n\r", ch );
 	return;
-   }
-
-   if ( (ch->pcdata && ch->pcdata->bestowments
-   &&    is_name("build", ch->pcdata->bestowments))
-   || nifty_is_name( ch->name, clan->leaders  ) )
-	;
-   else
-   {
-	send_to_char( "> your organization has not given you permission to modify their systems\n\r", ch );
-	return;
-   }
-
-   if ( !location->area || !location->area->planet ||
-   clan != location->area->planet->governed_by  )
-   {
-	send_to_char( "> you may only modify nodes in systems that your organization controls\n\r", ch );
-	return;   
    }
   
    if ( IS_SET( location->room_flags , ROOM_NOPEDIT ) )
@@ -2973,6 +2980,13 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
    }
    else if ( !str_cmp( argument, "agent" ) )
    {
+
+		if ( IS_SET( planet->flags, PLANET_NOCAP ) )
+		{
+			send_to_char("> &Ryou cannot build agent nodes here&w\n\r", ch );
+			return;
+		}
+
       location->area->planet->citysize++;
       location->sector_type = SECT_INSIDE;
       SET_BIT( location->room_flags , ROOM_HOTEL );
@@ -2982,6 +2996,12 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
    }
    else if ( !str_cmp( argument, "ionode" ) )
    {
+		if ( IS_SET( planet->flags, PLANET_NOCAP ) )
+		{
+			send_to_char("> &Ryou cannot build protected io nodes here&w\n\r", ch );
+			return;
+		}
+
       location->area->planet->citysize++;
       location->sector_type = SECT_CITY;
       SET_BIT( location->room_flags , ROOM_CAN_LAND );
@@ -3047,6 +3067,12 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 	//  send_to_char("> you do not have enough credits to build more firewall nodes\n\r", ch );
 	//  return;
      // }
+
+		if ( IS_SET( planet->flags, PLANET_NOCAP ) )
+		{
+			send_to_char("> &Ryou cannot build firewalls here&w\n\r", ch );
+			return;
+		}
 
       if( ch->gold < 20000 )
       {
@@ -3136,44 +3162,68 @@ void do_construction ( CHAR_DATA *ch , char *argument )
     int edir;
     ROOM_INDEX_DATA *nRoom;
     char buf[MAX_STRING_LENGTH];
+    //PLANET_DATA * dPlanet = NULL;
+    PLANET_DATA *planet;
              
     if ( IS_NPC(ch) || !ch->pcdata || !ch->in_room )
     	return;
     
     clan = ch->pcdata->clan;
+    planet = ch->in_room->area->planet;
 
     if ( !IS_IMMORTAL(ch) )
     {
 
-    if ( !clan )
-    {
-	send_to_char( "> you need to be part of an organization before you can do that\n\r", ch );
-	return;         
-    }
+		if ( !IS_SET( planet->flags, PLANET_NOCAP ) )
+		{
 
-    if ( (ch->pcdata && ch->pcdata->bestowments
-    &&    is_name("build", ch->pcdata->bestowments))
-    || nifty_is_name( ch->name, clan->leaders  ) )
-	;
-    else
-    {
-	send_to_char( "> your organization has not given you permission to construct in their systems\n\r", ch );
-	return;
-    }
 
-   if ( !ch->in_room->area || !ch->in_room->area->planet ||
-   clan != ch->in_room->area->planet->governed_by      )
-   {
-	send_to_char( "> you may only construct in systems that your organization controls\n\r", ch );
-	return;   
-   }
+			if ( !clan )
+			{
+			send_to_char( "> you need to be part of an organization before you can do that\n\r", ch );
+			return;
+			}
 
-   if( !IS_IMMORTAL(ch) )
-   if ( ch->in_room->area->planet->size >= 800 )
-   {
-	send_to_char( "> this system is too big - go construct somewhere else\n\r", ch );
-	return;   
-   }
+		    if ( (ch->pcdata && ch->pcdata->bestowments
+		    &&    is_name("build", ch->pcdata->bestowments))
+		    || nifty_is_name( ch->name, clan->leaders  ) )
+			;
+		    else
+		    {
+			send_to_char( "> your organization has not given you permission to construct in their systems\n\r", ch );
+			return;
+		    }
+
+		   if ( !ch->in_room->area || !ch->in_room->area->planet ||
+		   clan != ch->in_room->area->planet->governed_by      )
+		   {
+			send_to_char( "> you may only construct in systems that your organization controls\n\r", ch );
+			return;
+		   }
+
+		   if( !IS_IMMORTAL(ch) )
+		   if ( ch->in_room->area->planet->size >= 800 )
+		   {
+			send_to_char( "> this system is too big - go construct somewhere else\n\r", ch );
+			return;
+		   }
+
+		}
+		else {
+
+			if ( ch->pcdata->qtaxnodes > 49 )
+			{
+				send_to_char( "> you may not build any more nodes as a freelancer\n\r", ch );
+				return;
+			}
+
+			if ( clan )
+			{
+			send_to_char( "> you cannot construct in this system\n\r", ch );
+			return;
+			}
+
+		}
 
    if( !IS_IMMORTAL(ch) )
    if ( IS_SET( ch->in_room->room_flags , ROOM_NOPEDIT ) )
@@ -3243,6 +3293,11 @@ void do_construction ( CHAR_DATA *ch , char *argument )
     
    SET_BIT( ch->in_room->area->flags , AFLAG_MODIFIED );
    
+	if ( IS_SET( planet->flags, PLANET_NOCAP ) )
+	{
+		ch->pcdata->qtaxnodes = ch->pcdata->qtaxnodes + 1;
+	}
+
    sprintf( buf , "> a new node appears in this dir: %s" , dir_name[edir] );
    echo_to_room( AT_WHITE, ch->in_room, buf );
    

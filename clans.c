@@ -1021,6 +1021,7 @@ void do_resign( CHAR_DATA *ch, char *argument )
     ch->pcdata->clan = NULL;
     STRFREE(ch->pcdata->clan_name);
     ch->pcdata->clan_name = STRALLOC( "" );
+    ch->pcdata->qtaxnodes = 0;
     act( AT_MAGIC, "> you resign your position in $t", ch, clan->name, NULL , TO_CHAR );
     sprintf(buf, "> %s has quit %s", ch->name, clan->name);
     echo_to_all(AT_MAGIC, buf, ECHOTAR_ALL);

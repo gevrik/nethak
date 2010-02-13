@@ -197,7 +197,25 @@ return;
 
 }
 
+void do_homestray( CHAR_DATA *ch, char *argument )
+{
 
+	if ( ch->fighting )
+	{
+	send_to_char( "> you to try flee from combat\n\r", ch );
+	do_flee( ch, "" );
+	return;
+	}
+
+	send_to_char( "> you connect to the straylight lobby\n\r", ch );
+	act(AT_GREEN, "> $n connects to straylight lobby", ch, NULL, NULL, TO_ROOM );
+	char_from_room( ch );
+	char_to_room( ch, get_room_index( ROOM_VNUM_STRAY ) );
+	do_look( ch, "auto" );
+
+return;
+
+}
 
 void do_connect( CHAR_DATA *ch, char *argument )
 {
@@ -278,10 +296,10 @@ void do_connect( CHAR_DATA *ch, char *argument )
 	ch_printf( ch , "> choices for %s:\n\r\n\r", planet->name);
 		for ( room = planet->area->first_room ; room ; room = room->next_in_area )
 		if ( IS_SET( room->room_flags, ROOM_CAN_LAND ) )
-		ch_printf( ch , "%-15d  %s &C[&Rprot&C]&w\n\r", room->vnum, room->name);
+		ch_printf( ch , "%-15d  %s &C[&Rprot&C]\n\r", room->vnum, room->name);
 		for ( room = planet->area->first_room ; room ; room = room->next_in_area )
 		if ( IS_SET( room->room_flags, ROOM_PUBLICIO ) )
-		ch_printf( ch , "%-15d  %s &C[&Gpublic&C]&w\n\r", room->vnum, room->name);
+		ch_printf( ch , "%-15d  %s &C[&Gpublic&C]\n\r", room->vnum, room->name);
 		
 	return;
         }
@@ -806,6 +824,73 @@ void do_securenode( CHAR_DATA *ch, char *argument )
 
 
 	    return;
+	}
+
+	void do_foundorg( CHAR_DATA *ch, char *argument )
+	{
+	    char filename[256];
+	    CLAN_DATA *clan;
+	    bool found;
+	    int cost = 50000;
+
+	    if ( !argument || argument[0] == '\0' )
+	    {
+		send_to_char( "> &Ysyntax: foundorg <org name>&w\n\r", ch );
+		send_to_char( "> note: costs 50.000 credits\n\r", ch );
+		return;
+	    }
+
+		if ( ch->gold < cost )
+		{
+		send_to_char( "> &Rinsufficient funds [50.000c needed]&w\n\r", ch );
+		return;
+		}
+
+		if ( !check_parse_name( argument ) )
+		{
+			send_to_char( "> &Rinvalid organization name&w\n\r", ch );
+		    return;
+		}
+
+	    if ( ch->pcdata->clan )
+	    {
+	    send_to_char( "> &Ryou already belong to an organization!&w\n\r", ch );
+		return;
+	    }
+
+	    found = FALSE;
+	    sprintf( filename, "%s%s", CLAN_DIR, strlower(argument) );
+
+	    CREATE( clan, CLAN_DATA, 1 );
+	    LINK( clan, first_clan, last_clan, next, prev );
+	    clan->name		= STRALLOC( argument );
+	    clan->description	= STRALLOC( "" );
+	    clan->leaders	= STRALLOC( ch->name );
+	    clan->atwar		= STRALLOC( "" );
+	    clan->tmpstr	= STRALLOC( "" );
+	    clan->funds         = cost;
+	    clan->salary        = 0;
+	    clan->members       = 0;
+
+		//DISPOSE( clan->filename );
+		clan->filename = str_dup( argument );
+		//send_to_char( "> &Gdone&w\n\r", ch );
+		save_clan( clan );
+		write_clan_list( );
+
+	    ch->gold     -= cost;
+
+	    send_to_char( "> &Gorganization created!&w\n\r", ch );
+
+	    clan->members++;
+
+	    ch->pcdata->clan = clan;
+	    STRFREE(ch->pcdata->clan_name);
+	    ch->pcdata->clan_name = QUICKLINK( clan->name );
+	    save_char_obj( ch );
+
+	    return;
+
 	}
 
 //done for Neuro
