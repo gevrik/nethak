@@ -805,7 +805,7 @@ ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
      	if ( wield->value[4] < 1  )
      	{
             act( AT_YELLOW, "> $n points their blaster at you but nothing happens",  ch, NULL, victim, TO_VICT    );
-            act( AT_YELLOW, "> your blaster needs a new ammunition cell", ch, NULL, victim, TO_CHAR    );
+            act( AT_YELLOW, "> your blaster needs a new patch", ch, NULL, victim, TO_CHAR    );
             if ( IS_NPC(ch) )
      	    {
      	        do_remove( ch, wield->name );
@@ -888,7 +888,7 @@ ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
      {
      	if ( wield->value[4] < 1  )
      	{
-            act( AT_YELLOW, "> your blade program needs recharging", ch, NULL, victim, TO_CHAR    );
+            act( AT_YELLOW, "> your blade program needs a patch", ch, NULL, victim, TO_CHAR    );
             dam /= 3;
      	}
      }

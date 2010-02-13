@@ -750,12 +750,11 @@ void do_securenode( CHAR_DATA *ch, char *argument )
 		return;
 	    }
 
-	    ch_printf( ch, "> &Gname:&W %s\n\r", obj->short_descr );
-	    ch_printf( ch, "> &Gtype:&W %s\n\r", item_type_name( obj ) );
-	    ch_printf( ch, "> &Gwght:&W %d/%d\n\r", 1, obj->weight, get_obj_weight( obj ) );
-	    ch_printf( ch, "> &Gcost:&W %d &Glevel:&W %d\n\r", obj->cost, obj->level );
+	    ch_printf( ch, "> &Gname:&W %s&w\n\r", obj->short_descr );
+	    ch_printf( ch, "> &Gtype:&W %s&w  &Gsize:&W %d/%d&w\n\r", item_type_name( obj ), obj->weight, get_obj_weight( obj ) );
+	    ch_printf( ch, "> &Gcost:&W %d&w\n\r", obj->cost );
 
-	    if (obj->value[3] == WEAPON_BLASTER )
+	    if ( obj->value[3] == WEAPON_BLASTER )
 	    {
 
 	    ch_printf( ch, "> &Gcond:&W %d  &Gldmg:&W %d  &Ghdam:&W %d\n\r", obj->value[0], obj->value[1], obj->value[2] );
@@ -767,6 +766,42 @@ void do_securenode( CHAR_DATA *ch, char *argument )
 	    for ( paf = obj->pIndexData->first_affect; paf; paf = paf->next )
 		ch_printf( ch, "> &Yaffects %s by %d&w\n\r",
 		    affect_loc_name( paf->location ), paf->modifier );
+	    }
+
+	    if ( obj->value[3] == WEAPON_VIBRO_BLADE )
+	    {
+
+	    ch_printf( ch, "> &Gcond:&W %d  &Gldmg:&W %d  &Ghdam:&W %d\n\r", obj->value[0], obj->value[1], obj->value[2] );
+
+	    for ( paf = obj->first_affect; paf; paf = paf->next )
+		ch_printf( ch, "> &Yaffects %s by %d (extra)&w\n\r",
+		    affect_loc_name( paf->location ), paf->modifier );
+
+	    for ( paf = obj->pIndexData->first_affect; paf; paf = paf->next )
+		ch_printf( ch, "> &Yaffects %s by %d&w\n\r",
+		    affect_loc_name( paf->location ), paf->modifier );
+	    }
+
+	    if ( obj->item_type == ITEM_ARMOR )
+	    {
+
+	    	sh_int defencebonus = (obj->value[0] * 3);
+
+	    ch_printf( ch, "> &Gcond:&W %d/%d&w\n\r", obj->value[0], obj->value[1] );
+	    ch_printf( ch, "> &Gdefence:&W %d&w\n\r", defencebonus );
+	    ch_printf( ch, "> &Gcoder:&W %s&w\n\r", obj->description );
+
+	    }
+
+	    if ( obj->item_type == ITEM_CONTAINER )
+	    {
+
+	    	sh_int defencebonus = (obj->value[0] * 3);
+
+	    ch_printf( ch, "> &Gcond:&W %d/10&w\n\r", obj->value[3] );
+	    ch_printf( ch, "> &Gslots:&W %d&w\n\r", obj->value[0] );
+	    //ch_printf( ch, "> &Gcoder:&W %s&w\n\r", obj->description );
+
 	    }
 
 
