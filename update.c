@@ -1233,7 +1233,7 @@ void obj_update( void )
         {
           if ( obj->carried_by )
 	  {
-	    act( AT_TEMP, "> $p is almost dead" , obj->carried_by, obj, NULL, TO_CHAR );
+	    act( AT_TEMP, "> $p is almost broken" , obj->carried_by, obj, NULL, TO_CHAR );
 	  }
         }
 

@@ -925,7 +925,7 @@ void do_makejewelry( CHAR_DATA *ch, char *argument )
     {
        send_to_char( "&R> you hold up your newly coded utility\n\r", ch);
        send_to_char( "&R> it suddenly dawns upon you that you have created the most useless\n\r", ch);
-       send_to_char( "&Rpiece of junk you have ever seen - you quickly hide your mistake\n\r", ch);
+       send_to_char( "&R> piece of junk you have ever seen - you quickly hide your mistake\n\r", ch);
        learn_from_failure( ch, gsn_makejewelry );
        return;
     }
@@ -969,6 +969,7 @@ void do_makearmor( CHAR_DATA *ch, char *argument )
     char arg[MAX_INPUT_LENGTH];
     char arg2[MAX_INPUT_LENGTH];
     char buf[MAX_STRING_LENGTH];
+    char buf1[MAX_STRING_LENGTH];
     int level, chance;
     bool checksew, checkfab; 
     OBJ_DATA *obj;
@@ -1107,8 +1108,9 @@ void do_makearmor( CHAR_DATA *ch, char *argument )
     strcat( buf, " [def]" );
     STRFREE( obj->short_descr );
     obj->short_descr = STRALLOC( buf );        
+    sprintf( buf1," [coder: %s]", ch->name);
+    strcat( buf, buf1 );
     STRFREE( obj->description );
-    strcat( buf, " was dropped here." );
     obj->description = STRALLOC( buf );
     obj->value[0] = obj->value[1];      
     obj->cost *= 10;
