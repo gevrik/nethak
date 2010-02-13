@@ -2933,6 +2933,34 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 	   return;
 	}
 
+       for( xit = location->first_exit; xit; xit = xit->next )
+	if( IS_SET( xit->to_room->room_flags, ROOM_PUBLICIO ) )
+	{
+	   send_to_char("> &Ryou cannot put home nodes around ionodes&w\n\r", ch );
+	   return;
+	}
+
+       for( xit = location->first_exit; xit; xit = xit->next )
+	if( IS_SET( xit->to_room->room_flags, ROOM_CAN_LAND ) )
+	{
+	   send_to_char("> &Ryou cannot put home nodes around ionodes&w\n\r", ch );
+	   return;
+	}
+
+       for( xit = location->first_exit; xit; xit = xit->next )
+	if( IS_SET( xit->to_room->room_flags, ROOM_EMPTY_HOME ) )
+	{
+	   send_to_char("> &Ryou cannot put home nodes around home nodes&w\n\r", ch );
+	   return;
+	}
+
+       for( xit = location->first_exit; xit; xit = xit->next )
+	if( IS_SET( xit->to_room->room_flags, ROOM_PLR_HOME ) )
+	{
+	   send_to_char("> &Ryou cannot put home nodes around home nodes&w\n\r", ch );
+	   return;
+	}
+
       location->area->planet->citysize++;
       location->sector_type = SECT_INSIDE;
       SET_BIT( location->room_flags , ROOM_EMPTY_HOME );
@@ -3002,6 +3030,13 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 			return;
 		}
 
+	       for( xit = location->first_exit; xit; xit = xit->next )
+		if( IS_SET( xit->to_room->room_flags, ROOM_EMPTY_HOME ) )
+		{
+		   send_to_char("> &Ryou cannot put io nodes around home nodes&w\n\r", ch );
+		   return;
+		}
+
       location->area->planet->citysize++;
       location->sector_type = SECT_CITY;
       SET_BIT( location->room_flags , ROOM_CAN_LAND );
@@ -3011,6 +3046,14 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
    }
    else if ( !str_cmp( argument, "publicio" ) )
    {
+
+       for( xit = location->first_exit; xit; xit = xit->next )
+	if( IS_SET( xit->to_room->room_flags, ROOM_EMPTY_HOME ) )
+	{
+	   send_to_char("> &Ryou cannot put io nodes around home nodes&w\n\r", ch );
+	   return;
+	}
+
       location->area->planet->citysize++;
       location->sector_type = SECT_CITY;
       SET_BIT( location->room_flags , ROOM_PUBLICIO );
@@ -3145,6 +3188,10 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
           echo_to_room( AT_WHITE, location , "> construction code finished" );
 
     location->description = STRALLOC( bufa );
+
+	int anumber = number_range(1,100);
+	if ( anumber == 23 )
+		learn_from_success( ch , gsn_landscape );
 
     //ch->substate = SUB_ROOM_DESC;
     //ch->dest_buf = location;
