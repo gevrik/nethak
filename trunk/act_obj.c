@@ -2258,6 +2258,9 @@ bool  agent_trigger( CHAR_DATA *victim, CHAR_DATA *ch, OBJ_DATA *obj )
 	send_to_char( "&w> 2,000 credits received\r\n", ch );
 	extract_char( victim, TRUE );
 	planet->pop_support -= 1;
+
+    if ( planet->pop_support < -100 )
+        planet->pop_support = -100;
      
      return TRUE;         
 }

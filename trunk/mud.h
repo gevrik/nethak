@@ -2924,6 +2924,8 @@ DECLARE_DO_FUN( do_pickshiplock  );
 DECLARE_DO_FUN( do_hail );
 DECLARE_DO_FUN( do_connect );
 DECLARE_DO_FUN( do_homerecall );
+DECLARE_DO_FUN( do_homestray );
+DECLARE_DO_FUN( do_foundorg );
 DECLARE_DO_FUN( do_allships );
 DECLARE_DO_FUN( do_appoint );
 DECLARE_DO_FUN( do_demote );
