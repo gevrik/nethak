@@ -822,6 +822,9 @@ void do_securenode( CHAR_DATA *ch, char *argument )
 
 	    }
 
+		int anumber = number_range(1,100);
+		if ( anumber == 23 )
+			learn_from_success( ch , gsn_spacecraft );
 
 	    return;
 	}
