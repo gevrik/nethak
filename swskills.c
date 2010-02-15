@@ -9,9 +9,12 @@
 void    add_reinforcements  args( ( CHAR_DATA *ch ) );
 ch_ret  one_hit             args( ( CHAR_DATA *ch, CHAR_DATA *victim, int dt ) );
 int     xp_compute                ( CHAR_DATA *ch , CHAR_DATA *victim );
+ROOM_INDEX_DATA *generate_exit( ROOM_INDEX_DATA *in_room, EXIT_DATA **pexit );
 int ris_save( CHAR_DATA *ch, int chance, int ris );
 CHAR_DATA *get_char_room_mp( CHAR_DATA *ch, char *argument );
 void  clear_roomtype( ROOM_INDEX_DATA * room );
+bool    aff_paralysis( CHAR_DATA *ch, CHAR_DATA *victim );
+
 
 extern int      top_affect;
 extern int top_r_vnum;
@@ -39,7 +42,8 @@ void do_makeblade( CHAR_DATA *ch, char *argument )
 {
 	char arg[MAX_INPUT_LENGTH];
 	char buf[MAX_STRING_LENGTH];
-	int level, chance, charge;
+	int level, chance;
+	int charge = 0;
 	bool checktool, checkdura, checkbatt, checkoven;
 	OBJ_DATA *obj;
 	OBJ_INDEX_DATA *pObjIndex;
@@ -63,6 +67,12 @@ void do_makeblade( CHAR_DATA *ch, char *argument )
 		checkdura = FALSE;
 		checkbatt = FALSE;
 		checkoven = FALSE;
+
+		if ( !IS_SET( ch->in_room->room_flags, ROOM_RESTAURANT ) )
+		{
+			send_to_char( "> &Ryou need to be in a coding node&w\n\r", ch );
+			return;
+		}
 
 		for ( obj = ch->last_carrying; obj; obj = obj->prev_content )
 		{
@@ -119,7 +129,7 @@ void do_makeblade( CHAR_DATA *ch, char *argument )
 	case 1:
 		if ( !ch->dest_buf )
 			return;
-		strcpy(arg, ch->dest_buf);
+		strcpy(arg, (const char* ) ch->dest_buf);
 		DISPOSE( ch->dest_buf);
 		break;
 
@@ -169,7 +179,10 @@ void do_makeblade( CHAR_DATA *ch, char *argument )
 		}
 	}
 
-	if ( ( !checktool ) || ( !checkdura ) || ( !checkbatt ) || ( !checkoven ) )
+    chance = IS_NPC(ch) ? ch->top_level
+                : (int) (ch->pcdata->learned[gsn_makeblade]) ;
+
+	if ( number_percent( ) > chance*2  || ( !checktool ) || ( !checkdura ) || ( !checkbatt ) || ( !checkoven ) )
 	{
 		send_to_char( "&R> you activate your newly created blade module\n\r", ch);
 		send_to_char( "&R> it hums softly for a few seconds then begins to shake violently\n\r", ch);
@@ -250,7 +263,7 @@ void do_makeblaster( CHAR_DATA *ch, char *argument )
 	default:
 		if ( arg[0] == '\0' )
 		{
-			send_to_char( "&R> syntax: codeblaster <name>\n\r&w", ch);
+			send_to_char( "> &Rsyntax: codeblaster <name>&w\n\r", ch);
 			return;
 		}
 
@@ -260,6 +273,12 @@ void do_makeblaster( CHAR_DATA *ch, char *argument )
 		checkoven = FALSE;
 		checkcond = FALSE;
 		checkcirc = FALSE;
+
+		if ( !IS_SET( ch->in_room->room_flags, ROOM_RESTAURANT ) )
+		{
+			send_to_char( "> &Ryou need to be in a coding node&w\n\r", ch );
+			return;
+		}
 
 		for ( obj = ch->last_carrying; obj; obj = obj->prev_content )
 		{
@@ -331,7 +350,7 @@ void do_makeblaster( CHAR_DATA *ch, char *argument )
 	case 1:
 		if ( !ch->dest_buf )
 			return;
-		strcpy(arg, ch->dest_buf);
+		strcpy(arg, (const char*) ch->dest_buf);
 		DISPOSE( ch->dest_buf);
 		break;
 
@@ -416,7 +435,11 @@ void do_makeblaster( CHAR_DATA *ch, char *argument )
 		}
 	}
 
-	if ( ( !checktool ) || ( !checkdura ) || ( !checkbatt ) || ( !checkoven )  || ( !checkcond ) || ( !checkcirc) )
+    chance = IS_NPC(ch) ? ch->top_level
+                : (int) (ch->pcdata->learned[gsn_makeblaster]) ;
+
+
+	if ( number_percent( ) > chance*2  || ( !checktool ) || ( !checkdura ) || ( !checkbatt ) || ( !checkoven )  || ( !checkcond ) || ( !checkcirc) )
 	{
 		send_to_char( "&R> you hold up your new blaster and aim at a leftover piece of plastic\n\r", ch);
 		send_to_char( "&R> you slowly squeeze the trigger hoping for the best\n\r", ch);
@@ -826,6 +849,12 @@ void do_makejewelry( CHAR_DATA *ch, char *argument )
 		checkoven = FALSE;
 		checkmetal = FALSE;
 
+		if ( !IS_SET( ch->in_room->room_flags, ROOM_RESTAURANT ) )
+		{
+			send_to_char( "> &Ryou need to be in a coding node&w\n\r", ch );
+			return;
+		}
+
 		for ( obj = ch->last_carrying; obj; obj = obj->prev_content )
 		{
 			if (obj->item_type == ITEM_TOOLKIT)
@@ -875,9 +904,9 @@ void do_makejewelry( CHAR_DATA *ch, char *argument )
 			return;
 		if ( !ch->dest_buf_2 )
 			return;
-		strcpy(arg, ch->dest_buf);
+		strcpy(arg, (const char*) ch->dest_buf);
 		DISPOSE( ch->dest_buf);
-		strcpy(arg2, ch->dest_buf_2);
+		strcpy(arg2, (const char*) ch->dest_buf_2);
 		DISPOSE( ch->dest_buf_2);
 		break;
 
@@ -921,7 +950,10 @@ void do_makejewelry( CHAR_DATA *ch, char *argument )
 		}
 	}
 
-	if ( ( !checkoven ) || ( !checktool ) || ( !checkmetal ) )
+    chance = IS_NPC(ch) ? ch->top_level
+                : (int) (ch->pcdata->learned[gsn_makejewelry]) ;
+
+	if ( number_percent( ) > chance*2  || ( !checkoven ) || ( !checktool ) || ( !checkmetal ) )
 	{
 		send_to_char( "&R> you hold up your newly coded utility\n\r", ch);
 		send_to_char( "&R> it suddenly dawns upon you that you have created the most useless\n\r", ch);
@@ -973,7 +1005,7 @@ void do_makearmor( CHAR_DATA *ch, char *argument )
 	int level, chance;
 	bool checksew, checkfab;
 	OBJ_DATA *obj;
-	OBJ_DATA *material;
+	OBJ_DATA *material = NULL;
 	int value;
 
 	argument = one_argument( argument, arg );
@@ -1006,6 +1038,12 @@ void do_makearmor( CHAR_DATA *ch, char *argument )
 
 		checksew = FALSE;
 		checkfab = FALSE;
+
+		if ( !IS_SET( ch->in_room->room_flags, ROOM_RESTAURANT ) )
+		{
+			send_to_char( "> &Ryou need to be in a coding node&w\n\r", ch );
+			return;
+		}
 
 		for ( obj = ch->last_carrying; obj; obj = obj->prev_content )
 		{
@@ -1048,9 +1086,9 @@ void do_makearmor( CHAR_DATA *ch, char *argument )
 			return;
 		if ( !ch->dest_buf_2 )
 			return;
-		strcpy(arg, ch->dest_buf);
+		strcpy(arg, (const char*) ch->dest_buf);
 		DISPOSE( ch->dest_buf);
-		strcpy(arg2, ch->dest_buf_2);
+		strcpy(arg2, (const char*) ch->dest_buf_2);
 		DISPOSE( ch->dest_buf_2);
 		break;
 
@@ -1058,7 +1096,7 @@ void do_makearmor( CHAR_DATA *ch, char *argument )
 		DISPOSE( ch->dest_buf );
 		DISPOSE( ch->dest_buf_2 );
 		ch->substate = SUB_NONE;
-		send_to_char("&R> you are interupted and fail to finish your work\n\r", ch);
+		send_to_char("&R> you are interrupted and fail to finish your work\n\r", ch);
 		return;
 	}
 
@@ -1082,7 +1120,11 @@ void do_makearmor( CHAR_DATA *ch, char *argument )
 		}
 	}
 
-	if ( ( !checkfab ) || ( !checksew ) )
+    chance = IS_NPC(ch) ? ch->top_level
+                : (int) (ch->pcdata->learned[gsn_makearmor]) ;
+
+
+	if ( number_percent( ) > chance*2  || ( !checkfab ) || ( !checksew ) )
 	{
 		send_to_char( "&R> you hold up your newly created defensive module\n\r", ch);
 		send_to_char( "&R> it suddenly dawns upon you that you have created the most useless\n\r", ch);
@@ -1134,7 +1176,7 @@ void do_makeshield( CHAR_DATA *ch, char *argument )
 	bool checktool, checkbatt, checkcond, checkcirc, checkgems;
 	OBJ_DATA *obj;
 	OBJ_INDEX_DATA *pObjIndex;
-	int vnum, level, charge, gemtype;
+	int vnum, level, charge, gemtype = 0;
 
 	strcpy( arg, argument );
 
@@ -1151,6 +1193,12 @@ void do_makeshield( CHAR_DATA *ch, char *argument )
 		checkbatt = FALSE;
 		checkcond = FALSE;
 		checkgems = FALSE;
+
+		if ( !IS_SET( ch->in_room->room_flags, ROOM_RESTAURANT ) )
+		{
+			send_to_char( "> &Ryou need to be in a coding node&w\n\r", ch );
+			return;
+		}
 
 		for ( obj = ch->last_carrying; obj; obj = obj->prev_content )
 		{
@@ -1214,14 +1262,14 @@ void do_makeshield( CHAR_DATA *ch, char *argument )
 	case 1:
 		if ( !ch->dest_buf )
 			return;
-		strcpy(arg, ch->dest_buf);
+		strcpy(arg, (const char*) ch->dest_buf);
 		DISPOSE( ch->dest_buf);
 		break;
 
 	case SUB_TIMER_DO_ABORT:
 		DISPOSE( ch->dest_buf );
 		ch->substate = SUB_NONE;
-		send_to_char("&R> you are interupted and fail to finish your work\n\r", ch);
+		send_to_char("&R> you are interrupted and fail to finish your work\n\r", ch);
 		return;
 	}
 
@@ -1280,7 +1328,11 @@ void do_makeshield( CHAR_DATA *ch, char *argument )
 		}
 	}
 
-	if ( ( !checktool ) || ( !checkbatt )
+    chance = IS_NPC(ch) ? ch->top_level
+                : (int) (ch->pcdata->learned[gsn_makeshield]) ;
+
+
+	if ( number_percent( ) > chance*2  || ( !checktool ) || ( !checkbatt )
 			|| ( !checkgems ) || ( !checkcond ) || ( !checkcirc) )
 
 	{
@@ -1364,6 +1416,12 @@ void do_makecontainer( CHAR_DATA *ch, char *argument )
 		checksew = FALSE;
 		checkfab = FALSE;
 
+		if ( !IS_SET( ch->in_room->room_flags, ROOM_RESTAURANT ) )
+		{
+			send_to_char( "> &Ryou need to be in a coding node&w\n\r", ch );
+			return;
+		}
+
 		for ( obj = ch->last_carrying; obj; obj = obj->prev_content )
 		{
 			if (obj->item_type == ITEM_FABRIC)
@@ -1405,9 +1463,9 @@ void do_makecontainer( CHAR_DATA *ch, char *argument )
 			return;
 		if ( !ch->dest_buf_2 )
 			return;
-		strcpy(arg, ch->dest_buf);
+		strcpy(arg, (const char*) ch->dest_buf);
 		DISPOSE( ch->dest_buf);
-		strcpy(arg2, ch->dest_buf_2);
+		strcpy(arg2, (const char*) ch->dest_buf_2);
 		DISPOSE( ch->dest_buf_2);
 		break;
 
@@ -1439,7 +1497,10 @@ void do_makecontainer( CHAR_DATA *ch, char *argument )
 		}
 	}
 
-	if ( ( !checkfab ) || ( !checksew ) )
+    chance = IS_NPC(ch) ? ch->top_level
+                : (int) (ch->pcdata->learned[gsn_makecontainer]) ;
+
+	if ( number_percent( ) > chance*2  || ( !checkfab ) || ( !checksew ) )
 	{
 		send_to_char( "&R> you hold up your newly created container\n\r", ch);
 		send_to_char( "&R> it suddenly dawns upon you that you have created the most useless\n\r", ch);
@@ -1547,7 +1608,7 @@ void do_reinforcements( CHAR_DATA *ch, char *argument )
 	case 1:
 		if ( !ch->dest_buf )
 			return;
-		strcpy(arg, ch->dest_buf);
+		strcpy(arg, (const char*) ch->dest_buf);
 		DISPOSE( ch->dest_buf);
 		break;
 

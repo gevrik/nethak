@@ -1968,7 +1968,7 @@ void reboot_check( time_t reset )
   return;
 }
 
-//#if 0
+#if 0
 void reboot_check( char *arg )
 {
     char buf[MAX_STRING_LENGTH];
@@ -2163,7 +2163,7 @@ if ((current_time % 1800) == 0)
 
   return;
 }
-//#endif
+#endif
 
 /* the auction update*/
 

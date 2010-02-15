@@ -2043,6 +2043,9 @@ bool can_see( CHAR_DATA *ch, CHAR_DATA *victim )
 
     }
 
+    //if ( victim->switched )
+    //	return FALSE;
+
     return TRUE;
 }
 

@@ -396,11 +396,13 @@ void show_char_to_char_0( CHAR_DATA *victim, CHAR_DATA *ch )
 
     if ( !IS_NPC(victim) && !victim->desc )
     {
+    	//if ( !victim->switched )		strcat( buf, " "  );
 	if ( !victim->switched )		strcat( buf, "[link-dead] "  );
-	else
-	if ( !IS_AFFECTED(victim->switched, AFF_POSSESS) )
+    	else
+    		if ( !IS_AFFECTED(victim->switched, AFF_POSSESS) )
 						strcat( buf, "[switched] " );
     }
+
     if ( !IS_NPC(victim)
     && IS_SET(victim->act, PLR_AFK) )		strcat( buf, "[afk] ");
 
@@ -421,10 +423,14 @@ void show_char_to_char_0( CHAR_DATA *victim, CHAR_DATA *ch )
     &&   IS_AFFECTED(ch, AFF_DETECT_EVIL)     ) strcat( buf, "&R[red aura]&w "   );
     if ( !IS_NPC(victim) && IS_SET(victim->act, PLR_LITTERBUG  ) )
 						strcat( buf, "[litterbug] "  );
+
     if ( IS_NPC(victim) && IS_IMMORTAL(ch)
 	 && IS_SET(victim->act, ACT_PROTOTYPE) ) strcat( buf, "[proto] " );
-    if ( victim->desc && victim->desc->connected == CON_EDITING )
+
+    if ( ( victim->desc ) && ( victim->desc->connected == CON_EDITING ) )
+						{
 						strcat( buf, "[writing] " );
+						}
 
     set_char_color( AT_PERSON, ch );
     if ( victim->position == victim->defposition && victim->long_descr[0] != '\0' )
@@ -791,6 +797,9 @@ void do_look
 
 	if ( !IS_NPC(ch) && IS_SET(ch->act, PLR_AUTOEXIT) )
 	        do_exits( ch, "" );
+
+	//display_map (ch);
+	//do_room_map();
 
 	//show_ships_to_char( ch->in_room->first_ship, ch );
     	//strcpy( buf, fAuto ? "&Y>&c connections:&w" : "&Y>&c connections:&w\n\r" );
