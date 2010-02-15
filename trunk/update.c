@@ -22,6 +22,7 @@ void	mobile_update	args( ( void ) );
 //void	weather_update	args( ( void ) );
 void	update_taxes	args( ( void ) );
 void	char_update	args( ( void ) );
+void    bank_update	args( ( void ) );
 void	obj_update	args( ( void ) );
 void	aggr_update	args( ( void ) );
 void	room_act_update	args( ( void ) );
@@ -1746,6 +1747,7 @@ void update_handler( void )
     if ( --pulse_taxes     <= 0 )
     {
 	pulse_taxes	= PULSE_TAXES ;
+	bank_update     ( );
 	update_taxes	( );
     }
 
@@ -1966,7 +1968,7 @@ void reboot_check( time_t reset )
   return;
 }
 
-#if 0
+//#if 0
 void reboot_check( char *arg )
 {
     char buf[MAX_STRING_LENGTH];
@@ -2040,9 +2042,7 @@ if ((current_time % 1800) == 0)
         }
        }
 
-       sprintf( buf, "> you are forced from these realms by a strong magical presence" );
-       echo_to_all( AT_YELLOW, buf, ECHOTAR_ALL );
-       sprintf( buf, "as life here is reconstructed" );
+       sprintf( buf, "> you are disconnected from cyberspace" );
        echo_to_all( AT_YELLOW, buf, ECHOTAR_ALL );
 
        /* Save all characters before booting. */
@@ -2065,7 +2065,7 @@ if ((current_time % 1800) == 0)
   {
     if ( one == FALSE )
     {
-	sprintf( buf, "> you feel the ground shake as the end comes near!" );
+	sprintf( buf, "> server reboot in 60 seconds" );
 	echo_to_all( AT_YELLOW, buf, ECHOTAR_ALL );
 	one = TRUE;
 	sysdata.DENY_NEW_PLAYERS = TRUE;
@@ -2078,7 +2078,7 @@ if ((current_time % 1800) == 0)
   {
     if ( two == FALSE )
     {
-	sprintf( buf, "Lightning crackles in the sky above!" );
+	sprintf( buf, "> server reboot in 2 minutes!" );
 	echo_to_all( AT_YELLOW, buf, ECHOTAR_ALL );
 	two = TRUE;
 	sysdata.DENY_NEW_PLAYERS = TRUE;
@@ -2091,7 +2091,7 @@ if ((current_time % 1800) == 0)
   {
     if ( three == FALSE )
     {
-	sprintf( buf, "Crashes of thunder sound across the land!" );
+	sprintf( buf, "> server reboot in 3 minutes!" );
 	echo_to_all( AT_YELLOW, buf, ECHOTAR_ALL );
 	three = TRUE;
 	sysdata.DENY_NEW_PLAYERS = TRUE;
@@ -2104,7 +2104,7 @@ if ((current_time % 1800) == 0)
   {
     if ( four == FALSE )
     {
-	sprintf( buf, "The sky has suddenly turned midnight black" );
+	sprintf( buf, "> server reboot in 4 minutes!" );
 	echo_to_all( AT_YELLOW, buf, ECHOTAR_ALL );
 	four = TRUE;
 	sysdata.DENY_NEW_PLAYERS = TRUE;
@@ -2117,7 +2117,7 @@ if ((current_time % 1800) == 0)
   {
     if ( five == FALSE )
     {
-	sprintf( buf, "> you notice the life forms around you slowly dwindling away" );
+	sprintf( buf, "> server reboot in 5 minutes!" );
 	echo_to_all( AT_YELLOW, buf, ECHOTAR_ALL );
 	five = TRUE;
 	sysdata.DENY_NEW_PLAYERS = TRUE;
@@ -2130,7 +2130,7 @@ if ((current_time % 1800) == 0)
   {
     if ( ten == FALSE )
     {
-	sprintf( buf, "The seas across the realm have turned frigid" );
+	sprintf( buf, "> server reboot in 10 minutes!" );
 	echo_to_all( AT_YELLOW, buf, ECHOTAR_ALL );
 	ten = TRUE;
     }
@@ -2142,7 +2142,7 @@ if ((current_time % 1800) == 0)
   {
     if ( fifteen == FALSE )
     {
-	sprintf( buf, "The aura of magic which once surrounded the realms seems slightly unstable" );
+	sprintf( buf, "> server reboot in 15 minutes!" );
 	echo_to_all( AT_YELLOW, buf, ECHOTAR_ALL );
 	fifteen = TRUE;
     }
@@ -2154,7 +2154,7 @@ if ((current_time % 1800) == 0)
   {
     if ( thirty == FALSE )
     {
-	sprintf( buf, "> you sense a change in the magical forces surrounding you" );
+	sprintf( buf, "> server reboot in 30 minutes!" );
 	echo_to_all( AT_YELLOW, buf, ECHOTAR_ALL );
 	thirty = TRUE;
     }
@@ -2163,7 +2163,7 @@ if ((current_time % 1800) == 0)
 
   return;
 }
-#endif
+//#endif
 
 /* the auction update*/
 
@@ -2273,6 +2273,38 @@ void subtract_times(struct timeval *etime, struct timeval *stime)
     etime->tv_sec--;
   }
   return;
+}
+
+void bank_update()
+{
+    CHAR_DATA *ch;
+    int value1, value2;
+    char buf[MAX_INPUT_LENGTH];
+
+    for ( ch = last_char; ch; ch = gch_prev )
+    {
+	if ( ch == first_char && ch->prev )
+	{
+	    bug( "char_update: first_char->prev != NULL... fixed", 0 );
+	    ch->prev = NULL;
+	}
+	gch_prev = ch->prev;
+	set_cur_char( ch );
+	if ( gch_prev && gch_prev->next != ch )
+	{
+	    bug( "char_update: ch->prev->next != ch", 0 );
+	    return;
+	}
+
+
+    if ( !IS_NPC( ch ) ){
+       value1 = ch->pcdata->bank;
+       value2 = (value1 * .001); /* 1% interest */
+       ch->pcdata->bank += value2;
+       sprintf(buf, "> &C[bank] %s you made: %d credits in taxes&W\n\r", ch->name, value2);
+       send_to_char(buf, ch);
+    }
+   }
 }
 
 //done for Neuro
