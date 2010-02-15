@@ -559,7 +559,7 @@ void boot_db( void )
         MOBtrigger = TRUE;
     }
 
-    /* init_maps ( ); */
+    //init_maps();
 
     return;
 }
