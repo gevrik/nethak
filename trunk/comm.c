@@ -1657,7 +1657,7 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 			to_channel( log_buf, CHANNEL_MONITOR, "Monitor", 2 );
 
 			char logbufText[MAX_STRING_LENGTH];
-			sprintf( logbufText , "> a new runner has connect: %s" , ch->name );
+			sprintf( logbufText , "> a new runner has connected: %s" , ch->name );
 			echo_to_all( AT_BLUE , logbufText , ECHOTAR_ALL );
 
 			//show_title(d);
