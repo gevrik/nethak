@@ -866,13 +866,16 @@ void close_socket( DESCRIPTOR_DATA *dclose, bool force )
 		{
 			//act( AT_ACTION, "> $n has lost $s link", ch, NULL, NULL, TO_ROOM );
 
-			char bufText[MAX_STRING_LENGTH];
+			//char bufText[MAX_STRING_LENGTH];
 			//sprintf( bufText , "> %s has lost link" , ch->name );
 			//echo_to_all( AT_LBLUE , bufText , ECHOTAR_ALL );
 
 			ch->desc = NULL;
+			//extract_char( ch, TRUE );
 
-			extract_char( ch, TRUE );
+			//dclose->character->desc = NULL;
+			//free_char( dclose->character );
+
 		}
 		else
 		{
