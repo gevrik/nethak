@@ -1137,13 +1137,13 @@ void do_quit( CHAR_DATA *ch, char *argument )
 */
     
     set_char_color( AT_WHITE, ch );
-    send_to_char( "Cyberspace begin to fade as you are pushed through a vortex of colors\n\rYou find yourself back in the meat of your body\n\r\n\r", ch );
-    act( AT_SAY, "Behave, $n...'", ch, NULL, NULL, TO_CHAR );
+    send_to_char( "> cyberspace begins to fade as you are pushed through a vortex of colors\n\rYou find yourself back in the meat of your body\n\r\n\r", ch );
+    act( AT_SAY, "> come back soon, $n...'", ch, NULL, NULL, TO_CHAR );
     act( AT_BYE, "> $n has left cyberspace", ch, NULL, NULL, TO_ROOM );
     set_char_color( AT_GREY, ch);
 
     char bufText[MAX_STRING_LENGTH];
-    sprintf( bufText , "> %s has quit" , ch->name );
+    //sprintf( bufText , "> %s has quit" , ch->name );
     echo_to_all( AT_LBLUE , bufText , ECHOTAR_ALL );
 
     sprintf( log_buf, "> %s has quit", ch->name );

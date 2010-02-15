@@ -1187,7 +1187,7 @@ void obj_update( void )
               }
               else if ( obj->value[3] == WEAPON_VIBRO_BLADE )
               {
-                 act( AT_PLAIN, "> $p stops vibrating" , obj->carried_by, obj, NULL, TO_CHAR );
+                 act( AT_PLAIN, "> $p needs to be patched" , obj->carried_by, obj, NULL, TO_CHAR );
               }
            }
         }
