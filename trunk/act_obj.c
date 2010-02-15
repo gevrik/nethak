@@ -1056,6 +1056,7 @@ bool can_layer( CHAR_DATA *ch, OBJ_DATA *obj, sh_int wear_loc )
 	return FALSE;
     if ( !bitlayers || ((bitlayers & ~objlayers) == bitlayers) )
 	return TRUE;
+
     return FALSE;
 }
 
