@@ -23,6 +23,17 @@ typedef	int				obj_ret;
 #define DECLARE_SPELL_FUN( fun )	SPELL_FUN fun
 #endif
 
+/* Stuff from newarena.c */
+void show_jack_pot();
+void do_game();
+int num_in_arena();
+void find_game_winner();
+void do_end_game();
+void start_game();
+void silent_end();
+void write_fame_list(void);
+void load_hall_of_fame(void);
+
 /*
  * Short scalar types.
  * Diavolo reports AIX compiler has bugs with short types.
@@ -192,6 +203,7 @@ typedef ch_ret	SPELL_FUN	args( ( int sn, int level, CHAR_DATA *ch, void *vo ) );
 #define PULSE_AUCTION             ( 10 * PULSE_PER_SECOND)
 #define PULSE_SPACE               ( 10 * PULSE_PER_SECOND)
 #define PULSE_TAXES               ( 60 * PULSE_MINUTE)
+#define PULSE_ARENA               ( 30 * PULSE_PER_SECOND)
 #define PULSE_AREA		  ( 15 * PULSE_MINUTE)
 /*
  * Command logging types.
@@ -1444,7 +1456,7 @@ typedef enum
 #define ROOM_BARRACKS		BV15
 #define R16			BV16
 #define ROOM_NOPEDIT		BV17 /* players can't edit */
-#define R18			BV18
+#define ROOM_ARENA			BV18
 #define ROOM_RESTAURANT		BV19 /* used as coding node */
 #define ROOM_PLR_HOME		BV20
 #define ROOM_EMPTY_HOME 	BV21
@@ -1670,6 +1682,7 @@ struct timer_data
 #define CHANNEL_PNET               BV14
 #define CHANNEL_HINT               BV20
 #define CHANNEL_CLANTALK	   CHANNEL_CLAN
+#define CHANNEL_SPORTS             BV28
 
 /* Area defines - Scryn 8/11
  *
@@ -1909,6 +1922,13 @@ struct	char_data
     sh_int              was_stunned;
     CLAN_DATA       *   mob_clan;    /* for spec_clan_guard.. set by postguard */
     GUARD_DATA      *   guard_data;
+
+    CHAR_DATA           *opponent; //VERSION 1.3 UPGRADE
+    CHAR_DATA           *challenged;
+    CHAR_DATA *         betted_on;
+    int                 bet_amt;
+    sh_int              arenawin;      /* v1.1 Diablo */
+    sh_int              arenaloss;     /* v1.1 Diablo */
 };
 
 
@@ -1965,6 +1985,7 @@ struct	pc_data
     int			cyber;
     int			queststatus;
     int			qtaxnodes;
+    ROOM_INDEX_DATA *   roomarena;
 };
 
 
@@ -2288,6 +2309,7 @@ struct  auction_data
  * These are skill_lookup return values for common skills and spells.
  */
 extern sh_int   gsn_spacecraft;
+extern sh_int   gsn_makemedmod;
 extern sh_int   gsn_weaponsystems;
 extern sh_int   gsn_shipmaintenance;
 extern sh_int   gsn_spacecombat;
@@ -2909,6 +2931,16 @@ DECLARE_DO_FUN( do_skills );
 DECLARE_DO_FUN( do_landscape );
 DECLARE_DO_FUN( do_allsave );
 DECLARE_DO_FUN( do_setplanet );
+
+DECLARE_DO_FUN( do_aaccept      );
+DECLARE_DO_FUN( do_adecline     );
+DECLARE_DO_FUN( do_ahall        );
+DECLARE_DO_FUN( do_arena        );
+DECLARE_DO_FUN( do_awho         );
+DECLARE_DO_FUN( do_bet          );
+DECLARE_DO_FUN( do_challenge    );
+DECLARE_DO_FUN( do_chaos        );
+
 DECLARE_DO_FUN( do_makeplanet );
 DECLARE_DO_FUN( do_planets );
 DECLARE_DO_FUN( do_teach );
@@ -4333,3 +4365,7 @@ void rprog_act_trigger( char *buf, ROOM_INDEX_DATA *room, CHAR_DATA *ch,
 
 #define send_to_char  send_to_char_color
 #define send_to_pager send_to_pager_color
+
+#define GET_BETTED_ON(ch)    ((ch)->betted_on)
+#define GET_BET_AMT(ch) ((ch)->bet_amt)
+#define IN_ARENA(ch)            (IS_SET((ch)->in_room->room_flags, ROOM_ARENA))

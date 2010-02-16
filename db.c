@@ -107,6 +107,7 @@ sh_int   gsn_makearmor;
 sh_int   gsn_makeshield;
 sh_int   gsn_makecontainer;
 sh_int   gsn_makejewelry;
+sh_int   gsn_makemedmod;
 
 sh_int   gsn_bridge;
 sh_int   gsn_survey;
@@ -434,6 +435,7 @@ void boot_db( void )
         ASSIGN_GSN( gsn_makeblaster  , "codeblaster" );
         ASSIGN_GSN( gsn_makelight   , "codelight" );
         ASSIGN_GSN( gsn_makecomlink   , "codecomlink" );
+        ASSIGN_GSN( gsn_makemedmod   , "codemedmod" );
         ASSIGN_GSN( gsn_makearmor  , "codedef" );
         ASSIGN_GSN( gsn_makeshield  , "codeshield" );
         ASSIGN_GSN( gsn_makecontainer  , "codecontainer" );

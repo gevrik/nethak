@@ -2453,7 +2453,7 @@ void do_teach( CHAR_DATA *ch, char *argument )
           && sn != gsn_spacecombat
           && sn != gsn_weaponsystems )
           {
-                 act( AT_TELL, "> $n needs to spend time learning and refining jedi abilities instead", victim, NULL, ch, TO_VICT );
+                 act( AT_TELL, "> $n needs to spend time learning and refining other abilities instead", victim, NULL, ch, TO_VICT );
                  return;
 	  }
 
@@ -2759,6 +2759,11 @@ void do_channels( CHAR_DATA *ch, char *argument )
 		: " -newbie",
 		ch );
 
+	send_to_char( !IS_SET(ch->deaf, CHANNEL_SPORTS)
+	      	? " +SPORTS"
+		: " -sports",
+		ch );
+
 	send_to_char( !IS_SET(ch->deaf, CHANNEL_HINT)
 	      	? " +HINT"
 		: " -hint",
@@ -2809,11 +2814,12 @@ void do_channels( CHAR_DATA *ch, char *argument )
 	else if ( !str_cmp( arg+1, "build"    ) ) bit = CHANNEL_BUILD;
 	else if ( !str_cmp( arg+1, "monitor"  ) ) bit = CHANNEL_MONITOR;
 	else if ( !str_cmp( arg+1, "newbie"   ) ) bit = CHANNEL_NEWBIE;
+	else if ( !str_cmp( arg+1, "sports"   ) ) bit = CHANNEL_SPORTS;
 	else if ( !str_cmp( arg+1, "hint"   ) ) bit = CHANNEL_HINT;
 	else if ( !str_cmp( arg+1, "yell"     ) ) bit = CHANNEL_YELL;
 	else if ( !str_cmp( arg+1, "comm"     ) ) bit = CHANNEL_COMM;
-	else if ( !str_cmp( arg+1, "pnet"     ) ) bit = CHANNEL_PNET;
-	else if ( !str_cmp( arg+1, "gnet"     ) ) bit = CHANNEL_GNET;
+	else if ( !str_cmp( arg+1, "schat"     ) ) bit = CHANNEL_PNET;
+	else if ( !str_cmp( arg+1, "gchat"     ) ) bit = CHANNEL_GNET;
 	else if ( !str_cmp( arg+1, "all"      ) ) ClearAll = TRUE;
 	else
 	{
@@ -2825,6 +2831,7 @@ void do_channels( CHAR_DATA *ch, char *argument )
 	{
             REMOVE_BIT (ch->deaf, CHANNEL_AUCTION);
             REMOVE_BIT (ch->deaf, CHANNEL_YELL);
+            REMOVE_BIT (ch->deaf, CHANNEL_SPORTS);
 
 	    if ( IS_IMMORTAL(ch) )
 	      REMOVE_BIT (ch->deaf, CHANNEL_COMM);

@@ -904,4 +904,144 @@ void do_foundorg( CHAR_DATA *ch, char *argument )
 
 }
 
+void do_makemedmod( CHAR_DATA *ch, char *argument )
+{
+    char arg[MAX_STRING_LENGTH], buf[MAX_STRING_LENGTH];
+    OBJ_DATA *obj, *obj_next, *cont;
+    bool checkcont = FALSE, checkchem = FALSE, checktool = FALSE;
+    int chance, level, wearbit = get_wflag("hold");
+
+    if( !IS_NPC(ch) && ch->pcdata->learned[gsn_makemedmod] == 0 )
+    {
+	 send_to_char("Huh?\n\r",ch);
+	 return;
+	}
+
+
+    switch( ch->substate )
+    {
+    case 0:
+ if( argument[0] == '\0' )
+ {
+     send_to_char("> syntax: makemed <medmod name>\n\r",ch);
+     return;
+ }
+
+ for( obj = ch->first_carrying; obj; obj = obj->next_content )
+ {
+     if( obj->item_type == ITEM_DRINK_CON && !checkcont )
+     {
+    	 if( obj->value[1] <= 0 )
+         checkcont = TRUE;
+         continue;
+     }
+
+     if( obj->item_type == ITEM_MIRROR && !checkchem )
+     {
+  checkchem = TRUE;
+  continue;
+     }
+
+     if( obj->item_type == ITEM_TOOLKIT && !checktool )
+  checktool = TRUE;
+ }
+
+ if( !checkcont )
+ {
+     send_to_char("> &Ryou need an empty container module&w\n\r",ch);
+     return;
+ }
+
+ if( !checkchem )
+ {
+     send_to_char("> &Ryou need a wilderspace subroutine&w\n\r",ch);
+    return;
+ }
+
+ if( !checktool )
+ {
+    send_to_char("> &Ryou need a devkit&w\n\r",ch);
+    return;
+ }
+
+ chance = IS_NPC(ch) ? ch->top_level : ch->pcdata->learned[gsn_makemedmod];
+
+ if( number_percent() <= chance )
+ {
+    send_to_char("> you begin making a med module\n\r",ch);
+    act( AT_PLAIN, "> $n begins making a med module.", ch, NULL, NULL, TO_ROOM );
+    ch->dest_buf = str_dup(argument);
+    add_timer( ch, TIMER_DO_FUN, 10, do_makemedmod, 1 );
+    return;
+ }
+ send_to_char("> &Ryou fail creating a devkit - try again&w\n\r",ch);
+ return;
+
+    case 1:
+ if( !ch->dest_buf ) return;
+ strcpy( arg, (const char*) ch->dest_buf );
+ DISPOSE( ch->dest_buf );
+ break;
+
+    case SUB_TIMER_DO_ABORT:
+ DISPOSE( ch->dest_buf );
+ send_to_char("> &Ryour work is interrupted and you fail&w\n\r",ch);
+        return;
+    }
+
+    for( obj = ch->first_carrying; obj; obj = obj_next )
+    {
+ obj_next = obj->next_content;
+
+ if( obj->item_type == ITEM_DRINK_CON && !checkcont )
+ {
+     if( obj->value[1] > 0 ) continue;
+     cont = obj;
+     checkcont = TRUE;
+     continue;
+ }
+
+ if( obj->item_type == ITEM_MIRROR && !checkchem )
+ {
+     obj_from_char( obj );
+     extract_obj( obj );
+     checkchem = TRUE;
+     continue;
+ }
+
+ if( obj->item_type == ITEM_TOOLKIT && !checktool )
+     checktool = TRUE;
+    }
+
+    level = chance = IS_NPC(ch) ? ch->top_level : ch->pcdata->learned[gsn_makemedmod];
+
+    if( number_percent() > chance || !checkcont || !checkchem || !checktool )
+    {
+ send_to_char("> &Ryou hold your newly created med module&w\n\r",ch);
+ send_to_char("> &Rthen you suddenly realize you fumbled it...\n\r",ch);
+ return;
+    }
+
+    cont->item_type = ITEM_MEDPAC;
+    cont->value[0] = level/10;
+    sprintf( buf, "%s's medmod", arg );
+    STRFREE( cont->name );
+    cont->name = STRALLOC( buf );
+    STRFREE( cont->short_descr );
+    cont->short_descr = STRALLOC( arg );
+    sprintf( buf, " was left here.");
+    STRFREE( cont->description );
+    cont->description = STRALLOC( buf );
+    if( !CAN_WEAR( cont, 1 << wearbit ) )
+ SET_BIT( cont->wear_flags, 1 << wearbit );
+
+    send_to_char("&GYou hold up your newly created medpac!\n\r",ch);
+    act( AT_PLAIN, "$n finished their newly created medpac.",ch,NULL,NULL,TO_ROOM);
+
+
+    learn_from_success( ch, gsn_makemedmod );
+
+}
+
+
 //done for Neuro

@@ -60,25 +60,29 @@ void do_score(CHAR_DATA * ch, char *argument)
 
     ch_printf( ch, "&Wwimpy set to &G%d &Wpercent\n\r", ch->wimpy );
     
-    	ch_printf( ch, "&W-----------------------------------------------------\n\r" );
+//    	ch_printf( ch, "&W-----------------------------------------------------\n\r" );
+//
+//    if ( !IS_NPC(ch) && ch->pcdata )
+//    {
+//    	int sn;
+//
+//        send_to_char( "&Wskilled at: &G" , ch );
+//    	for ( sn = 0; sn < top_sn ; sn++ )
+//    	   if ( ch->pcdata->learned[sn] > 0 && ch->pcdata->learned[sn] < 100 )
+//               ch_printf( ch,  "%s  ", skill_table[sn]->name );
+//        send_to_char( "\n\r" , ch );
+//
+//        send_to_char( "&Wadept at: &G" , ch );
+//    	for ( sn = 0; sn < top_sn ; sn++ )
+//    	   if ( ch->pcdata->learned[sn] >= 100 )
+//               ch_printf( ch,  "%s  ", skill_table[sn]->name );
+//        send_to_char( "\n\r" , ch );
+//
+//    }
     
-    if ( !IS_NPC(ch) && ch->pcdata )
-    {
-    	int sn;
-    	
-        send_to_char( "&Wskilled at: &G" , ch );
-    	for ( sn = 0; sn < top_sn ; sn++ )
-    	   if ( ch->pcdata->learned[sn] > 0 && ch->pcdata->learned[sn] < 100 )
-               ch_printf( ch,  "%s  ", skill_table[sn]->name );    	     	 
-        send_to_char( "\n\r" , ch );
-    
-        send_to_char( "&Wadept at: &G" , ch );
-    	for ( sn = 0; sn < top_sn ; sn++ )
-    	   if ( ch->pcdata->learned[sn] >= 100 )
-               ch_printf( ch,  "%s  ", skill_table[sn]->name );    	     	 
-        send_to_char( "\n\r" , ch );
-    
-    }           
+    send_to_char( "&W-----------------------------------------------------\n\r", ch);
+    ch_printf(ch, "arena:   wins: %d   losses: %d\n\r",
+           ch->arenawin, ch->arenaloss );
 
     	ch_printf( ch, "&W-----------------------------------------------------\n\r" );
     

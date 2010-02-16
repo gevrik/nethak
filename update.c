@@ -6,6 +6,14 @@
 #include <math.h>
 #include "mud.h"
 
+/* From newarena.c -- Tawnos */
+extern void start_arena();
+extern void do_game();
+extern int in_start_arena;
+extern int ppl_in_arena;
+extern int ppl_challenged;
+extern int num_in_arena();
+
 /* from swskills.c */
 void    add_reinforcements  args( ( CHAR_DATA *ch ) );
 
@@ -1711,6 +1719,8 @@ void tele_update( void )
  */
 void update_handler( void )
 {
+    static  int     pulse_start_arena = PULSE_ARENA;
+    static  int     pulse_arena = PULSE_ARENA;
     static  int     pulse_taxes;
     static  int     pulse_area;
     static  int     pulse_savearea;
@@ -1780,6 +1790,20 @@ void update_handler( void )
     {
 	pulse_violence	= PULSE_VIOLENCE;
 	violence_update	( );
+    }
+
+    if(in_start_arena || ppl_challenged)
+    if( --pulse_start_arena <= 0)
+    {
+      pulse_start_arena = PULSE_ARENA;
+      start_arena();
+    }
+
+    if(ppl_in_arena)
+    if(( --pulse_arena <= 0) || (num_in_arena()==1))
+    {
+      pulse_arena = PULSE_ARENA;
+      do_game();
     }
 
     if ( --pulse_point    <= 0 )
@@ -2301,7 +2325,7 @@ void bank_update()
        value1 = ch->pcdata->bank;
        value2 = (value1 * .001); /* 1% interest */
        ch->pcdata->bank += value2;
-       sprintf(buf, "> &C[bank] %s you made: %d credits in taxes&W\n\r", ch->name, value2);
+       sprintf(buf, "> &C[bank] interest: %d&W\n\r", value2);
        send_to_char(buf, ch);
     }
    }
