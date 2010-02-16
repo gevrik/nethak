@@ -50,6 +50,9 @@ void do_buyhome( CHAR_DATA *ch, char *argument )
 		REMOVE_BIT( rooma->room_flags , ROOM_PLR_HOME );
 		SET_BIT( rooma->room_flags , ROOM_EMPTY_HOME );
 
+		STRFREE( rooma->description );
+		rooma->description = STRALLOC( "use BUYHOME to buy this node for 10.000 credits." );
+
 		if ( rooma->area )
 			fold_area( rooma->area, rooma->area->filename, FALSE );
 
@@ -87,6 +90,9 @@ void do_buyhome( CHAR_DATA *ch, char *argument )
 
 	STRFREE( room->name );
 	room->name = STRALLOC( argument );
+
+	STRFREE( room->description );
+	room->description = STRALLOC( "home, sweet home." ); //
 
 	ch->gold -= 10000;
 

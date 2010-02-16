@@ -603,6 +603,9 @@ void show_char_to_char_1( CHAR_DATA *victim, CHAR_DATA *ch )
     if ( IS_NPC(ch) || victim == ch )
       return;
 
+    if( IS_IMMORTAL(victim) && (victim->top_level > ch->top_level) )
+        return;
+
     if ( number_percent( ) < ch->pcdata->learned[gsn_peek] )
     {
 	send_to_char( "\n\r> you peek at the inventory:\n\r", ch );

@@ -2389,24 +2389,33 @@ void do_throw( CHAR_DATA *ch, char *argument )
 			to_room = pexit->to_room;
 
 
-			char_from_room( ch );
-			char_to_room( ch, to_room );
+            char_from_room( ch );
+   char_to_room( ch, to_room );
 
-			sprintf( buf , "> someone throws %s at you from the %s" , obj->short_descr , dir_name[dir] );
-			act( AT_ACTION, buf , victim, NULL, ch, TO_CHAR );
-			act( AT_ACTION, "> you throw %p at $N", ch, obj, victim, TO_CHAR );
-			sprintf( buf, "> %s is thrown at $N from the %s" , obj->short_descr , dir_name[dir] );
-			act( AT_ACTION, buf, ch, NULL, victim, TO_NOTVICT );
-
-
-		}
-		else
-		{
-			ch_printf( ch, "> you throw %s %s\n\r", obj->short_descr , dir_name[get_dir( arg2 )] );
-			sprintf( buf, "> %s is thrown from the %s" , obj->short_descr , dir_name[dir] );
-			act( AT_ACTION, buf, ch, NULL, NULL, TO_ROOM );
-
-		}
+   sprintf( buf, "> someone throws %s at you from the %s", obj->short_descr, dir_name[dir] );
+   act( AT_ACTION, buf, victim, NULL, ch, TO_CHAR );
+   act( AT_ACTION, "> you throw %p at $N", ch, obj, victim, TO_CHAR );
+   char_from_room( ch );
+   char_to_room( ch, was_in_room );
+   sprintf( buf, "> $n throws %s to the %s", obj->short_descr, dir_name[get_dir(arg2)] );
+   act( AT_ACTION, buf, ch, NULL, NULL, TO_ROOM );
+   char_from_room( ch );
+   char_to_room( ch, to_room );
+   sprintf( buf, "> %s is thrown at $N from the %s", obj->short_descr, dir_name[dir] );
+   act( AT_ACTION, buf, ch, NULL, victim, TO_NOTVICT );
+}
+else
+{
+   ch_printf( ch, "> you throw %s %s\r\n", obj->short_descr, dir_name[get_dir( arg2 )] );
+   char_from_room( ch );
+   char_to_room( ch, was_in_room );
+   sprintf( buf, "> $n throws %s to the %s", obj->short_descr, dir_name[get_dir(arg2)] );
+   act( AT_ACTION, buf, ch, NULL, NULL, TO_ROOM );
+   char_from_room( ch );
+   char_to_room( ch, to_room );
+   sprintf( buf, "> %s is thrown from the %s", obj->short_descr, dir_name[dir] );
+   act( AT_ACTION, buf, ch, NULL, NULL, TO_ROOM );
+}
 	}
 	else if ( ( victim = get_char_room( ch, arg2 ) ) != NULL )
 	{

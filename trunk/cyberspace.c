@@ -187,7 +187,7 @@ void do_homerecall( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
-	if ( !IS_SET( ch->in_room->room_flags, ROOM_ARENA ) )
+	if ( IS_SET( ch->in_room->room_flags, ROOM_ARENA ) )
 	{
 		send_to_char( "> &Rfinish the current match first&w\n\r", ch );
 		return;
@@ -223,7 +223,7 @@ void do_homestray( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
-	if ( !IS_SET( ch->in_room->room_flags, ROOM_ARENA ) )
+	if ( IS_SET( ch->in_room->room_flags, ROOM_ARENA ) )
 	{
 		send_to_char( "> &Rfinish the current match first&w\n\r", ch );
 		return;
