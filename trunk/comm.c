@@ -296,7 +296,7 @@ static void SegVio()
 
 /*
  * LAG alarm!							-Thoric
- */
+
 static void caught_alarm()
 {
 	char buf[MAX_STRING_LENGTH];
@@ -314,6 +314,18 @@ static void caught_alarm()
 
 	log_string( "Normal termination of game." );
 	exit( 0 );
+}
+*/
+
+/*
+ * LAG alarm!							-Thoric
+ */
+static void caught_alarm()
+{
+	char buf[MAX_STRING_LENGTH];
+	bug( "ALARM CLOCK!" );
+	strcpy( buf, "> the hideous malevalent entity known only as 'LAG' rises once more!\n\r" );
+	echo_to_all( AT_IMMORT, buf, ECHOTAR_ALL );
 }
 
 bool check_bad_desc( int desc )

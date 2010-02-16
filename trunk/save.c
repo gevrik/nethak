@@ -303,6 +303,7 @@ void fwrite_char( CHAR_DATA *ch, FILE *fp )
     fprintf( fp, "MGlory       %d\n",   ch->pcdata->quest_accum );
     fprintf( fp, "ArenaWin     %d\n",   ch->arenawin            );
     fprintf( fp, "ArenaLoss    %d\n",   ch->arenaloss           );
+    fprintf( fp, "Snippets     %d\n",   ch->snippets           );
     fprintf( fp, "Hitroll      %d\n",	ch->hitroll		);
     fprintf( fp, "Damroll      %d\n",	ch->damroll		);
     fprintf( fp, "Armor        %d\n",	ch->armor		);
@@ -1216,6 +1217,7 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload )
 	    KEY( "Sex",		ch->sex,		fread_number( fp ) );
 	    KEY( "ShortDescr",	ch->short_descr,	fread_string( fp ) );
 	    KEY( "Susceptible",	ch->susceptible,	fread_number( fp ) );
+	    KEY( "Snippets",		ch->snippets,		fread_number( fp ) );
 	    if ( !str_cmp( word, "SavingThrow" ) )
 	    {
 		ch->saving_wand 	= fread_number( fp );

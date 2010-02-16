@@ -124,6 +124,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_closebay" ))  		return do_closebay;
 	if ( !str_cmp( name, "do_closehatch"  ))        return do_closehatch;
 	if ( !str_cmp( name, "do_cmdtable" ))		return do_cmdtable;
+	if ( !str_cmp( name, "do_codemed" ))		return do_codemed;
 	if ( !str_cmp( name, "do_coding" ))		return do_coding;
 	if ( !str_cmp( name, "do_commands" ))		return do_commands;
 	if ( !str_cmp( name, "do_compare" ))		return do_compare;
@@ -682,6 +683,7 @@ char *skill_name( DO_FUN *skill )
     if ( skill == do_climb )		return "do_climb";
     if ( skill == do_close )		return "do_close";
     if ( skill == do_cmdtable )		return "do_cmdtable";
+    if ( skill == do_codemed )		return "do_codemed";
     if ( skill == do_coding )		return "do_coding";
     if ( skill == do_commands )		return "do_commands";
     if ( skill == do_compare )		return "do_compare";

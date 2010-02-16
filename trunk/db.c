@@ -84,6 +84,7 @@ sh_int   gsn_hijack;
 sh_int   gsn_reinforcements;
 sh_int   gsn_postguard;
 sh_int   gsn_first_aid;
+sh_int   gsn_codemed;
 sh_int   gsn_throw;
 
 sh_int   gsn_quicktalk;
@@ -107,7 +108,7 @@ sh_int   gsn_makearmor;
 sh_int   gsn_makeshield;
 sh_int   gsn_makecontainer;
 sh_int   gsn_makejewelry;
-sh_int   gsn_makemedmod;
+sh_int   gsn_codemed;
 
 sh_int   gsn_bridge;
 sh_int   gsn_survey;
@@ -435,7 +436,6 @@ void boot_db( void )
         ASSIGN_GSN( gsn_makeblaster  , "codeblaster" );
         ASSIGN_GSN( gsn_makelight   , "codelight" );
         ASSIGN_GSN( gsn_makecomlink   , "codecomlink" );
-        ASSIGN_GSN( gsn_makemedmod   , "codemedmod" );
         ASSIGN_GSN( gsn_makearmor  , "codedef" );
         ASSIGN_GSN( gsn_makeshield  , "codeshield" );
         ASSIGN_GSN( gsn_makecontainer  , "codecontainer" );
@@ -445,6 +445,7 @@ void boot_db( void )
         ASSIGN_GSN( gsn_throw   , "throw" );
         ASSIGN_GSN( gsn_disguise   , "disguise" );
         ASSIGN_GSN( gsn_first_aid   , "firstaid" );
+        ASSIGN_GSN( gsn_codemed   , "codemed" );
         ASSIGN_GSN( gsn_lightsaber_crafting, "lightsaber crafting" );
         ASSIGN_GSN( gsn_spice_refining,  "spice refining" );
         ASSIGN_GSN( gsn_spacecombat,     "space combat" );

@@ -1929,6 +1929,7 @@ struct	char_data
     int                 bet_amt;
     sh_int              arenawin;      /* v1.1 Diablo */
     sh_int              arenaloss;     /* v1.1 Diablo */
+    int					snippets;
 };
 
 
@@ -2309,7 +2310,7 @@ struct  auction_data
  * These are skill_lookup return values for common skills and spells.
  */
 extern sh_int   gsn_spacecraft;
-extern sh_int   gsn_makemedmod;
+extern sh_int   gsn_codemed;
 extern sh_int   gsn_weaponsystems;
 extern sh_int   gsn_shipmaintenance;
 extern sh_int   gsn_spacecombat;
@@ -2902,6 +2903,7 @@ extern		struct act_prog_data *	mob_act_list;
  * Command functions.
  * Defined in act_*.c (mostly).
  */
+DECLARE_DO_FUN( do_codemed );
 DECLARE_DO_FUN( do_arrest );
 DECLARE_DO_FUN( do_buyskill );
 DECLARE_DO_FUN( do_setwages );
