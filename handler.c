@@ -2255,7 +2255,7 @@ char *affect_loc_name( int location )
     case APPLY_SUSCEPTIBLE:	return "susceptible";
     case APPLY_BACKSTAB:	return "backstab";
     case APPLY_PICK:		return "pick";
-    case APPLY_TRACK:		return "track";
+    case APPLY_TRACK:		return "trace";
     case APPLY_STEAL:		return "steal";
     case APPLY_SNEAK:		return "sneak";
     case APPLY_HIDE:		return "hide";

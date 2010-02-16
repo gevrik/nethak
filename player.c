@@ -185,7 +185,7 @@ tiny_affect_loc_name(int location)
 	case APPLY_WEAPONSPELL:		return " WEAPON";
 	case APPLY_BACKSTAB:		return "BACKSTB";
 	case APPLY_PICK:		return " PICK  ";
-	case APPLY_TRACK:		return " TRACK ";
+	case APPLY_TRACK:		return " TRACE ";
 	case APPLY_STEAL:		return " STEAL ";
 	case APPLY_SNEAK:		return " SNEAK ";
 	case APPLY_HIDE:		return " HIDE  ";
