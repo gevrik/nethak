@@ -90,7 +90,7 @@ char *	const	o_types	[] =
 "scraps", "lockpick", "patch", "dataminer", "lens",
 "utility_class", "blaster_class", "utility_patch", "devkit", "blade_class",
 "compiler", "artefact", "func_var_one", "func_var_two", "comlink",
-"medpac", "def_class", "app_class", "magnet",  "parser",
+"medmod", "def_class", "app_class", "magnet",  "parser",
 "device", "droid_corpse", "resourceb"
 };
 

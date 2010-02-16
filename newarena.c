@@ -365,12 +365,14 @@ void start_arena()
     {
       if(time_to_start >1)
       {
-        sprintf(buf1, "The duel will start in %d hours.",
-                        time_to_start);
+
+    	int seconds_to_start = time_to_start * 30;
+        sprintf(buf1, "> the arena will start in %d seconds",
+                        seconds_to_start);
       }
       else
       {
-        sprintf(buf1, "The duel will start in 1 hour.");
+        sprintf(buf1, "> the arena will start in 30 seconds");
       }
       sportschan(buf1);
       time_to_start--;
@@ -390,7 +392,7 @@ void start_game()
     i = d->character;
     if (IS_SET(i->in_room->room_flags, ROOM_ARENA))
     {
-       send_to_char("\r\nThe floor falls out from bellow, dropping you in the arena\r\n", i);
+       send_to_char("\r\n> the floor opens below you, dropping you in the arena\r\n", i);
        char_from_room(i);
 //      i->pcdata->oldac = i->armor;
 //       i->armor = -1500;
@@ -423,20 +425,22 @@ void do_game()
   }
   else if(time_left_in_game % 5)
   {
-     sprintf(buf, "With %d hours left in the game there are %d players left.",
-             time_left_in_game, num_in_arena());
+	 int seconds_left_in_game = time_left_in_game * 30;
+     sprintf(buf, "> time left %d seconds - players left: %d",
+             seconds_left_in_game, num_in_arena());
      sportschan(buf);
   }
   else if(time_left_in_game == 1)
   {
-    sprintf(buf, "With 1 hour left in the game there are %d players left.",
+    sprintf(buf, "> time left 30 seconds - players left: %d",
                   num_in_arena());
     sportschan(buf);
   }
   else if(time_left_in_game <= 4)
   {
-    sprintf(buf, "With %d hours left in the game there are %d players left.",
-            time_left_in_game, num_in_arena());
+	  int seconds_left_in_game = time_left_in_game * 30;
+    sprintf(buf, "> time left %d seconds - players left: %d",
+            seconds_left_in_game, num_in_arena());
     sportschan(buf);
   }
   time_left_in_game--;
@@ -470,7 +474,7 @@ void find_game_winner()
           location = i->pcdata->roomarena;
           char_to_room(i,location);
           do_look(i, "auto");
-          act(AT_YELLOW,"$n falls from the sky.", i, NULL, NULL, TO_ROOM);
+          act(AT_YELLOW,"> $n falls from the sky", i, NULL, NULL, TO_ROOM);
 
 // VERSION 1.3 UPGRADE
           sprintf( buf, ">>> %s has beaten %s in the killing fields!", i->name, i->opponent->name );
@@ -501,7 +505,7 @@ void show_jack_pot()
 {
   char buf1[MAX_INPUT_LENGTH];
   
-  sprintf(buf1, ">>> lets get ready to RUMBLE!!!!!!!!\r\n");
+  sprintf(buf1, "\r\n>>> lets get ready to RUMBLE!!!!!!!!\r\n");
   sprintf(buf1, "%s>>> the jackpot for this arena is %d credits\r\n",
   buf1, arena_pot);
   sprintf(buf1, "%s>>> %d credits have been bet on this arena.\r\n\r\n",buf1, bet_pot);
@@ -549,11 +553,12 @@ void do_end_game()
           char_from_room(i);
           char_to_room(i, location);
           do_look(i,"auto");
-          act(AT_TELL,"$n falls from the sky.", i, NULL, NULL, TO_ROOM);
+          act(AT_TELL,"> $n falls from the sky", i, NULL, NULL, TO_ROOM);
        }
      }
      }
-     sprintf(buf, "After %d hours of battle the Match is a draw",game_length);
+	  int seconds_game_length = game_length * 30;
+     sprintf(buf, "> after %d seconds of battle the match is a draw",game_length);
      sportschan(buf);
      time_left_in_game = 0;
      ppl_in_arena=0;
@@ -589,7 +594,7 @@ void sportschan(char *argument)
   char buf1[MAX_INPUT_LENGTH];
   DESCRIPTOR_DATA *i;
         
-  sprintf(buf1, "&RInfo: &W%s\r\n", argument);
+  sprintf(buf1, "&R[ARENA]: &W%s\r\n", argument);
 
   for (i = first_descriptor; i; i = i->next)
   {
@@ -614,16 +619,16 @@ void do_awho(CHAR_DATA *ch, char *argument)
           
   if(num==0)
   {
-     send_to_char("There is noone in the arena right now.\r\n", ch);
+     send_to_char("> nobody is in the arena right now\r\n", ch);
      return;
   }
                             
-  sprintf(buf,"&W  Players in the &BChaos&W Arena\r\n");
+  sprintf(buf,"&W  players in the &BNetx&W arena\r\n");
   sprintf(buf,"%s-&B-&W-&B-&W-&B-&W-&B-&W-&B-&W-&B-&W-&B-&W-&B-&W-&B-&W-&B-&W-&B-&W-&B-&W-", buf);
   sprintf(buf,"%s&B-&W-&B-&W-&B-&W-&B-&W-&B-&W-&B-&W-&B-&W-&B-&W-&B-&W-&B-&W-&B-&W-&B-&W-\r\n", buf);
-  sprintf(buf,"%sGame Length = &R%-3d   &WTime To Start &R%-3d\r\n", buf, game_length, time_to_start);
-  sprintf(buf,"%s&Wtop_level Limits &R%d &Wto &R%d\r\n", buf, lo_lim, hi_lim);
-  sprintf(buf,"%s         &WJackpot = &R%d\r\n", buf, arena_pot);
+  sprintf(buf,"%sgame length = &R%-3d   &Wtime to start &R%-3d\r\n", buf, game_length, time_to_start);
+  sprintf(buf,"%s&Wtop_level limits &R%d &Wto &R%d\r\n", buf, lo_lim, hi_lim);
+  sprintf(buf,"%s         &Wjackpot = &R%d\r\n", buf, arena_pot);
   sprintf(buf,"%s&W-&B-&W-&B-&W-&B-&W-&B-&W-&B-&W-&B-&W-&B-&W-&B-&W-&B-&W-&B-&W-&B-&W-&B-&W-&B", buf);
   sprintf(buf,"%s-&W-&B-&W-&B-&W-&B-&W-&B-&W-&B-&W-&B-&W-&B-&W-&B-&W-&B-&W-&B-&W-&B-&W-&B-&W-&B\r\n", buf);
   send_to_char(buf, ch);
@@ -655,7 +660,7 @@ void do_ahall(CHAR_DATA *ch, char *argument)
           
   if (!fame_list)
   {
-     send_to_char("No-one is in the Hall of Fame.\r\n", ch);
+     send_to_char("> no entries in the hall of fame yet today\r\n", ch);
      return;
   }
                                   
@@ -759,7 +764,7 @@ void find_bet_winners(CHAR_DATA *winner)
        wch = d->original ? d->original : d->character;
        if ((!IS_NPC(wch)) && (GET_BET_AMT(wch) > 0) && (GET_BETTED_ON(wch) == winner))
        {
-          sprintf(buf1, "You have won %d coins on your bet.\r\n",(GET_BET_AMT(wch))*2);
+          sprintf(buf1, "> arena winnings: %d credits\r\n",(GET_BET_AMT(wch))*2);
           send_to_char(buf1, wch);
           wch->gold += GET_BET_AMT(wch)*2;
           GET_BETTED_ON(wch) = NULL;
@@ -776,25 +781,25 @@ void do_challenge(CHAR_DATA *ch, char *argument)
    
  if ( ( victim = get_char_world_ooc( ch, argument ) ) == NULL)
  {
-    send_to_char("&WThat character is not of these realms!\n\r",ch);  
+    send_to_char("&W> player not found\n\r",ch);
     return;
  }
 
  if ((ch->top_level > 199) || (victim->top_level > 199))
  {
-    send_to_char("Sorry, Immortal's are not allowed to participate in the arena.\n\r",ch);
+    send_to_char("> AI can not participate in the arena\n\r",ch);
     return;
  }
          
  if (IS_NPC(victim) || IS_NPC(ch))
  {
-    send_to_char("&WYou cannot challenge mobiles!\n\r",ch);
+    send_to_char("&W> you cannot challenge programs\n\r",ch);
     return;
  }
  
  if (victim->name == ch->name)
  {
-   send_to_char("&WYou cannot challenge yourself!",ch);
+   send_to_char("&W> you cannot challenge yourself",ch);
    return;
  }
  
@@ -806,19 +811,19 @@ void do_challenge(CHAR_DATA *ch, char *argument)
  
  if (get_timer(victim,TIMER_PKILLED)>0)
  {
-   send_to_char("&WThat player has died within the last 5 minutes and cannot be challenged!\n\r",ch);
+   send_to_char("&W> that player has died within the last 5 minutes and cannot be challenged\n\r",ch);
    return;
  }
  
  if (get_timer(ch,TIMER_PKILLED)>0)
  {
-   send_to_char("&WYou have died within the last 5 minutes and cannot challenge anyone.\n\r",ch);
+   send_to_char("&W> you have died within the last 5 minutes and cannot challenge anyone\n\r",ch);
    return;
  }        
  
  if (num_in_arena()>0)
  {
-    send_to_char("&WSomeone is already in the arena!\n\r",ch);
+    send_to_char("&W> someone is already in the arena\n\r",ch);
     return;
  }
  if(ch->pcdata->release_date != 0)
@@ -832,10 +837,10 @@ void do_challenge(CHAR_DATA *ch, char *argument)
     return;
  }
 
- sprintf(buf,"&R%s &Whas challenged you to a duel!\n\r",ch->name);
+ sprintf(buf,"&R>>> %s &Whas challenged you to a duel\n\r",ch->name);
  send_to_char(buf,victim);
- send_to_char("&WPlease either accept or decline the challenge.\n\r\n\r",victim);
- sprintf(buf,"%s has challenged %s to a duel!!\n\r",ch->name,victim->name);
+ send_to_char("&W>>> either AACCEPT or ADECLINE the challenge\n\r\n\r",victim);
+ sprintf(buf,">>> %s has challenged %s to a duel\n\r",ch->name,victim->name);
  location = ch->in_room;
  ch->pcdata->roomarena = location;
  sportschan(buf);
@@ -850,13 +855,13 @@ void do_aaccept(CHAR_DATA *ch, char *argument)
   ROOM_INDEX_DATA *location;     
   if (num_in_arena()>0)
   {
-   send_to_char("Please wait until the current arena is closed before you accept.\n\r",ch);
+   send_to_char("> wait until the current match is over before you accept\n\r",ch);
    return;
   }
 
   if (!(ch->challenged))
   {
-    send_to_char("You have not been challenged!\n\r",ch);
+    send_to_char("> you have not been challenged\n\r",ch);
     return;
   }
   else
@@ -865,13 +870,13 @@ void do_aaccept(CHAR_DATA *ch, char *argument)
     dch = ch->challenged;
     if(!dch || dch == NULL)
     {
-	send_to_char("Your challenger has left!\n\r", ch);
+	send_to_char("> your challenger has left\n\r", ch);
 	ch->challenged = NULL;
 	return;
     }
     location = ch->in_room;
     ch->pcdata->roomarena = location;
-    sprintf(buf,"%s has accepted %s's challenge!",ch->name,dch->name);
+    sprintf(buf,"> %s has accepted %s's challenge",ch->name,dch->name);
     sportschan(buf);
     ch->challenged = NULL;
     char_from_room(ch);
@@ -898,14 +903,14 @@ void do_adecline(CHAR_DATA *ch, char *argument)
  
  if (ch->challenged)
  {
-   sprintf(buf,"%s has DECLINED %s's challenge! WHAT A WUSS!!!\n\r",ch->name,ch->challenged->name);
+   sprintf(buf,"> %s has declined %s's challenge\n\r",ch->name,ch->challenged->name);
    sportschan(buf);
    ch->challenged=NULL;
    return;
  }
  else 
  {
-   send_to_char("You have not been challenged!\n\r",ch);
+   send_to_char("> you have not been challenged\n\r",ch);
    return;
  }
 }                                                                                                                                                                                                 

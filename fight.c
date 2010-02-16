@@ -2397,7 +2397,7 @@ void do_murder( CHAR_DATA *ch, char *argument )
       return;
     }
 
-    ch->alignment -= 10;
+    // ch->alignment -= 1;
 
     if((!ch->in_room->area || !in_arena(ch)) || !IS_NPC(ch) || !IS_NPC(victim))
     {

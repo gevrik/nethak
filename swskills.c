@@ -1966,7 +1966,7 @@ void do_first_aid( CHAR_DATA *ch, char *argument )
 	medpac = get_eq_char( ch, WEAR_HOLD );
 	if ( !medpac || medpac->item_type != ITEM_MEDPAC )
 	{
-		send_to_char( "> you need to be holding a medpac\n\r",ch );
+		send_to_char( "> you need to be holding a medmod\n\r",ch );
 		return;
 	}
 
@@ -1978,7 +1978,7 @@ void do_first_aid( CHAR_DATA *ch, char *argument )
 
 	if ( medpac->value[0] <= 0 )
 	{
-		send_to_char( "> your medpac seems to be empty\n\r",ch );
+		send_to_char( "> your medmod seems to be empty\n\r",ch );
 		return;
 	}
 
@@ -3008,6 +3008,16 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 	else if ( !str_cmp( argument, "home" ) )
 	{
 
+		int amountexits = 0;
+		for( xit = location->first_exit; xit; xit = xit->next )
+			amountexits = amountexits + 1;
+
+		if( amountexits > 1 )
+		{
+			send_to_char("> &Rnode already has more than one exit&w\n\r", ch );
+			return;
+		}
+
 		for( xit = location->first_exit; xit; xit = xit->next )
 			if( IS_SET( xit->to_room->room_flags, ROOM_BARRACKS ) )
 			{
@@ -3047,6 +3057,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 		location->sector_type = SECT_INSIDE;
 		SET_BIT( location->room_flags , ROOM_EMPTY_HOME );
 		SET_BIT( location->room_flags , ROOM_NO_MOB );
+		SET_BIT( location->room_flags , ROOM_NOPEDIT );
 		strcpy( buf , "&Chomenode" );
 		strcpy( bufa , "use BUYHOME to buy this node for 10k.\n\r" );
 	}
@@ -4050,6 +4061,147 @@ void do_quicktalk ( CHAR_DATA *ch , char *argument )
 	return;
 
 }
+
+void do_codemed( CHAR_DATA *ch, char *argument )
+{
+    char arg[MAX_STRING_LENGTH], buf[MAX_STRING_LENGTH];
+    OBJ_DATA *obj, *obj_next, *cont;
+    bool checkcont = FALSE, checkchem = FALSE, checktool = FALSE;
+    int chance, level, wearbit = get_wflag("hold");
+
+    if( !IS_NPC(ch) && ch->pcdata->learned[gsn_codemed] == 0 )
+    {
+	 send_to_char("Huh?\n\r",ch);
+	 return;
+	}
+
+
+    switch( ch->substate )
+    {
+    case 0:
+ if( argument[0] == '\0' )
+ {
+     send_to_char("> syntax: codemed <medmod name>\n\r",ch);
+     return;
+ }
+
+ for( obj = ch->first_carrying; obj; obj = obj->next_content )
+ {
+     if( obj->item_type == ITEM_CONTAINER && !checkcont )
+     {
+    	 if( obj->value[1] <= 0 )
+         checkcont = TRUE;
+         continue;
+     }
+
+     if( obj->item_type == ITEM_MIRROR && !checkchem )
+     {
+  checkchem = TRUE;
+  continue;
+     }
+
+     if( obj->item_type == ITEM_TOOLKIT && !checktool )
+  checktool = TRUE;
+ }
+
+ if( !checkcont )
+ {
+     send_to_char("> &Ryou need an empty container module&w\n\r",ch);
+     return;
+ }
+
+ if( !checkchem )
+ {
+     send_to_char("> &Ryou need a wilderspace subroutine&w\n\r",ch);
+    return;
+ }
+
+ if( !checktool )
+ {
+    send_to_char("> &Ryou need a devkit&w\n\r",ch);
+    return;
+ }
+
+ chance = IS_NPC(ch) ? ch->top_level : ch->pcdata->learned[gsn_codemed];
+
+ if( number_percent() <= chance )
+ {
+    send_to_char("> you begin making a med module\n\r",ch);
+    act( AT_PLAIN, "> $n begins making a med module.", ch, NULL, NULL, TO_ROOM );
+    ch->dest_buf = str_dup(argument);
+    add_timer( ch, TIMER_DO_FUN, 10, do_codemed, 1 );
+    return;
+ }
+ send_to_char("> &Ryou fail creating a mod module - try again&w\n\r",ch);
+ return;
+
+    case 1:
+ if( !ch->dest_buf ) return;
+ strcpy( arg, (const char*) ch->dest_buf );
+ DISPOSE( ch->dest_buf );
+ break;
+
+    case SUB_TIMER_DO_ABORT:
+ DISPOSE( ch->dest_buf );
+ send_to_char("> &Ryour work is interrupted and you fail&w\n\r",ch);
+        return;
+    }
+
+    for( obj = ch->first_carrying; obj; obj = obj_next )
+    {
+ obj_next = obj->next_content;
+
+ if( obj->item_type == ITEM_CONTAINER && !checkcont )
+ {
+     if( obj->value[1] > 0 ) continue;
+     cont = obj;
+     checkcont = TRUE;
+     continue;
+ }
+
+ if( obj->item_type == ITEM_MIRROR && !checkchem )
+ {
+     obj_from_char( obj );
+     extract_obj( obj );
+     checkchem = TRUE;
+     continue;
+ }
+
+ if( obj->item_type == ITEM_TOOLKIT && !checktool )
+     checktool = TRUE;
+    }
+
+    level = chance = IS_NPC(ch) ? ch->top_level : ch->pcdata->learned[gsn_codemed];
+
+    if( number_percent() > chance || !checkcont || !checkchem || !checktool )
+    {
+ send_to_char("> &Ryou hold your newly created med module&w\n\r",ch);
+ send_to_char("> &Rthen you suddenly realize you fumbled it...\n\r",ch);
+ return;
+    }
+
+    cont->item_type = ITEM_MEDPAC;
+    cont->value[0] = level/10;
+    sprintf( buf, "%s [medmod]", arg );
+    STRFREE( cont->name );
+    cont->name = STRALLOC( buf );
+    STRFREE( cont->short_descr );
+    cont->short_descr = STRALLOC( buf );
+    //sprintf( buf, " was left here.");
+    STRFREE( cont->description );
+    cont->description = STRALLOC( buf );
+    if( !CAN_WEAR( cont, 1 << wearbit ) )
+    SET_BIT( cont->wear_flags, 1 << wearbit );
+
+    send_to_char("&G> you hold up your new med module\n\r",ch);
+    act( AT_PLAIN, "> $n finished their new med module",ch,NULL,NULL,TO_ROOM);
+
+
+    learn_from_success( ch, gsn_codemed );
+
+}
+
+
 
 //done for swrip
 //done for Neuro
