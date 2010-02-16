@@ -19,6 +19,9 @@ extern CHAR_DATA *	gch_prev;
 int ris_save( CHAR_DATA *ch, int chance, int ris );
 void        write_ship_list args( ( void ) );
 
+/* From newarena.c */
+void lost_arena(CHAR_DATA *ch);
+
 /*
  * Local functions.
  */
@@ -1281,7 +1284,7 @@ ch_ret damage( CHAR_DATA *ch, CHAR_DATA *victim, int dam, int dt )
      * Code to handle equipment getting damaged, and also support  -Thoric
      * bonuses/penalties for having or not having equipment where hit
      */
-    if (dam > 10 && dt != TYPE_UNDEFINED)
+    if (dam > 10 && dt != TYPE_UNDEFINED && !IS_SET( ch->in_room->room_flags, ROOM_ARENA))
     {
 	/* get a random body eq part */
 	dameq  = number_range(WEAR_LIGHT, WEAR_EYES);
@@ -1311,6 +1314,20 @@ ch_ret damage( CHAR_DATA *ch, CHAR_DATA *victim, int dam, int dt )
     &&   victim->hit < 1 )
        victim->hit = 1;
 
+    if ( victim->hit < 1 && !IS_NPC(victim) && IS_SET(victim->in_room->room_flags, ROOM_ARENA))
+     {
+        char_from_room(victim);
+        char_to_room(victim,victim->pcdata->roomarena);
+        victim->hit = victim->max_hit;
+        victim->mana = victim->max_mana;
+        victim->arenaloss += 1;  /* v1.1 Diablo */
+        if( num_in_arena() == 1)
+          find_game_winner();
+        do_look(victim, "auto");
+        stop_fighting( victim, TRUE );
+        lost_arena(victim);
+        return rNONE;
+     }
 
     if ( dam > 0 && dt > TYPE_HIT
     && !IS_AFFECTED( victim, AFF_POISON )
@@ -2100,6 +2117,10 @@ else
 
 int align_compute( CHAR_DATA *gch, CHAR_DATA *victim )
 {
+
+    if(IS_SET( gch->in_room->room_flags, ROOM_ARENA ))
+      return 0;
+
     return URANGE ( -1000,
                      (int) ( gch->alignment - victim->alignment/5 ),
                      1000 );
@@ -2330,6 +2351,7 @@ void do_murder( CHAR_DATA *ch, char *argument )
 {
     char arg[MAX_INPUT_LENGTH];
     CHAR_DATA *victim;
+    char logbuf[MAX_STRING_LENGTH];
 
     one_argument( argument, arg );
 
@@ -2377,6 +2399,12 @@ void do_murder( CHAR_DATA *ch, char *argument )
 
     ch->alignment -= 10;
 
+    if((!ch->in_room->area || !in_arena(ch)) || !IS_NPC(ch) || !IS_NPC(victim))
+    {
+      sprintf( logbuf, "%s: murder %s", ch->name, argument);
+      log_string(logbuf);
+    }
+
     WAIT_STATE( ch, 1 * PULSE_VIOLENCE );
     multi_hit( ch, victim, TYPE_UNDEFINED );
     return;
@@ -2384,7 +2412,14 @@ void do_murder( CHAR_DATA *ch, char *argument )
 
 bool in_arena( CHAR_DATA *ch )
 {
+
+if ( !str_cmp( ch->in_room->area->filename, "limbo.are" ) )
+  return TRUE;
+
+if ( ch->in_room->vnum < 2994 || ch->in_room->vnum > 3020 )
   return FALSE;
+
+return TRUE;
 }
 
 

@@ -45,6 +45,11 @@ DO_FUN *skill_function( char *name )
     switch( name[3] )
     {
     case 'a':
+        if ( !str_cmp( name, "do_aaccept" ))            return do_aaccept;
+        if ( !str_cmp( name, "do_ahall" ))              return do_ahall;
+        if ( !str_cmp( name, "do_arena" ))              return do_arena;
+        if ( !str_cmp( name, "do_awho" ))               return do_awho;
+	if ( !str_cmp( name, "do_adecline" ))		return do_adecline;
 	if ( !str_cmp( name, "do_aassign" ))		return do_aassign;
 	if ( !str_cmp( name, "do_addpilot" ))  		return do_addpilot;
 	if ( !str_cmp( name, "do_accelerate" ))         return do_accelerate;
@@ -72,6 +77,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_autopilot"))           return do_autopilot;
 	break;
     case 'b':
+    	if ( !str_cmp( name, "do_bet" ))                return do_bet;
 	if ( !str_cmp( name, "do_backstab" ))		return do_backstab;
 	if ( !str_cmp( name, "do_balzhur" ))		return do_balzhur;
 	if ( !str_cmp( name, "do_bamfin" ))		return do_bamfin;
@@ -99,6 +105,8 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_buyship" ))            return do_buyship;
 	break;
     case 'c':
+        if ( !str_cmp( name, "do_challenge" ))          return do_challenge;
+        if ( !str_cmp( name, "do_chaos" ))              return do_chaos;
 	if ( !str_cmp( name, "do_calculate" ))          return do_calculate;
 	if ( !str_cmp( name, "do_capture" ))            return do_capture;
 	if ( !str_cmp( name, "do_cast" ))		return do_cast;
@@ -533,6 +541,14 @@ char *spell_name( SPELL_FUN *spell )
 
 char *skill_name( DO_FUN *skill )
 {
+    if ( skill == do_aaccept )           return "do_aaccept";
+    if ( skill == do_ahall )            return "do_ahall";
+    if ( skill == do_arena )            return "do_arena";
+    if ( skill == do_awho )             return "do_awho";
+    if ( skill == do_bet )              return "do_bet";
+    if ( skill == do_challenge )        return "do_challenge";
+    if ( skill == do_chaos )            return "do_chaos";
+    if ( skill == do_adecline )          return "do_adecline";
     if ( skill == do_arrest )     return "do_arrest";
     if ( skill == do_buyskill )     return "do_buyskill";
     if ( skill == do_war )     return "do_war";

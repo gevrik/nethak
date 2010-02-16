@@ -301,6 +301,8 @@ void fwrite_char( CHAR_DATA *ch, FILE *fp )
     fprintf( fp, "Alignment    %d\n",	ch->alignment		);
     fprintf( fp, "Glory        %d\n",   ch->pcdata->quest_curr  );
     fprintf( fp, "MGlory       %d\n",   ch->pcdata->quest_accum );
+    fprintf( fp, "ArenaWin     %d\n",   ch->arenawin            );
+    fprintf( fp, "ArenaLoss    %d\n",   ch->arenaloss           );
     fprintf( fp, "Hitroll      %d\n",	ch->hitroll		);
     fprintf( fp, "Damroll      %d\n",	ch->damroll		);
     fprintf( fp, "Armor        %d\n",	ch->armor		);
@@ -874,6 +876,8 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload )
 	    KEY( "Act",		ch->act,		fread_number( fp ) );
 	    KEY( "AffectedBy",	ch->affected_by,	fread_number( fp ) );
 	    KEY( "Alignment",	ch->alignment,		fread_number( fp ) );
+        KEY( "ArenaWin",    ch->arenawin,           fread_number( fp ) );
+        KEY( "ArenaLoss",   ch->arenaloss,          fread_number( fp ) );
 	    KEY( "Armor",	ch->armor,		fread_number( fp ) );
 
 	    if ( !str_cmp( word, "Affect" ) || !str_cmp( word, "AffectData" ) )

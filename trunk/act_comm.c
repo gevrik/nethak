@@ -12,6 +12,7 @@ void send_obj_page_to_char(CHAR_DATA * ch, OBJ_INDEX_DATA * idx, char page);
 void send_room_page_to_char(CHAR_DATA * ch, ROOM_INDEX_DATA * idx, char page);
 void send_page_to_char(CHAR_DATA * ch, MOB_INDEX_DATA * idx, char page);
 void send_control_page_to_char(CHAR_DATA * ch, char page);
+void sportschan(char *);
 
 /*
  * Local functions.
@@ -1097,6 +1098,9 @@ void do_quit( CHAR_DATA *ch, char *argument )
     int x, y;
     int level;
 
+    char qbuf[MAX_INPUT_LENGTH];
+    CHAR_DATA *fch;
+
     if ( IS_NPC(ch) && IS_SET(ch->act, ACT_POLYMORPHED))
     { 
       send_to_char("> you cannot quit while polymorphed\n\r", ch);
@@ -1141,6 +1145,22 @@ void do_quit( CHAR_DATA *ch, char *argument )
     act( AT_SAY, "> come back soon, $n...'", ch, NULL, NULL, TO_CHAR );
     act( AT_BYE, "> $n has left cyberspace", ch, NULL, NULL, TO_ROOM );
     set_char_color( AT_GREY, ch);
+
+    if ( ch->challenged )
+    {
+      sprintf(qbuf,"> %s has quit! challenge is void!",ch->name);
+      ch->challenged=NULL;
+      sportschan(qbuf);
+    }
+
+    for ( fch = first_char; fch; fch = fch->next )
+    {
+	if(IS_NPC(fch))
+	  continue;
+
+	if(fch->challenged && fch->challenged == ch)
+	  fch->challenged=NULL;
+    }
 
     //char bufText[MAX_STRING_LENGTH];
     //sprintf( bufText , "> %s has quit" , ch->name );

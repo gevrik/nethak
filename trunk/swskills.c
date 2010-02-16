@@ -1970,6 +1970,12 @@ void do_first_aid( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
+	   if ( IS_SET(ch->in_room->room_flags, ROOM_ARENA) )
+	   {
+		send_to_char("> &Rmedmods are not allowed in the arena&w\n\r", ch);
+		return;
+	   }
+
 	if ( medpac->value[0] <= 0 )
 	{
 		send_to_char( "> your medpac seems to be empty\n\r",ch );
@@ -2028,7 +2034,7 @@ void do_snipe( CHAR_DATA *ch, char *argument )
 	EXIT_DATA       * pexit;
 	ROOM_INDEX_DATA * was_in_room;
 	ROOM_INDEX_DATA * to_room;
-	CHAR_DATA       * victim;
+	CHAR_DATA       * victim = NULL;
 	char              buf[MAX_STRING_LENGTH];
 	bool              pfound = FALSE;
 
@@ -2083,6 +2089,11 @@ void do_snipe( CHAR_DATA *ch, char *argument )
 		if ( !pexit->to_room )
 			break;
 
+//	    to_room = NULL;
+//	    if ( pexit->distance > 1 )
+//	       to_room = generate_exit( ch->in_room , &pexit );
+//
+//	    if ( to_room == NULL )
 		to_room = pexit->to_room;
 
 		char_from_room( ch );
@@ -2329,6 +2340,11 @@ void do_throw( CHAR_DATA *ch, char *argument )
 			break;
 		}
 
+//	      to_room = NULL;
+//	      if ( pexit->distance > 1 )
+//	       to_room = generate_exit( ch->in_room , &pexit );
+//
+//	      if ( to_room == NULL )
 		to_room = pexit->to_room;
 
 
@@ -2365,6 +2381,11 @@ void do_throw( CHAR_DATA *ch, char *argument )
 				return;
 			}
 
+//	        to_room = NULL;
+//	        if ( pexit->distance > 1 )
+//	           to_room = generate_exit( ch->in_room , &pexit );
+//
+//	        if ( to_room == NULL )
 			to_room = pexit->to_room;
 
 
@@ -4030,4 +4051,5 @@ void do_quicktalk ( CHAR_DATA *ch , char *argument )
 
 }
 
+//done for swrip
 //done for Neuro

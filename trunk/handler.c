@@ -1307,6 +1307,13 @@ void extract_char( CHAR_DATA *ch, bool fPull )
 
     REMOVE_BIT( ch->act, ACT_MOUNTED );
 
+    if (IS_SET(ch->in_room->room_flags, ROOM_ARENA))
+    {
+        ch->hit = ch->max_hit;
+        ch->mana = ch->max_mana;
+        ch->move = ch->max_move;
+    }
+
     while ( (obj = ch->last_carrying) != NULL )
 	extract_obj( obj );
 
@@ -1497,6 +1504,95 @@ CHAR_DATA *get_char_world( CHAR_DATA *ch, char *argument )
     for ( wch = first_char; wch; wch = wch->next )
     {
 	if ( !nifty_is_name_prefix( arg, wch->name ) )
+	    continue;
+	if ( number == 0 && !IS_NPC(wch) && is_wizvis(ch, wch) )
+	    return wch;
+	else
+	if ( ++count == number  && is_wizvis(ch, wch) )
+	    return wch;
+    }
+
+    return NULL;
+}
+
+/* Find a character by name, no PERS */
+CHAR_DATA *get_char_world_ooc( CHAR_DATA *ch, char *argument )
+{
+    char arg[MAX_INPUT_LENGTH];
+    CHAR_DATA *wch;
+    int number, count, vnum;
+
+    number = number_argument( argument, arg );
+    count  = 0;
+    if ( !str_cmp( arg, "self" ) )
+	return ch;
+
+    /*
+     * Allow reference by vnum for saints+			-Thoric
+     */
+    if ( IS_IMMORTAL(ch) && is_number( arg ) )
+	vnum = atoi( arg );
+    else
+	vnum = -1;
+
+    /* check the room for an exact match */
+    for ( wch = ch->in_room->first_person; wch; wch = wch->next_in_room )
+	if ( (nifty_is_name( arg, wch->name ) ||
+		(IS_NPC(ch) && (nifty_is_name(arg, wch->name)))
+		||  (IS_NPC(wch) && vnum == wch->pIndexData->vnum))
+		 && is_wizvis(ch,wch))
+	{
+	    if ( number == 0 && !IS_NPC(wch) )
+		return wch;
+	    else
+	    if ( ++count == number )
+		return wch;
+	}
+
+    count = 0;
+
+    /* check the world for an exact match */
+    for ( wch = first_char; wch; wch = wch->next )
+	if ( (nifty_is_name( arg, wch->name ) || (IS_NPC(ch) && (nifty_is_name(arg, wch->name)))
+	||  (IS_NPC(wch) && vnum == wch->pIndexData->vnum)) && is_wizvis(ch,wch) )
+	{
+	    if ( number == 0 && !IS_NPC(wch) )
+		return wch;
+	    else
+	    if ( ++count == number  )
+		return wch;
+	}
+
+    /* bail out if looking for a vnum match */
+    if ( vnum != -1 )
+	return NULL;
+
+    /*
+     * If we didn't find an exact match, check the room for
+     * for a prefix match, ie gu == guard.
+     * Added by Narn, Sept/96
+     */
+    count  = 0;
+    for ( wch = ch->in_room->first_person; wch; wch = wch->next_in_room )
+    {
+	if ( !nifty_is_name_prefix( arg, wch->name ) || (IS_NPC(ch) && (!nifty_is_name_prefix(arg, wch->name))) )
+	    continue;
+	if ( number == 0 && !IS_NPC(wch) && is_wizvis(ch,wch))
+	    return wch;
+	else
+	if ( ++count == number  && is_wizvis(ch, wch) )
+	    return wch;
+    }
+
+    /*
+     * If we didn't find a prefix match in the room, run through the full list
+     * of characters looking for prefix matching, ie gu == guard.
+     * Added by Narn, Sept/96
+     */
+    count  = 0;
+    for ( wch = first_char; wch; wch = wch->next )
+    {
+	if ( !nifty_is_name_prefix( arg, wch->name ) || (IS_NPC(ch) && (!nifty_is_name(arg, wch->name))))
 	    continue;
 	if ( number == 0 && !IS_NPC(wch) && is_wizvis(ch, wch) )
 	    return wch;
