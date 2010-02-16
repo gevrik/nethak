@@ -484,7 +484,7 @@ void boot_db( void )
 	ASSIGN_GSN( gsn_berserk,	"berserk" );
 	ASSIGN_GSN( gsn_hitall,		"hitall" );
 	ASSIGN_GSN( gsn_aid,		"aid" );
-	ASSIGN_GSN( gsn_track,		"track" );
+	ASSIGN_GSN( gsn_track,		"trace" );
 	ASSIGN_GSN( gsn_mount,		"mount" );
 	ASSIGN_GSN( gsn_climb,		"climb" );
 	ASSIGN_GSN( gsn_slice,		"slice" );

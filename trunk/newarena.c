@@ -473,11 +473,11 @@ void find_game_winner()
           act(AT_YELLOW,"$n falls from the sky.", i, NULL, NULL, TO_ROOM);
 
 // VERSION 1.3 UPGRADE
-          sprintf( buf, "%s has KICKED %s's BUTT!!!", i->name, i->opponent->name );
+          sprintf( buf, ">>> %s has beaten %s in the killing fields!", i->name, i->opponent->name );
           sportschan( buf );
 
           i->gold += arena_pot/2;
-          sprintf(buf, "You have been awarded %d credits for winning the arena\r\n",
+          sprintf(buf, "> you have been awarded %d credits for winning the arena\r\n",
                         (arena_pot/2));
           send_to_char(buf, i);
 //          sprintf(buf2, "%s awarded %d credits for winning arena", i->name,                 (arena_pot/2));
@@ -501,10 +501,10 @@ void show_jack_pot()
 {
   char buf1[MAX_INPUT_LENGTH];
   
-  sprintf(buf1, "Lets get ready to RUMBLE!!!!!!!!\r\n");
-  sprintf(buf1, "%sThe jack pot for this arena is %d credits\r\n",
+  sprintf(buf1, ">>> lets get ready to RUMBLE!!!!!!!!\r\n");
+  sprintf(buf1, "%s>>> the jackpot for this arena is %d credits\r\n",
   buf1, arena_pot);
-  sprintf(buf1, "%s%d credits have been bet on this arena.\r\n\r\n",buf1, bet_pot);
+  sprintf(buf1, "%s>>> %d credits have been bet on this arena.\r\n\r\n",buf1, bet_pot);
   sportschan(buf1);
                     
 }
@@ -521,7 +521,7 @@ void silent_end()
   time_left_in_game = 0;
   arena_pot = 0;
   bet_pot = 0;
-  sprintf(buf, "It looks like no one was brave enough to enter the Arena.");
+  sprintf(buf, "> it looks like no one was brave enough to enter the arena");
   sportschan(buf);
 }
        
@@ -660,7 +660,7 @@ void do_ahall(CHAR_DATA *ch, char *argument)
   }
                                   
      sprintf(buf2,  "&B|---------------------------------------|\r\n");
-     strcat(buf2, "|    &WPast Winners of The FotE Arena&B     |\r\n");
+     strcat(buf2, "|    &WPast Winners of The Netx Arena&B     |\r\n");
      strcat(buf2, "|---------------------------------------|\r\n\r\n"); 
 
      send_to_char(buf2, ch);
@@ -668,7 +668,7 @@ void do_ahall(CHAR_DATA *ch, char *argument)
      sprintf(buf, format,
         "&RName",
         "&RDate",
-        "&RAward Amt");
+        "&RWinnings");
      send_to_char(buf, ch);
      sprintf(buf, format,
         "&B---------------------------------",
@@ -780,7 +780,7 @@ void do_challenge(CHAR_DATA *ch, char *argument)
     return;
  }
 
- if ((ch->top_level > 200) || (victim->top_level > 200))
+ if ((ch->top_level > 199) || (victim->top_level > 199))
  {
     send_to_char("Sorry, Immortal's are not allowed to participate in the arena.\n\r",ch);
     return;
@@ -798,7 +798,7 @@ void do_challenge(CHAR_DATA *ch, char *argument)
    return;
  }
  
- if (victim->top_level<5)
+ if (victim->top_level<1)
  {
    send_to_char("&WThat character is too young.\n\r",ch);
    return;
