@@ -1779,6 +1779,7 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 
 				if ( get_timer( ch, TIMER_PKILLED ) > 0 )
 					remove_timer( ch, TIMER_PKILLED );
+
 				if ( ch->plr_home != NULL )
 				{
 					char filename[256];
@@ -1852,6 +1853,7 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 
 					}
 				}
+
 				char bufText[MAX_STRING_LENGTH];
 				act( AT_ACTION, "> $n has entered the node", ch, NULL, NULL, TO_ROOM );
 				//sprintf( bufText , "> %s has logged in" , ch->name );

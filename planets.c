@@ -240,13 +240,15 @@ void fread_planet( PLANET_DATA *planet, FILE *fp )
 	    KEY( "Flags",	planet->flags,			fread_number( fp ) );
 	    break;
 
-	case 'G':
-	    if ( !str_cmp( word, "GovernedBy" ) )
-	    {
-	     	planet->governed_by = get_clan ( fread_string(fp) );
-                fMatch = TRUE;
-	    }
-	    break;
+    case 'G':
+       if( !str_cmp( word, "GovernedBy" ) )
+       {
+          const char *clan_name = fread_string( fp );
+          planet->governed_by = get_clan( clan_name );
+          fMatch = TRUE;
+          STRFREE( clan_name );
+       }
+       break;
 
 	case 'N':
 	    KEY( "Name",	planet->name,		fread_string( fp ) );
@@ -258,17 +260,19 @@ void fread_planet( PLANET_DATA *planet, FILE *fp )
 
 	case 'S':
 	    KEY( "Sector",	planet->sector,		fread_number( fp ) );
-	    if ( !str_cmp( word, "Starsystem" ) )
-	    {
-	     	planet->starsystem = starsystem_from_name ( fread_string(fp) );
-                if (planet->starsystem)
-                {
-                     SPACE_DATA *starsystem = planet->starsystem;
+        if( !str_cmp( word, "Starsystem" ) )
+        {
+           const char *starsystem_name = fread_string( fp );
+           planet->starsystem = starsystem_from_name( starsystem_name );
+           if( planet->starsystem )
+           {
+              SPACE_DATA *starsystem = planet->starsystem;
 
-                     LINK( planet , starsystem->first_planet, starsystem->last_planet, next_in_system, prev_in_system );
-                }
-                fMatch = TRUE;
-	    }
+              LINK( planet, starsystem->first_planet, starsystem->last_planet, next_in_system, prev_in_system );
+           }
+           fMatch = TRUE;
+           STRFREE( starsystem_name );
+        }
 	    break;
 
 	case 'X':

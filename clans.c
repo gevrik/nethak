@@ -1292,7 +1292,7 @@ void do_clan_withdraw( CHAR_DATA *ch, char *argument )
 
     clan->funds -= amount;
     ch->gold += amount;
-    save_clan ( clan );
+    save_char_obj( ch );
 
 }
 
@@ -1340,7 +1340,7 @@ void do_clan_donate( CHAR_DATA *ch, char *argument )
 
     clan->funds += amount;
     ch->gold -= amount;
-    save_clan ( clan );
+    save_char_obj( ch );
 
 }
 

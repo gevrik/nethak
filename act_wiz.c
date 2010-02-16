@@ -2720,12 +2720,12 @@ void do_ban( CHAR_DATA *ch, char *argument )
       }
       else if ( !str_cmp(arg, "newban") )
       {
-        pban->level = 1;
+        pban->level = 0;
         send_to_char( "New characters banned.\n\r", ch );
       }
       else if ( !str_cmp(arg, "mortal") )
       {
-        pban->level = 2;
+        pban->level = 1;
         send_to_char( "All mortals banned.\n\r", ch );
       }
       else if ( !str_cmp(arg, "total") )

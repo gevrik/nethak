@@ -3863,6 +3863,7 @@ void	trip			args( ( CHAR_DATA *ch, CHAR_DATA *victim) );
 
 
 /* handler.c */
+//void 	free_obj( OBJ_DATA * obj );
 void    explode         args( ( OBJ_DATA *obj ) );
 sh_int	get_trust	args( ( CHAR_DATA *ch ) );
 sh_int	get_age		args( ( CHAR_DATA *ch ) );

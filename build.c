@@ -2596,18 +2596,24 @@ void do_oset( CHAR_DATA *ch, char *argument )
 	return;
     }
 
-    if ( !str_cmp( arg2, "name" ) )
+    if( !str_cmp( arg2, "name" ) )
     {
-	if ( !can_omodify( ch, obj ) )
-	  return;
-	STRFREE( obj->name );
-	obj->name = STRALLOC( arg3 );
-	if ( IS_OBJ_STAT( obj, ITEM_PROTOTYPE ) )
-	{
-	   STRFREE(obj->pIndexData->name );
-	   obj->pIndexData->name = QUICKLINK( obj->name );
-	}
-	return;
+       if( !can_omodify( ch, obj ) )
+          return;
+
+       if( arg3[0] == '\0' )
+       {
+            send_to_char( "&WYou &RMUST choose a new name\n\r", ch );
+            return;
+       }
+       STRFREE( obj->name );
+       obj->name = STRALLOC( arg3 );
+       if( IS_OBJ_STAT( obj, ITEM_PROTOTYPE ) )
+       {
+          STRFREE( obj->pIndexData->name );
+          obj->pIndexData->name = QUICKLINK( obj->name );
+       }
+       return;
     }
 
     if ( !str_cmp( arg2, "short" ) )

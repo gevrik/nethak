@@ -47,9 +47,9 @@ void do_score(CHAR_DATA * ch, char *argument)
 	ch_printf( ch, "   &Wwillpower: &G%d\n\r", ch->mental_state );
 	ch_printf( ch, "&Wdefence: &G%d", GET_AC(ch) );
 	//ch_printf( ch, "   &Wkarma:  &G%d", ch->alignment );
-    	ch_printf( ch, "     &Wcredits:  &G%ld\n\r" , ch->gold );
-    	ch_printf( ch, "     &Wsnippets:  &G%d\n\r" , ch->snippets );
-
+    	ch_printf( ch, "   &Wsnippets:  &G%d\n\r" , ch->snippets );
+    	ch_printf( ch, "&Wcredits:  &G%ld\n\r" , ch->gold );
+    	ch_printf( ch, "&Wbank   :  &G%ld\n\r" , ch->pcdata->bank );
     	ch_printf( ch, "&W-----------------------------------------------------\n\r" );
 
     ch_printf( ch,

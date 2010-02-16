@@ -1285,7 +1285,7 @@ void extract_char( CHAR_DATA *ch, bool fPull )
     if ( gch_prev == ch )
       gch_prev = ch->prev;
 
-    if ( fPull && !IS_SET(ch->act, ACT_POLYMORPHED))
+    if ( fPull )
 	die_follower( ch );
 
     stop_fighting( ch, TRUE );

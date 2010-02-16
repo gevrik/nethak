@@ -40,6 +40,7 @@ static	OBJ_DATA *	rgObjNest	[MAX_NEST];
 void	fwrite_char	args( ( CHAR_DATA *ch, FILE *fp ) );
 void	fread_char	args( ( CHAR_DATA *ch, FILE *fp, bool preload) );
 void	write_corpses	args( ( CHAR_DATA *ch, char *name ) );
+//void 	load_plr_home( CHAR_DATA * ch );
 
 void save_home( CHAR_DATA *ch )
 {
@@ -827,6 +828,7 @@ bool load_char_obj( DESCRIPTOR_DATA *d, char *name, bool preload )
     }
 
     loading_char = NULL;
+
     return found;
 }
 
@@ -1898,5 +1900,79 @@ void load_corpses( void )
   falling = 0;
   return;
 }
+
+//void load_plr_home( CHAR_DATA * ch )
+//{
+//    char filename[256];
+//    FILE *fph;
+//    ROOM_INDEX_DATA *storeroom = ch->plr_home;
+//    OBJ_DATA *obj;
+//    OBJ_DATA *obj_next;
+//
+//    if( IS_NPC( ch ) || ch->plr_home == NULL )
+//        return;
+//
+//    for( obj = storeroom->first_content; obj; obj = obj_next )
+//    {
+//        obj_next = obj->next_content;
+//        extract_obj( obj );
+//    }
+//
+//    sprintf( filename, "%s%c/%s.home", PLAYER_DIR, tolower( ch->name[0] ), capitalize( ch->name ) );
+//    if( ( fph = fopen( filename, "r" ) ) != NULL )
+//    {
+//        int iNest;
+//        bool found;
+//        OBJ_DATA *tobj, *tobj_next;
+//
+//        rset_supermob( storeroom );
+//        for( iNest = 0; iNest < MAX_NEST; iNest++ )
+//            rgObjNest[iNest] = NULL;
+//
+//        found = TRUE;
+//        for( ;; )
+//        {
+//            char letter;
+//            char *word;
+//
+//            letter = fread_letter( fph );
+//            if( letter == '*' )
+//            {
+//                fread_to_eol( fph );
+//                continue;
+//            }
+//
+//            if( letter != '#' )
+//            {
+//                bug( "Load_plr_home: # not found.", 0 );
+//                bug( ch->name, 0 );
+//                break;
+//            }
+//
+//            word = fread_word( fph );
+//            if( !str_cmp( word, "OBJECT" ) ) /* Objects  */
+//                fread_obj( supermob, fph, OS_CARRY );
+//            else if( !str_cmp( word, "END" ) )  /* Done     */
+//                break;
+//            else
+//            {
+//                bug( "Load_plr_home: bad section.", 0 );
+//                bug( ch->name, 0 );
+//                break;
+//            }
+//        }
+//
+//        fclose( fph );
+//
+//        for( tobj = supermob->first_carrying; tobj; tobj = tobj_next )
+//        {
+//            tobj_next = tobj->next_content;
+//            obj_from_char( tobj );
+//            obj_to_room( tobj, storeroom );
+//        }
+//
+//        release_supermob(  );
+//    }
+//}
 
 //not needed for Neuro
