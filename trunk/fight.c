@@ -2376,6 +2376,18 @@ void do_murder( CHAR_DATA *ch, char *argument )
     if ( is_safe( ch, victim ) )
        return;
 
+    if ( get_age(victim) <= 25 )
+    {
+	send_to_char( "> that character is too new\n\r", ch );
+	return;
+    }
+
+    if ( get_age(ch) <= 25 )
+    {
+	send_to_char( "> you are too new to murder\n\r", ch );
+	return;
+    }
+
     if ( IS_AFFECTED(ch, AFF_CHARM) )
     {
       if ( ch->master == victim )

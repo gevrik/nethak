@@ -1687,6 +1687,9 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 			case CON_PRESS_ENTER:
 				write_to_buffer( d, "\n\r> message of the day:\n\r", 0 );
 				do_help( ch, "motd" );
+
+				//if ( strcmp(ch->pcdata->clan, "Turing") )
+
 				write_to_buffer( d, "\n\r> press [ENTER]\n\r", 0 );
 				d->connected = CON_DONE_MOTD;
 				break;

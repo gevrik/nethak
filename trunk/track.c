@@ -215,7 +215,7 @@ void do_track( CHAR_DATA *ch, char *argument )
       case BFS_NO_PATH:
          sprintf(buf, "> &Ryou can't trace them from here\n\r" );
          send_to_char(buf, ch);
-	 learn_from_failure( ch, gsn_track );
+         learn_from_failure( ch, gsn_track );
          break;
       default:
          ch_printf(ch, "> &Yyou trace them %s from here...&w\n\r", dir_name[dir]);
