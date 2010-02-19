@@ -1,4 +1,3 @@
-
 #include <sys/types.h>
 #include <ctype.h>
 #include <stdio.h>
@@ -102,7 +101,7 @@ void do_layout( CHAR_DATA *ch, char *argument )
 
 	if ( IS_SET( location->room_flags , ROOM_NOPEDIT ) )
 	{
-		send_to_char( "> &Rsorry, but you may not code this room\n\r", ch );
+		send_to_char( "> &Rsorry, but you may not edit this room\n\r", ch );
 		return;
 	}
 
@@ -190,6 +189,12 @@ void do_homerecall( CHAR_DATA *ch, char *argument )
 	if ( IS_SET( ch->in_room->room_flags, ROOM_ARENA ) )
 	{
 		send_to_char( "> &Rfinish the current match first&w\n\r", ch );
+		return;
+	}
+	
+	if ( ch->in_room->vnum <= 30 )
+	{
+		send_to_char( "> &Ryou cannot use this command in the tutorial&w\n\r", ch );
 		return;
 	}
 
@@ -479,7 +484,7 @@ void do_decompile( CHAR_DATA *ch, char *argument )
 	bool checksew, checkfab;
 	OBJ_DATA *obj;
 	OBJ_DATA *material;
-	int value;
+	int value, cost;
 
 	argument = one_argument( argument, arg );
 	//strcpy( arg2 , argument );
@@ -501,11 +506,12 @@ void do_decompile( CHAR_DATA *ch, char *argument )
 				&& str_cmp( arg, "function" )
 				&& str_cmp( arg, "util" )
 				&& str_cmp( arg, "patch" )
-				&& str_cmp( arg, "app" ) )
+				&& str_cmp( arg, "app" )
+				&& str_cmp( arg, "snippet" ) )
 		{
 			send_to_char( "&R> you cannot decompile that, try:\n\r&w", ch);
 			send_to_char( "> def, blaster, blade, function,\n\r", ch);
-			send_to_char( "> util, app or patch\n\r", ch);
+			send_to_char( "> util, app, patch or snippet\n\r", ch);
 			return;
 		}
 
@@ -537,14 +543,14 @@ void do_decompile( CHAR_DATA *ch, char *argument )
 				: (int) (ch->pcdata->learned[gsn_spacecraft]);
 		if ( number_percent( ) < chance )
 		{
-			send_to_char( "&G> you begin the long process of decompiling\n\r", ch);
+			send_to_char( "> &Gyou begin the long process of decompiling\n\r", ch);
 			act( AT_PLAIN, "> $n takes $s compiler as well as some code and begins to work", ch,
 					NULL, argument , TO_ROOM );
-			add_timer ( ch , TIMER_DO_FUN , 10 , do_decompile , 1 );
+			add_timer ( ch , TIMER_DO_FUN , 5 , do_decompile , 1 );
 			ch->dest_buf = str_dup(arg);
 			return;
 		}
-		send_to_char("&R> you cannot figure out what to do\n\r",ch);
+		send_to_char("> &Ryou cannot figure out what to do\n\r",ch);
 		learn_from_failure( ch, gsn_spacecraft );
 		return;
 
@@ -558,7 +564,7 @@ void do_decompile( CHAR_DATA *ch, char *argument )
 	case SUB_TIMER_DO_ABORT:
 		DISPOSE( ch->dest_buf );
 		ch->substate = SUB_NONE;
-		send_to_char("&R> you are interrupted and fail to finish your work\n\r", ch);
+		send_to_char("> &Ryou are interrupted and fail to finish your work\n\r", ch);
 		return;
 	}
 
@@ -579,28 +585,29 @@ void do_decompile( CHAR_DATA *ch, char *argument )
 			separate_obj( obj );
 			obj_from_char( obj );
 			material = obj;
+			cost = obj->cost;
 		}
 	}
 
 	if ( ( !checkfab ) || ( !checksew ) )
 	{
-		send_to_char( "&R> you could not decompile anything useful\n\r", ch);
+		send_to_char( "> &Ryou could not decompile anything useful\n\r", ch);
 		learn_from_failure( ch, gsn_spacecraft );
 		return;
 	}
 
-	int afumble = number_range(0,5);
+	int afumble = number_range(1,5);
 
-	if ( afumble < 2 )
+	if ( afumble <= 2 )
 	{
-		send_to_char( "&R> you could not decompile anything useful\n\r", ch);
+		send_to_char( "> &Ryou could not decompile anything useful\n\r", ch);
 		learn_from_failure( ch, gsn_spacecraft );
 		return;
 	}
 
 	obj = material;
 
-	send_to_char( "&Y> you coded:\n\r\n\r", ch);
+	send_to_char( "> &Yyou decompiled:&w\n\r\n\r", ch);
 
 	if ( !str_cmp( arg, "def" ) )
 	{
@@ -638,6 +645,14 @@ void do_decompile( CHAR_DATA *ch, char *argument )
 	{
 		pObjIndex = get_obj_index( 59 );
 	}
+	else if ( !str_cmp( arg, "snippet" ) )
+	{
+		send_to_char( "> &Gyou finish decompiling&w\n\r", ch);
+		act( AT_PLAIN, "> $n finishes decompiling", ch, NULL, argument , TO_ROOM );
+		ch->snippets = ch->snippets + cost;
+		ch_printf( ch, "> you received %d snippets\n\r", cost );
+		return;
+	}
 
 	obj = create_object(pObjIndex, 1);
 	SET_BIT(obj->extra_flags, ITEM_INVENTORY);
@@ -645,12 +660,11 @@ void do_decompile( CHAR_DATA *ch, char *argument )
 
 	ch_printf( ch , "%s\n\r\n\r", obj->name);
 
-	send_to_char( "&G> you finish decompiling&w\n\r", ch);
-	act( AT_PLAIN, "> $n finishes decompiling", ch,
-			NULL, argument , TO_ROOM );
+	send_to_char( "> &Gyou finish decompiling&w\n\r", ch);
+	act( AT_PLAIN, "> $n finishes decompiling", ch, NULL, argument , TO_ROOM );
 
 	learn_from_success( ch, gsn_spacecraft );
-
+	return;
 }
 
 
@@ -830,7 +844,26 @@ void do_examineobject( CHAR_DATA *ch, char *argument )
 		ch_printf( ch, "> &Gcond:&W %d/%d&w\n\r", obj->value[0], obj->value[1] );
 		ch_printf( ch, "> &Gdefence:&W %d&w\n\r", defencebonus );
 		ch_printf( ch, "> &Gcoder:&W %s&w\n\r", obj->description );
-
+		
+//		if ( obj->layers == 1 )
+//		send_to_char( "> &Glayer:&W 1&w\n\r", ch );
+//		else if ( obj->layers == 2 )
+//		send_to_char( "> &Glayer:&W 2&w\n\r", ch );
+//		else if ( obj->layers == 4 )
+//		send_to_char( "> &Glayer:&W 3&w\n\r", ch );
+//		else if ( obj->layers == 8 )
+//		send_to_char( "> &Glayer:&W 4&w\n\r", ch );
+//		else if ( obj->layers == 16 )
+//		send_to_char( "> &Glayer:&W 5&w\n\r", ch );
+//		else if ( obj->layers == 32 )
+//		send_to_char( "> &Glayer:&W 6&w\n\r", ch );
+//		else if ( obj->layers == 64 )
+//		send_to_char( "> &Glayer:&W 7&w\n\r", ch );
+//		else if ( obj->layers == 128 )
+//		send_to_char( "> &Glayer:&W 8&w\n\r", ch );
+//		else
+//		send_to_char( "> &Glayer:&W N/A&w\n\r", ch );
+		
 	}
 
 	if ( obj->item_type == ITEM_CONTAINER )
@@ -840,7 +873,13 @@ void do_examineobject( CHAR_DATA *ch, char *argument )
 
 		ch_printf( ch, "> &Gcond:&W %d/10&w\n\r", obj->value[3] );
 		ch_printf( ch, "> &Gslots:&W %d&w\n\r", obj->value[0] );
-		//ch_printf( ch, "> &Gcoder:&W %s&w\n\r", obj->description );
+
+	}
+	
+		if ( obj->item_type == ITEM_MEDPAC )
+	{
+
+		ch_printf( ch, "> &Gcharges:&W %d&w\n\r", obj->value[0] );
 
 	}
 
@@ -861,7 +900,7 @@ void do_foundorg( CHAR_DATA *ch, char *argument )
 	if ( !argument || argument[0] == '\0' )
 	{
 		send_to_char( "> &Ysyntax: foundorg <org name>&w\n\r", ch );
-		send_to_char( "> note: costs 50.000 credits\n\r", ch );
+		send_to_char( "> note: you need 50.000 credits\n\r", ch );
 		return;
 	}
 
@@ -897,9 +936,7 @@ void do_foundorg( CHAR_DATA *ch, char *argument )
 	clan->salary        = 0;
 	clan->members       = 0;
 
-	//DISPOSE( clan->filename );
 	clan->filename = str_dup( argument );
-	//send_to_char( "> &Gdone&w\n\r", ch );
 	save_clan( clan );
 	write_clan_list( );
 

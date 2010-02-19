@@ -118,7 +118,7 @@ void do_makeblade( CHAR_DATA *ch, char *argument )
 			send_to_char( "&G> you begin coding a blade module\n\r", ch);
 			act( AT_PLAIN, "> $n loads $s devkit and a compiler and begins to work on something", ch,
 					NULL, argument , TO_ROOM );
-			add_timer ( ch , TIMER_DO_FUN , 10 , do_makeblade , 1 );
+			add_timer ( ch , TIMER_DO_FUN , 5 , do_makeblade , 1 );
 			ch->dest_buf = str_dup(arg);
 			return;
 		}
@@ -184,9 +184,7 @@ void do_makeblade( CHAR_DATA *ch, char *argument )
 
 	if ( number_percent( ) > chance*2  || ( !checktool ) || ( !checkdura ) || ( !checkbatt ) || ( !checkoven ) )
 	{
-		send_to_char( "&R> you activate your newly created blade module\n\r", ch);
-		send_to_char( "&R> it hums softly for a few seconds then begins to shake violently\n\r", ch);
-		send_to_char( "&R> it finally shatters breaking apart into a dozen pieces\n\r", ch);
+		send_to_char( "> &Ryou fail to code the blade module&w\n\r", ch);
 		learn_from_failure( ch, gsn_makeblade );
 		return;
 	}
@@ -339,7 +337,7 @@ void do_makeblaster( CHAR_DATA *ch, char *argument )
 			send_to_char( "&G> you begin the long process of making a blaster\n\r", ch);
 			act( AT_PLAIN, "> $n takes $s tools and a small oven and begins to work on something", ch,
 					NULL, argument , TO_ROOM );
-			add_timer ( ch , TIMER_DO_FUN , 10 , do_makeblaster , 1 );
+			add_timer ( ch , TIMER_DO_FUN , 5 , do_makeblaster , 1 );
 			ch->dest_buf   = str_dup(arg);
 			return;
 		}
@@ -441,9 +439,7 @@ void do_makeblaster( CHAR_DATA *ch, char *argument )
 
 	if ( number_percent( ) > chance*2  || ( !checktool ) || ( !checkdura ) || ( !checkbatt ) || ( !checkoven )  || ( !checkcond ) || ( !checkcirc) )
 	{
-		send_to_char( "&R> you hold up your new blaster and aim at a leftover piece of plastic\n\r", ch);
-		send_to_char( "&R> you slowly squeeze the trigger hoping for the best\n\r", ch);
-		send_to_char( "&R> your blaster backfires destroying your weapon and burning your hand\n\r", ch);
+		send_to_char( "> &Ryou fail to code the blaster module&w\n\r", ch);
 		learn_from_failure( ch, gsn_makeblaster );
 		return;
 	}
@@ -625,7 +621,7 @@ void do_makelightsaber( CHAR_DATA *ch, char *argument )
 			send_to_char( "&G> you begin the long process of crafting a lightsaber\n\r", ch);
 			act( AT_PLAIN, "> $n takes $s tools and a small oven and begins to work on something", ch,
 					NULL, argument , TO_ROOM );
-			add_timer ( ch , TIMER_DO_FUN , 10 , do_makelightsaber , 1 );
+			add_timer ( ch , TIMER_DO_FUN , 5 , do_makelightsaber , 1 );
 			ch->dest_buf = str_dup(arg);
 			return;
 		}
@@ -890,7 +886,7 @@ void do_makejewelry( CHAR_DATA *ch, char *argument )
 			send_to_char( "&G> you begin the long process of coding some utility\n\r", ch);
 			act( AT_PLAIN, "> $n takes $s devkit, some code bits and begins to work", ch,
 					NULL, argument , TO_ROOM );
-			add_timer ( ch , TIMER_DO_FUN , 10 , do_makejewelry , 1 );
+			add_timer ( ch , TIMER_DO_FUN , 5 , do_makejewelry , 1 );
 			ch->dest_buf = str_dup(arg);
 			ch->dest_buf_2 = str_dup(arg2);
 			return;
@@ -955,9 +951,7 @@ void do_makejewelry( CHAR_DATA *ch, char *argument )
 
 	if ( number_percent( ) > chance*2  || ( !checkoven ) || ( !checktool ) || ( !checkmetal ) )
 	{
-		send_to_char( "&R> you hold up your newly coded utility\n\r", ch);
-		send_to_char( "&R> it suddenly dawns upon you that you have created the most useless\n\r", ch);
-		send_to_char( "&R> piece of junk you have ever seen - you quickly hide your mistake\n\r", ch);
+		send_to_char( "> &Ryou fail to code the utility module&w\n\r", ch);
 		learn_from_failure( ch, gsn_makejewelry );
 		return;
 	}
@@ -1072,7 +1066,7 @@ void do_makearmor( CHAR_DATA *ch, char *argument )
 			send_to_char( "&G> you begin the long process of coding a defensive module\n\r", ch);
 			act( AT_PLAIN, "> $n takes $s parser, some code fragments and begins to work", ch,
 					NULL, argument , TO_ROOM );
-			add_timer ( ch , TIMER_DO_FUN , 10 , do_makearmor , 1 ); // 10 to 2
+			add_timer ( ch , TIMER_DO_FUN , 5 , do_makearmor , 1 ); // 10 to 2
 			ch->dest_buf = str_dup(arg);
 			ch->dest_buf_2 = str_dup(arg2);
 			return;
@@ -1126,9 +1120,7 @@ void do_makearmor( CHAR_DATA *ch, char *argument )
 
 	if ( number_percent( ) > chance*2  || ( !checkfab ) || ( !checksew ) )
 	{
-		send_to_char( "&R> you hold up your newly created defensive module\n\r", ch);
-		send_to_char( "&R> it suddenly dawns upon you that you have created the most useless\n\r", ch);
-		send_to_char( "&R> module you have ever seen - you quickly hide your mistake\n\r", ch);
+		send_to_char( "> &Ryou fail to code the def module&w\n\r", ch);
 		learn_from_failure( ch, gsn_makearmor );
 		return;
 	}
@@ -1251,7 +1243,7 @@ void do_makeshield( CHAR_DATA *ch, char *argument )
 			send_to_char( "&G> you begin the long process of coding a shield module\n\r", ch);
 			act( AT_PLAIN, "> $n takes $s devkit and begins to work on something", ch,
 					NULL, argument , TO_ROOM );
-			add_timer ( ch , TIMER_DO_FUN , 10 , do_makeshield , 1 );
+			add_timer ( ch , TIMER_DO_FUN , 5 , do_makeshield , 1 );
 			ch->dest_buf = str_dup(arg);
 			return;
 		}
@@ -1336,9 +1328,7 @@ void do_makeshield( CHAR_DATA *ch, char *argument )
 			|| ( !checkgems ) || ( !checkcond ) || ( !checkcirc) )
 
 	{
-		send_to_char( "&R> you hold up your new shield module and press the switch hoping for the best\n\r", ch);
-		send_to_char( "&R> instead of a field of energy being created, smoke starts pouring from the device\n\r", ch);
-		send_to_char( "&R> you drop the hot device and watch as it melts on away on the floor\n\r", ch);
+		send_to_char( "> &Ryou fail to code the shield module&w\n\r", ch);
 		learn_from_failure( ch, gsn_makeshield );
 		return;
 	}
@@ -1449,7 +1439,7 @@ void do_makecontainer( CHAR_DATA *ch, char *argument )
 			send_to_char( "&G> you begin the long process of coding a container module\n\r", ch);
 			act( AT_PLAIN, "> $n takes $s parser and some code and begins to work", ch,
 					NULL, argument , TO_ROOM );
-			add_timer ( ch , TIMER_DO_FUN , 10 , do_makecontainer , 1 );
+			add_timer ( ch , TIMER_DO_FUN , 5 , do_makecontainer , 1 );
 			ch->dest_buf = str_dup(arg);
 			ch->dest_buf_2 = str_dup(arg2);
 			return;
@@ -1502,9 +1492,7 @@ void do_makecontainer( CHAR_DATA *ch, char *argument )
 
 	if ( number_percent( ) > chance*2  || ( !checkfab ) || ( !checksew ) )
 	{
-		send_to_char( "&R> you hold up your newly created container\n\r", ch);
-		send_to_char( "&R> it suddenly dawns upon you that you have created the most useless\n\r", ch);
-		send_to_char( "&R> container you have ever seen - you quickly hide your mistake\n\r", ch);
+		send_to_char( "> &Ryou fail to code the container module&w\n\r", ch);
 		learn_from_failure( ch, gsn_makecontainer );
 		return;
 	}
@@ -1926,9 +1914,10 @@ void do_disguise( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
-	if ( !str_cmp( argument, "Wintermute" ) || !str_cmp( argument, "Wintermute " ))
+	//if ( !str_cmp( argument, "Wintermute" ) || !str_cmp( argument, "Wintermute " ) )
+	if ( nifty_is_name( "Wintermute", argument) )
 	{
-		ch_printf( ch, "> %s would not like that\n\r", argument );
+		ch_printf( ch, "> They would not like that\n\r", argument );
 		return;
 	}
 
@@ -4138,7 +4127,7 @@ void do_codemed( CHAR_DATA *ch, char *argument )
     send_to_char("> you begin making a med module\n\r",ch);
     act( AT_PLAIN, "> $n begins making a med module.", ch, NULL, NULL, TO_ROOM );
     ch->dest_buf = str_dup(argument);
-    add_timer( ch, TIMER_DO_FUN, 10, do_codemed, 1 );
+    add_timer( ch, TIMER_DO_FUN, 5, do_codemed, 1 );
     return;
  }
  send_to_char("> &Ryou fail creating a mod module - try again&w\n\r",ch);
@@ -4184,9 +4173,8 @@ void do_codemed( CHAR_DATA *ch, char *argument )
 
     if( number_percent() > chance || !checkcont || !checkchem || !checktool )
     {
- send_to_char("> &Ryou hold your newly created med module&w\n\r",ch);
- send_to_char("> &Rthen you suddenly realize you fumbled it...\n\r",ch);
- return;
+		send_to_char( "> &Ryou fail to code the blade module&w\n\r", ch);
+		return;
     }
 
     cont->item_type = ITEM_MEDPAC;

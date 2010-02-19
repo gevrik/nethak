@@ -11,6 +11,7 @@ void do_buyhome( CHAR_DATA *ch, char *argument )
 	ROOM_INDEX_DATA *room;
 	AREA_DATA *pArea;
 	PLANET_DATA *planet;
+	int cost = 0;
 
 	if ( !ch->in_room )
 		return;
@@ -21,6 +22,7 @@ void do_buyhome( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
+	
 	planet = ch->in_room->area->planet;
 	if ( !IS_SET( planet->flags, PLANET_NOCAP ) )
 	{
@@ -32,8 +34,15 @@ void do_buyhome( CHAR_DATA *ch, char *argument )
 		}
 
 	}
-
-
+	else
+	{
+		if (  ch->pcdata->clan )
+		{
+			send_to_char( "> &Ryou cannot buy a home node in this system&w\n\r", ch );
+			return;
+		}
+	}
+	
 	if ( IS_NPC(ch) || !ch->pcdata )
 		return;
 
@@ -41,6 +50,8 @@ void do_buyhome( CHAR_DATA *ch, char *argument )
 	{
 		//send_to_char( "&R> you already have a home\n\r&w", ch);
 		//return;
+		
+		cost = 10000;
 
 		ROOM_INDEX_DATA *rooma = ch->plr_home;
 
@@ -51,7 +62,7 @@ void do_buyhome( CHAR_DATA *ch, char *argument )
 		SET_BIT( rooma->room_flags , ROOM_EMPTY_HOME );
 
 		STRFREE( rooma->description );
-		rooma->description = STRALLOC( "use BUYHOME to buy this node for 10.000 credits." );
+		rooma->description = STRALLOC( "use BUYHOME to buy this node for 10.000 credits. if you do not have a home node yet it will be free." );
 
 		if ( rooma->area )
 			fold_area( rooma->area, rooma->area->filename, FALSE );
@@ -75,7 +86,7 @@ void do_buyhome( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
-	if ( ch->gold < 10000 )
+	if ( ch->gold < cost )
 	{
 		send_to_char( "&R> this room costs 10.000 credits\n\r&w", ch);
 		return;
@@ -85,6 +96,7 @@ void do_buyhome( CHAR_DATA *ch, char *argument )
 	{
 		send_to_char( "> set the node name - a single-line node description\n\r", ch );
 		send_to_char( "> syntax: buyhome <node name>\n\r", ch );
+		send_to_char( "> cost: 10,000c if you do have a home already\n\r", ch );
 		return;
 	}
 
@@ -94,11 +106,10 @@ void do_buyhome( CHAR_DATA *ch, char *argument )
 	STRFREE( room->description );
 	room->description = STRALLOC( "home, sweet home." ); //
 
-	ch->gold -= 10000;
+	ch->gold -= cost;
 
 	REMOVE_BIT( room->room_flags , ROOM_EMPTY_HOME );
 	SET_BIT( room->room_flags , ROOM_PLR_HOME );
-	//SET_BIT( room->room_flags , ROOM_HOTEL );
 	SET_BIT( room->room_flags , ROOM_NOPEDIT );
 
 	fold_area( room->area, room->area->filename, FALSE );
