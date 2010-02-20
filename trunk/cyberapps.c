@@ -7,6 +7,8 @@
 #include "mud.h"
 
 void do_sn_jackhammer(CHAR_DATA *ch, char *argument) {
+
+	DESCRIPTOR_DATA *d;
 	OBJ_DATA *obj;
 	int chance;
 	EXIT_DATA *xit, *texit;
@@ -14,7 +16,7 @@ void do_sn_jackhammer(CHAR_DATA *ch, char *argument) {
 	ROOM_INDEX_DATA *location;
 	char buf[MAX_STRING_LENGTH];
 	PLANET_DATA *planet;
-	bool ch_snippet;
+	bool ch_snippet, found;
 
 	planet = ch->in_room->area->planet;
 
@@ -70,6 +72,27 @@ void do_sn_jackhammer(CHAR_DATA *ch, char *argument) {
 		sprintf(buf, "> %s's jackhammer breaks down the gate to the: %s",
 				ch->name, dir_name[edir]);
 		echo_to_room(AT_RED, ch->in_room, buf);
+
+		//found = FALSE;
+
+		   for( d = first_descriptor; d; d = d->next )
+		   {
+		      if( !d->character )
+		         continue;
+		      if( d->connected != CON_PLAYING )
+		         continue;
+		      if( IS_IMMORTAL( d->character ) )
+		         continue;
+
+		      if( d->character->pcdata->clan == location->area->planet->governed_by )
+		      {
+
+			      send_to_char( "> &R[&YALERT&R]&W enemy activity! jackhammer used!\n\r", d->character );
+			      ch_printf( d->character, "> &R[&YALERT&R]&W in system: %s&w\n\r", ch->in_room->area->planet->name );
+
+		      }
+		   }
+
 		REMOVE_BIT( xit->exit_info , EX_ISDOOR );
 		REMOVE_BIT( xit->exit_info , EX_LOCKED );
 		REMOVE_BIT( xit->exit_info , EX_CLOSED );
