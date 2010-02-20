@@ -893,6 +893,7 @@ void do_note( CHAR_DATA *ch, char *arg_passed, bool IS_MAIL )
 	if ( !can_post( ch, board ) ) 
 	{
 	    send_to_char( "> you cannot use this terminal - it is encrypted\n\r", ch );
+	    send_to_char( "> use GBOARD instead (help gnote)\n\r", ch );
 	    return;
 	}
 

@@ -507,11 +507,12 @@ void do_decompile( CHAR_DATA *ch, char *argument )
 				&& str_cmp( arg, "util" )
 				&& str_cmp( arg, "patch" )
 				&& str_cmp( arg, "app" )
-				&& str_cmp( arg, "snippet" ) )
+				&& str_cmp( arg, "snippet" )
+				&& str_cmp( arg, "datacube" ))
 		{
 			send_to_char( "&R> you cannot decompile that, try:\n\r&w", ch);
 			send_to_char( "> def, blaster, blade, function,\n\r", ch);
-			send_to_char( "> util, app, patch or snippet\n\r", ch);
+			send_to_char( "> util, app, patch, snippet or datacube\n\r", ch);
 			return;
 		}
 
@@ -598,7 +599,7 @@ void do_decompile( CHAR_DATA *ch, char *argument )
 
 	int afumble = number_range(1,5);
 
-	if ( afumble <= 2 )
+	if ( afumble < 2 )
 	{
 		send_to_char( "> &Ryou could not decompile anything useful\n\r", ch);
 		learn_from_failure( ch, gsn_spacecraft );
@@ -644,6 +645,10 @@ void do_decompile( CHAR_DATA *ch, char *argument )
 	else if ( !str_cmp( arg, "app" ) )
 	{
 		pObjIndex = get_obj_index( 59 );
+	}
+	else if ( !str_cmp( arg, "datacube" ) )
+	{
+		pObjIndex = get_obj_index( 103 );
 	}
 	else if ( !str_cmp( arg, "snippet" ) )
 	{
