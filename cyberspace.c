@@ -192,7 +192,7 @@ void do_homerecall( CHAR_DATA *ch, char *argument )
 		return;
 	}
 	
-	if ( ch->in_room->vnum <= 30 )
+	if ( ch->in_room->vnum <= 20 )
 	{
 		send_to_char( "> &Ryou cannot use this command in the tutorial&w\n\r", ch );
 		return;
@@ -647,10 +647,10 @@ void do_decompile( CHAR_DATA *ch, char *argument )
 	}
 	else if ( !str_cmp( arg, "snippet" ) )
 	{
+		ch->snippets = ch->snippets + cost;
+		ch_printf( ch, "%d snippets\n\r", cost );
 		send_to_char( "> &Gyou finish decompiling&w\n\r", ch);
 		act( AT_PLAIN, "> $n finishes decompiling", ch, NULL, argument , TO_ROOM );
-		ch->snippets = ch->snippets + cost;
-		ch_printf( ch, "> you received %d snippets\n\r", cost );
 		return;
 	}
 

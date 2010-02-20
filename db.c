@@ -1934,6 +1934,22 @@ void free_char( CHAR_DATA *ch )
 
     if ( ch->pcdata )
     {
+        NOTIFY_DATA *temp, *next;
+
+        /* free up memory allocated to store notify names */
+
+        for(temp = ch->pcdata->first_notify; temp; temp = next)
+        {
+                next = temp->next;
+                UNLINK(temp, ch->pcdata->first_notify,
+                        ch->pcdata->last_notify, next, prev);
+                STRFREE(temp->name);
+                DISPOSE(temp);
+        }
+    }
+
+    if ( ch->pcdata )
+    {
 	STRFREE( ch->pcdata->clan_name	);
         DISPOSE( ch->pcdata->pwd	);  /* no hash */
 	DISPOSE( ch->pcdata->email	);  /* no hash */

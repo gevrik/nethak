@@ -1783,6 +1783,28 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 				if ( get_timer( ch, TIMER_PKILLED ) > 0 )
 					remove_timer( ch, TIMER_PKILLED );
 
+			    for ( d = first_descriptor; d; d = d->next )
+			    {
+			        CHAR_DATA *vch;
+			        NOTIFY_DATA *temp;
+
+				temp = NULL;
+			        vch = d->character;
+
+			        if ( d->connected == CON_PLAYING   &&   vch != ch)
+			 	{
+				    for(temp = vch->pcdata->first_notify; temp; temp = temp->next)
+				    {
+				        if (on_notify(vch, ch) == TRUE  && temp->name == ch->name )
+					{
+					 set_char_color(AT_NOTIFY,vch);
+					 ch_printf(vch,"> %s has entered cyberspace\n\r",temp->name);
+					 break;
+					}
+				    }
+				}
+			    }
+
 				if ( ch->plr_home != NULL )
 				{
 					char filename[256];

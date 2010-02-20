@@ -117,6 +117,7 @@ typedef	struct	social_type		SOCIALTYPE;
 typedef	struct	cmd_type		CMDTYPE;
 typedef	struct	killed_data		KILLED_DATA;
 typedef struct	wizent			WIZENT;
+typedef struct  notify_data     NOTIFY_DATA;
 
 /*
  * Function types.
@@ -500,6 +501,7 @@ struct  frc_app_type
 #define AT_WARTALK         AT_RED
 #define AT_SHIP            AT_PINK
 #define AT_CLAN            AT_PINK
+#define AT_NOTIFY          AT_YELLOW
 
 #define INIT_WEAPON_CONDITION    12
 #define MAX_ITEM_IMPACT		 30
@@ -1987,6 +1989,8 @@ struct	pc_data
     int			queststatus;
     int			qtaxnodes;
     ROOM_INDEX_DATA *   roomarena;
+    NOTIFY_DATA *       first_notify;   /* used to keep track of persons on notify - Sadiq */
+    NOTIFY_DATA *       last_notify;
 };
 
 
@@ -2252,6 +2256,17 @@ struct timerset
 };
 
 
+/* Structure for a linked list of players on notify - Sadiq */
+struct notify_data
+{
+      NOTIFY_DATA *next;
+      NOTIFY_DATA *prev;
+      char * name;
+};
+
+/* Max number of people you can have on notify at once - Sadiq */
+#define MAX_NOTIFY      20  /* Set this to whatever wish to allow.
+                               Remember that pfiles fill up fast!  */
 
 /*
  * Skills include spells as a particular case.
@@ -2903,6 +2918,9 @@ extern		struct act_prog_data *	mob_act_list;
  * Command functions.
  * Defined in act_*.c (mostly).
  */
+
+DECLARE_DO_FUN(	do_notell	);
+DECLARE_DO_FUN( do_notify	);
 DECLARE_DO_FUN( do_codemed );
 DECLARE_DO_FUN( do_arrest );
 DECLARE_DO_FUN( do_buyskill );
@@ -3538,6 +3556,7 @@ char *	format_obj_to_char	args( ( OBJ_DATA *obj, CHAR_DATA *ch,
 				    bool fShort ) );
 void	show_list_to_char	args( ( OBJ_DATA *list, CHAR_DATA *ch,
 				    bool fShort, bool fShowNothing ) );
+bool    on_notify       args( ( CHAR_DATA *ch, CHAR_DATA *victim ) );
 
 /* act_move.c */
 void	clear_vrooms	args( ( void ) );
