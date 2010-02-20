@@ -1199,7 +1199,7 @@ void do_capture ( CHAR_DATA *ch , char *argument )
 
    if ( !ch->pcdata->clan )
    {
-       send_to_char ( "> you need to be a member of an organization to do that!\n\r" , ch );
+       send_to_char ( "> &Ryou need to be a member of an organization to do that&w\n\r" , ch );
        return;
    }
 
@@ -1207,19 +1207,19 @@ void do_capture ( CHAR_DATA *ch , char *argument )
 
    if ( ( planet = ch->in_room->area->planet ) == NULL )
    {
-       send_to_char ( "> you must be on a planet to capture it\n\r" , ch );
+       send_to_char ( "> &Ryou must be in a system to capture it&w\n\r" , ch );
        return;
    }
 
    if ( IS_SET( planet->flags, PLANET_NOCAP ) )
    {
-       send_to_char( "> you can't capture this planet\n\r", ch );
+       send_to_char( "> &Ryou can't capture this system&w\n\r", ch );
        return;
    }
 
    if ( clan == planet->governed_by )
    {
-       send_to_char ( "> your organization already controls this planet\n\r" , ch );
+       send_to_char ( "> &Ryour organization already controls this system&w\n\r" , ch );
        return;
    }
 
@@ -1252,7 +1252,7 @@ void do_capture ( CHAR_DATA *ch , char *argument )
 
    if ( planet->pop_support > 0 )
    {
-       send_to_char ( "> the cpu is still too strong\n\r" , ch );
+       send_to_char ( "> &Rthe cpu is still too strong&w\n\r" , ch );
        return;
    }
 

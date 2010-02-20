@@ -91,7 +91,7 @@ char *	const	o_types	[] =
 "utility_class", "blaster_class", "utility_patch", "devkit", "blade_class",
 "compiler", "artefact", "func_var_one", "func_var_two", "comlink",
 "medmod", "def_class", "app_class", "magnet",  "parser",
-"device", "droid_corpse", "resourceb"
+"device", "droid_corpse", "resourceb", "snippet", "datacube"
 };
 
 char *	const	a_types	[] =
@@ -1188,6 +1188,16 @@ void do_mset( CHAR_DATA *ch, char *argument )
 	if ( !can_mmodify( ch, victim ) )
 	  return;
 	victim->gold = value;
+	if ( IS_NPC(victim) && IS_SET( victim->act, ACT_PROTOTYPE ) )
+	  victim->pIndexData->gold = value;
+	return;
+    }
+
+    if ( !str_cmp( arg2, "snippets" ) )
+    {
+	if ( !can_mmodify( ch, victim ) )
+	  return;
+	victim->snippets = value;
 	if ( IS_NPC(victim) && IS_SET( victim->act, ACT_PROTOTYPE ) )
 	  victim->pIndexData->gold = value;
 	return;

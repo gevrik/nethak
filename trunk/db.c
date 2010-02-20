@@ -84,7 +84,7 @@ sh_int   gsn_hijack;
 sh_int   gsn_reinforcements;
 sh_int   gsn_postguard;
 sh_int   gsn_first_aid;
-sh_int   gsn_codemed;
+//sh_int   gsn_codemed;
 sh_int   gsn_throw;
 
 sh_int   gsn_quicktalk;
@@ -109,6 +109,7 @@ sh_int   gsn_makeshield;
 sh_int   gsn_makecontainer;
 sh_int   gsn_makejewelry;
 sh_int   gsn_codemed;
+sh_int   gsn_codeapp;
 
 sh_int   gsn_bridge;
 sh_int   gsn_survey;
@@ -446,6 +447,7 @@ void boot_db( void )
         ASSIGN_GSN( gsn_disguise   , "disguise" );
         ASSIGN_GSN( gsn_first_aid   , "firstaid" );
         ASSIGN_GSN( gsn_codemed   , "codemed" );
+        ASSIGN_GSN( gsn_codeapp   , "codeapp" );
         ASSIGN_GSN( gsn_lightsaber_crafting, "lightsaber crafting" );
         ASSIGN_GSN( gsn_spice_refining,  "spice refining" );
         ASSIGN_GSN( gsn_spacecombat,     "space combat" );
@@ -1726,6 +1728,8 @@ OBJ_DATA *create_object( OBJ_INDEX_DATA *pObjIndex, int level )
     case ITEM_CIRCUIT:
     case ITEM_TOOLKIT:
     case ITEM_LIGHT:
+    case ITEM_SNIPPET:
+    case ITEM_DATACUBE:
     case ITEM_FURNITURE:
     case ITEM_TRASH:
     case ITEM_CONTAINER:

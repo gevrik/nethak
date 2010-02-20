@@ -12,7 +12,7 @@ O_FILES = act_comm.o act_info.o act_move.o act_obj.o act_wiz.o boards.o \
 	  misc.o mud_comm.o mud_prog.o player.o requests.o \
 	  reset.o save.o shops.o skills.o special.o tables.o track.o update.o \
 	  space.o morespace.o swskills.o planets.o vote.o gboard.o webwho.o \
-	  webhelp.o cyberspace.o mpxset.o newarena.o
+	  webhelp.o cyberspace.o mpxset.o newarena.o realmail.o cyberapps.o
 
 C_FILES = act_comm.c act_info.c act_move.c act_obj.c act_wiz.c boards.c \
 	  build.c clans.c comm.c const.c db.c fight.c \
@@ -20,7 +20,7 @@ C_FILES = act_comm.c act_info.c act_move.c act_obj.c act_wiz.c boards.c \
 	  misc.c mud_comm.c mud_prog.c player.c requests.c \
 	  reset.c save.c shops.c skills.c special.c tables.c track.c update.c \
 	  space.c morespace.c swskills.c planets.c vote.c gboard.c webwho.c \
-	  webhelp.c cyberspace.c mpxset.c newarena.c
+	  webhelp.c cyberspace.c mpxset.c newarena.c realmail.c cyberapps.c
 
 H_FILES = mud.h bet.h gboard.h
 

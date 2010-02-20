@@ -1285,6 +1285,7 @@ typedef enum { SEX_NEUTRAL, SEX_MALE, SEX_FEMALE } sex_types;
 #define OBJ_VNUM_LAST_FABRIC         99
 
 #define OBJ_VNUM_PACKAGE             100
+#define OBJ_VNUM_DATACUBE            103
 
 /*
  * Item types.
@@ -1299,11 +1300,11 @@ typedef enum
   ITEM_CRYSTAL, ITEM_PLASTIC, ITEM_BATTERY, ITEM_TOOLKIT, ITEM_METAL,
   ITEM_OVEN, ITEM_MIRROR, ITEM_CIRCUIT, ITEM_SUPERCONDUCTOR, ITEM_COMLINK,
   ITEM_MEDPAC, ITEM_FABRIC, ITEM_RARE_METAL, ITEM_MAGNET, ITEM_THREAD,
-  ITEM_DEVICE, ITEM_DROID_CORPSE, ITEM_RESOURCE
+  ITEM_DEVICE, ITEM_DROID_CORPSE, ITEM_RESOURCE, ITEM_SNIPPET, ITEM_DATACUBE
 } item_types;
 
 
-#define MAX_ITEM_TYPE		     ITEM_RESOURCE
+#define MAX_ITEM_TYPE		     ITEM_DATACUBE
 /*
  * Extra flags.
  * Used in #OBJECTS.
@@ -2326,6 +2327,7 @@ struct  auction_data
  */
 extern sh_int   gsn_spacecraft;
 extern sh_int   gsn_codemed;
+extern sh_int   gsn_codeapp;
 extern sh_int   gsn_weaponsystems;
 extern sh_int   gsn_shipmaintenance;
 extern sh_int   gsn_spacecombat;
@@ -2919,9 +2921,18 @@ extern		struct act_prog_data *	mob_act_list;
  * Defined in act_*.c (mostly).
  */
 
+// snippets
+
+DECLARE_DO_FUN(	do_sn_randomizer	);
+DECLARE_DO_FUN(	do_sn_jackhammer	);
+
+// other
+
 DECLARE_DO_FUN(	do_notell	);
 DECLARE_DO_FUN( do_notify	);
 DECLARE_DO_FUN( do_codemed );
+DECLARE_DO_FUN( do_codeapp );
+DECLARE_DO_FUN( do_email );
 DECLARE_DO_FUN( do_arrest );
 DECLARE_DO_FUN( do_buyskill );
 DECLARE_DO_FUN( do_setwages );

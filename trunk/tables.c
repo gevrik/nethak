@@ -124,6 +124,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_closebay" ))  		return do_closebay;
 	if ( !str_cmp( name, "do_closehatch"  ))        return do_closehatch;
 	if ( !str_cmp( name, "do_cmdtable" ))		return do_cmdtable;
+	if ( !str_cmp( name, "do_codeapp" ))		return do_codeapp;
 	if ( !str_cmp( name, "do_codemed" ))		return do_codemed;
 	if ( !str_cmp( name, "do_coding" ))		return do_coding;
 	if ( !str_cmp( name, "do_commands" ))		return do_commands;
@@ -160,6 +161,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_east" ))		return do_east;
 	if ( !str_cmp( name, "do_eat" ))		return do_eat;
 	if ( !str_cmp( name, "do_echo" ))		return do_echo;
+	if ( !str_cmp( name, "do_email" ))		return do_email;
 	if ( !str_cmp( name, "do_emote" ))		return do_emote;
 	if ( !str_cmp( name, "do_empty" ))		return do_empty;
 	if ( !str_cmp( name, "do_empower" ))		return do_empower;
@@ -451,6 +453,8 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_slice" ))		return do_slice;
 	if ( !str_cmp( name, "do_slist" ))		return do_slist;
 	if ( !str_cmp( name, "do_slookup" ))		return do_slookup;
+	if ( !str_cmp( name, "do_sn_jackhammer" )) 		return do_sn_jackhammer;
+	if ( !str_cmp( name, "do_sn_randomizer" )) 		return do_sn_randomizer;
 	if ( !str_cmp( name, "do_snipe" ))		return do_snipe;
 	if ( !str_cmp( name, "do_sneak" ))		return do_sneak;
 	if ( !str_cmp( name, "do_snoop" ))		return do_snoop;
@@ -543,6 +547,8 @@ char *spell_name( SPELL_FUN *spell )
 
 char *skill_name( DO_FUN *skill )
 {
+	if ( skill == do_sn_jackhammer )           return "do_sn_jackhammer";
+	if ( skill == do_sn_randomizer )           return "do_sn_randomizer";
     if ( skill == do_aaccept )           return "do_aaccept";
     if ( skill == do_ahall )            return "do_ahall";
     if ( skill == do_arena )            return "do_arena";
@@ -684,6 +690,7 @@ char *skill_name( DO_FUN *skill )
     if ( skill == do_climb )		return "do_climb";
     if ( skill == do_close )		return "do_close";
     if ( skill == do_cmdtable )		return "do_cmdtable";
+    if ( skill == do_codeapp )		return "do_codeapp";
     if ( skill == do_codemed )		return "do_codemed";
     if ( skill == do_coding )		return "do_coding";
     if ( skill == do_commands )		return "do_commands";
@@ -710,6 +717,7 @@ char *skill_name( DO_FUN *skill )
 */    if ( skill == do_east )		return "do_east";
     if ( skill == do_eat )		return "do_eat";
     if ( skill == do_echo )		return "do_echo";
+    if ( skill == do_email )		return "do_email";
     if ( skill == do_emote )		return "do_emote";
     if ( skill == do_empty )		return "do_empty";
     if ( skill == do_enlist )		return "do_enlist";
