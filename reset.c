@@ -411,33 +411,33 @@ void reset_all( )
 	    
 	}
         
-        if ( IS_SET( pRoomIndex->room_flags, ROOM_MAIL ) )
-        {
-   	   if ( !(pObjIndex = get_obj_index(OBJ_VNUM_MAIL_TERMINAL)) )
-   	   {
-             bug( "Reset_all: Missing mail terminal (%d)", OBJ_VNUM_MAIL_TERMINAL );
-             return;
-   	   }
-   	   if ( count_obj_list(pObjIndex, pRoomIndex->first_content) <= 0 )
-   	   {
-      	     obj = create_object(pObjIndex, 1);
-             obj_to_room(obj, pRoomIndex);
-   	   }
-        }
-        
-        if ( IS_SET( pRoomIndex->room_flags, ROOM_INFO ) )
-        {
-   	   if ( !(pObjIndex = get_obj_index(OBJ_VNUM_MESSAGE_TERMINAL)) )
-   	   {
-             bug( "Reset_all: Missing message terminal (%d)", OBJ_VNUM_MESSAGE_TERMINAL );
-             return;
-   	   }
-   	   if ( count_obj_list(pObjIndex, pRoomIndex->first_content) <= 0 )
-   	   {
-      	     obj = create_object(pObjIndex, 1);
-             obj_to_room(obj, pRoomIndex);
-   	   }
-        }
+//        if ( IS_SET( pRoomIndex->room_flags, ROOM_MAIL ) )
+//        {
+//   	   if ( !(pObjIndex = get_obj_index(OBJ_VNUM_MAIL_TERMINAL)) )
+//   	   {
+//             bug( "Reset_all: Missing mail terminal (%d)", OBJ_VNUM_MAIL_TERMINAL );
+//             return;
+//   	   }
+//   	   if ( count_obj_list(pObjIndex, pRoomIndex->first_content) <= 0 )
+//   	   {
+//      	     obj = create_object(pObjIndex, 1);
+//             obj_to_room(obj, pRoomIndex);
+//   	   }
+//        }
+//
+//        if ( IS_SET( pRoomIndex->room_flags, ROOM_INFO ) )
+//        {
+//   	   if ( !(pObjIndex = get_obj_index(OBJ_VNUM_MESSAGE_TERMINAL)) )
+//   	   {
+//             bug( "Reset_all: Missing message terminal (%d)", OBJ_VNUM_MESSAGE_TERMINAL );
+//             return;
+//   	   }
+//   	   if ( count_obj_list(pObjIndex, pRoomIndex->first_content) <= 0 )
+//   	   {
+//      	     obj = create_object(pObjIndex, 1);
+//             obj_to_room(obj, pRoomIndex);
+//   	   }
+//        }
 
         if ( IS_SET( pRoomIndex->room_flags, ROOM_BARRACKS ) 
         && pRoomIndex->area && pRoomIndex->area->planet)
