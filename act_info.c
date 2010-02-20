@@ -3344,14 +3344,14 @@ void do_notify(CHAR_DATA *ch, char *argument)
                 set_char_color(AT_YELLOW, ch);
                 ch_printf(ch, "\n\r----------------------------------------\n\r");
                 set_char_color(AT_WHITE, ch);
-                ch_printf(ch, "Players you currently have on notify:\n\r");
+                ch_printf(ch, "players you currently have on notify:\n\r");
                 set_char_color(AT_YELLOW, ch);
                 ch_printf(ch, "----------------------------------------\n\r");
                 set_char_color(AT_NOTIFY, ch);
 
                 if(!ch->pcdata->first_notify)
                 {
-                        ch_printf(ch, "\t    no one\n\r");
+                        ch_printf(ch, "\t    &RNULL&w  \n\r");
                         return;
                 }
 
@@ -3379,7 +3379,7 @@ void do_notify(CHAR_DATA *ch, char *argument)
                 }
 
                 set_char_color(AT_NOTIFY, ch);
-                ch_printf(ch, "You now are not being notified about anyone.\n\r");
+                ch_printf(ch, "> you now are not being notified about anyone\n\r");
 
                 return;
         }
@@ -3389,7 +3389,7 @@ void do_notify(CHAR_DATA *ch, char *argument)
         else if(!strcmp(arg, "self") || nifty_is_name(arg, ch->name))
         {
                 set_char_color(AT_NOTIFY, ch);
-                ch_printf(ch, "Now that would be kind of....err...well....stupid, wouldn't it?\n\r");
+                ch_printf(ch, "> invalid input\n\r");
                 return;
         }
         else
@@ -3410,7 +3410,7 @@ void do_notify(CHAR_DATA *ch, char *argument)
                                         ch->pcdata->last_notify,
                                         next, prev);
                                 set_char_color(AT_NOTIFY, ch);
-                                ch_printf(ch,"You no longer have %s on notify.\n\r", temp->name);
+                                ch_printf(ch,"> you no longer have %s on notify\n\r", temp->name);
                                 STRFREE(temp->name);
                                 DISPOSE(temp);
                                 return;
@@ -3426,8 +3426,8 @@ void do_notify(CHAR_DATA *ch, char *argument)
                         strcmp(capitalize(arg),victim->name) != 0))
                 {
                         set_char_color(AT_NOTIFY, ch);
-                        ch_printf(ch,"No player exists by that"
-                                " name.\n\r");
+                        ch_printf(ch,"> no player exists by that"
+                                " name\n\r");
                         return;
                 }
 
@@ -3449,13 +3449,13 @@ void do_notify(CHAR_DATA *ch, char *argument)
                         LINK(new, ch->pcdata->first_notify,
                                 ch->pcdata->last_notify, next, prev);
                         set_char_color(AT_NOTIFY, ch);
-                        ch_printf(ch,"You now have %s on notify.\n\r", new->name);
+                        ch_printf(ch,"> you now have %s on notify\n\r", new->name);
                         return;
                 }
                 else
                 {
                         set_char_color(AT_NOTIFY, ch);
-                        ch_printf(ch,"You may only have %d players on notify.\n\r",
+                        ch_printf(ch,"> you may only have %d players on notify\n\r",
                                 MAX_NOTIFY);
                         return;
                 }

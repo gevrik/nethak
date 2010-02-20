@@ -3896,11 +3896,15 @@ void do_bridge ( CHAR_DATA *ch , char *argument )
 			sprintf( buf , "> construction code removes door at: %s" , dir_name[edir] );
 			echo_to_room( AT_WHITE, ch->in_room, buf );
 			REMOVE_BIT(  xit->exit_info , EX_ISDOOR );
+			REMOVE_BIT( xit->exit_info , EX_LOCKED );
+			REMOVE_BIT( xit->exit_info , EX_CLOSED );
 			xit->key = -1;
 			texit = get_exit_to( xit->to_room, rev_dir[edir], ch->in_room->vnum );
 			if ( texit )
 			{
 				REMOVE_BIT(  texit->exit_info , EX_ISDOOR );
+				REMOVE_BIT( texit->exit_info , EX_LOCKED );
+				REMOVE_BIT( texit->exit_info , EX_CLOSED );
 				texit->key = -1;
 			}
 

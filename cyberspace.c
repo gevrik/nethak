@@ -129,7 +129,7 @@ void do_buyskill( CHAR_DATA *ch, char *argument )
 	{
 		send_to_char( "> syntax: buyskill <skill>\n\r",	ch );
 		send_to_char( "> cost: 5,000c\n\r",	ch );
-		send_to_char( "> skills: aid, backstab, blades, blasters, codeblade, codeblaster, codecontainer, codedef, codemed, codeshield, codeutil,"
+		send_to_char( "> skills: aid, backstab, blades, blasters, codeapp, codeblade, codeblaster, codecontainer, codedef, codemed, codeshield, codeutil,"
 				" damboost, disguise, dodge, dualwield, firstaid, hide, peek, picklock, poisonmod, postguard, propaganda, quicktalk,"
 				" reinforcements, second attack, sneak, steal, throw, trace\n\r",	ch );
 		return;
@@ -955,5 +955,327 @@ void do_foundorg( CHAR_DATA *ch, char *argument )
 
 }
 
+void do_codesnippet( CHAR_DATA *ch, char *argument )
+{
+    char arg[MAX_STRING_LENGTH], buf[MAX_STRING_LENGTH];
+    OBJ_DATA *obj, *obj_next, *cont;
+    bool checkcont = FALSE, checkchem = FALSE, checktool = FALSE;
+    int chance, level, wearbit = get_wflag("hold");
+
+    if( !IS_NPC(ch) && ch->pcdata->learned[gsn_spacecraft] == 0 )
+    {
+	 send_to_char("Huh?\n\r",ch);
+	 return;
+	}
+
+
+    switch( ch->substate )
+    {
+    case 0:
+ if( argument[0] == '\0' )
+ {
+     send_to_char("> syntax: codemed <medmod name>\n\r",ch);
+     return;
+ }
+
+ for( obj = ch->first_carrying; obj; obj = obj->next_content )
+ {
+     if( obj->item_type == ITEM_CONTAINER && !checkcont )
+     {
+    	 if( obj->value[1] <= 0 )
+         checkcont = TRUE;
+         continue;
+     }
+
+     if( obj->item_type == ITEM_MIRROR && !checkchem )
+     {
+  checkchem = TRUE;
+  continue;
+     }
+
+     if( obj->item_type == ITEM_TOOLKIT && !checktool )
+  checktool = TRUE;
+ }
+
+ if( !checkcont )
+ {
+     send_to_char("> &Ryou need an empty container module&w\n\r",ch);
+     return;
+ }
+
+ if( !checkchem )
+ {
+     send_to_char("> &Ryou need a wilderspace subroutine&w\n\r",ch);
+    return;
+ }
+
+ if( !checktool )
+ {
+    send_to_char("> &Ryou need a devkit&w\n\r",ch);
+    return;
+ }
+
+ chance = IS_NPC(ch) ? ch->top_level : ch->pcdata->learned[gsn_codemed];
+
+ if( number_percent() <= chance )
+ {
+    send_to_char("> you begin making a med module\n\r",ch);
+    act( AT_PLAIN, "> $n begins making a med module.", ch, NULL, NULL, TO_ROOM );
+    ch->dest_buf = str_dup(argument);
+    add_timer( ch, TIMER_DO_FUN, 5, do_codesnippet, 1 );
+    return;
+ }
+ send_to_char("> &Ryou fail creating a mod module - try again&w\n\r",ch);
+ return;
+
+    case 1:
+ if( !ch->dest_buf ) return;
+ strcpy( arg, (const char*) ch->dest_buf );
+ DISPOSE( ch->dest_buf );
+ break;
+
+    case SUB_TIMER_DO_ABORT:
+ DISPOSE( ch->dest_buf );
+ send_to_char("> &Ryour work is interrupted and you fail&w\n\r",ch);
+        return;
+    }
+
+    for( obj = ch->first_carrying; obj; obj = obj_next )
+    {
+ obj_next = obj->next_content;
+
+ if( obj->item_type == ITEM_CONTAINER && !checkcont )
+ {
+     if( obj->value[1] > 0 ) continue;
+     cont = obj;
+     checkcont = TRUE;
+     continue;
+ }
+
+ if( obj->item_type == ITEM_MIRROR && !checkchem )
+ {
+     obj_from_char( obj );
+     extract_obj( obj );
+     checkchem = TRUE;
+     continue;
+ }
+
+ if( obj->item_type == ITEM_TOOLKIT && !checktool )
+     checktool = TRUE;
+    }
+
+    level = chance = IS_NPC(ch) ? ch->top_level : ch->pcdata->learned[gsn_codemed];
+
+    if( number_percent() > chance || !checkcont || !checkchem || !checktool )
+    {
+		send_to_char( "> &Ryou fail to code the blade module&w\n\r", ch);
+		return;
+    }
+
+    cont->item_type = ITEM_MEDPAC;
+    cont->value[0] = level/10;
+    sprintf( buf, "%s [medmod]", arg );
+    STRFREE( cont->name );
+    cont->name = STRALLOC( buf );
+    STRFREE( cont->short_descr );
+    cont->short_descr = STRALLOC( buf );
+    //sprintf( buf, " was left here.");
+    STRFREE( cont->description );
+    cont->description = STRALLOC( buf );
+    if( !CAN_WEAR( cont, 1 << wearbit ) )
+    SET_BIT( cont->wear_flags, 1 << wearbit );
+
+    send_to_char("&G> you hold up your new med module\n\r",ch);
+    act( AT_PLAIN, "> $n finished their new med module",ch,NULL,NULL,TO_ROOM);
+
+
+    learn_from_success( ch, gsn_codemed );
+
+}
+
+void do_sn_randomizer( CHAR_DATA *ch, char *argument )
+{
+	char buf [MAX_STRING_LENGTH];
+	ROOM_INDEX_DATA	*location;
+	int defmax;
+
+	location = ch->in_room;
+
+	if ( ch->snippets < 1 )
+	{
+		send_to_char( "> &Rinsufficient snippets [1 needed]&w\n\r", ch );
+		return;
+	}
+
+	if ( argument[0] == '\0' )
+		defmax = 100;
+	else
+		defmax = atoi(argument);
+
+	int result = number_range(1, defmax);
+
+	ch->snippets     -= 1;
+
+	ch_printf( ch, "> &Grandomizer (1-%d):&W %d&w\n\r", defmax, result );
+    sprintf(buf,"> &G%s's randomizer (1-%d):&W %d&w", ch->name, defmax, result);
+    act(AT_WHITE,buf, ch, NULL, NULL, TO_ROOM);
+	return;
+
+}
+
+void do_codeapp( CHAR_DATA *ch, char *argument )
+{
+	char arg[MAX_INPUT_LENGTH];
+	char buf[MAX_STRING_LENGTH];
+	OBJ_INDEX_DATA *pObjIndex = NULL;
+	int level, chance;
+	bool checksew, checkfab;
+	OBJ_DATA *obj;
+	OBJ_DATA *material;
+	int value, cost = 360;
+
+	strcpy( arg , argument );
+
+
+	switch( ch->substate )
+	{
+	default:
+
+		if ( !IS_SET( ch->in_room->room_flags, ROOM_RESTAURANT ) )
+		{
+			send_to_char( "&R> you need to be in a coding node\n\r", ch );
+			return;
+		}
+
+		if ( str_cmp( arg, "jackhammer" )
+				&& str_cmp( arg, "krash" ) )
+		{
+			send_to_char( "> &Ryou cannot code that app, try:\n\r&w", ch);
+			send_to_char( "> jackhammer, krash\n\r", ch);
+			return;
+		}
+
+		if ( ch->snippets < cost )
+		{
+			ch_printf( ch, "> &Rinsufficient snippets [%d needed]&w\n\r", cost );
+			return;
+		}
+
+		checksew = FALSE;
+		checkfab = FALSE;
+
+		for ( obj = ch->last_carrying; obj; obj = obj->prev_content )
+		{
+			if (obj->item_type == ITEM_DATACUBE)
+				checkfab = TRUE;
+			if (obj->item_type == ITEM_OVEN)
+				checksew = TRUE;
+		}
+
+		if ( !checkfab )
+		{
+			send_to_char( "&R> you need a datacube\n\r", ch);
+			return;
+		}
+
+		if ( !checksew )
+		{
+			send_to_char( "&R> you need a compiler\n\r", ch);
+			return;
+		}
+
+		chance = IS_NPC(ch) ? ch->top_level
+				: (int) (ch->pcdata->learned[gsn_codeapp]);
+		if ( number_percent( ) < chance )
+		{
+			send_to_char( "> &Gyou begin coding an application\n\r", ch);
+			act( AT_PLAIN, "> $n takes $s compiler as well as some snippets and begins to work", ch,
+					NULL, argument , TO_ROOM );
+			add_timer ( ch , TIMER_DO_FUN , 2 , do_codeapp , 1 );
+			ch->dest_buf = str_dup(arg);
+			return;
+		}
+		send_to_char("> &Ryou cannot figure out what to do\n\r",ch);
+		learn_from_failure( ch, gsn_codeapp );
+		return;
+
+	case 1:
+		if ( !ch->dest_buf )
+			return;
+		strcpy(arg, ch->dest_buf);
+		DISPOSE( ch->dest_buf);
+		break;
+
+	case SUB_TIMER_DO_ABORT:
+		DISPOSE( ch->dest_buf );
+		ch->substate = SUB_NONE;
+		send_to_char("> &Ryou are interrupted and fail to finish your work\n\r", ch);
+		return;
+	}
+
+	ch->substate = SUB_NONE;
+
+	level = IS_NPC(ch) ? ch->top_level : (int) (ch->pcdata->learned[gsn_codeapp]);
+
+	checksew = FALSE;
+	checkfab = FALSE;
+
+	for ( obj = ch->last_carrying; obj; obj = obj->prev_content )
+	{
+		if (obj->item_type == ITEM_OVEN)
+			checksew = TRUE;
+		if ( (obj->item_type == ITEM_DATACUBE && checkfab == FALSE) )
+		{
+			checkfab = TRUE;
+			separate_obj( obj );
+			obj_from_char( obj );
+			material = obj;
+		}
+	}
+
+	if ( ( !checkfab ) || ( !checksew ) )
+	{
+		send_to_char( "> &Ryou could not code the application\n\r", ch);
+		learn_from_failure( ch, gsn_codeapp );
+		return;
+	}
+
+	int afumble = number_range(1,5);
+
+	if ( afumble == 1 )
+	{
+		send_to_char( "> &Ryou fail to code the application\n\r", ch);
+		learn_from_failure( ch, gsn_codeapp );
+		ch->snippets     -= 1;
+		return;
+	}
+
+	ch->snippets     -= cost;
+
+	obj = material;
+
+	obj->item_type = ITEM_SNIPPET;
+	obj->level = level;
+	STRFREE( obj->name );
+	strcpy( buf, arg );
+	obj->name = STRALLOC( buf );
+	strcat( buf, " [app]" );
+	STRFREE( obj->short_descr );
+	obj->short_descr = STRALLOC( buf );
+	STRFREE( obj->description );
+	obj->description = STRALLOC( buf );
+	obj->value[0] = level;
+	obj->cost = cost;
+
+	obj = obj_to_char( obj, ch );
+
+	send_to_char( "> &Gyou finish coding and look at your newly created application&w\n\r", ch);
+	act( AT_PLAIN, "> $n finishes coding a new application", ch,
+			NULL, argument , TO_ROOM );
+
+	learn_from_success( ch, gsn_codeapp );
+
+	return;
+}
 
 //done for Neuro

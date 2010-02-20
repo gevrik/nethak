@@ -40,9 +40,7 @@ bool can_remove( CHAR_DATA *ch, BOARD_DATA *board )
  
 bool can_read( CHAR_DATA *ch, BOARD_DATA *board )
 {
-    return TRUE;
-
-/*
+    //return TRUE;
 
   if ( IS_IMMORTAL( ch )  )
     return TRUE;
@@ -60,13 +58,11 @@ bool can_read( CHAR_DATA *ch, BOARD_DATA *board )
   } 
   return FALSE;
 
-*/
-
 }
 
 bool can_post( CHAR_DATA *ch, BOARD_DATA *board )
 {
-   return TRUE;
+   //return TRUE;
 
   /* If your trust is high enough, you can post. */
   if ( IS_IMMORTAL( ch ) )
@@ -267,6 +263,8 @@ void do_noteroom( CHAR_DATA *ch, char *argument )
     BOARD_DATA *board;
     char arg[MAX_STRING_LENGTH];
     char arg_passed[MAX_STRING_LENGTH];
+    //ROOM_INDEX_DATA * location;
+    //CLAN_DATA * clan;
 
     strcpy(arg_passed, argument);
 
@@ -293,6 +291,15 @@ void do_noteroom( CHAR_DATA *ch, char *argument )
         send_to_char( "> there is no bulletin board here to look at\n\r", ch );
         return;
     }
+
+//    location = ch->in_room;
+//    clan = ch->pcdata->clan;
+//	if ( !location->area || !location->area->planet ||
+//			clan != location->area->planet->governed_by  )
+//	{
+//		send_to_char( "> access denied\n\r", ch );
+//		return;
+//	}
 
     if (board->type != BOARD_NOTE)
     {

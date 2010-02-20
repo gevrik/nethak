@@ -477,8 +477,17 @@ void find_game_winner()
           act(AT_YELLOW,"> $n falls from the sky", i, NULL, NULL, TO_ROOM);
 
 // VERSION 1.3 UPGRADE
-          sprintf( buf, ">>> %s has beaten %s in the killing fields!", i->name, i->opponent->name );
+
+          if ( i->opponent->name )
+          {
+          sprintf( buf, ">>> %s has beaten %s in the Killing Fields!", i->name, i->opponent->name );
           sportschan( buf );
+          }
+          else
+          {
+          sprintf( buf, ">>> %s won the Killing Fields!", i->name );
+          sportschan( buf );
+          }
 
           i->gold += arena_pot/2;
           sprintf(buf, "> you have been awarded %d credits for winning the arena\r\n",
