@@ -4,6 +4,7 @@
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
+#include <sys/stat.h>
 #include "mud.h"
 
 
@@ -3312,6 +3313,173 @@ bool is_online( char * argument )
 
     return FALSE;
 
+}
+
+/*
+ * Notify command written by Sadiq - 02/06/99
+ */
+
+void do_notify(CHAR_DATA *ch, char *argument)
+{
+        char arg[MAX_INPUT_LENGTH];
+        NOTIFY_DATA *temp, *next;
+        char fname[1024];
+        struct stat fst;
+        CHAR_DATA *victim;
+
+        if(IS_NPC(ch))
+                return;
+
+        argument = one_argument(argument, arg);
+
+        sprintf(fname, "%s%c/%s", PLAYER_DIR,
+                tolower(arg[0]), capitalize(arg));
+
+        victim = NULL;
+
+        /* If no arguments, then list players currently on notify list */
+
+        if(arg[0] == '\0')
+        {
+                set_char_color(AT_YELLOW, ch);
+                ch_printf(ch, "\n\r----------------------------------------\n\r");
+                set_char_color(AT_WHITE, ch);
+                ch_printf(ch, "Players you currently have on notify:\n\r");
+                set_char_color(AT_YELLOW, ch);
+                ch_printf(ch, "----------------------------------------\n\r");
+                set_char_color(AT_NOTIFY, ch);
+
+                if(!ch->pcdata->first_notify)
+                {
+                        ch_printf(ch, "\t    no one\n\r");
+                        return;
+                }
+
+                for(temp = ch->pcdata->first_notify; temp;
+                                temp = temp->next)
+                {
+                        ch_printf(ch,"\t  - %s\n\r",temp->name);
+                }
+
+                return;
+        }
+
+        /* Clear players on notify if given arg "none" */
+
+        else if(!strcmp(arg, "none"))
+        {
+                for(temp = ch->pcdata->first_notify; temp; temp = next)
+                {
+                        next = temp->next;
+                        UNLINK(temp, ch->pcdata->first_notify,
+                                        ch->pcdata->last_notify,
+                                        next, prev);
+                        STRFREE(temp->name);
+                        DISPOSE(temp);
+                }
+
+                set_char_color(AT_NOTIFY, ch);
+                ch_printf(ch, "You now are not being notified about anyone.\n\r");
+
+                return;
+        }
+
+        /* Prevent someone from placing themselves on notify. */
+
+        else if(!strcmp(arg, "self") || nifty_is_name(arg, ch->name))
+        {
+                set_char_color(AT_NOTIFY, ch);
+                ch_printf(ch, "Now that would be kind of....err...well....stupid, wouldn't it?\n\r");
+                return;
+        }
+        else
+        {
+                int i;
+
+                /*  Loop through the linked list of players on the notify */
+                /*  list, and keep track of how many are on the list      */
+
+                for(temp = ch->pcdata->first_notify, i = 0; temp;
+                                temp = temp->next, i++)
+                {
+                        /* If the argument matches a name in list remove it */
+
+                        if(!strcmp(temp->name, capitalize(arg)))
+                        {
+                                UNLINK(temp, ch->pcdata->first_notify,
+                                        ch->pcdata->last_notify,
+                                        next, prev);
+                                set_char_color(AT_NOTIFY, ch);
+                                ch_printf(ch,"You no longer have %s on notify.\n\r", temp->name);
+                                STRFREE(temp->name);
+                                DISPOSE(temp);
+                                return;
+                        }
+                }
+
+                /* Allow players to add other players that are not logged */
+		/* on, or who have no pfiles yet. (But are connected)     */
+
+                if( stat(fname, &fst) == -1 &&
+                        (!(victim = get_char_world(ch, arg)) ||
+                        IS_NPC(victim) ||
+                        strcmp(capitalize(arg),victim->name) != 0))
+                {
+                        set_char_color(AT_NOTIFY, ch);
+                        ch_printf(ch,"No player exists by that"
+                                " name.\n\r");
+                        return;
+                }
+
+                if(victim)
+                {
+                        strcpy(capitalize(arg),victim->name);
+                }
+
+                /* If its valid and the list size limit has not been */
+                /* reached, create a node and add it to the list      */
+
+                if(i < MAX_NOTIFY)
+                {
+                        NOTIFY_DATA *new;
+                        CREATE(new, NOTIFY_DATA, 1);
+                        new->name = STRALLOC(capitalize(arg));
+                        new->next = NULL;
+                        new->prev = NULL;
+                        LINK(new, ch->pcdata->first_notify,
+                                ch->pcdata->last_notify, next, prev);
+                        set_char_color(AT_NOTIFY, ch);
+                        ch_printf(ch,"You now have %s on notify.\n\r", new->name);
+                        return;
+                }
+                else
+                {
+                        set_char_color(AT_NOTIFY, ch);
+                        ch_printf(ch,"You may only have %d players on notify.\n\r",
+                                MAX_NOTIFY);
+                        return;
+                }
+        }
+}
+
+/*
+ * Simple bool that checks to see if ch has victim on notify.
+ */
+
+bool on_notify(CHAR_DATA *ch, CHAR_DATA *victim)
+{
+        NOTIFY_DATA *temp;
+
+        if(IS_NPC(ch) || IS_NPC(victim))
+                return FALSE;
+
+        for(temp = ch->pcdata->first_notify; temp; temp = temp->next)
+        {
+                if(nifty_is_name(temp->name, victim->name))
+                        return TRUE;
+        }
+
+        return FALSE;
 }
 
 // done for neuro

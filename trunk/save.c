@@ -469,6 +469,12 @@ void fwrite_char( CHAR_DATA *ch, FILE *fp )
 	  fprintf( fp, ""
 			  "Qtaxnodes      %d\n",	ch->pcdata->qtaxnodes	);
 
+    NOTIFY_DATA *temp;
+    for(temp = ch->pcdata->first_notify; temp; temp = temp->next)
+    {
+            fprintf(fp,"Notify      %s~\n", temp->name);
+    }
+
     fprintf( fp, "End\n\n" );
     return;
 }
@@ -678,6 +684,8 @@ bool load_char_obj( DESCRIPTOR_DATA *d, char *name, bool preload )
     ch->guard_data                      = NULL;
     ch->was_sentinel                    = NULL;
     ch->plr_home                        = NULL;
+    ch->pcdata->first_notify            = NULL;     /* Notify list  */
+    ch->pcdata->last_notify             = NULL;
     found = FALSE;
     sprintf( strsave, "%s%c/%s", PLAYER_DIR, tolower(name[0]),
 			name );
@@ -1155,6 +1163,56 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload )
 	    break;
 
 	case 'N':
+        if(!strcmp(word, "Notify"))
+        {
+            char *temp;
+            char fname[1024];
+            struct stat fst;
+            int noti;
+            NOTIFY_DATA *nnode;
+
+            /* Get the name */
+            temp = fread_string(fp);
+
+            sprintf(fname, "%s%c/%s", PLAYER_DIR,
+                    tolower(temp[0]), capitalize(temp));
+
+            /* If there isn't a pfile for the name */
+            /* then don't add it to the list       */
+            if(stat(fname, &fst) == -1)
+            {
+                    fMatch = TRUE;
+                    break;
+            }
+
+            /* Count the number of names on notify list. */
+            for(noti = 0, nnode = ch->pcdata->first_notify; nnode;
+                                    nnode = nnode->next)
+            {
+                    noti++;
+            }
+
+            /* Add the name unless the limit has been reached */
+            if(noti >= MAX_NOTIFY)
+            {
+                    bug("fread_char: too many notify names");
+            }
+            else
+            {
+                    /* Add the name to the list */
+                    CREATE(nnode, NOTIFY_DATA, 1);
+                    nnode->name = STRALLOC(temp);
+                    nnode->next = NULL;
+                    nnode->prev = NULL;
+
+                    LINK(nnode, ch->pcdata->first_notify,
+                            ch->pcdata->last_notify, next,
+                            prev);
+            }
+
+            fMatch = TRUE;
+            break;
+        }
 	    if ( !str_cmp( word, "Name" ) )
 	    {
 		/*

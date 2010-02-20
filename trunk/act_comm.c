@@ -1097,6 +1097,7 @@ void do_quit( CHAR_DATA *ch, char *argument )
 /*  OBJ_DATA *obj; */ /* Unused */
     int x, y;
     int level;
+    DESCRIPTOR_DATA *d;
 
     char qbuf[MAX_INPUT_LENGTH];
     CHAR_DATA *fch;
@@ -1167,6 +1168,29 @@ void do_quit( CHAR_DATA *ch, char *argument )
     //echo_to_all( AT_LBLUE , bufText , ECHOTAR_ALL );
 
     sprintf( log_buf, "> %s has quit", ch->name );
+
+    for ( d = first_descriptor; d; d = d->next )
+    {
+        CHAR_DATA *vch;
+        NOTIFY_DATA *temp;
+
+	temp = NULL;
+        vch = d->character;
+
+        if ( d->connected == CON_PLAYING   &&   vch != ch)
+ 	{
+	    for(temp = vch->pcdata->first_notify; temp; temp = temp->next)
+	    {
+	        if (on_notify(vch, ch) == TRUE  && temp->name == ch->name )
+		{
+		 set_char_color(AT_NOTIFY,vch);
+		 ch_printf(vch,"> %s has left cyberspace\n\r",temp->name);
+		 break;
+		}
+	    }
+	}
+    }
+
     quitting_char = ch;
     save_char_obj( ch );
     save_home(ch);

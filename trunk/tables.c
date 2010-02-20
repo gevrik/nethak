@@ -326,6 +326,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_northeast" ))		return do_northeast;
 	if ( !str_cmp( name, "do_northwest" ))		return do_northwest;
 	if ( !str_cmp( name, "do_notell" ))		return do_notell;
+	if ( !str_cmp( name, "do_notify" ))		return do_notify;
         if ( !str_cmp( name, "do_notitle" ))            return do_notitle;
 	if ( !str_cmp( name, "do_noteroom" ))		return do_noteroom;
 	break;
@@ -839,6 +840,7 @@ char *skill_name( DO_FUN *skill )
     if ( skill == do_northeast )	return "do_northeast";
     if ( skill == do_northwest )	return "do_northwest";
     if ( skill == do_notell )		return "do_notell";
+    if ( skill == do_notify )		return "do_notify";
     if ( skill == do_notitle )          return "do_notitle";
     if ( skill == do_noteroom )		return "do_noteroom";
     if ( skill == do_ocreate )		return "do_ocreate";
