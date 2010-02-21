@@ -1497,14 +1497,14 @@ void do_exits( CHAR_DATA *ch, char *argument )
 			pexit->to_room->name );
 		}
 		else
-		    sprintf( buf + strlen(buf), "&W%-5s - &C%s\n\r",
-		    //capitalize( dir_name[pexit->vdir] ),
-		    dir_name[pexit->vdir],
-		    //room_is_dark( pexit->to_room )
-			//?  "> too dark to tell"
-			//: pexit->to_room->name );
+		{
+			sprintf( buf + strlen(buf),"&W%s%-5s%s - &C%s\n\r",
+					MXPTAG ("Ex"),
+					dir_name[pexit->vdir],
+					MXPTAG ("/Ex"),
 			pexit->to_room->name );
-	    }
+		}
+		}
 	    else
 	    {
 	        sprintf( buf + strlen(buf), " &C%s",

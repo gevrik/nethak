@@ -49,6 +49,8 @@ DO_FUN *skill_function( char *name )
         if ( !str_cmp( name, "do_ahall" ))              return do_ahall;
         if ( !str_cmp( name, "do_arena" ))              return do_arena;
         if ( !str_cmp( name, "do_awho" ))               return do_awho;
+        if ( !str_cmp( name, "do_alia" ))               return do_alia;
+        if ( !str_cmp( name, "do_alias" ))               return do_alias;
 	if ( !str_cmp( name, "do_adecline" ))		return do_adecline;
 	if ( !str_cmp( name, "do_aassign" ))		return do_aassign;
 	if ( !str_cmp( name, "do_addpilot" ))  		return do_addpilot;
@@ -494,6 +496,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_typo" ))		return do_typo;
 	break;
     case 'u':
+    	if ( !str_cmp( name, "do_unalias" ))               return do_unalias;
 	if ( !str_cmp( name, "do_unfoldarea" ))		return do_unfoldarea;
 	if ( !str_cmp( name, "do_unlock" ))		return do_unlock;
         if ( !str_cmp( name, "do_unsilence" ))          return do_unsilence;
@@ -547,6 +550,9 @@ char *spell_name( SPELL_FUN *spell )
 
 char *skill_name( DO_FUN *skill )
 {
+	if ( skill == do_alia )           return "do_alia";
+	if ( skill == do_alias )           return "do_alias";
+	if ( skill == do_unalias )           return "do_unalias";
 	if ( skill == do_sn_jackhammer )           return "do_sn_jackhammer";
 	if ( skill == do_sn_randomizer )           return "do_sn_randomizer";
     if ( skill == do_aaccept )           return "do_aaccept";

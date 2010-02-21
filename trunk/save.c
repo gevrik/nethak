@@ -252,6 +252,7 @@ void fwrite_char( CHAR_DATA *ch, FILE *fp )
     AFFECT_DATA *paf;
     int sn, track, i;
     SKILLTYPE *skill;
+    int pos;
 
     fprintf( fp, "#%s\n", IS_NPC(ch) ? "MOB" : "PLAYER"		);
 
@@ -358,6 +359,16 @@ void fwrite_char( CHAR_DATA *ch, FILE *fp )
 	  fprintf( fp, "Prompt       %s~\n",	ch->pcdata->prompt	);
 	if ( ch->pcdata->pagerlen != 24 )
 	  fprintf( fp, "Pagerlen     %d\n",	ch->pcdata->pagerlen	);
+
+ 	for ( pos = 0; pos < MAX_ALIAS ; pos++ )
+		{
+		if ( !ch->pcdata->alias[pos]
+		||   !ch->pcdata->alias_sub[pos] )
+		break;
+
+		fprintf( fp, "Alias %s %s~\n", ch->pcdata->alias[pos],
+					      ch->pcdata->alias_sub[pos] );
+ 	}
 
 	fprintf (fp, "Boards %d ", MAX_BOARD);
      for (i = 0; i < MAX_BOARD; i++)
@@ -866,6 +877,7 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload )
     int x1, x2, x3, x4, x5, x6, x7;
     sh_int killcnt;
     bool fMatch;
+    int count = 0;
     time_t lastplayed;
     int sn, extra;
 
@@ -945,6 +957,22 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload )
 		fMatch = TRUE;
 		break;
 	    }
+
+		if ( !str_cmp( word, "Alias" ) )
+	 	    {
+ 	    	if( count >= MAX_ALIAS )
+ 	    	{
+ 	    		fread_to_eol( fp );
+ 	    		fMatch = TRUE;
+ 	    		break;
+ 	    	}
+
+ 	    	ch->pcdata->alias[count]      =	 str_dup( fread_word( fp ) );
+ 	    	ch->pcdata->alias_sub[count]  =	 fread_string( fp );
+ 	    	count++;
+ 	    	fMatch 			      =  TRUE;
+ 	    	break;
+	 	    }
 
 	    if ( !str_cmp( word, "AttrPerm" ) )
 	    {
