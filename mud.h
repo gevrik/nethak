@@ -374,6 +374,9 @@ struct	descriptor_data
     int 		atimes;
     int			newstate;
     unsigned char	prevcolor;
+
+    bool    mxp;   /* player using MXP flag */
+
 };
 
 
@@ -1942,6 +1945,8 @@ struct killed_data
     char		count;
 };
 
+#define MAX_ALIAS 20
+
 /*
  * Data which only PC's have.
  */
@@ -1992,6 +1997,8 @@ struct	pc_data
     ROOM_INDEX_DATA *   roomarena;
     NOTIFY_DATA *       first_notify;   /* used to keep track of persons on notify - Sadiq */
     NOTIFY_DATA *       last_notify;
+	char * alias[MAX_ALIAS];
+	char *alias_sub[MAX_ALIAS];
 };
 
 
@@ -2931,6 +2938,9 @@ DECLARE_DO_FUN(	do_sn_jackhammer	);
 DECLARE_DO_FUN(	do_notell	);
 DECLARE_DO_FUN( do_notify	);
 DECLARE_DO_FUN( do_codemed );
+DECLARE_DO_FUN( do_alia );
+DECLARE_DO_FUN( do_alias );
+DECLARE_DO_FUN( do_unalias );
 DECLARE_DO_FUN( do_codeapp );
 DECLARE_DO_FUN( do_email );
 DECLARE_DO_FUN( do_arrest );
@@ -4402,3 +4412,32 @@ void rprog_act_trigger( char *buf, ROOM_INDEX_DATA *room, CHAR_DATA *ch,
 #define GET_BETTED_ON(ch)    ((ch)->betted_on)
 #define GET_BET_AMT(ch) ((ch)->bet_amt)
 #define IN_ARENA(ch)            (IS_SET((ch)->in_room->room_flags, ROOM_ARENA))
+
+/* strings */
+
+#define MXP_BEG "\x03"    /* becomes < */
+#define MXP_END "\x04"    /* becomes > */
+#define MXP_AMP "\x05"    /* becomes & */
+
+/* characters */
+
+#define MXP_BEGc '\x03'    /* becomes < */
+#define MXP_ENDc '\x04'    /* becomes > */
+#define MXP_AMPc '\x05'    /* becomes & */
+
+/* constructs an MXP tag with < and > around it */
+
+#define MXPTAG(arg) MXP_BEG arg MXP_END
+
+#define ESC "\x1B"  /* esc character */
+
+#define MXPMODE(arg) ESC "[" #arg "z"
+
+/* flags for show_list_to_char */
+
+enum {
+  eItemNothing,   /* item is not readily accessible */
+  eItemGet,     /* item on ground */
+  eItemDrop,    /* item in inventory */
+  eItemBid     /* auction item */
+  };
