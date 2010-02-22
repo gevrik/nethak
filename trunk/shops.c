@@ -423,6 +423,13 @@ void do_list( CHAR_DATA *ch, char *argument )
 	found = FALSE;
 	for ( obj = keeper->last_carrying; obj; obj = obj->prev_content )
 	{
+
+		/* Find length of first word in the object name */
+		 int i = 0;
+		  char * p = obj->name;
+		  for ( ; *p && !isspace (*p); p++, i++)
+		    ;
+
 	    if ( obj->wear_loc == WEAR_NONE
 	    &&   can_see_obj( ch, obj ) )
 	    {
@@ -435,8 +442,8 @@ void do_list( CHAR_DATA *ch, char *argument )
 		    found = TRUE;
 		    send_to_char( "[price] {ref} item\n\r", ch );
 		}
-		ch_printf( ch, "[%5d] {%3d} %s\n\r",
-		    cost, oref, obj->short_descr );
+		ch_printf( ch, "[%5d] {%3d} " MXPTAG ("list '%.*s' '%s'") "%s" MXPTAG ("/list") "\n\r",
+		    cost, oref, i, obj->name, obj->short_descr, obj->short_descr );
 	       }
 	    }
 	}

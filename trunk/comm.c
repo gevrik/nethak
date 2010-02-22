@@ -3239,32 +3239,32 @@ void turn_on_mxp (DESCRIPTOR_DATA *d)
   write_to_buffer( d, MXPTAG
       ("!ELEMENT Get \"<send href='"
            "get &#39;&name;&#39;|"
-           "examine &#39;&name;&#39;|"
-           "drink &#39;&name;&#39;"
+           "eval &#39;&name;&#39;"
+           //"drink &#39;&name;&#39;"
        "' "
        "hint='RH mouse click to use this object|"
            "Get &desc;|"
-           "Examine &desc;|"
-           "Drink from &desc;"
+           "Eval &desc;"
+           //"Drink from &desc;"
        "'>\" ATT='name desc'"),
       0);
   /* Drop an item tag (for things in the inventory) */
   write_to_buffer( d, MXPTAG
       ("!ELEMENT Drop \"<send href='"
            "drop &#39;&name;&#39;|"
-           "examine &#39;&name;&#39;|"
+           "eval &#39;&name;&#39;|"
            "look in &#39;&name;&#39;|"
-           "wear &#39;&name;&#39;|"
-           "eat &#39;&name;&#39;|"
-           "drink &#39;&name;&#39;"
+           "load &#39;&name;&#39;"
+           //"eat &#39;&name;&#39;|"
+           //"drink &#39;&name;&#39;"
        "' "
        "hint='RH mouse click to use this object|"
            "Drop &desc;|"
-           "Examine &desc;|"
+           "Eval &desc;|"
            "Look inside &desc;|"
-           "Wear &desc;|"
-           "Eat &desc;|"
-           "Drink &desc;"
+           "Load &desc;"
+           //"Eat &desc;|"
+           //"Drink &desc;"
        "'>\" ATT='name desc'"),
       0);
   /* Bid an item tag (for things in the auction) */

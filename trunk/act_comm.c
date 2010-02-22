@@ -945,7 +945,7 @@ void do_tell( CHAR_DATA *ch, char *argument )
     act( AT_TELL, buf , ch, argument, victim, TO_CHAR );
     position		= victim->position;
     victim->position	= POS_STANDING;
-    sprintf( buf , "[TELL] %s <-> you: '$t'" , ch->name );
+    sprintf( buf , "[TELL] %s%s%s <-> you: '$t'" , MXPTAG ("player $n"), ch->name, MXPTAG ("/player") );
     act( AT_TELL, buf, ch, argument, victim, TO_VICT );
     victim->position	= position;
     victim->reply	= ch;
@@ -1075,11 +1075,11 @@ void do_typo( CHAR_DATA *ch, char *argument )
 {
 	   if( !argument || argument[0] == '\0' )
    {
-      send_to_char( "&w> syntax&B:&C TYPO &B<&wmessage&B>\n\r", ch );
+      send_to_char( "&w> syntax&B:&C TYPO|IDEA &B<&wmessage&B>\n\r", ch );
       return;
    }
     append_file( ch, TYPO_FILE, argument );
-    send_to_char( "> typo submitted\n\r", ch );
+    send_to_char( "> &Gmessage submitted&w\n\r", ch );
     return;
 }
 
