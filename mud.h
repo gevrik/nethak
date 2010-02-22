@@ -3576,7 +3576,7 @@ int	get_door	args( ( char *arg ) );
 char *	format_obj_to_char	args( ( OBJ_DATA *obj, CHAR_DATA *ch,
 				    bool fShort ) );
 void	show_list_to_char	args( ( OBJ_DATA *list, CHAR_DATA *ch,
-				    bool fShort, bool fShowNothing ) );
+				    bool fShort, bool fShowNothing, const int iDefaultAction ) );
 bool    on_notify       args( ( CHAR_DATA *ch, CHAR_DATA *victim ) );
 
 /* act_move.c */

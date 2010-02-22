@@ -575,7 +575,8 @@ void start_editing( CHAR_DATA *ch, char *data )
 	   bug( "NOT GOOD: start_editing: ch->substate == SUB_RESTRICTED", 0 );
 
 	set_char_color( AT_GREEN, ch );
-	send_to_char( "Begin entering your text (/? =help /s =save /c =clear /l =list /f =format)\n\r", ch );
+	send_to_char( "neoCortED v1.0\n\r", ch );
+	send_to_char( "(/? =help /s =save /c =clear /l =list /f =format /a =abort)\n\r", ch );
 	send_to_char( "--------------------------------------------------\n\r> ", ch );
 	if ( ch->editor )
 	  stop_editing( ch );

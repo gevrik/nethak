@@ -3311,6 +3311,24 @@ void do_construction ( CHAR_DATA *ch , char *argument )
 	clan = ch->pcdata->clan;
 	planet = ch->in_room->area->planet;
 
+	if ( str_cmp( argument, "north" )
+			&& str_cmp( argument, "south" )
+			&& str_cmp( argument, "west" )
+			&& str_cmp( argument, "east" )
+			&& str_cmp( argument, "up" )
+			&& str_cmp( argument, "down")
+			&& str_cmp( argument, "n")
+			&& str_cmp( argument, "e")
+			&& str_cmp( argument, "s")
+			&& str_cmp( argument, "w")
+			&& str_cmp( argument, "u")
+			&& str_cmp( argument, "d"))
+	{
+		send_to_char( "> &Ryou cannot construct in that direction, try:\n\r&w", ch);
+		send_to_char( "> north, east, south, west, up or down\n\r", ch);
+		return;
+	}
+
 	if ( !IS_IMMORTAL(ch) )
 	{
 
