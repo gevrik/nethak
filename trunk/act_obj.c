@@ -1654,6 +1654,7 @@ void do_remove( CHAR_DATA *ch, char *argument )
 {
     char arg[MAX_INPUT_LENGTH];
     OBJ_DATA *obj, *obj_next;
+    int x,y;
 
 
     one_argument( argument, arg );
@@ -1677,6 +1678,90 @@ void do_remove( CHAR_DATA *ch, char *argument )
       }
       return;
     }
+
+   if ( !str_cmp( arg, "allbody" ) )  /* SB Remove all */
+    {
+	   //for ( obj = ch->first_carrying; obj != NULL ; obj = obj_next )
+	   for ( obj = ch->last_carrying; obj; obj = obj_next )
+	      {
+	        obj_next = obj->prev_content;
+	        if ( obj->wear_loc == WEAR_BODY && can_see_obj ( ch, obj ) )
+	          remove_obj ( ch, obj->wear_loc, TRUE );
+	      }
+	return;
+	}
+
+   if ( !str_cmp( arg, "alllegs" ) )  /* SB Remove all */
+    {
+	   //for ( obj = ch->first_carrying; obj != NULL ; obj = obj_next )
+	   for ( obj = ch->last_carrying; obj; obj = obj_next )
+	      {
+	        obj_next = obj->prev_content;
+	        if ( obj->wear_loc == WEAR_LEGS && can_see_obj ( ch, obj ) )
+	          remove_obj ( ch, obj->wear_loc, TRUE );
+	      }
+	return;
+	}
+
+   if ( !str_cmp( arg, "allfeet" ) )  /* SB Remove all */
+    {
+	   //for ( obj = ch->first_carrying; obj != NULL ; obj = obj_next )
+	   for ( obj = ch->last_carrying; obj; obj = obj_next )
+	      {
+	        obj_next = obj->prev_content;
+	        if ( obj->wear_loc == WEAR_FEET && can_see_obj ( ch, obj ) )
+	          remove_obj ( ch, obj->wear_loc, TRUE );
+	      }
+	return;
+	}
+
+   if ( !str_cmp( arg, "allhands" ) )  /* SB Remove all */
+    {
+	   //for ( obj = ch->first_carrying; obj != NULL ; obj = obj_next )
+	   for ( obj = ch->last_carrying; obj; obj = obj_next )
+	      {
+	        obj_next = obj->prev_content;
+	        if ( obj->wear_loc == WEAR_HANDS && can_see_obj ( ch, obj ) )
+	          remove_obj ( ch, obj->wear_loc, TRUE );
+	      }
+	return;
+	}
+
+   if ( !str_cmp( arg, "allarms" ) )  /* SB Remove all */
+    {
+	   //for ( obj = ch->first_carrying; obj != NULL ; obj = obj_next )
+	   for ( obj = ch->last_carrying; obj; obj = obj_next )
+	      {
+	        obj_next = obj->prev_content;
+	        if ( obj->wear_loc == WEAR_ARMS && can_see_obj ( ch, obj ) )
+	          remove_obj ( ch, obj->wear_loc, TRUE );
+	      }
+	return;
+	}
+
+   if ( !str_cmp( arg, "allabout" ) )  /* SB Remove all */
+    {
+	   //for ( obj = ch->first_carrying; obj != NULL ; obj = obj_next )
+	   for ( obj = ch->last_carrying; obj; obj = obj_next )
+	      {
+	        obj_next = obj->prev_content;
+	        if ( obj->wear_loc == WEAR_ABOUT && can_see_obj ( ch, obj ) )
+	          remove_obj ( ch, obj->wear_loc, TRUE );
+	      }
+	return;
+	}
+
+   if ( !str_cmp( arg, "allwaist" ) )  /* SB Remove all */
+    {
+	   //for ( obj = ch->first_carrying; obj != NULL ; obj = obj_next )
+	   for ( obj = ch->last_carrying; obj; obj = obj_next )
+	      {
+	        obj_next = obj->prev_content;
+	        if ( obj->wear_loc == WEAR_WAIST && can_see_obj ( ch, obj ) )
+	          remove_obj ( ch, obj->wear_loc, TRUE );
+	      }
+	return;
+	}
 
     if ( ( obj = get_obj_wear( ch, arg ) ) == NULL )
     {

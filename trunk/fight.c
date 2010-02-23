@@ -244,7 +244,7 @@ void violence_update( void )
 		    fun = timer->do_fun;
 		    ch->substate = timer->value;
 		    extract_timer( ch, timer );
-		    // Seems redundent but, why not?
+		    // Seems redundant but, why not?
 		    timer = NULL;
 		    (fun)( ch, "" );
 		    if ( char_died(ch) )

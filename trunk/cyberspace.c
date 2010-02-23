@@ -547,7 +547,10 @@ void do_decompile( CHAR_DATA *ch, char *argument )
 			send_to_char( "> &Gyou begin the long process of decompiling\n\r", ch);
 			act( AT_PLAIN, "> $n takes $s compiler as well as some code and begins to work", ch,
 					NULL, argument , TO_ROOM );
-			add_timer ( ch , TIMER_DO_FUN , 5 , do_decompile , 1 );
+			if ( !str_cmp( arg, "snippet" ) )
+			add_timer ( ch , TIMER_DO_FUN , 2 , do_decompile , 1 );
+			else
+			add_timer ( ch , TIMER_DO_FUN , 3 , do_decompile , 1 );
 			ch->dest_buf = str_dup(arg);
 			return;
 		}
@@ -652,8 +655,10 @@ void do_decompile( CHAR_DATA *ch, char *argument )
 	}
 	else if ( !str_cmp( arg, "snippet" ) )
 	{
-		ch->snippets = ch->snippets + cost;
-		ch_printf( ch, "%d snippets\n\r", cost );
+		int randomamount = number_range(2, 8);
+		int amountsnips = cost * randomamount;
+		ch->snippets = ch->snippets + amountsnips;
+		ch_printf( ch, "%d snippets\n\r", amountsnips );
 		send_to_char( "> &Gyou finish decompiling&w\n\r", ch);
 		act( AT_PLAIN, "> $n finishes decompiling", ch, NULL, argument , TO_ROOM );
 		return;
@@ -668,7 +673,16 @@ void do_decompile( CHAR_DATA *ch, char *argument )
 	send_to_char( "> &Gyou finish decompiling&w\n\r", ch);
 	act( AT_PLAIN, "> $n finishes decompiling", ch, NULL, argument , TO_ROOM );
 
+	if ( !str_cmp( arg, "snippet" ) )
+	{
 	learn_from_success( ch, gsn_spacecraft );
+	}
+	else
+	{
+		int snipchance = number_range(1, 5);
+		if ( snipchance <= 2 )
+		learn_from_success( ch, gsn_spacecraft );
+	}
 	return;
 }
 
