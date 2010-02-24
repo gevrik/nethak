@@ -1200,7 +1200,16 @@ void do_gouge( CHAR_DATA *ch, char *argument )
 						ch, NULL, NULL, TO_CHAR );
 			}
 		if ( global_retcode != rCHAR_DIED && global_retcode != rBOTH_DIED )
+		{
+			if ( number_percent() == 23 )
+			{
+				send_to_char( "> you feel more coordinated than before\n\r", ch );
+				ch->perm_dex++;
+				ch->perm_dex = UMIN( ch->perm_dex , 25 );
+			}
 			learn_from_success( ch, gsn_gouge );
+		}
+
 	}
 	else
 	{
@@ -1398,7 +1407,7 @@ void do_steal( CHAR_DATA *ch, char *argument )
 
 	if ( number_percent() == 23 )
 	{
-		send_to_char( "> your experience makes you feel more coordinated than before\n\r", ch );
+		send_to_char( "> you feel more coordinated than before\n\r", ch );
 		ch->perm_dex++;
 		ch->perm_dex = UMIN( ch->perm_dex , 25 );
 	}
@@ -1485,6 +1494,12 @@ void do_backstab( CHAR_DATA *ch, char *argument )
 			||   IS_NPC(ch)
 			||   percent < ch->pcdata->learned[gsn_backstab] )
 	{
+		if ( number_percent() == 23 )
+		{
+			send_to_char( "> you feel more coordinated than before\n\r", ch );
+			ch->perm_dex++;
+			ch->perm_dex = UMIN( ch->perm_dex , 25 );
+		}
 		learn_from_success( ch, gsn_backstab );
 		global_retcode = multi_hit( ch, victim, gsn_backstab );
 
@@ -1577,6 +1592,13 @@ void do_rescue( CHAR_DATA *ch, char *argument )
 	ch->alignment = ch->alignment + 50;
 	ch->alignment = URANGE( -1000, ch->alignment, 1000 );
 
+	if ( number_percent() == 23 )
+	{
+		send_to_char( "> you feel more coordinated than before\n\r", ch );
+		ch->perm_dex++;
+		ch->perm_dex = UMIN( ch->perm_dex , 25 );
+	}
+
 	learn_from_success( ch, gsn_rescue );
 	stop_fighting( fch, FALSE );
 	stop_fighting( victim, FALSE );
@@ -1610,6 +1632,14 @@ void do_kick( CHAR_DATA *ch, char *argument )
 	WAIT_STATE( ch, skill_table[gsn_kick]->beats );
 	if ( IS_NPC(ch) || number_percent( ) < ch->pcdata->learned[gsn_kick] )
 	{
+
+		if ( number_percent() == 23 )
+		{
+			send_to_char( "> you feel stronger than before\n\r", ch );
+			ch->perm_str++;
+			ch->perm_str = UMIN( ch->perm_str , 25 );
+		}
+
 		learn_from_success( ch, gsn_kick );
 		global_retcode = damage( ch, victim, number_range( 1, IS_NPC(ch) ? ch->top_level/5 : ch->pcdata->learned[gsn_kick]/5 ) , gsn_kick );
 	}
@@ -1659,6 +1689,14 @@ void disarm( CHAR_DATA *ch, CHAR_DATA *victim )
 	act( AT_SKILL, "> $n DISARMS you", ch, NULL, victim, TO_VICT    );
 	act( AT_SKILL, "> you disarm $N",  ch, NULL, victim, TO_CHAR    );
 	act( AT_SKILL, "> $n disarms $N",  ch, NULL, victim, TO_NOTVICT );
+
+	if ( number_percent() == 23 )
+	{
+		send_to_char( "> you feel more coordinated than before\n\r", ch );
+		ch->perm_dex++;
+		ch->perm_dex = UMIN( ch->perm_dex , 25 );
+	}
+
 	learn_from_success( ch, gsn_disarm );
 
 	if ( obj == get_eq_char( victim, WEAR_WIELD )
@@ -1876,6 +1914,14 @@ void do_pick( CHAR_DATA *ch, char *argument )
 		REMOVE_BIT(obj->value[1], CONT_LOCKED);
 		send_to_char( "> success\n\r", ch );
 		act( AT_ACTION, "> $n picks $p", ch, obj, NULL, TO_ROOM );
+
+		if ( number_percent() == 23 )
+		{
+			send_to_char( "> you feel more coordinated than before\n\r", ch );
+			ch->perm_dex++;
+			ch->perm_dex = UMIN( ch->perm_dex , 25 );
+		}
+
 		learn_from_success( ch, gsn_pick_lock );
 		return;
 	}
@@ -1959,6 +2005,14 @@ void do_sneak( CHAR_DATA *ch, char *argument )
 		af.modifier  = 0;
 		af.bitvector = AFF_SNEAK;
 		affect_to_char( ch, &af );
+
+		if ( number_percent() == 23 )
+		{
+			send_to_char( "> you feel more coordinated than before\n\r", ch );
+			ch->perm_dex++;
+			ch->perm_dex = UMIN( ch->perm_dex , 25 );
+		}
+
 		learn_from_success( ch, gsn_sneak );
 		send_to_char( "&G> stealth mode active&w\n\r", ch );
 	}
@@ -1994,6 +2048,14 @@ void do_hide( CHAR_DATA *ch, char *argument )
 	if ( IS_NPC(ch) || number_percent( ) < ch->pcdata->learned[gsn_hide] )
 	{
 		SET_BIT(ch->affected_by, AFF_HIDE);
+
+		if ( number_percent() == 23 )
+		{
+			send_to_char( "> you feel more coordinated than before\n\r", ch );
+			ch->perm_dex++;
+			ch->perm_dex = UMIN( ch->perm_dex , 25 );
+		}
+
 		learn_from_success( ch, gsn_hide );
 	}
 	else
@@ -2145,6 +2207,14 @@ void do_aid( CHAR_DATA *ch, char *argument )
 
 	act( AT_SKILL, "> you aid $N",  ch, NULL, victim, TO_CHAR    );
 	act( AT_SKILL, "> $n aids $N",  ch, NULL, victim, TO_NOTVICT );
+
+	if ( number_percent() == 23 )
+	{
+		send_to_char( "> you feel wiser than before\n\r", ch );
+		ch->perm_wis++;
+		ch->perm_wis = UMIN( ch->perm_wis , 25 );
+	}
+
 	learn_from_success( ch, gsn_aid );
 	if ( victim->hit < 1 )
 		victim->hit = 1;
@@ -2308,7 +2378,14 @@ bool check_parry( CHAR_DATA *ch, CHAR_DATA *victim )
 
 	if ( !IS_NPC(ch)
 			&& !IS_SET( ch->pcdata->flags, PCFLAG_GAG) )  /* SB */
-		act( AT_SKILL, "> $N parries your attack", ch, NULL, victim, TO_CHAR    );
+		act( AT_SKILL, "> $N parried your attack", ch, NULL, victim, TO_CHAR    );
+
+	if ( number_percent() == 23 )
+	{
+		send_to_char( "> you feel more coordinated than before\n\r", ch );
+		ch->perm_dex++;
+		ch->perm_dex = UMIN( ch->perm_dex , 25 );
+	}
 
 	learn_from_success( victim, gsn_parry );
 	return TRUE;
@@ -2345,6 +2422,13 @@ bool check_dodge( CHAR_DATA *ch, CHAR_DATA *victim )
 
 	if ( !IS_NPC(ch) && !IS_SET( ch->pcdata->flags, PCFLAG_GAG) )
 		act( AT_SKILL, "> $N dodges your attack", ch, NULL, victim, TO_CHAR    );
+
+	if ( number_percent() == 23 )
+	{
+		send_to_char( "> you feel more coordinated than before\n\r", ch );
+		ch->perm_dex++;
+		ch->perm_dex = UMIN( ch->perm_dex , 25 );
+	}
 
 	learn_from_success( victim, gsn_dodge );
 	return TRUE;
@@ -2468,6 +2552,14 @@ void do_poison_weapon( CHAR_DATA *ch, char *argument )
 	//act(AT_BLUE, "> the remainder of the viral code eats through $p", ch, wobj, NULL, TO_ROOM );
 	extract_obj( pobj );
 	//extract_obj( wobj );
+
+	if ( number_percent() == 23 )
+	{
+		send_to_char( "> you feel more intelligent than before\n\r", ch );
+		ch->perm_int++;
+		ch->perm_int = UMIN( ch->perm_int , 25 );
+	}
+
 	learn_from_success( ch, gsn_poison_weapon );
 	return;
 }
@@ -2577,6 +2669,14 @@ void do_circle( CHAR_DATA *ch, char *argument )
 	WAIT_STATE( ch, skill_table[gsn_circle]->beats );
 	if ( percent < (IS_NPC(ch) ? ch->top_level  * 1.5 : ch->pcdata->learned[gsn_circle]) )
 	{
+
+		if ( number_percent() == 23 )
+		{
+			send_to_char( "> you feel more coordinated than before\n\r", ch );
+			ch->perm_dex++;
+			ch->perm_dex = UMIN( ch->perm_dex , 25 );
+		}
+
 		learn_from_success( ch, gsn_circle );
 		global_retcode = multi_hit( ch, victim, gsn_circle );
 
@@ -2627,6 +2727,14 @@ void do_berserk( CHAR_DATA *ch, char *argument )
 	af.bitvector = AFF_BERSERK;
 	affect_to_char(ch, &af);
 	send_to_char( "> you start to lose control.\n\r", ch );
+
+	if ( number_percent() == 23 )
+	{
+		send_to_char( "> you feel stronger than before\n\r", ch );
+		ch->perm_str++;
+		ch->perm_str = UMIN( ch->perm_str , 25 );
+	}
+
 	learn_from_success(ch, gsn_berserk);
 	return;
 }
