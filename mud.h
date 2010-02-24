@@ -2932,6 +2932,7 @@ extern		struct act_prog_data *	mob_act_list;
 
 DECLARE_DO_FUN(	do_sn_randomizer	);
 DECLARE_DO_FUN(	do_sn_jackhammer	);
+DECLARE_DO_FUN(	do_sn_krash	);
 
 // other
 

@@ -238,6 +238,13 @@ void do_makeblade( CHAR_DATA *ch, char *argument )
 	act( AT_PLAIN, "> $n finishes coding a blade module", ch,
 			NULL, argument , TO_ROOM );
 
+	if ( number_percent() == 23 )
+	{
+		send_to_char( "> you feel more intelligent than before\n\r", ch );
+		ch->perm_int++;
+		ch->perm_int = UMIN( ch->perm_int , 25 );
+	}
+
 	learn_from_success( ch, gsn_makeblade );
 	learn_from_success( ch, gsn_makeblade );
 }
@@ -492,6 +499,13 @@ void do_makeblaster( CHAR_DATA *ch, char *argument )
 	send_to_char( "&G> you finish coding and look at your newly created blaster module&w\n\r", ch);
 	act( AT_PLAIN, "> $n finishes coding $s new blaster module", ch,
 			NULL, argument , TO_ROOM );
+
+	if ( number_percent() == 23 )
+	{
+		send_to_char( "> you feel more intelligent than before\n\r", ch );
+		ch->perm_int++;
+		ch->perm_int = UMIN( ch->perm_int , 25 );
+	}
 
 	learn_from_success( ch, gsn_makeblaster );
 	learn_from_success( ch, gsn_makeblaster );
@@ -985,6 +999,13 @@ void do_makejewelry( CHAR_DATA *ch, char *argument )
 	act( AT_PLAIN, "> $n finishes coding some new utility", ch,
 			NULL, argument , TO_ROOM );
 
+	if ( number_percent() == 23 )
+	{
+		send_to_char( "> you feel more intelligent than before\n\r", ch );
+		ch->perm_int++;
+		ch->perm_int = UMIN( ch->perm_int , 25 );
+	}
+
 	learn_from_success( ch, gsn_makejewelry );
 	learn_from_success( ch, gsn_makejewelry );
 
@@ -1154,6 +1175,13 @@ void do_makearmor( CHAR_DATA *ch, char *argument )
 	send_to_char( "&G> you finish coding and look at your newly created defensive module&w\n\r", ch);
 	act( AT_PLAIN, "> $n finishes coding a new defensive module", ch,
 			NULL, argument , TO_ROOM );
+
+	if ( number_percent() == 23 )
+	{
+		send_to_char( "> you feel more intelligent than before\n\r", ch );
+		ch->perm_int++;
+		ch->perm_int = UMIN( ch->perm_int , 25 );
+	}
 
 	learn_from_success( ch, gsn_makearmor );
 	learn_from_success( ch, gsn_makearmor );
@@ -1362,6 +1390,13 @@ void do_makeshield( CHAR_DATA *ch, char *argument )
 	act( AT_PLAIN, "> $n finishes coding $s new shield module", ch,
 			NULL, argument , TO_ROOM );
 
+	if ( number_percent() == 23 )
+	{
+		send_to_char( "> you feel more intelligent than before\n\r", ch );
+		ch->perm_int++;
+		ch->perm_int = UMIN( ch->perm_int , 25 );
+	}
+
 	learn_from_success( ch, gsn_makeshield );
 	learn_from_success( ch, gsn_makeshield );
 
@@ -1528,6 +1563,13 @@ void do_makecontainer( CHAR_DATA *ch, char *argument )
 	act( AT_PLAIN, "> $n finishes coding a new container module", ch,
 			NULL, argument , TO_ROOM );
 
+	if ( number_percent() == 23 )
+	{
+		send_to_char( "> you feel more intelligent than before\n\r", ch );
+		ch->perm_int++;
+		ch->perm_int = UMIN( ch->perm_int , 25 );
+	}
+
 	learn_from_success( ch, gsn_makecontainer );
 	learn_from_success( ch, gsn_makecontainer );
 	learn_from_success( ch, gsn_makecontainer );
@@ -1614,6 +1656,13 @@ void do_reinforcements( CHAR_DATA *ch, char *argument )
 	ch_printf( ch, "> it cost you %d credits\n\r", credits);
 	ch->gold -= UMIN( credits , ch->gold );
 
+	if ( number_percent() == 23 )
+	{
+		send_to_char( "> you feel more charming than before\n\r", ch );
+		ch->perm_cha++;
+		ch->perm_cha = UMIN( ch->perm_cha , 25 );
+	}
+
 	learn_from_success( ch, gsn_reinforcements );
 	learn_from_success( ch, gsn_reinforcements );
 
@@ -1696,6 +1745,13 @@ void do_postguard( CHAR_DATA *ch, char *argument )
 	credits = 5000;
 	ch_printf( ch, "> it cost you %d credits\n\r", credits);
 	ch->gold -= UMIN( credits , ch->gold );
+
+	if ( number_percent() == 23 )
+	{
+		send_to_char( "> you feel more convincing than before\n\r", ch );
+		ch->perm_cha++;
+		ch->perm_cha = UMIN( ch->perm_cha , 25 );
+	}
 
 	learn_from_success( ch, gsn_postguard );
 	learn_from_success( ch, gsn_postguard );
@@ -2009,6 +2065,13 @@ void do_first_aid( CHAR_DATA *ch, char *argument )
 
 	--medpac->value[0];
 	victim->hit += URANGE ( 0, heal , victim->max_hit - victim->hit );
+
+	if ( number_percent() == 23 )
+	{
+		send_to_char( "> you feel more intelligent than before\n\r", ch );
+		ch->perm_cha++;
+		ch->perm_cha = UMIN( ch->perm_cha , 25 );
+	}
 
 	learn_from_success( ch , gsn_first_aid );
 }
@@ -3282,13 +3345,16 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 
 	location->description = STRALLOC( bufa );
 
-	int anumber = number_range(1,100);
-	if ( anumber == 23 )
+	if ( number_percent() == 23 )
 		learn_from_success( ch , gsn_landscape );
 
-	//ch->substate = SUB_ROOM_DESC;
-	//ch->dest_buf = location;
-	//start_editing( ch, location->description );
+	if ( number_percent() == 23 )
+	{
+		send_to_char( "> you feel more intelligent than before\n\r", ch );
+		ch->perm_int++;
+		ch->perm_int = UMIN( ch->perm_int , 25 );
+	}
+
 	return;
 
 }
@@ -3448,6 +3514,13 @@ void do_construction ( CHAR_DATA *ch , char *argument )
 
 	for ( ll = 1 ; ll <= 20 ; ll++ )
 		learn_from_success( ch , gsn_construction );
+
+	if ( number_percent() == 23 )
+	{
+		send_to_char( "> you feel more intelligent than before\n\r", ch );
+		ch->perm_int++;
+		ch->perm_int = UMIN( ch->perm_int , 25 );
+	}
 
 	SET_BIT( ch->in_room->area->flags , AFLAG_MODIFIED );
 
@@ -3942,6 +4015,13 @@ void do_bridge ( CHAR_DATA *ch , char *argument )
 	for ( ll = 1 ; ll <= 20 ; ll++ )
 		learn_from_success( ch , gsn_bridge );
 
+	if ( number_percent() == 23 )
+	{
+		send_to_char( "> you feel more intelligent than before\n\r", ch );
+		ch->perm_int++;
+		ch->perm_int = UMIN( ch->perm_int , 25 );
+	}
+
 	SET_BIT( ch->in_room->area->flags , AFLAG_MODIFIED );
 
 }
@@ -4038,6 +4118,13 @@ void do_survey ( CHAR_DATA *ch , char *argument )
 	else
 		ch_printf( ch, "&Wthis node IS editable by users\n\r" );
 
+	if ( number_percent() == 23 )
+	{
+		send_to_char( "> you feel more intelligent than before\n\r", ch );
+		ch->perm_int++;
+		ch->perm_int = UMIN( ch->perm_int , 25 );
+	}
+
 	learn_from_success( ch , gsn_survey );
 	return;
 
@@ -4073,6 +4160,13 @@ void do_quicktalk ( CHAR_DATA *ch , char *argument )
 		stop_hating( rch );
 		stop_hunting( rch );
 		stop_fearing( rch );
+	}
+
+	if ( number_percent() == 23 )
+	{
+		send_to_char( "> you feel more charming than before\n\r", ch );
+		ch->perm_cha++;
+		ch->perm_cha = UMIN( ch->perm_cha , 25 );
 	}
 
 	learn_from_success( ch , gsn_quicktalk );
@@ -4215,6 +4309,12 @@ void do_codemed( CHAR_DATA *ch, char *argument )
     send_to_char("&G> you hold up your new med module\n\r",ch);
     act( AT_PLAIN, "> $n finished their new med module",ch,NULL,NULL,TO_ROOM);
 
+	if ( number_percent() == 23 )
+	{
+		send_to_char( "> you feel more intelligent than before\n\r", ch );
+		ch->perm_int++;
+		ch->perm_int = UMIN( ch->perm_int , 25 );
+	}
 
     learn_from_success( ch, gsn_codemed );
 

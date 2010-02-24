@@ -129,9 +129,9 @@ void do_buyskill( CHAR_DATA *ch, char *argument )
 	{
 		send_to_char( "> syntax: buyskill <skill>\n\r",	ch );
 		send_to_char( "> cost: 5,000c\n\r",	ch );
-		send_to_char( "> skills: aid, backstab, blades, blasters, codeapp, codeblade, codeblaster, codecontainer, codedef, codemed, codeshield, codeutil,"
-				" damboost, disguise, dodge, dualwield, firstaid, hide, peek, picklock, poisonmod, postguard, propaganda, quicktalk,"
-				" reinforcements, second attack, sneak, steal, throw, trace\n\r",	ch );
+		send_to_char( "> skills: aid, backstab, blades, blasters, circle, codeapp, codeblade, codeblaster, codecontainer, codedef, codemed, codeshield, codeutil,"
+				" damboost, disarm, disguise, dodge, dualwield, firstaid, gouge, hide, kick, parry, peek, picklock, poisonmod, postguard, propaganda, quicktalk,"
+				" reinforcements, rescue, second attack, sneak, steal, throw, trace, trip\n\r",	ch );
 		return;
 	}
 
@@ -675,7 +675,15 @@ void do_decompile( CHAR_DATA *ch, char *argument )
 
 	if ( !str_cmp( arg, "snippet" ) )
 	{
-	learn_from_success( ch, gsn_spacecraft );
+
+		if ( number_percent() == 23 )
+		{
+			send_to_char( "> you feel more intelligent than before\n\r", ch );
+			ch->perm_int++;
+			ch->perm_int = UMIN( ch->perm_int , 25 );
+		}
+
+		learn_from_success( ch, gsn_spacecraft );
 	}
 	else
 	{
@@ -1151,7 +1159,7 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 	bool checksew, checkfab;
 	OBJ_DATA *obj;
 	OBJ_DATA *material;
-	int value, cost = 360;
+	int value, cost = 100;
 
 	strcpy( arg , argument );
 
@@ -1166,8 +1174,23 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 			return;
 		}
 
-		if ( str_cmp( arg, "jackhammer" )
-				&& str_cmp( arg, "krash" ) )
+//		if ( str_cmp( arg, "jackhammer" )
+//				&& str_cmp( arg, "krash" ) )
+//		{
+//			send_to_char( "> &Ryou cannot code that app, try:\n\r&w", ch);
+//			send_to_char( "> jackhammer, krash\n\r", ch);
+//			return;
+//		}
+
+		if ( !str_cmp( arg, "jackhammer" ) )
+		{
+			cost = 360;
+		}
+		else if ( !str_cmp( arg, "krash" ) )
+		{
+			cost = 250;
+		}
+		else
 		{
 			send_to_char( "> &Ryou cannot code that app, try:\n\r&w", ch);
 			send_to_char( "> jackhammer, krash\n\r", ch);
@@ -1291,6 +1314,13 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 	send_to_char( "> &Gyou finish coding and look at your newly created application&w\n\r", ch);
 	act( AT_PLAIN, "> $n finishes coding a new application", ch,
 			NULL, argument , TO_ROOM );
+
+	if ( number_percent() == 23 )
+	{
+		send_to_char( "> you feel more intelligent than before\n\r", ch );
+		ch->perm_int++;
+		ch->perm_int = UMIN( ch->perm_int , 25 );
+	}
 
 	learn_from_success( ch, gsn_codeapp );
 

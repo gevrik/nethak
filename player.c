@@ -52,12 +52,12 @@ void do_score(CHAR_DATA * ch, char *argument)
     	ch_printf( ch, "&Wbank   :  &G%ld\n\r" , ch->pcdata->bank );
     	ch_printf( ch, "&W-----------------------------------------------------\n\r" );
 
-    ch_printf( ch,
-	"&Wautoexit: &G%s   &Wautoloot: &G%s   &Wautosac: &G%s   &Wautocred: &G%s\n\r",
-	(!IS_NPC(ch) && IS_SET(ch->act, PLR_AUTOEXIT)) ? "yes" : "no",
-	(!IS_NPC(ch) && IS_SET(ch->act, PLR_AUTOLOOT)) ? "yes" : "no",
-	(!IS_NPC(ch) && IS_SET(ch->act, PLR_AUTOSAC) ) ? "yes" : "no",
-  	(!IS_NPC(ch) && IS_SET(ch->act, PLR_AUTOGOLD)) ? "yes" : "no" );
+//    ch_printf( ch,
+//	"&Wautoexit: &G%s   &Wautoloot: &G%s   &Wautosac: &G%s   &Wautocred: &G%s\n\r",
+//	(!IS_NPC(ch) && IS_SET(ch->act, PLR_AUTOEXIT)) ? "yes" : "no",
+//	(!IS_NPC(ch) && IS_SET(ch->act, PLR_AUTOLOOT)) ? "yes" : "no",
+//	(!IS_NPC(ch) && IS_SET(ch->act, PLR_AUTOSAC) ) ? "yes" : "no",
+//  	(!IS_NPC(ch) && IS_SET(ch->act, PLR_AUTOGOLD)) ? "yes" : "no" );
 
     ch_printf( ch, "&Wwimpy set to &G%d &Wpercent\n\r", ch->wimpy );
     
