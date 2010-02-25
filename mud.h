@@ -195,6 +195,7 @@ typedef ch_ret	SPELL_FUN	args( ( int sn, int level, CHAR_DATA *ch, void *vo ) );
 #define MAX_PLANET_SYSTEM	 1000
 #define MAX_SHIP                 1000
 #define MAX_SHIP_ROOMS             25
+#define MAX_ALIAS				20
 
 #define PULSE_PER_SECOND	    4
 #define PULSE_MINUTE              ( 60 * PULSE_PER_SECOND)
@@ -1945,8 +1946,6 @@ struct killed_data
     char		count;
 };
 
-#define MAX_ALIAS 20
-
 /*
  * Data which only PC's have.
  */
@@ -2933,6 +2932,7 @@ extern		struct act_prog_data *	mob_act_list;
 DECLARE_DO_FUN(	do_sn_randomizer	);
 DECLARE_DO_FUN(	do_sn_jackhammer	);
 DECLARE_DO_FUN(	do_sn_krash	);
+DECLARE_DO_FUN(	do_sn_spun	);
 
 // other
 

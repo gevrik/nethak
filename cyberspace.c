@@ -494,11 +494,7 @@ void do_decompile( CHAR_DATA *ch, char *argument )
 	{
 	default:
 
-		if ( !IS_SET( ch->in_room->room_flags, ROOM_RESTAURANT ) )
-		{
-			send_to_char( "&R> you need to be in a coding node\n\r", ch );
-			return;
-		}
+
 
 		if ( str_cmp( arg, "def" )
 				&& str_cmp( arg, "blaster" )
@@ -516,6 +512,15 @@ void do_decompile( CHAR_DATA *ch, char *argument )
 			return;
 		}
 
+
+		if ( str_cmp( arg, "datacube" ) && str_cmp( arg, "snippet" ) )
+		{
+			if ( !IS_SET( ch->in_room->room_flags, ROOM_RESTAURANT ) )
+			{
+				send_to_char( "> &Ryou need to be in a coding node\n\r", ch );
+				return;
+			}
+		}
 
 		checksew = FALSE;
 		checkfab = FALSE;
@@ -1168,11 +1173,11 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 	{
 	default:
 
-		if ( !IS_SET( ch->in_room->room_flags, ROOM_RESTAURANT ) )
-		{
-			send_to_char( "&R> you need to be in a coding node\n\r", ch );
-			return;
-		}
+//		if ( !IS_SET( ch->in_room->room_flags, ROOM_RESTAURANT ) )
+//		{
+//			send_to_char( "&R> you need to be in a coding node\n\r", ch );
+//			return;
+//		}
 
 //		if ( str_cmp( arg, "jackhammer" )
 //				&& str_cmp( arg, "krash" ) )
@@ -1190,10 +1195,14 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 		{
 			cost = 250;
 		}
+		else if ( !str_cmp( arg, "spun" ) )
+		{
+			cost = 50;
+		}
 		else
 		{
 			send_to_char( "> &Ryou cannot code that app, try:\n\r&w", ch);
-			send_to_char( "> jackhammer, krash\n\r", ch);
+			send_to_char( "> jackhammer, krash, spun\n\r", ch);
 			return;
 		}
 
