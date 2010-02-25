@@ -79,8 +79,8 @@ void reset_all( )
                {
                 sprintf( dBuf , "(GCHAT) user: %s is being infected by AI viruses" , dPlanet->name );    
                 echo_to_all( AT_LBLUE , dBuf , ECHOTAR_ALL );
-                //for( mCount = 0 ; mCount < 10 ; mCount++ )
-                //{
+                for( mCount = 0 ; mCount < 3 ; mCount++ )
+                {
                   mob = create_mobile( pMobIndex );
                   char_to_room( mob, pRoomIndex );
                   mob->hit = 100;
@@ -94,7 +94,7 @@ void reset_all( )
                      equip_char( mob, obj, WEAR_WIELD );                        
                   } 
                   do_setblaster( mob , "full" );
-                //}
+                }
                }
               
             }

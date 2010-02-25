@@ -193,6 +193,7 @@ void fread_planet( PLANET_DATA *planet, FILE *fp )
                 AREA_DATA *pArea;
 
 	     	sprintf (aName, fread_string(fp));
+
 		for( pArea = first_area ; pArea ; pArea = pArea->next )
 	          if (pArea->filename && !str_cmp(pArea->filename , aName ) )
 	          {
@@ -660,7 +661,7 @@ void do_makeplanet( CHAR_DATA *ch, char *argument )
     char filename[MAX_STRING_LENGTH];
     char pname[MAX_STRING_LENGTH];
     char * description = NULL;
-    char * owner = NULL;
+    //char * owner = NULL;
     bool destok = TRUE;
     int rnum, sector, px, py, pz;
     ROOM_INDEX_DATA *location;

@@ -50,7 +50,6 @@ void do_mp_offer_job( CHAR_DATA *ch, char *argument )
 {
     char        arg[MAX_INPUT_LENGTH];
     char        buf[MAX_STRING_LENGTH];
-    char        bufa;
     CHAR_DATA  *victim;
     PLANET_DATA * dPlanet = NULL;
     int pCount = 0;
@@ -958,7 +957,7 @@ void do_mpinvis( CHAR_DATA *ch, char *argument )
     }
  
     argument = one_argument( argument, arg );
-    if ( arg && arg[0] != '\0' )
+    if ( arg[0] != '\0' )
     {
         if ( !is_number( arg ) )
         {

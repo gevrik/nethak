@@ -19,6 +19,8 @@ void    add_reinforcements  args( ( CHAR_DATA *ch ) );
 
 void    channel_noise       args( ( ) );
 
+void who_html_update (void);
+
 /*
  * Local functions.
  */
@@ -665,12 +667,10 @@ void update_taxes( void )
 
 void update_taxnodes( void )
 {
-     PLANET_DATA *planet;
      CLAN_DATA *clan;
      DESCRIPTOR_DATA *d;
      CHAR_DATA *ch;
      CHAR_DATA *och;
-     int pay;
      int paya;
 
     for ( d = last_descriptor; d; d = d->prev )

@@ -14,6 +14,7 @@ int ris_save( CHAR_DATA *ch, int chance, int ris );
 CHAR_DATA *get_char_room_mp( CHAR_DATA *ch, char *argument );
 void  clear_roomtype( ROOM_INDEX_DATA * room );
 bool    aff_paralysis( CHAR_DATA *ch, CHAR_DATA *victim );
+bool	check_parse_name	args( ( char *name ) );
 
 
 extern int      top_affect;
@@ -1970,6 +1971,12 @@ void do_disguise( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
+	if ( !check_parse_name( argument ) )
+	{
+		send_to_char( "> &Rinvalid disguise name&w\n\r", ch );
+		return;
+	}
+
 	//if ( !str_cmp( argument, "Wintermute" ) || !str_cmp( argument, "Wintermute " ) )
 	if ( nifty_is_name( "Wintermute", argument) )
 	{
@@ -2891,7 +2898,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 	OBJ_DATA *obj;
 	OBJ_DATA *obj_next;
 	ROOM_INDEX_DATA * location;
-	EXIT_DATA   *xit, *texit;
+	EXIT_DATA   *xit;
 	int chance;
 	//char arg[MAX_INPUT_LENGTH];
 	char buf[MAX_STRING_LENGTH];
@@ -4289,7 +4296,7 @@ void do_codemed( CHAR_DATA *ch, char *argument )
 
     if( number_percent() > chance || !checkcont || !checkchem || !checktool )
     {
-		send_to_char( "> &Ryou fail to code the blade module&w\n\r", ch);
+		send_to_char( "> &Ryou fail to code the med module&w\n\r", ch);
 		return;
     }
 

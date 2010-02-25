@@ -6,16 +6,16 @@
 #include <unistd.h>
 #include "mud.h"
 
+bool	check_parse_name	args( ( char *name ) );
+void	write_clan_list	args( ( void ) );
+
 void do_layout( CHAR_DATA *ch, char *argument )
 {
 
 	CLAN_DATA * clan;
 	OBJ_DATA *obj;
 	OBJ_DATA *obj_next;
-	EXIT_DATA *xit;
 	ROOM_INDEX_DATA * location;
-	int chance;
-	char arg[MAX_INPUT_LENGTH];
 
 	if ( IS_NPC(ch) || !ch->pcdata )
 		return;
@@ -477,14 +477,12 @@ void do_coding( CHAR_DATA *ch, char *argument )
 void do_decompile( CHAR_DATA *ch, char *argument )
 {
 	char arg[MAX_INPUT_LENGTH];
-	char arg2[MAX_INPUT_LENGTH];
-	char buf[MAX_STRING_LENGTH];
 	OBJ_INDEX_DATA *pObjIndex = NULL;
 	int level, chance;
 	bool checksew, checkfab;
 	OBJ_DATA *obj;
 	OBJ_DATA *material;
-	int value, cost;
+	int cost;
 
 	argument = one_argument( argument, arg );
 	//strcpy( arg2 , argument );
@@ -702,8 +700,6 @@ void do_decompile( CHAR_DATA *ch, char *argument )
 
 void do_renamenode( CHAR_DATA *ch, char *argument )
 {
-	char arg [MAX_INPUT_LENGTH];
-	char buf [MAX_STRING_LENGTH];
 	ROOM_INDEX_DATA	*location;
 	int cost = 100;
 
@@ -747,8 +743,6 @@ void do_renamenode( CHAR_DATA *ch, char *argument )
 
 void do_securenode( CHAR_DATA *ch, char *argument )
 {
-	char arg [MAX_INPUT_LENGTH];
-	char buf [MAX_STRING_LENGTH];
 	ROOM_INDEX_DATA	*location;
 	int chance;
 
@@ -818,7 +812,6 @@ void do_examineobject( CHAR_DATA *ch, char *argument )
 	char arg[MAX_INPUT_LENGTH];
 	AFFECT_DATA *paf;
 	OBJ_DATA *obj;
-	char *pdesc;
 
 	one_argument( argument, arg );
 
@@ -900,8 +893,6 @@ void do_examineobject( CHAR_DATA *ch, char *argument )
 
 	if ( obj->item_type == ITEM_CONTAINER )
 	{
-
-		sh_int defencebonus = (obj->value[0] * 3);
 
 		ch_printf( ch, "> &Gcond:&W %d/10&w\n\r", obj->value[3] );
 		ch_printf( ch, "> &Gslots:&W %d&w\n\r", obj->value[0] );
@@ -1159,14 +1150,13 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 {
 	char arg[MAX_INPUT_LENGTH];
 	char buf[MAX_STRING_LENGTH];
-	OBJ_INDEX_DATA *pObjIndex = NULL;
 	int level, chance;
 	bool checksew, checkfab;
 	OBJ_DATA *obj;
 	OBJ_DATA *material;
-	int value, cost = 100;
+	int cost = 100;
 
-	strcpy( arg , argument );
+	strcpy( arg , strlower(argument) );
 
 
 	switch( ch->substate )
@@ -1179,13 +1169,14 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 //			return;
 //		}
 
-//		if ( str_cmp( arg, "jackhammer" )
-//				&& str_cmp( arg, "krash" ) )
-//		{
-//			send_to_char( "> &Ryou cannot code that app, try:\n\r&w", ch);
-//			send_to_char( "> jackhammer, krash\n\r", ch);
-//			return;
-//		}
+		if ( str_cmp( arg, "jackhammer" )
+				&& str_cmp( arg, "krash" )
+				&& str_cmp( arg, "spun" ) )
+		{
+			send_to_char( "> &Ryou cannot code that app, try:\n\r&w", ch);
+			send_to_char( "> jackhammer, krash, spun\n\r", ch);
+			return;
+		}
 
 		if ( !str_cmp( arg, "jackhammer" ) )
 		{
@@ -1240,8 +1231,8 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 		if ( number_percent( ) < chance )
 		{
 			send_to_char( "> &Gyou begin coding an application\n\r", ch);
-			act( AT_PLAIN, "> $n takes $s compiler as well as some snippets and begins to work", ch,
-					NULL, argument , TO_ROOM );
+//			act( AT_PLAIN, "> $n takes $s compiler as well as some snippets and begins to work", ch,
+//					NULL, argument , TO_ROOM );
 			add_timer ( ch , TIMER_DO_FUN , 2 , do_codeapp , 1 );
 			ch->dest_buf = str_dup(arg);
 			return;

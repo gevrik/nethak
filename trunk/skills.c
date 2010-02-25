@@ -1104,6 +1104,9 @@ void learn_from_success( CHAR_DATA *ch, int sn )
 			learn = 2;
 		else if ( percent > chance )
 			learn = 1;
+
+
+
 		ch->pcdata->learned[sn] = UMIN( adept, ch->pcdata->learned[sn] + learn );
 
 		if(learn > 0)
@@ -2356,10 +2359,10 @@ bool check_parry( CHAR_DATA *ch, CHAR_DATA *victim )
 	else
 	{
 		if ( ( wield = get_eq_char( victim, WEAR_WIELD ) ) == NULL ||
-				( wield->value[3] != WEAPON_LIGHTSABER ) )
+				( wield->value[3] != WEAPON_VIBRO_BLADE ) )
 		{
 			if ( ( wield = get_eq_char( victim, WEAR_DUAL_WIELD ) ) == NULL ||
-					( wield->value[3] != WEAPON_LIGHTSABER ) )
+					( wield->value[3] != WEAPON_VIBRO_BLADE ) )
 				return FALSE;
 		}
 		chances = (int) (victim->pcdata->learned[gsn_parry] );
@@ -2438,7 +2441,7 @@ void do_poison_weapon( CHAR_DATA *ch, char *argument )
 {
 	OBJ_DATA *obj;
 	OBJ_DATA *pobj;
-	OBJ_DATA *wobj;
+	//OBJ_DATA *wobj;
 	char      arg [ MAX_INPUT_LENGTH ];
 	int       percent;
 

@@ -10,7 +10,6 @@ void do_sn_jackhammer(CHAR_DATA *ch, char *argument) {
 
 	DESCRIPTOR_DATA *d;
 	OBJ_DATA *obj;
-	int chance;
 	EXIT_DATA *xit, *texit;
 	int edir;
 	ROOM_INDEX_DATA *location;
@@ -50,8 +49,8 @@ void do_sn_jackhammer(CHAR_DATA *ch, char *argument) {
 		ch_snippet = FALSE;
 
 		for (obj = ch->last_carrying; obj; obj = obj->prev_content) {
-			if (obj->item_type == ITEM_SNIPPET && !strcmp(obj->name,
-					"jackhammer")) {
+			if ( obj->item_type == ITEM_SNIPPET && !strcmp(obj->name,
+					"jackhammer") ) {
 				ch_snippet = TRUE;
 				separate_obj(obj);
 				obj_from_char(obj);
@@ -110,7 +109,6 @@ void do_sn_krash(CHAR_DATA *ch, char *argument) {
 	CLAN_DATA *clan;
 	DESCRIPTOR_DATA *d;
 	OBJ_DATA *obj;
-	int chance;
 	ROOM_INDEX_DATA *location;
 	char buf[MAX_STRING_LENGTH];
 	PLANET_DATA *planet;
@@ -235,7 +233,7 @@ void do_sn_krash(CHAR_DATA *ch, char *argument) {
 void do_sn_spun(CHAR_DATA *ch, char *argument) {
 
 	OBJ_DATA *obj;
-	int chance, energyplus;
+	int energyplus;
 	char buf[MAX_STRING_LENGTH];
 	bool ch_snippet;
 
