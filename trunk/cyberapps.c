@@ -284,4 +284,58 @@ void do_sn_spun(CHAR_DATA *ch, char *argument) {
 
 }
 
+void do_sn_reconstruct(CHAR_DATA *ch, char *argument) {
+
+	OBJ_DATA *obj;
+	int energyplus;
+	char buf[MAX_STRING_LENGTH];
+	bool ch_snippet;
+
+	if ( IS_NPC(ch) || !ch->pcdata )
+	   {
+	       send_to_char ( "huh?\n\r" , ch );
+	       return;
+	   }
+
+
+		if ( ch->position <= POS_SLEEPING )
+		{
+			send_to_char( "> you are hibernating\n\r" , ch );
+			return;
+		}
+
+		ch_snippet = FALSE;
+
+		for (obj = ch->last_carrying; obj; obj = obj->prev_content) {
+			if (obj->item_type == ITEM_SNIPPET && !strcmp(obj->name,
+					"reconstruct")) {
+				ch_snippet = TRUE;
+				energyplus = obj->value[0] / 4;
+				separate_obj(obj);
+				obj_from_char(obj);
+			}
+		}
+
+		if (!ch_snippet) {
+			send_to_char("> &Rreconstruct application needed&w\n\r", ch);
+			return;
+		}
+
+		WAIT_STATE( ch, skill_table[gsn_propaganda]->beats );
+
+		sprintf(buf, "> %s uses reconstruct to regain some health",
+				ch->name);
+		echo_to_room(AT_RED, ch->in_room, buf);
+
+
+		if ( ch->hit < ch->max_hit )
+		{
+			if ( ch->hit + energyplus > ch->max_hit )
+				ch->hit = ch->max_hit;
+			else
+				ch->hit = ch->hit + energyplus;
+		}
+
+}
+
 //done for Neuro

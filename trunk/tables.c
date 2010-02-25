@@ -458,6 +458,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_sn_jackhammer" )) 		return do_sn_jackhammer;
 	if ( !str_cmp( name, "do_sn_krash" )) 		return do_sn_krash;
 	if ( !str_cmp( name, "do_sn_randomizer" )) 		return do_sn_randomizer;
+	if ( !str_cmp( name, "do_sn_reconstruct" )) 		return do_sn_reconstruct;
 	if ( !str_cmp( name, "do_sn_spun" )) 		return do_sn_spun;
 	if ( !str_cmp( name, "do_snipe" ))		return do_snipe;
 	if ( !str_cmp( name, "do_sneak" ))		return do_sneak;
@@ -558,6 +559,7 @@ char *skill_name( DO_FUN *skill )
 	if ( skill == do_sn_jackhammer )           return "do_sn_jackhammer";
 	if ( skill == do_sn_krash )           return "do_sn_krash";
 	if ( skill == do_sn_randomizer )           return "do_sn_randomizer";
+	if ( skill == do_sn_reconstruct )           return "do_sn_reconstruct";
 	if ( skill == do_sn_spun )           return "do_sn_spun";
     if ( skill == do_aaccept )           return "do_aaccept";
     if ( skill == do_ahall )            return "do_ahall";
