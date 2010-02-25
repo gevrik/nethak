@@ -1171,10 +1171,11 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 
 		if ( str_cmp( arg, "jackhammer" )
 				&& str_cmp( arg, "krash" )
-				&& str_cmp( arg, "spun" ) )
+				&& str_cmp( arg, "spun" )
+				&& str_cmp( arg, "reconstruct" ))
 		{
 			send_to_char( "> &Ryou cannot code that app, try:\n\r&w", ch);
-			send_to_char( "> jackhammer, krash, spun\n\r", ch);
+			send_to_char( "> jackhammer, krash, spun, reconstruct\n\r", ch);
 			return;
 		}
 
@@ -1190,10 +1191,14 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 		{
 			cost = 50;
 		}
+		else if ( !str_cmp( arg, "reconstruct" ) )
+		{
+			cost = 100;
+		}
 		else
 		{
 			send_to_char( "> &Ryou cannot code that app, try:\n\r&w", ch);
-			send_to_char( "> jackhammer, krash, spun\n\r", ch);
+			send_to_char( "> jackhammer, krash, spun, reconstruct\n\r", ch);
 			return;
 		}
 
