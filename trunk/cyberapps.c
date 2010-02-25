@@ -16,7 +16,7 @@ void do_sn_jackhammer(CHAR_DATA *ch, char *argument) {
 	ROOM_INDEX_DATA *location;
 	char buf[MAX_STRING_LENGTH];
 	PLANET_DATA *planet;
-	bool ch_snippet, found;
+	bool ch_snippet;
 
 	planet = ch->in_room->area->planet;
 
@@ -63,12 +63,6 @@ void do_sn_jackhammer(CHAR_DATA *ch, char *argument) {
 			return;
 		}
 
-		chance = (int) (ch->pcdata->learned[gsn_spacecraft]);
-		if (number_percent() > chance) {
-			send_to_char("> &Ryou fail to execute the application&w\n\r", ch);
-			return;
-		}
-
 		sprintf(buf, "> %s's jackhammer breaks down the gate to the: %s",
 				ch->name, dir_name[edir]);
 		echo_to_room(AT_RED, ch->in_room, buf);
@@ -106,8 +100,6 @@ void do_sn_jackhammer(CHAR_DATA *ch, char *argument) {
 		}
 
 	}
-
-	learn_from_success(ch, gsn_spacecraft);
 
 	SET_BIT( ch->in_room->area->flags , AFLAG_MODIFIED );
 
@@ -205,12 +197,6 @@ void do_sn_krash(CHAR_DATA *ch, char *argument) {
 			return;
 		}
 
-		chance = (int) (ch->pcdata->learned[gsn_spacecraft]);
-		if (number_percent() > chance) {
-			send_to_char("> &Ryou fail to execute the application&w\n\r", ch);
-			return;
-		}
-
 		WAIT_STATE( ch, skill_table[gsn_propaganda]->beats );
 
 		sprintf(buf, "> %s's krash slows down the cpu of the system.",
@@ -244,7 +230,59 @@ void do_sn_krash(CHAR_DATA *ch, char *argument) {
 			if ( planet->pop_support < -100 )
 				planet->pop_support = -100;
 
-	learn_from_success(ch, gsn_spacecraft);
+}
+
+void do_sn_spun(CHAR_DATA *ch, char *argument) {
+
+	OBJ_DATA *obj;
+	int chance, energyplus;
+	char buf[MAX_STRING_LENGTH];
+	bool ch_snippet;
+
+	if ( IS_NPC(ch) || !ch->pcdata )
+	   {
+	       send_to_char ( "huh?\n\r" , ch );
+	       return;
+	   }
+
+
+		if ( ch->position <= POS_SLEEPING )
+		{
+			send_to_char( "> you are hibernating\n\r" , ch );
+			return;
+		}
+
+		ch_snippet = FALSE;
+
+		for (obj = ch->last_carrying; obj; obj = obj->prev_content) {
+			if (obj->item_type == ITEM_SNIPPET && !strcmp(obj->name,
+					"spun")) {
+				ch_snippet = TRUE;
+				energyplus = obj->value[0];
+				separate_obj(obj);
+				obj_from_char(obj);
+			}
+		}
+
+		if (!ch_snippet) {
+			send_to_char("> &Rspun application needed&w\n\r", ch);
+			return;
+		}
+
+		WAIT_STATE( ch, skill_table[gsn_propaganda]->beats );
+
+		sprintf(buf, "> %s uses spun to regain some energy",
+				ch->name);
+		echo_to_room(AT_RED, ch->in_room, buf);
+
+
+		if ( ch->move < ch->max_move )
+		{
+			if ( ch->move + energyplus > ch->max_move )
+				ch->move = ch->max_move;
+			else
+				ch->move = ch->move + energyplus;
+		}
 
 }
 

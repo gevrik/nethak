@@ -95,16 +95,16 @@ void who_html_update (void)
   fprintf(fp, "<html>\n");
   fprintf(fp, "<head>\n");
   fprintf(fp, "<title>");
-  fprintf(fp, "Players currently on KULTS");
+  fprintf(fp, "Players currently jacked-in:");
 
   fprintf(fp, "</title>\n");
   fprintf(fp, "<META HTTP-EQUIV=REFRESH CONTENT=30>\n");
   fprintf(fp, "<BODY TEXT=""#C0C0C0"" BGCOLOR=""#000000"" LINK=""#00FFFF""");
   fprintf(fp, "VLINK=""#FFFFFF"" ALINK=""#008080"">\n\n");
-  fprintf(fp, "<h1><center>Who's on KULTS?</center></h1>\n\n");
+  fprintf(fp, "<h1><center>Who's on?</center></h1>\n\n");
   fprintf(fp, "<CENTER>\n\n<TABLE BORDER=0 BGCOLOR=""#000000"" >\n");
   fprintf(fp, "<TR ALIGN=CENTER VALIGN=CENTER>\n");
-  fprintf(fp, "<TD>Level</TD>\n");
+  //fprintf(fp, "<TD>Level</TD>\n");
   fprintf(fp, "<TD>Title</TD></TR>\n");
   
     
@@ -121,9 +121,8 @@ void who_html_update (void)
     if ( !IS_SET(wch->act, PLR_WIZINVIS ) )
     {
 	fprintf(fp, "<TR ALIGN=CENTER VALIGN=CENTER>\n");
-	fprintf(fp, "<TD>%d</TD>\n<TD>", wch->top_level);
-	
-
+	//fprintf(fp, "<TD>%d</TD>\n<TD>", wch->top_level);
+	fprintf(fp, "<TD>");
       buf2[0] = '\0';
       sprintf(buf2, "%s", (IS_NPC(wch)? "" : wch->pcdata->title));
       html_colourconv( buf, buf2, wch );
@@ -136,17 +135,17 @@ void who_html_update (void)
   fprintf(fp, "</TABLE></CENTER>\n");
   fprintf(fp, "<BR><BR><BR><BR>\n\n");
   fprintf(fp, "<font face=""Times New Roman""><center>\n");
-  sprintf(buf, "This file was last updated at %s Eastern Time.\n", ((char *) ctime( 
+  sprintf(buf, "This file was last updated at %s MST\n", ((char *) ctime(
 &current_time )));
   fprintf(fp, buf);
   fprintf(fp, "</center></font>\n");
 
-  fprintf(fp, "<br><br>\n");
-  fprintf(fp, "<CENTER><P><A HREF=\"index.html\">\n");
+  //fprintf(fp, "<br><br>\n");
+  //fprintf(fp, "<CENTER><P><A HREF=\"index.html\">\n");
   /*
    * You may need to change the line above, depending on where you want this link to go to
    */
-  fprintf(fp, "Return to main page</A> </P></CENTER></Font>\n");
+  //fprintf(fp, "Return to main page</A> </P></CENTER></Font>\n");
 
   fprintf(fp, "</body>\n");
   fprintf(fp, "</html>\n");

@@ -360,16 +360,6 @@ void fwrite_char( CHAR_DATA *ch, FILE *fp )
 	if ( ch->pcdata->pagerlen != 24 )
 	  fprintf( fp, "Pagerlen     %d\n",	ch->pcdata->pagerlen	);
 
- 	for ( pos = 0; pos < MAX_ALIAS ; pos++ )
-		{
-		if ( !ch->pcdata->alias[pos]
-		||   !ch->pcdata->alias_sub[pos] )
-		break;
-
-		fprintf( fp, "Alias %s %s~\n", ch->pcdata->alias[pos],
-					      ch->pcdata->alias_sub[pos] );
- 	}
-
 	fprintf (fp, "Boards %d ", MAX_BOARD);
      for (i = 0; i < MAX_BOARD; i++)
     	 fprintf (fp, "%s %ld ", boards[i].short_name,ch->pcdata->last_note[i]);
@@ -485,6 +475,16 @@ void fwrite_char( CHAR_DATA *ch, FILE *fp )
     {
             fprintf(fp,"Notify      %s~\n", temp->name);
     }
+
+ 	for ( pos = 0; pos < MAX_ALIAS ; pos++ )
+		{
+		if ( !ch->pcdata->alias[pos]
+		||   !ch->pcdata->alias_sub[pos] )
+		break;
+
+		fprintf( fp, "Alias %s %s~\n", ch->pcdata->alias[pos],
+					      ch->pcdata->alias_sub[pos] );
+ 	}
 
     fprintf( fp, "End\n\n" );
     return;
