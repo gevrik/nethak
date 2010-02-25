@@ -2535,7 +2535,7 @@ void clean_mob( MOB_INDEX_DATA *mob )
 	mob->weight	 = 0;
 }
 
-extern top_reset;
+extern int top_reset;
 
 
 /* no more silliness */

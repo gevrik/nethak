@@ -427,7 +427,7 @@ void do_list( CHAR_DATA *ch, char *argument )
 		/* Find length of first word in the object name */
 		 int i = 0;
 		  char * p = obj->name;
-		  for ( ; *p && !isspace (*p); p++, i++)
+		  for ( ; *p && !isspace(*p); p++, i++)
 		    ;
 
 	    if ( obj->wear_loc == WEAR_NONE

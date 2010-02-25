@@ -1039,20 +1039,8 @@ void do_enlist( CHAR_DATA *ch, char *argument )
 {
 
 	CLAN_DATA *clan;
-	ROOM_INDEX_DATA *nRoom;
-	ROOM_INDEX_DATA *lRoom;
-	ROOM_INDEX_DATA *cRoom;
-	char buf[MAX_STRING_LENGTH];
-	char bufa[MAX_STRING_LENGTH];
-	char bufb[MAX_STRING_LENGTH];
 	ROOM_INDEX_DATA * location;
 	location = ch->in_room;
-    	EXIT_DATA * xit2;
-    	EXIT_DATA * xit3;
-    	EXIT_DATA * xit4;
-    	EXIT_DATA * xit5;
-    	EXIT_DATA * xit6;
-    	EXIT_DATA * xit7;
 
 	if ( IS_NPC(ch) || !ch->pcdata )
 	{

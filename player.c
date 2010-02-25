@@ -222,7 +222,7 @@ tiny_affect_loc_name(int location)
 	}
 
 	bug("Affect_location_name: unknown location %d.", location);
-	return "(???)";
+	return "(?)";
 }
 
 
@@ -248,7 +248,7 @@ void do_oldscore( CHAR_DATA *ch, char *argument )
     else if ( ch->hit > 35   ) send_to_char( "severely wounded.", ch );
     else if ( ch->hit > 20   ) send_to_char( "writhing in pain.",    ch );
     else if ( ch->hit > 0    ) send_to_char( "barely conscious.",    ch );
-    else if ( ch->hit > -300 ) send_to_char( "uncounscious.", ch );
+    else if ( ch->hit > -300 ) send_to_char( "unconscious.", ch );
     else                       send_to_char( "nearly DEAD.", ch );
 
 

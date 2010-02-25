@@ -1828,11 +1828,8 @@ void raw_kill( CHAR_DATA *ch, CHAR_DATA *victim )
 
     CHAR_DATA *victmp;
 
-    char buf[MAX_STRING_LENGTH];
-    char buf2[MAX_STRING_LENGTH];
     char arg[MAX_STRING_LENGTH];
     OBJ_DATA *obj, *obj_next;
-    SHIP_DATA *ship;
 
     if ( !victim )
     {

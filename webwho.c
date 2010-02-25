@@ -101,11 +101,10 @@ void who_html_update (void)
   fprintf(fp, "<META HTTP-EQUIV=REFRESH CONTENT=30>\n");
   fprintf(fp, "<BODY TEXT=""#C0C0C0"" BGCOLOR=""#000000"" LINK=""#00FFFF""");
   fprintf(fp, "VLINK=""#FFFFFF"" ALINK=""#008080"">\n\n");
-  fprintf(fp, "<h1><center>Who's on?</center></h1>\n\n");
   fprintf(fp, "<CENTER>\n\n<TABLE BORDER=0 BGCOLOR=""#000000"" >\n");
   fprintf(fp, "<TR ALIGN=CENTER VALIGN=CENTER>\n");
   //fprintf(fp, "<TD>Level</TD>\n");
-  fprintf(fp, "<TD>Title</TD></TR>\n");
+  fprintf(fp, "<TD><U><B>Title</B></U><P></TD></TR>\n");
   
     
   for ( d = first_descriptor; d != NULL ; d = d->next )
@@ -126,7 +125,7 @@ void who_html_update (void)
       buf2[0] = '\0';
       sprintf(buf2, "%s", (IS_NPC(wch)? "" : wch->pcdata->title));
       html_colourconv( buf, buf2, wch );
-      fprintf(fp, buf);
+      fprintf(fp, "%s", buf);
       fprintf(fp, "</TD></TR>\n");
  
     }  /*end if */
@@ -135,9 +134,8 @@ void who_html_update (void)
   fprintf(fp, "</TABLE></CENTER>\n");
   fprintf(fp, "<BR><BR><BR><BR>\n\n");
   fprintf(fp, "<font face=""Times New Roman""><center>\n");
-  sprintf(buf, "This file was last updated at %s MST\n", ((char *) ctime(
-&current_time )));
-  fprintf(fp, buf);
+  sprintf(buf, "Last updated at %s MST\n", ((char *) ctime(&current_time )));
+  fprintf(fp, "%s", buf);
   fprintf(fp, "</center></font>\n");
 
   //fprintf(fp, "<br><br>\n");

@@ -5787,10 +5787,10 @@ void do_transship( CHAR_DATA *ch ,char *argument )
 		return;
 	}
 
-	if (arg2 && arg2[0] != '\0')
+	if (arg2[0] != '\0')
 		starsystem = starsystem_from_name(arg2);
 
-	if ( (!arg2 || arg2[0] == '\0') && ch->in_room )
+	if ( (arg2[0] == '\0') && ch->in_room )
 		arg3 = ch->in_room->vnum;
 	else
 		arg3 = atoi( arg2 );

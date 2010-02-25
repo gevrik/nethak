@@ -2121,7 +2121,7 @@ void do_who( CHAR_DATA *ch, char *argument )
     for ( cur_who = first_mortal; cur_who; cur_who = next_who )
     {
       if ( !ch )
-        fprintf( whoout, cur_who->text );
+    	  fprintf( whoout, "%s", cur_who->text );
       else
         send_to_pager( cur_who->text, ch );
       next_who = cur_who->next;
@@ -2140,7 +2140,7 @@ void do_who( CHAR_DATA *ch, char *argument )
     for ( cur_who = first_imm; cur_who; cur_who = next_who )
     {
       if ( !ch )
-        fprintf( whoout, cur_who->text );
+    	  fprintf( whoout, "%s", cur_who->text );
       else
         send_to_pager( cur_who->text, ch );
       next_who = cur_who->next;

@@ -132,35 +132,35 @@ void do_restrict( CHAR_DATA *ch, char *argument )
 
 /* 
  * Check if the name prefix uniquely identifies a char descriptor
- */ 
-CHAR_DATA *get_waiting_desc( CHAR_DATA *ch, char *name ) 
-{ 
-  DESCRIPTOR_DATA *d; 
-  CHAR_DATA       *ret_char; 
-  static unsigned int number_of_hits; 
-  
-  number_of_hits = 0; 
-  for ( d = first_descriptor; d; d = d->next ) 
-    { 
+ */
+CHAR_DATA *get_waiting_desc( CHAR_DATA *ch, char *name )
+{
+  DESCRIPTOR_DATA *d;
+  CHAR_DATA       *ret_char;
+  static unsigned int number_of_hits;
+
+  number_of_hits = 0;
+  for ( d = first_descriptor; d; d = d->next )
+    {
     if ( d->character && (!str_prefix( name, d->character->name )) &&
          IS_WAITING_FOR_AUTH(d->character) )
-      { 
-      if ( ++number_of_hits > 1 ) 
-         { 
-         ch_printf( ch, "%s does not uniquely identify a char.\n\r", name ); 
-         return NULL; 
-         } 
+      {
+      if ( ++number_of_hits > 1 )
+         {
+         ch_printf( ch, "%s does not uniquely identify a char.\n\r", name );
+         return NULL;
+         }
       ret_char = d->character;       /* return current char on exit */
-      } 
-    } 
-  if ( number_of_hits==1 ) 
-     return ret_char; 
-  else 
-     { 
-     send_to_char( "No one like that waiting for authorization.\n\r", ch ); 
-     return NULL; 
-     } 
-} 
+      }
+    }
+  if ( number_of_hits==1 )
+     return ret_char;
+  else
+     {
+     send_to_char( "No one like that waiting for authorization.\n\r", ch );
+     return NULL;
+     }
+}
 
 void do_authorize( CHAR_DATA *ch, char *argument )
 {
@@ -202,9 +202,9 @@ void do_authorize( CHAR_DATA *ch, char *argument )
 					  victim->name );
 	to_channel( buf, CHANNEL_MONITOR, "Monitor", ch->top_level );
 	ch_printf( ch, "You have authorized %s.\n\r", victim->name);
-    
-     /* Below sends a message to player when name is accepted - Brittany   */                           
-        
+
+     /* Below sends a message to player when name is accepted - Brittany   */
+
         ch_printf( victim,                                            /* B */
         "The MUD Administrators have accepted the name %s.\n\r"       /* B */
         "You are now fully authorized to play.\n\r",victim->name);                               /* B */
@@ -425,7 +425,7 @@ void echo_to_all( sh_int AT_COLOR, char *argument, sh_int tar )
     for ( d = first_descriptor; d; d = d->next )
     {
         /* Added showing echoes to players who are editing, so they won't
-           miss out on important info like upcoming reboots. --Narn */ 
+           miss out on important info like upcoming reboots. --Narn */
 	if ( d->connected == CON_PLAYING || d->connected == CON_EDITING )
 	{
 	    /* This one is kinda useless except for switched.. */
@@ -456,7 +456,7 @@ void echo_to_area( AREA_DATA *area , sh_int AT_COLOR, char *argument, sh_int tar
 	if ( d->connected == CON_PLAYING )
 	{
 	    CHAR_DATA *ech;
-	    
+
 	    if ( ( ech = d->character ) == NULL )
 	      continue;
 	    if ( tar == ECHOTAR_IMM && !IS_IMMORTAL(ech) )
@@ -520,11 +520,11 @@ void do_echo( CHAR_DATA *ch, char *argument )
 void echo_to_room( sh_int AT_COLOR, ROOM_INDEX_DATA *room, char *argument )
 {
     CHAR_DATA *vic;
-    
+
     if ( room == NULL )
     	return;
-    	
-    
+
+
     for ( vic = room->first_person; vic; vic = vic->next_in_room )
     {
 	set_char_color( AT_COLOR, vic );
@@ -685,7 +685,7 @@ void do_retran( CHAR_DATA *ch, char *argument )
 	char arg[MAX_INPUT_LENGTH];
 	CHAR_DATA *victim;
 	char buf[MAX_STRING_LENGTH];
-	
+
 	argument = one_argument( argument, arg );
 	if ( arg[0] == '\0' )
 	{
@@ -705,12 +705,12 @@ void do_retran( CHAR_DATA *ch, char *argument )
 void do_regoto( CHAR_DATA *ch, char *argument )
 {
 	char buf[MAX_STRING_LENGTH];
-	
+
 	sprintf(buf, "%d", ch->regoto);
 	do_goto(ch, buf);
 	return;
 }
-	
+
 void do_at( CHAR_DATA *ch, char *argument )
 {
     char arg[MAX_INPUT_LENGTH];
@@ -743,7 +743,7 @@ void do_at( CHAR_DATA *ch, char *argument )
       {
 	send_to_char( "Overriding private flag!\n\r", ch );
       }
-      
+
     }
 
     original = ch->in_room;
@@ -828,7 +828,7 @@ void do_rstat( CHAR_DATA *ch, char *argument )
     static char *dir_text[] = { "n", "e", "s", "w", "u", "d", "ne", "nw", "se", "sw", "?" };
 
     one_argument( argument, arg );
-    
+
     if ( !str_cmp( arg, "exits" ) )
     {
 	location = ch->in_room;
@@ -973,18 +973,18 @@ void do_ostat( CHAR_DATA *ch, char *argument )
 
     ch_printf( ch, "Name: %s.\n\r",
 	obj->name );
-    
+
     pdesc=get_extra_descr(arg, obj->first_extradesc);
     if ( !pdesc )
        pdesc=get_extra_descr(arg, obj->pIndexData->first_extradesc);
-    if ( !pdesc )	    
+    if ( !pdesc )
        pdesc = get_extra_descr( obj->name, obj->first_extradesc );
     if ( !pdesc )
        pdesc = get_extra_descr( obj->name, obj->pIndexData->first_extradesc );
     if ( pdesc )
        send_to_char( pdesc, ch );
-		
-    
+
+
     ch_printf( ch, "Vnum: %ld.  Type: %s.  Count: %d  Gcount: %d\n\r",
 	obj->pIndexData->vnum, item_type_name( obj ), obj->pIndexData->count,
 	obj->count );
@@ -1093,7 +1093,7 @@ void do_mstat( CHAR_DATA *ch, char *argument )
     }
     ch_printf( ch, "Name: %s     Organization: %s\n\r",
 	victim->name,
-	( IS_NPC( victim ) || !victim->pcdata->clan ) ? "(none)" 
+	( IS_NPC( victim ) || !victim->pcdata->clan ) ? "(none)"
 			       : victim->pcdata->clan->name );
     if( IS_IMMORTAL(ch) && !IS_NPC(victim) && victim->desc )
 	ch_printf( ch, "User: %s@%s   Descriptor: %d   Trust: %d   AuthedBy: %s\n\r",
@@ -1123,7 +1123,7 @@ void do_mstat( CHAR_DATA *ch, char *argument )
     ch_printf( ch, "Hps: %d/%d  Force: %d/%d   Move: %d/%d\n\r",
         victim->hit,         victim->max_hit,
         victim->mana,        victim->max_mana,
-        victim->move,        victim->max_move );  
+        victim->move,        victim->max_move );
 
 ch_printf( ch,
 	"Top Level: %d     Align: %d  AC: %d  Gold: %d\n\r",
@@ -1165,11 +1165,11 @@ ch_printf( ch,
     ch_printf( ch, "Years: %d   Seconds Played: %d   Timer: %d   Act: %d\n\r",
 	get_age( victim ), (int) victim->played, victim->timer, victim->act );
     if ( IS_NPC( victim ) )
-    {	
+    {
 	ch_printf( ch, "Act flags: %s\n\r", flag_string(victim->act, act_flags) );
-    }    
+    }
     else
-    { 
+    {
 	ch_printf( ch, "Player flags: %s\n\r",
 		flag_string(victim->act, plr_flags) );
 	ch_printf( ch, "Pcflags: %s\n\r",
@@ -1178,7 +1178,7 @@ ch_printf( ch,
     ch_printf( ch, "Affected by: %s\n\r",
 	affect_bit_name( victim->affected_by ) );
     send_to_char( "\n\r", ch );
-    if ( victim->pcdata && victim->pcdata->bestowments 
+    if ( victim->pcdata && victim->pcdata->bestowments
          && victim->pcdata->bestowments[0] != '\0' )
       ch_printf( ch, "Bestowments: %s\n\r", victim->pcdata->bestowments );
     ch_printf( ch, "Short description: %s\n\rLong  description: %s",
@@ -1420,12 +1420,12 @@ void do_bodybag( CHAR_DATA *ch, char *argument )
     /* make sure the buf3 is clear? */
     sprintf(buf3, " ");
     /* check to see if vict is playing? */
-    sprintf(buf2,"the corpse of %s",arg); 
+    sprintf(buf2,"the corpse of %s",arg);
     found = FALSE;
     for ( obj = first_object; obj; obj = obj->next )
     {
-	if ( obj->in_room 
-        && !str_cmp( buf2, obj->short_descr ) 
+	if ( obj->in_room
+        && !str_cmp( buf2, obj->short_descr )
         && (obj->pIndexData->vnum == 11 ) )
 	{
 	    found = TRUE;
@@ -1434,7 +1434,7 @@ void do_bodybag( CHAR_DATA *ch, char *argument )
 		obj->short_descr,
 		obj->in_room->vnum,
 		obj->in_room->name );
-            obj_from_room(obj); 
+            obj_from_room(obj);
             obj = obj_to_char(obj, ch);
 	    obj->timer = -1;
             save_char_obj( ch );
@@ -1464,7 +1464,7 @@ void do_owhere( CHAR_DATA *ch, char *argument )
 	return;
     }
     argument = one_argument(argument, arg1);
-    
+
     set_pager_color( AT_PLAIN, ch );
     if ( arg1[0] != '\0' && !str_prefix(arg1, "nesthunt") )
     {
@@ -1511,7 +1511,7 @@ void do_owhere( CHAR_DATA *ch, char *argument )
         if ( !nifty_is_name( arg, obj->name ) )
             continue;
         found = TRUE;
-        
+
         sprintf(buf, "(%3d) [%5ld] %-28s in ", ++icnt, obj->pIndexData->vnum,
                 obj_short(obj));
         if ( obj->carried_by )
@@ -1578,10 +1578,10 @@ void do_reboot( CHAR_DATA *ch, char *argument )
 	for ( vch = first_char; vch; vch = vch->next )
 	    if ( !IS_NPC( vch ) )
 		save_char_obj( vch );
-		
-    if ( str_cmp(argument, "nosave") )    
-                        save_some_areas(); 
-    
+
+    if ( str_cmp(argument, "nosave") )
+                        save_some_areas();
+
     mud_down = TRUE;
     return;
 }
@@ -1968,7 +1968,7 @@ void do_purge( CHAR_DATA *ch, char *argument )
     /* fixed to get things in room first -- i.e., purge portal (obj),
      * no more purging mobs with that keyword in another room first
      * -- Tri */
-    if ( ( victim = get_char_room( ch, arg ) ) == NULL 
+    if ( ( victim = get_char_room( ch, arg ) ) == NULL
     && ( obj = get_obj_here( ch, arg ) ) == NULL )
     {
       if ( ( victim = get_char_world( ch, arg ) ) == NULL
@@ -1984,7 +1984,7 @@ void do_purge( CHAR_DATA *ch, char *argument )
     {
 	separate_obj( obj );
 	act( AT_IMMORT, "$n purges $p.", ch, obj, NULL, TO_ROOM);
-	act( AT_IMMORT, "You make $p disappear in a puff of smoke!", ch, obj, NULL, TO_CHAR);          
+	act( AT_IMMORT, "You make $p disappear in a puff of smoke!", ch, obj, NULL, TO_CHAR);
 	extract_obj( obj );
 	return;
     }
@@ -2102,7 +2102,7 @@ void do_balzhur( CHAR_DATA *ch, char *argument )
 	set_char_color( AT_IMMORT, victim );
 	send_to_char( "You hear an ungodly sound in the distance that makes your blood run cold!\n\r", victim );
 	sprintf( buf, "Balzhur screams, 'You are MINE %s!!!'", victim->name );
-	echo_to_all( AT_IMMORT, buf, ECHOTAR_ALL ); 
+	echo_to_all( AT_IMMORT, buf, ECHOTAR_ALL );
 	victim->top_level =1;
 	victim->trust	 = 0;
 	victim->max_hit  = 100;
@@ -2218,7 +2218,7 @@ void do_restore( CHAR_DATA *ch, char *argument )
 	}
     }
     else
-    {    
+    {
 
     CHAR_DATA *victim;
 
@@ -2253,7 +2253,7 @@ void do_restoretime( CHAR_DATA *ch, char *argument )
      time_passed = current_time - last_restore_all_time;
      hour = (int) ( time_passed / 3600 );
      minute = (int) ( ( time_passed - ( hour * 3600 ) ) / 60 );
-     ch_printf( ch, "The  last restore all was %d hours and %d minutes ago.\n\r", 
+     ch_printf( ch, "The  last restore all was %d hours and %d minutes ago.\n\r",
                   hour, minute );
      }
 
@@ -2269,8 +2269,8 @@ void do_restoretime( CHAR_DATA *ch, char *argument )
   time_passed = current_time - ch->pcdata->restore_time;
   hour = (int) ( time_passed / 3600 );
   minute = (int) ( ( time_passed - ( hour * 3600 ) ) / 60 );
-  ch_printf( ch, "Your last restore all was %d hours and %d minutes ago.\n\r", 
-                  hour, minute ); 
+  ch_printf( ch, "Your last restore all was %d hours and %d minutes ago.\n\r",
+                  hour, minute );
   return;
 }
 
@@ -2485,7 +2485,7 @@ void do_notitle( CHAR_DATA *ch, char *argument )
     char buf[MAX_STRING_LENGTH];
     char arg[MAX_INPUT_LENGTH];
     CHAR_DATA *victim;
- 
+
     one_argument( argument, arg );
 
     if ( arg[0] == '\0' )
@@ -2499,19 +2499,19 @@ void do_notitle( CHAR_DATA *ch, char *argument )
         send_to_char( "They aren't here.\n\r", ch );
         return;
     }
-  
+
     if ( IS_NPC(victim) )
     {
         send_to_char( "Not on NPC's.\n\r", ch );
         return;
     }
-    
+
     if ( get_trust( victim ) >= get_trust( ch ) )
     {
         send_to_char( "You failed.\n\r", ch );
         return;
     }
-    
+
     if ( IS_SET(victim->pcdata->flags, PCFLAG_NOTITLE) )
     {
         REMOVE_BIT(victim->pcdata->flags, PCFLAG_NOTITLE);
@@ -2522,11 +2522,11 @@ void do_notitle( CHAR_DATA *ch, char *argument )
     {
         SET_BIT(victim->pcdata->flags, PCFLAG_NOTITLE);
         sprintf( buf, "%s", victim->name );
-        set_title( victim, buf );   
+        set_title( victim, buf );
         send_to_char( "You can't set your own title!\n\r", victim );
         send_to_char( "NOTITLE set.\n\r", ch );
     }
-    
+
     return;
 }
 
@@ -2635,7 +2635,7 @@ void do_peace( CHAR_DATA *ch, char *argument )
 	    stop_fighting( rch, TRUE );
 	    do_sit( rch, "" );
 	}
-       
+
         /* Added by Narn, Nov 28/95 */
         stop_hating( rch );
         stop_hunting( rch );
@@ -2673,8 +2673,8 @@ void save_banlist( void )
   fpReserve = fopen( NULL_FILE, "r" );
   return;
 }
-  
-  
+
+
 
 void do_ban( CHAR_DATA *ch, char *argument )
 {
@@ -2699,7 +2699,7 @@ void do_ban( CHAR_DATA *ch, char *argument )
 	            pban->level, pban->ban_time, pban->name);
 	return;
     }
-    
+
     /* People are gonna need .# instead of just # to ban by just last
        number in the site ip.                               -- Altrag */
     if ( is_number(arg) )
@@ -2741,7 +2741,7 @@ void do_ban( CHAR_DATA *ch, char *argument )
       save_banlist( );
       return;
     }
-    
+
     if ( !str_cmp(arg, "help") )
     {
       send_to_char( "Syntax: ban <site address>\n\r", ch );
@@ -2844,7 +2844,7 @@ void do_users( CHAR_DATA *ch, char *argument )
     buf[0]	= '\0';
 
     set_pager_color( AT_PLAIN, ch );
-    sprintf(buf, 
+    sprintf(buf,
 "Desc|Con|Idle| Port | Player@HostIP                 ");
    strcat(buf, "\n\r");
    strcat(buf, "----+---+----+------+-------------------------------");
@@ -2908,8 +2908,8 @@ void do_force( CHAR_DATA *ch, char *argument )
 	        if ( toomany++ > 1000 )  /* i doubt we'd have that many players */
 	            return;              /* so this would be an infinate loop */
 	    }
-	    
-	                        
+
+
 	}
     }
     else
@@ -2947,14 +2947,14 @@ void do_invis( CHAR_DATA *ch, char *argument )
 {
     char arg[MAX_INPUT_LENGTH];
     sh_int level;
-    
+
     /*
     if ( IS_NPC(ch))
 	return;
     */
 
     argument = one_argument( argument, arg );
-    if ( arg && arg[0] != '\0' )
+    if ( arg[0] != '\0' )
     {
 	if ( !is_number( arg ) )
 	{
@@ -2973,15 +2973,15 @@ void do_invis( CHAR_DATA *ch, char *argument )
 	  ch->pcdata->wizinvis = level;
 	  ch_printf( ch, "Wizinvis level set to %d.\n\r", level );
         }
-        
-        if (IS_NPC(ch))       
+
+        if (IS_NPC(ch))
         {
           ch->mobinvis = level;
           ch_printf( ch, "Mobinvis level set to %d.\n\r", level );
         }
 	return;
     }
-    
+
     if (!IS_NPC(ch))
     {
     if ( ch->pcdata->wizinvis < 2 )
@@ -3034,10 +3034,10 @@ void do_cmdtable( CHAR_DATA *ch, char *argument )
 {
     int hash, cnt;
     CMDTYPE *cmd;
- 
+
     set_pager_color( AT_PLAIN, ch );
     send_to_pager("Commands and Number of Uses This Run\n\r", ch);
- 
+
     for ( cnt = hash = 0; hash < 126; hash++ )
 	for ( cmd = command_hash[hash]; cmd; cmd = cmd->next )
 	{
@@ -3081,7 +3081,7 @@ void do_loadup( CHAR_DATA *ch, char *argument )
 	d->connected = CON_GET_NAME;
 	d->outsize = 2000;
 	CREATE( d->outbuf, char, d->outsize );
-	
+
 	loaded = load_char_obj( d, name, FALSE );
 	add_char( d->character );
         old_room_vnum = d->character->in_room->vnum;
@@ -3092,11 +3092,11 @@ void do_loadup( CHAR_DATA *ch, char *argument )
 	   send_to_char( "I think you'd better leave that player alone!\n\r", ch );
 	   d->character->desc	= NULL;
 	   do_quit( d->character, "" );
-	   return;	   
+	   return;
 	}
 	d->character->desc	= NULL;
 	d->character->retran    = old_room_vnum;
-	d->character		= NULL;	
+	d->character		= NULL;
 	DISPOSE( d->outbuf );
 	DISPOSE( d );
 	ch_printf(ch, "Player %s loaded from room %ld.\n\r", name,old_room_vnum );
@@ -3149,7 +3149,7 @@ void do_newbieset( CHAR_DATA *ch, char *argument )
     char arg2[MAX_INPUT_LENGTH];
     OBJ_DATA *obj;
     CHAR_DATA *victim;
-        
+
     argument = one_argument( argument, arg1 );
     argument = one_argument (argument, arg2);
 
@@ -3179,7 +3179,7 @@ void do_newbieset( CHAR_DATA *ch, char *argument )
 
      obj = create_object( get_obj_index(OBJ_VNUM_SCHOOL_DAGGER), 1 );
      obj_to_char(obj, victim);
-  
+
      {
        OBJ_INDEX_DATA *obj_ind = get_obj_index( 23 );
        if ( obj_ind != NULL )
@@ -3309,7 +3309,7 @@ void do_bestow( CHAR_DATA *ch, char *argument )
     sprintf( buf, "%s %s", victim->pcdata->bestowments, argument );
     DISPOSE( victim->pcdata->bestowments );
     victim->pcdata->bestowments = str_dup( buf );
-    ch_printf( victim, "%s has bestowed on you the command(s): %s\n\r", 
+    ch_printf( victim, "%s has bestowed on you the command(s): %s\n\r",
              ch->name, argument );
     send_to_char( "Done.\n\r", ch );
 }
@@ -3318,7 +3318,7 @@ struct tm *update_time ( struct tm *old_time )
 {
    time_t time;
 
-   time = mktime(old_time); 
+   time = mktime(old_time);
    return localtime(&time);
 }
 
@@ -3327,7 +3327,7 @@ void do_set_boot_time( CHAR_DATA *ch, char *argument)
    char arg[MAX_INPUT_LENGTH];
    char arg1[MAX_INPUT_LENGTH];
    bool check;
- 
+
    check = FALSE;
 
    argument = one_argument(argument, arg);
@@ -3336,7 +3336,7 @@ void do_set_boot_time( CHAR_DATA *ch, char *argument)
     {
 	send_to_char( "Syntax: setboot time {hour minute <day> <month> <year>}\n\r", ch);
 	send_to_char( "        setboot manual {0/1}\n\r", ch);
-	send_to_char( "        setboot default\n\r", ch); 
+	send_to_char( "        setboot default\n\r", ch);
         ch_printf( ch, "Boot time is currently set to %s, manual bit is set to %d\n\r"
 	,reboot_time, set_boot_time->manual );
 	return;
@@ -3345,7 +3345,7 @@ void do_set_boot_time( CHAR_DATA *ch, char *argument)
     if ( !str_cmp(arg, "time") )
     {
       struct tm *now_time;
-      
+
       argument = one_argument(argument, arg);
       argument = one_argument(argument, arg1);
       if ( !*arg || !*arg1 || !is_number(arg) || !is_number(arg1) )
@@ -3360,7 +3360,7 @@ void do_set_boot_time( CHAR_DATA *ch, char *argument)
         send_to_char("Valid range for hour is 0 to 23.\n\r", ch);
         return;
       }
- 
+
       if ( (now_time->tm_min = atoi(arg1)) < 0 || now_time->tm_min > 59 )
       {
         send_to_char("Valid range for minute is 0 to 59.\n\r", ch);
@@ -3409,7 +3409,7 @@ void do_set_boot_time( CHAR_DATA *ch, char *argument)
 
       ch_printf(ch, "Boot time set to %s\n\r", reboot_time);
       check = TRUE;
-    }  
+    }
     else if ( !str_cmp(arg, "manual") )
     {
       argument = one_argument(argument, arg1);
@@ -3418,7 +3418,7 @@ void do_set_boot_time( CHAR_DATA *ch, char *argument)
 	send_to_char("Please enter a value for manual boot on/off\n\r", ch);
 	return;
       }
-      
+
       if ( !is_number(arg1))
       {
 	send_to_char("Value for manual must be 0 (off) or 1 (on)\n\r", ch);
@@ -3430,7 +3430,7 @@ void do_set_boot_time( CHAR_DATA *ch, char *argument)
 	send_to_char("Value for manual must be 0 (off) or 1 (on)\n\r", ch);
 	return;
       }
-   
+
       set_boot_time->manual = atoi(arg1);
       ch_printf(ch, "Manual bit set to %s\n\r", arg1);
       check = TRUE;
@@ -3445,7 +3445,7 @@ void do_set_boot_time( CHAR_DATA *ch, char *argument)
       new_boot_time = localtime(&current_time);
       new_boot_time->tm_mday += 1;
       if (new_boot_time->tm_hour > 12)
-      new_boot_time->tm_mday += 1; 
+      new_boot_time->tm_mday += 1;
       new_boot_time->tm_hour = 6;
       new_boot_time->tm_min = 0;
       new_boot_time->tm_sec = 0;
@@ -3473,15 +3473,15 @@ void do_set_boot_time( CHAR_DATA *ch, char *argument)
  * of a name/password would be, taking in 2 arguments - the name and the
  * password - can still only change the password if you have access to 
  * pfiles and the correct password
- */ 
-void do_form_password( CHAR_DATA *ch, char *argument) 
+ */
+void do_form_password( CHAR_DATA *ch, char *argument)
 {
    char arg[MAX_STRING_LENGTH];
-  
+
    argument = one_argument(argument, arg);
-   
-   ch_printf(ch, "Those two arguments encrypted would result in: %s", 
-   crypt(arg, argument)); 
+
+   ch_printf(ch, "Those two arguments encrypted would result in: %s",
+   crypt(arg, argument));
    return;
 }
 
@@ -3522,7 +3522,7 @@ void do_destroy( CHAR_DATA *ch, char *argument )
   if ( !victim )
   {
     DESCRIPTOR_DATA *d;
-    
+
     /* Make sure they aren't halfway logged in. */
     for ( d = first_descriptor; d; d = d->next )
       if ( (victim = d->character) && !IS_NPC(victim) &&
@@ -3531,10 +3531,10 @@ void do_destroy( CHAR_DATA *ch, char *argument )
     if ( d )
       close_socket( d, TRUE );
   }
-  else        
+  else
   {
     int x, y;
-    
+
     quitting_char = victim;
     save_char_obj( victim );
     saving_char = NULL;
@@ -3543,7 +3543,7 @@ void do_destroy( CHAR_DATA *ch, char *argument )
 	for ( y = 0; y < MAX_LAYERS; y++ )
 	    save_equipment[x][y] = NULL;
   }
-  
+
   sprintf( buf, "%s%c/%s", PLAYER_DIR, tolower(arg[0]),
           arg );
   sprintf( buf2, "%s%c/%s", BACKUP_DIR, tolower(arg[0]),
@@ -3591,7 +3591,7 @@ in game. If there is no #, the action will be executed for every room containg
 at least one target, but only once per room. # cannot be used with FOR EVERY-
 WHERE. # can be anywhere in the action.
 
-Example: 
+Example:
 
 FOR ALL SMILE -> you will only smile once in a room with 2 players.
 FOR ALL TWIDDLE # -> In a room with A and B, you will twiddle A then B.
@@ -3602,39 +3602,39 @@ avoid something like FOR MOBS PURGE (although it actually works at my MUD).
 FOR MOBS TRANS 3054 (transfer ALL the mobs to Midgaard temple) does NOT work
 though :)
 
-The command works by transporting the character to each of the rooms with 
+The command works by transporting the character to each of the rooms with
 target in them. Private rooms are not violated.
 
 */
 
 /* Expand the name of a character into a string that identifies THAT
    character within a room. E.g. the second 'guard' -> 2. guard
-*/   
+*/
 const char * name_expand (CHAR_DATA *ch)
 {
 	int count = 1;
 	CHAR_DATA *rch;
 	char name[MAX_INPUT_LENGTH]; /*  HOPEFULLY no mob has a name longer than THAT */
 
-	static char outbuf[MAX_INPUT_LENGTH];	
-	
+	static char outbuf[MAX_INPUT_LENGTH];
+
 	if (!IS_NPC(ch))
 		return ch->name;
-		
+
 	one_argument (ch->name, name); /* copy the first word into name */
-	
+
 	if (!name[0]) /* weird mob .. no keywords */
 	{
 		strcpy (outbuf, ""); /* Do not return NULL, just an empty buffer */
 		return outbuf;
 	}
-	
-	/* ->people changed to ->first_person -- TRI */	
-	for (rch = ch->in_room->first_person; rch && (rch != ch);rch = 
+
+	/* ->people changed to ->first_person -- TRI */
+	for (rch = ch->in_room->first_person; rch && (rch != ch);rch =
 	    rch->next_in_room)
 		if (is_name (name, rch->name))
 			count++;
-			
+
 
 	sprintf (outbuf, "%d.%s", count, name);
 	return outbuf;
@@ -3649,22 +3649,22 @@ void do_for (CHAR_DATA *ch, char *argument)
 	ROOM_INDEX_DATA *room, *old_room;
 	CHAR_DATA *p, *p_prev;  /* p_next to p_prev -- TRI */
 	int i;
-	
+
 	argument = one_argument (argument, range);
-	
+
 	if (!range[0] || !argument[0]) /* invalid usage? */
 	{
 		do_help (ch, "for");
 		return;
 	}
-	
+
 	if (!str_prefix("quit", argument))
 	{
 		send_to_char ("Are you trying to crash the MUD or something?\n\r",ch);
 		return;
 	}
-	
-	
+
+
 	if (!str_cmp (range, "all"))
 	{
 		fMortals = TRUE;
@@ -3681,25 +3681,25 @@ void do_for (CHAR_DATA *ch, char *argument)
 	else
 		do_help (ch, "for"); /* show syntax */
 
-	/* do not allow # to make it easier */		
+	/* do not allow # to make it easier */
 	if (fEverywhere && strchr (argument, '#'))
 	{
 		send_to_char ("Cannot use FOR EVERYWHERE with the # thingie.\n\r",ch);
 		return;
 	}
-		
+
 	if (strchr (argument, '#')) /* replace # ? */
-	{ 
+	{
 		/* char_list - last_char, p_next - gch_prev -- TRI */
 		for (p = last_char; p ; p = p_prev )
 		{
 			p_prev = p->prev;  /* TRI */
 		/*	p_next = p->next; */ /* In case someone DOES try to AT MOBS SLAY # */
 			found = FALSE;
-			
+
 			if (!(p->in_room) || room_is_private(p, p->in_room) || (p == ch))
 				continue;
-			
+
 			if (IS_NPC(p) && fMobs)
 				found = TRUE;
 			else if (!IS_NPC(p) && IS_IMMORTAL(p) && fGods)
@@ -3707,18 +3707,18 @@ void do_for (CHAR_DATA *ch, char *argument)
 			else if (!IS_NPC(p) && !IS_IMMORTAL(p) && fMortals)
 				found = TRUE;
 
-			/* It looks ugly to me.. but it works :) */				
+			/* It looks ugly to me.. but it works :) */
 			if (found) /* p is 'appropriate' */
 			{
 				char *pSource = argument; /* head of buffer to be parsed */
 				char *pDest = buf; /* parse into this */
-				
+
 				while (*pSource)
 				{
 					if (*pSource == '#') /* Replace # with name of target */
 					{
 						const char *namebuf = name_expand (p);
-						
+
 						if (namebuf) /* in case there is no mob name ?? */
 							while (*namebuf) /* copy name over */
 								*(pDest++) = *(namebuf++);
@@ -3729,7 +3729,7 @@ void do_for (CHAR_DATA *ch, char *argument)
 						*(pDest++) = *(pSource++);
 				} /* while */
 				*pDest = '\0'; /* Terminate */
-				
+
 				/* Execute */
 				old_room = ch->in_room;
 				char_from_room (ch);
@@ -3737,7 +3737,7 @@ void do_for (CHAR_DATA *ch, char *argument)
 				interpret (ch, buf);
 				char_from_room (ch);
 				char_to_room (ch,old_room);
-				
+
 			} /* if found */
 		} /* for every char */
 	}
@@ -3747,14 +3747,14 @@ void do_for (CHAR_DATA *ch, char *argument)
 			for (room = room_index_hash[i] ; room ; room = room->next)
 			{
 				found = FALSE;
-				
+
 				/* Anyone in here at all? */
 				if (fEverywhere) /* Everywhere executes always */
 					found = TRUE;
 				else if (!room->first_person) /* Skip it if room is empty */
 					continue;
 				/* ->people changed to first_person -- TRI */
-					
+
 				/* Check if there is anyone here of the requried type */
 				/* Stop as soon as a match is found or there are no more ppl in room */
 				/* ->people to ->first_person -- TRI */
@@ -3763,7 +3763,7 @@ void do_for (CHAR_DATA *ch, char *argument)
 
 					if (p == ch) /* do not execute on oneself */
 						continue;
-						
+
 					if (IS_NPC(p) && fMobs)
 						found = TRUE;
 					else if (!IS_NPC(p) && IS_IMMORTAL(p) && fGods)
@@ -3771,14 +3771,14 @@ void do_for (CHAR_DATA *ch, char *argument)
 					else if (!IS_NPC(p) && IS_IMMORTAL(p) && fMortals)
 						found = TRUE;
 				} /* for everyone inside the room */
-						
+
 				if (found && !room_is_private(p, room)) /* Any of the required type here AND room not private? */
 				{
 					/* This may be ineffective. Consider moving character out of old_room
 					   once at beginning of command then moving back at the end.
 					   This however, is more safe?
 					*/
-				
+
 					old_room = ch->in_room;
 					char_from_room (ch);
 					char_to_room (ch, room);
@@ -3812,15 +3812,15 @@ void do_vsearch( CHAR_DATA *ch, char *argument )
     OBJ_DATA *in_obj;
     int obj_counter = 1;
     int argi;
- 
+
     one_argument( argument, arg );
- 
+
     if( arg[0] == '\0' )
     {
         send_to_char( "Syntax:  vsearch <vnum>.\n\r", ch );
         return;
     }
- 
+
     set_pager_color( AT_PLAIN, ch );
     argi=atoi(arg);
     if (argi<0 && argi>20000)
@@ -3832,17 +3832,17 @@ void do_vsearch( CHAR_DATA *ch, char *argument )
     {
 	if ( !can_see_obj( ch, obj ) || !( argi == obj->pIndexData->vnum ))
 	  continue;
- 
+
 	found = TRUE;
 	for ( in_obj = obj; in_obj->in_obj != NULL;
 	  in_obj = in_obj->in_obj );
 
 	if ( in_obj->carried_by != NULL )
-	  pager_printf( ch, "[%2d] Level %d %s carried by %s.\n\r", 
+	  pager_printf( ch, "[%2d] Level %d %s carried by %s.\n\r",
 		obj_counter,
 		obj->level, obj_short(obj),
 		PERS( in_obj->carried_by, ch ) );
-	else           
+	else
 	  pager_printf( ch, "[%2d] [%-5d] %s in %s.\n\r", obj_counter,
 		( ( in_obj->in_room ) ? in_obj->in_room->vnum : 0 ),
 		obj_short(obj), ( in_obj->in_room == NULL ) ?
@@ -3878,14 +3878,14 @@ void do_sober( CHAR_DATA *ch, char *argument )
   if ( IS_NPC( victim ) )
   {
     send_to_char( "Not on mobs.\n\r", ch );
-    return;    
+    return;
   }
 
-  if ( victim->pcdata ) 
+  if ( victim->pcdata )
     victim->pcdata->condition[COND_DRUNK] = 0;
   send_to_char( "Ok.\n\r", ch );
   send_to_char( "You feel sober again.\n\r", victim );
-  return;    
+  return;
 }
 
 
@@ -4388,7 +4388,7 @@ void do_cedit( CHAR_DATA *ch, char *argument )
     if ( !str_cmp( arg2, "code" ) )
     {
 	DO_FUN *fun = skill_function( argument );
-	
+
 	if ( fun == skill_notfound )
 	{
 	    send_to_char( "Code not found.\n\r", ch );
@@ -4479,7 +4479,7 @@ void do_arrest( CHAR_DATA *ch, char *argument )
     DESCRIPTOR_DATA *d;
     CHAR_DATA *victim;
     BAN_DATA *tban;
-    
+
     argument = one_argument( argument, arg1 );
 
     if ( arg1[0] == '\0' )
@@ -4514,7 +4514,7 @@ void do_arrest( CHAR_DATA *ch, char *argument )
 	    return;
 	 }
          break;
-    }        
+    }
 
     if ( victim == NULL )
     {

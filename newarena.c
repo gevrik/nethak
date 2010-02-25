@@ -62,6 +62,8 @@ Michael Seifert, and Sebastian Hammer.
 #define ARENA_END   3018   /* vnum of last real arena room*/
 #define HALL_FAME_FILE  SYSTEM_DIR "halloffame.lst"
 
+CHAR_DATA *get_char_world_ooc( CHAR_DATA *ch, char *argument );
+
 
 struct hall_of_fame_element 
 {
@@ -566,8 +568,8 @@ void do_end_game()
        }
      }
      }
-	  int seconds_game_length = game_length * 30;
-     sprintf(buf, "> after %d seconds of battle the match is a draw",game_length);
+	 int seconds_game_length = game_length * 30;
+     sprintf(buf, "> after %d seconds of battle the match is a draw", seconds_game_length);
      sportschan(buf);
      time_left_in_game = 0;
      ppl_in_arena=0;
