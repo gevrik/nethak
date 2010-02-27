@@ -578,6 +578,9 @@ ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
     OBJ_DATA *wield;
     int victim_ac;
     int thac0;
+    int att_bonus;
+    int def_bonus;
+    int diceresult;
     int plusris;
     int dam, x;
     int diceroll;
@@ -664,30 +667,49 @@ ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
     /*
      * Calculate to-hit-armor-class-0 versus armor.
      */
-    thac0     = 20 - GET_HITROLL(ch);
-    victim_ac = (int) (GET_AC(victim) / 10);
+    //thac0     = 20 - GET_HITROLL(ch);
+    //victim_ac = (int) (GET_AC(victim) / 10);
+    //victim_ac = (int) GET_AC(victim);
 
-    /* if you can't see what's coming... */
+    att_bonus = get_curr_dex(ch) + ch->hitroll;
+    def_bonus = get_curr_dex(victim);
+
     if ( wield && !can_see_obj( victim, wield) )
-	victim_ac += 1;
+	att_bonus += 1;
     if ( !can_see( ch, victim ) )
-	victim_ac -= 4;
+	att_bonus -= 4;
 
     if ( !IS_AWAKE ( victim ) )
-        victim_ac += 5;
+        att_bonus += 5;
+
+    /* if you can't see what's coming... */
+//    if ( wield && !can_see_obj( victim, wield) )
+//	victim_ac += 1;
+//    if ( !can_see( ch, victim ) )
+//	victim_ac -= 4;
+//
+//    if ( !IS_AWAKE ( victim ) )
+//        victim_ac += 5;
 
     /* Weapon proficiency bonus */
-    victim_ac += prof_bonus/20;
-
+    //victim_ac += prof_bonus/20;
+    att_bonus += prof_bonus/20;
     /*
      * The moment of excitement!
      */
-    diceroll = number_range( 1,20 );
+    diceroll = number_range( 2,20 );
 
-    if ( diceroll == 1
-    || ( diceroll < 20 && diceroll < thac0 - victim_ac ) )
+    diceresult = ( diceroll + att_bonus ) - def_bonus;
+
+    if ( diceresult < 11)
     {
+//    if ( diceroll == 2
+//    || ( diceroll < 20 && diceroll < thac0 - victim_ac ) )
+//    {
 	/* Miss. */
+
+    	//ch_printf( ch, "&Ratt: %d def: %d roll: %d result: %d&w\n\r", att_bonus, def_bonus, diceroll, diceresult );
+
 	if ( prof_gsn != -1 )
 	  learn_from_failure( ch, prof_gsn );
 	damage( ch, victim, 0, dt );
@@ -700,19 +722,39 @@ ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
      * Calc damage.
      */
 
+    //ch_printf( ch, "&Gatt: %d def: %d roll: %d result: %d&w\n\r", att_bonus, def_bonus, diceroll, diceresult );
+
     if ( !wield )       /* dice formula fixed by Thoric */
-	dam = number_range( ch->barenumdie, ch->baresizedie * ch->barenumdie );
+	dam = get_curr_str(ch);
     else
 	dam = number_range( wield->value[1], wield->value[2] );
+
+    if ( diceresult > 20 )
+    {
+    	dam += diceresult - 20;
+    }
+
+    //def_const = get_curr_con(victim);
+
+    dam -= get_curr_con(victim);
+
+//    if ( !wield )       /* dice formula fixed by Thoric */
+//	dam = number_range( ch->barenumdie, ch->baresizedie * ch->barenumdie );
+//    else
+//	dam = number_range( wield->value[1], wield->value[2] );
 
     /*
      * Bonuses.
      */
 
-    dam += GET_DAMROLL(ch);
+    dam += victim->armor / 10;
 
-    if ( prof_bonus )
-      dam *= ( 1 + prof_bonus / 100 );
+    //dam += GET_DAMROLL(ch);
+
+    dam += get_curr_int(ch);
+
+//    if ( prof_bonus )
+//      dam *= ( 1 + prof_bonus / 100 );
 
 
     if ( !IS_NPC(ch) && ch->pcdata->learned[gsn_enhanced_damage] > 0 )
@@ -785,8 +827,8 @@ ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
 
     /* PCs take less damage now that they only have 100 hitpoints to start */
 
-    if ( !IS_NPC(victim) )
-    {
+//    if ( !IS_NPC(victim) )
+//    {
        if ( get_curr_con( victim ) > 20 )
           dam *= 0.1;
        else if ( get_curr_con( victim ) > 18 )
@@ -797,7 +839,7 @@ ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
           dam *= 0.25;
        else
           dam *= 0.3;
-    }
+//    }
 
     /*
       * check to see if weapon is charged
@@ -2166,6 +2208,13 @@ void dam_message( CHAR_DATA *ch, CHAR_DATA *victim, int dam, int dt )
 			        vp = "&r* OBLITERATES *&w";			}
     else                      { vs = "&r*** ANNIHILATE ***&w";
 			        vp = "&r*** ANNIHILATES ***&w";		}
+
+//	 ch_printf( ch, "dam: %d \n\r", dam );
+//
+//	 if ( !IS_NPC(victim) )
+//	 {
+//		 ch_printf( victim, "&Cdam received: %d \n\r", dam );
+//	 }
 
     punct   = (dampc <= 30) ? '.' : '!';
 

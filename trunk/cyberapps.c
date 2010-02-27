@@ -68,23 +68,23 @@ void do_sn_jackhammer(CHAR_DATA *ch, char *argument) {
 
 		//found = FALSE;
 
-		   for( d = first_descriptor; d; d = d->next )
-		   {
-		      if( !d->character )
-		         continue;
-		      if( d->connected != CON_PLAYING )
-		         continue;
-		      if( IS_IMMORTAL( d->character ) )
-		         continue;
-
-		      if( d->character->pcdata->clan == location->area->planet->governed_by )
-		      {
-
-			      send_to_char( "> &R[&YALERT&R]&W enemy activity! jackhammer used!\n\r", d->character );
-			      ch_printf( d->character, "> &R[&YALERT&R]&W in system: %s&w\n\r", ch->in_room->area->planet->name );
-
-		      }
-		   }
+//		   for( d = first_descriptor; d; d = d->next )
+//		   {
+//		      if( !d->character )
+//		         continue;
+//		      if( d->connected != CON_PLAYING )
+//		         continue;
+//		      if( IS_IMMORTAL( d->character ) )
+//		         continue;
+//
+//		      if( d->character->pcdata->clan == location->area->planet->governed_by )
+//		      {
+//
+//			      send_to_char( "> &R[&YALERT&R]&W enemy activity! jackhammer used!\n\r", d->character );
+//			      ch_printf( d->character, "> &R[&YALERT&R]&W in system: %s&w\n\r", ch->in_room->area->planet->name );
+//
+//		      }
+//		   }
 
 		REMOVE_BIT( xit->exit_info , EX_ISDOOR );
 		REMOVE_BIT( xit->exit_info , EX_LOCKED );
@@ -203,23 +203,23 @@ void do_sn_krash(CHAR_DATA *ch, char *argument) {
 
 		//found = FALSE;
 
-		   for( d = first_descriptor; d; d = d->next )
-		   {
-		      if( !d->character )
-		         continue;
-		      if( d->connected != CON_PLAYING )
-		         continue;
-		      if( IS_IMMORTAL( d->character ) )
-		         continue;
-
-		      if( d->character->pcdata->clan == location->area->planet->governed_by )
-		      {
-
-			      send_to_char( "> &R[&YALERT&R]&W enemy activity! krash used!\n\r", d->character );
-			      ch_printf( d->character, "> &R[&YALERT&R]&W in system: %s&w\n\r", ch->in_room->area->planet->name );
-
-		      }
-		   }
+//		   for( d = first_descriptor; d; d = d->next )
+//		   {
+//		      if( !d->character )
+//		         continue;
+//		      if( d->connected != CON_PLAYING )
+//		         continue;
+//		      if( IS_IMMORTAL( d->character ) )
+//		         continue;
+//
+//		      if( d->character->pcdata->clan == location->area->planet->governed_by )
+//		      {
+//
+//			      send_to_char( "> &R[&YALERT&R]&W enemy activity! krash used!\n\r", d->character );
+//			      ch_printf( d->character, "> &R[&YALERT&R]&W in system: %s&w\n\r", ch->in_room->area->planet->name );
+//
+//		      }
+//		   }
 
 		   planet->pop_support -= 1;
 
@@ -247,6 +247,12 @@ void do_sn_spun(CHAR_DATA *ch, char *argument) {
 		if ( ch->position <= POS_SLEEPING )
 		{
 			send_to_char( "> you are hibernating\n\r" , ch );
+			return;
+		}
+
+		if ( ch->move >= ch->max_move )
+		{
+			send_to_char( "> you are already at maximum\n\r" , ch );
 			return;
 		}
 
@@ -301,6 +307,12 @@ void do_sn_reconstruct(CHAR_DATA *ch, char *argument) {
 		if ( ch->position <= POS_SLEEPING )
 		{
 			send_to_char( "> you are hibernating\n\r" , ch );
+			return;
+		}
+
+		if ( ch->hit >= ch->max_hit )
+		{
+			send_to_char( "> you are already at maximum\n\r" , ch );
 			return;
 		}
 

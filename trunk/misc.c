@@ -59,7 +59,9 @@ void do_buyhome( CHAR_DATA *ch, char *argument )
 		rooma->name = STRALLOC( "unusedhome" );
 
 		REMOVE_BIT( rooma->room_flags , ROOM_PLR_HOME );
+		REMOVE_BIT( rooma->room_flags , ROOM_NOPEDIT );
 		SET_BIT( rooma->room_flags , ROOM_EMPTY_HOME );
+		SET_BIT( rooma->room_flags , ROOM_SAFE );
 
 		STRFREE( rooma->description );
 		rooma->description = STRALLOC( "use BUYHOME to buy this node for 10.000 credits. if you do not have a home node yet it will be free." );

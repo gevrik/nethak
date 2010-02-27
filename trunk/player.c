@@ -45,7 +45,8 @@ void do_score(CHAR_DATA * ch, char *argument)
 	ch_printf( ch, "&Whealth:  &G%d", ch->hit );
 	ch_printf( ch, "   &Wenergy: &G%d", ch->move );
 	ch_printf( ch, "   &Wwillpower: &G%d\n\r", ch->mental_state );
-	ch_printf( ch, "&Wdefence: &G%d", GET_AC(ch) );
+	ch_printf( ch, "&Warmor dam mod: &G%d", ch->armor / 10 );
+	//ch_printf( ch, "&Wdefence: &G%d", GET_AC(ch) );
 	//ch_printf( ch, "   &Wkarma:  &G%d", ch->alignment );
     	ch_printf( ch, "   &Wsnippets:  &G%d\n\r" , ch->snippets );
     	ch_printf( ch, "&Wcredits:  &G%ld\n\r" , ch->gold );
