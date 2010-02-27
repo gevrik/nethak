@@ -2639,7 +2639,8 @@ do								\
 #define IS_NEUTRAL(ch)		(!IS_GOOD(ch) && !IS_EVIL(ch))
 
 #define IS_AWAKE(ch)		((ch)->position > POS_SLEEPING)
-#define GET_AC(ch)		( (ch)->armor + ( IS_AWAKE(ch) ? dex_app[get_curr_dex(ch)].defensive : 0 ) )
+// #define GET_AC(ch)		( (ch)->armor + ( IS_AWAKE(ch) ? dex_app[get_curr_dex(ch)].defensive : 0 ) )
+#define GET_AC(ch)		( ( IS_AWAKE(ch) ? dex_app[get_curr_dex(ch)].defensive : 0 ) )
 #define GET_HITROLL(ch)		((ch)->hitroll				    \
 				    +str_app[get_curr_str(ch)].tohit	    \
 				    +(2-(abs((ch)->mental_state)/10)))

@@ -1175,7 +1175,7 @@ void do_gouge( CHAR_DATA *ch, char *argument )
 
 	if ( IS_NPC(ch) || percent < ch->pcdata->learned[gsn_gouge] )
 	{
-		dam = number_range( 1, ch->pcdata->learned[gsn_gouge] );
+		dam = number_range( 1, ch->pcdata->learned[gsn_gouge] / 10 );
 		global_retcode = damage( ch, victim, dam, gsn_gouge );
 		if ( global_retcode == rNONE )
 		{
@@ -1644,7 +1644,7 @@ void do_kick( CHAR_DATA *ch, char *argument )
 		}
 
 		learn_from_success( ch, gsn_kick );
-		global_retcode = damage( ch, victim, number_range( 1, IS_NPC(ch) ? ch->top_level/5 : ch->pcdata->learned[gsn_kick]/5 ) , gsn_kick );
+		global_retcode = damage( ch, victim, number_range( 1, IS_NPC(ch) ? ch->top_level/10 : ch->pcdata->learned[gsn_kick]/10 ) , gsn_kick );
 	}
 	else
 	{

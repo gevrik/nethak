@@ -253,11 +253,11 @@ void do_mp_offer_agent( CHAR_DATA *ch, char *argument )
 
 //	ch_printf( victim, "DEBUG: clan: %s tclan: %s\n\r", clan->atwar, tclan->name );
 
-	if ( !victim->pcdata->clan )
-	{
-		do_say( ch , "You do not belong to a clan." );
-		return;
-	}
+//	if ( !victim->pcdata->clan )
+//	{
+//		do_say( ch , "You do not belong to a clan." );
+//		return;
+//	}
 
 
 	if( victim->pcdata->clan->name != planet->governed_by->name )
@@ -266,12 +266,14 @@ void do_mp_offer_agent( CHAR_DATA *ch, char *argument )
           return;
        }
 
-
-	if( !nifty_is_name( clan->atwar,  tclan->name ) )
-       {
+	if ( !victim->pcdata->clan )
+	{
+		if( !nifty_is_name( clan->atwar,  tclan->name ) )
+		{
           do_say( ch , "I have no jobs to offer you at this time! [no war]" );
           return;
-       }
+		}
+	}
 
        sprintf( buf , "virus %s" , dPlanet->name );
        

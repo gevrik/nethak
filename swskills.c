@@ -2200,6 +2200,13 @@ void do_snipe( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
+	if ( IS_SET( victim->in_room->room_flags, ROOM_PLR_HOME ) )
+	{
+		set_char_color( AT_MAGIC, ch );
+		send_to_char( "> you cannot shoot them there\n\r", ch );
+		return;
+	}
+
 	if ( is_safe( ch, victim ) )
 		return;
 
@@ -3125,7 +3132,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 		location->sector_type = SECT_INSIDE;
 		SET_BIT( location->room_flags , ROOM_EMPTY_HOME );
 		SET_BIT( location->room_flags , ROOM_NO_MOB );
-		SET_BIT( location->room_flags , ROOM_NOPEDIT );
+		//SET_BIT( location->room_flags , ROOM_NOPEDIT );
 		strcpy( buf , "&Chomenode" );
 		strcpy( bufa , "use BUYHOME to buy this node for 10k.\n\r" );
 	}
@@ -3268,11 +3275,6 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 
 	else if ( !str_cmp( argument, "firewall" ) )
 	{
-		//if( location->area->planet->barracks >= 4 && ch->gold < 100000 )
-		//{
-		//  send_to_char("> you do not have enough credits to build more firewall nodes\n\r", ch );
-		//  return;
-		// }
 
 		if ( IS_SET( planet->flags, PLANET_NOCAP ) )
 		{
@@ -3537,6 +3539,7 @@ void do_construction ( CHAR_DATA *ch , char *argument )
 	}
 
 	sprintf( buf , "> a new node appears in this dir: %s" , dir_name[edir] );
+	send_to_char( "> cost: 500 credits\n\r", ch );
 	echo_to_room( AT_WHITE, ch->in_room, buf );
 
 }
