@@ -4285,6 +4285,7 @@ void do_codemed( CHAR_DATA *ch, char *argument )
 
  if( obj->item_type == ITEM_MIRROR && !checkchem )
  {
+	 separate_obj(obj);
      obj_from_char( obj );
      extract_obj( obj );
      checkchem = TRUE;

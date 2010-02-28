@@ -646,7 +646,13 @@ void do_decompile( CHAR_DATA *ch, char *argument )
 	}
 	else if ( !str_cmp( arg, "patch" ) )
 	{
-		pObjIndex = get_obj_index( 61 );
+
+		int anumber = number_range(0,1);
+		if ( anumber == 0 )
+			pObjIndex = get_obj_index( 61 );
+		else
+			pObjIndex = get_obj_index( 28 );
+		//pObjIndex = get_obj_index( 61 );
 	}
 	else if ( !str_cmp( arg, "app" ) )
 	{
@@ -1331,5 +1337,3 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 
 	return;
 }
-
-//done for Neuro

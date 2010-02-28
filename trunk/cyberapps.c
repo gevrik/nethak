@@ -54,6 +54,7 @@ void do_sn_jackhammer(CHAR_DATA *ch, char *argument) {
 				ch_snippet = TRUE;
 				separate_obj(obj);
 				obj_from_char(obj);
+				extract_obj( obj );
 			}
 		}
 
@@ -187,6 +188,7 @@ void do_sn_krash(CHAR_DATA *ch, char *argument) {
 				ch_snippet = TRUE;
 				separate_obj(obj);
 				obj_from_char(obj);
+				extract_obj( obj );
 			}
 		}
 
@@ -265,6 +267,7 @@ void do_sn_spun(CHAR_DATA *ch, char *argument) {
 				energyplus = obj->value[0];
 				separate_obj(obj);
 				obj_from_char(obj);
+				extract_obj( obj );
 			}
 		}
 
@@ -325,6 +328,7 @@ void do_sn_reconstruct(CHAR_DATA *ch, char *argument) {
 				energyplus = obj->value[0] / 4;
 				separate_obj(obj);
 				obj_from_char(obj);
+				extract_obj( obj );
 			}
 		}
 

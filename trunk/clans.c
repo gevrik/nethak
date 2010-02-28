@@ -328,6 +328,7 @@ void do_make( CHAR_DATA *ch, char *argument )
 void do_induct( CHAR_DATA *ch, char *argument )
 {
     char arg[MAX_INPUT_LENGTH];
+    char buf[MAX_INPUT_LENGTH];
     CHAR_DATA *victim;
     CLAN_DATA *clan;
 
@@ -387,6 +388,10 @@ void do_induct( CHAR_DATA *ch, char *argument )
     act( AT_MAGIC, "> $n inducts $N into $t", ch, clan->name, victim, TO_NOTVICT );
     act( AT_MAGIC, "> $n inducts you into $t", ch, clan->name, victim, TO_VICT );
     victim->pcdata->bestowments = str_dup( "build" );
+
+    sprintf(buf, "> %s has joined %s", victim->name, clan->name);
+    echo_to_all(AT_MAGIC, buf, ECHOTAR_ALL);
+
     save_char_obj( victim );
     return;
 }
@@ -1040,6 +1045,7 @@ void do_enlist( CHAR_DATA *ch, char *argument )
 
 	CLAN_DATA *clan;
 	ROOM_INDEX_DATA * location;
+	char buf[MAX_STRING_LENGTH];
 	location = ch->in_room;
 
 	if ( IS_NPC(ch) || !ch->pcdata )
@@ -1073,7 +1079,11 @@ void do_enlist( CHAR_DATA *ch, char *argument )
 			ch->pcdata->clan = clan;
 			ch->pcdata->bestowments = str_dup( "build" );	
 			ch_printf( ch, "> welcome to %s\n\r", clan->name );
-			save_clan ( clan );
+
+		    sprintf(buf, "> %s has joined %s", ch->name, clan->name);
+		    echo_to_all(AT_MAGIC, buf, ECHOTAR_ALL);
+
+		    save_char_obj( ch );
 
 //			nRoom = make_room( ++top_r_vnum );
 //   			nRoom->area = ch->in_room->area;
@@ -1743,5 +1753,3 @@ void do_setwages ( CHAR_DATA *ch , char *argument )
 
 
 }
-
-// done for Neuro

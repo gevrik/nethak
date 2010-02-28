@@ -492,6 +492,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_torture" ))		return do_torture;
 	if ( !str_cmp( name, "do_track" ))		return do_track;
 	if ( !str_cmp( name, "do_tractorbeam" ))	return do_tractorbeam;
+	if ( !str_cmp( name, "do_tradechat" ))	return do_tradechat;
 	if ( !str_cmp( name, "do_trajectory" ))		return do_trajectory;
 	if ( !str_cmp( name, "do_transfer" ))		return do_transfer;
 	if ( !str_cmp( name, "do_transship" ))		return do_transship;
@@ -967,6 +968,7 @@ char *skill_name( DO_FUN *skill )
     if ( skill == do_timecmd )		return "do_timecmd";
     if ( skill == do_title )		return "do_title";
     if ( skill == do_track )		return "do_track";
+    if ( skill == do_tradechat )		return "do_tradechat";
     if ( skill == do_trajectory )	return "do_trajectory";
     if ( skill == do_transfer )		return "do_transfer";
     if ( skill == do_transship )		return "do_transship";

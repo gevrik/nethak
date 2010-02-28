@@ -1689,6 +1689,7 @@ struct timer_data
 #define CHANNEL_PNET               BV14
 #define CHANNEL_HINT               BV20
 #define CHANNEL_CLANTALK	   CHANNEL_CLAN
+#define CHANNEL_TRADE             BV27
 #define CHANNEL_SPORTS             BV28
 
 /* Area defines - Scryn 8/11
@@ -3319,6 +3320,7 @@ DECLARE_DO_FUN(	do_time		);
 DECLARE_DO_FUN(	do_timecmd	);
 DECLARE_DO_FUN(	do_title	);
 DECLARE_DO_FUN( do_track	);
+DECLARE_DO_FUN( do_tradechat   );
 DECLARE_DO_FUN(	do_transfer	);
 DECLARE_DO_FUN(	do_transship	);
 DECLARE_DO_FUN(	do_trust	);

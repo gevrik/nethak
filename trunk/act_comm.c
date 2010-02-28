@@ -381,7 +381,7 @@ void talk_channel( CHAR_DATA *ch, char *argument, int channel, const char *verb 
     bool  ch_comlink = FALSE;
     
     if ( channel != CHANNEL_YELL && channel != CHANNEL_IMMTALK && channel != CHANNEL_OOC 
-         && channel != CHANNEL_NEWBIE && channel != CHANNEL_HINT && channel != CHANNEL_SYSTEM && channel != CHANNEL_SHIP )
+         && channel != CHANNEL_NEWBIE && channel != CHANNEL_TRADE && channel != CHANNEL_HINT && channel != CHANNEL_SYSTEM && channel != CHANNEL_SHIP )
     {
       OBJ_DATA *obj;
       
@@ -471,6 +471,11 @@ void talk_channel( CHAR_DATA *ch, char *argument, int channel, const char *verb 
 	ch_printf( ch, "[NEWBIE] %s: %s\n\r", ch->name, argument );
 	sprintf( buf, "[NEWBIE] %s: $t", IS_IMMORTAL(ch) ? "$n" : ch->name  );
 	break;
+    case CHANNEL_TRADE:
+        set_char_color( AT_OOC, ch );
+	ch_printf( ch, "[TRADE] %s: %s\n\r", ch->name, argument );
+	sprintf( buf, "[TRADE] %s: $t", IS_IMMORTAL(ch) ? "$n" : ch->name  );
+	break;
     case CHANNEL_HINT:
         set_char_color( AT_CLAN, ch );
 	ch_printf( ch, "[HINT] %s: %s\n\r", ch->name, argument );
@@ -509,7 +514,7 @@ void talk_channel( CHAR_DATA *ch, char *argument, int channel, const char *verb 
   	    ch_comlink = FALSE;
     
             if ( channel != CHANNEL_YELL && channel != CHANNEL_IMMTALK && channel != CHANNEL_OOC 
-            && channel != CHANNEL_NEWBIE && channel != CHANNEL_HINT
+            && channel != CHANNEL_NEWBIE && channel != CHANNEL_TRADE && channel != CHANNEL_HINT
             && channel != CHANNEL_SHIP && channel != CHANNEL_SYSTEM )
             {
                OBJ_DATA *obj;
@@ -601,7 +606,7 @@ void talk_channel( CHAR_DATA *ch, char *argument, int channel, const char *verb 
 	    MOBtrigger = FALSE;
 	    if ( channel == CHANNEL_IMMTALK )
 	      act( AT_IMMORT , buf, ch, sbuf, vch, TO_VICT );
-	    else if (channel == CHANNEL_OOC || channel == CHANNEL_NEWBIE )
+	    else if (channel == CHANNEL_OOC || channel == CHANNEL_NEWBIE || channel == CHANNEL_TRADE )
               act( AT_OOC, buf, ch, sbuf, vch, TO_VICT );
 	    else if ( channel == CHANNEL_SHIP )
 	      act( AT_SHIP, buf, ch, sbuf, vch, TO_VICT );
@@ -717,6 +722,12 @@ void do_clantalk( CHAR_DATA *ch, char *argument )
 void do_newbiechat( CHAR_DATA *ch, char *argument )
 {
     talk_channel( ch, argument, CHANNEL_NEWBIE, "newbiechat" );
+    return;
+}
+
+void do_tradechat( CHAR_DATA *ch, char *argument )
+{
+    talk_channel( ch, argument, CHANNEL_TRADE, "tradechat" );
     return;
 }
 
