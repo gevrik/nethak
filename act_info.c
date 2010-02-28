@@ -2796,6 +2796,11 @@ void do_channels( CHAR_DATA *ch, char *argument )
 		: " -newbie",
 		ch );
 
+	send_to_char( !IS_SET(ch->deaf, CHANNEL_TRADE)
+	      	? " +TRADE"
+		: " -trade",
+		ch );
+
 	send_to_char( !IS_SET(ch->deaf, CHANNEL_SPORTS)
 	      	? " +SPORTS"
 		: " -sports",
@@ -2851,6 +2856,7 @@ void do_channels( CHAR_DATA *ch, char *argument )
 	else if ( !str_cmp( arg+1, "build"    ) ) bit = CHANNEL_BUILD;
 	else if ( !str_cmp( arg+1, "monitor"  ) ) bit = CHANNEL_MONITOR;
 	else if ( !str_cmp( arg+1, "newbie"   ) ) bit = CHANNEL_NEWBIE;
+	else if ( !str_cmp( arg+1, "trade"   ) ) bit = CHANNEL_TRADE;
 	else if ( !str_cmp( arg+1, "sports"   ) ) bit = CHANNEL_SPORTS;
 	else if ( !str_cmp( arg+1, "hint"   ) ) bit = CHANNEL_HINT;
 	else if ( !str_cmp( arg+1, "yell"     ) ) bit = CHANNEL_YELL;

@@ -253,11 +253,38 @@ void do_mp_offer_agent( CHAR_DATA *ch, char *argument )
 
 //	ch_printf( victim, "DEBUG: clan: %s tclan: %s\n\r", clan->atwar, tclan->name );
 
-//	if ( !victim->pcdata->clan )
-//	{
-//		do_say( ch , "You do not belong to a clan." );
-//		return;
-//	}
+	if ( !victim->pcdata->clan )
+	{
+	       sprintf( buf , "virus %s" , dPlanet->name );
+
+	       if ( get_obj_here( ch, buf ) )
+	       {
+	          do_say( ch , "Deliver the virus that is stored in this node." );
+	          return;
+	       }
+
+	   	if( dPlanet->governed_by->name == planet->governed_by->name )
+	          {
+	             do_say( ch , "Sorry, no jobs. Try again." );
+	             return;
+	          }
+
+	       obj = create_object( pObjIndex , 1 );
+	       STRFREE( obj->name );
+	       obj->name = STRALLOC( buf );
+	       STRFREE( obj->short_descr );
+	       sprintf( buf , "a virus marked %s" , dPlanet->name );
+	       obj->short_descr = STRALLOC( buf );
+
+	       sprintf( buf , "Infect a dataminer in the city grid of %s with this virus." , dPlanet->name );
+	       do_say( ch , buf );
+
+	       act( AT_ACTION, "> $n gives $p to $N", ch, obj, victim, TO_NOTVICT );
+	       act( AT_ACTION, "> $n gives you $p",   ch, obj, victim, TO_VICT    );
+	       act( AT_ACTION, "> you give $p to $N", ch, obj, victim, TO_CHAR    );
+	       obj = obj_to_char( obj, victim );
+		return;
+	}
 
 
 	if( victim->pcdata->clan->name != planet->governed_by->name )

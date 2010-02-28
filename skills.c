@@ -2175,7 +2175,7 @@ void do_aid( CHAR_DATA *ch, char *argument )
 
 	if ( victim == ch )
 	{
-		send_to_char( "> aid yourself\n\r", ch );
+		send_to_char( "> aid yourself?\n\r", ch );
 		return;
 	}
 
