@@ -1994,6 +1994,13 @@ struct	pc_data
     int			cyber;
     int			queststatus;
     int			qtaxnodes;
+    char *		wm_name;
+    int			wm_top_level;
+    int			wm_hit;
+    int			wm_max_hit;
+    int			wm_armor;
+    int			wm_hitroll;
+    int			wm_damroll;
     ROOM_INDEX_DATA *   roomarena;
     NOTIFY_DATA *       first_notify;   /* used to keep track of persons on notify - Sadiq */
     NOTIFY_DATA *       last_notify;
@@ -2946,6 +2953,7 @@ DECLARE_DO_FUN( do_alia );
 DECLARE_DO_FUN( do_alias );
 DECLARE_DO_FUN( do_unalias );
 DECLARE_DO_FUN( do_codeapp );
+DECLARE_DO_FUN( do_workmate );
 DECLARE_DO_FUN( do_email );
 DECLARE_DO_FUN( do_arrest );
 DECLARE_DO_FUN( do_buyskill );

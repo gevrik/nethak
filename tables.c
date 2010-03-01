@@ -527,6 +527,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_wizhelp" ))		return do_wizhelp;
 	if ( !str_cmp( name, "do_wizlist" ))		return do_wizlist;
 	if ( !str_cmp( name, "do_wizlock" ))		return do_wizlock;
+	if ( !str_cmp( name, "do_workmate" ))		return do_workmate;
 	break;
     case 'y':
 	if ( !str_cmp( name, "do_yell" ))		return do_yell;
@@ -704,6 +705,7 @@ char *skill_name( DO_FUN *skill )
     if ( skill == do_close )		return "do_close";
     if ( skill == do_cmdtable )		return "do_cmdtable";
     if ( skill == do_codeapp )		return "do_codeapp";
+    if ( skill == do_workmate )		return "do_workmate";
     if ( skill == do_codemed )		return "do_codemed";
     if ( skill == do_coding )		return "do_coding";
     if ( skill == do_commands )		return "do_commands";

@@ -1337,3 +1337,101 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 
 	return;
 }
+
+void do_workmate( CHAR_DATA *ch, char *argument )
+{
+	char arg[MAX_INPUT_LENGTH];
+	CHAR_DATA *och;
+	int chance, count;
+
+	if ( IS_NPC( ch ) || !ch->pcdata )
+		return;
+
+	if ( ch->pcdata->learned[gsn_spacecraft] <= 0  )
+	{
+		send_to_char(
+				"> your mind races as you realize you have no idea how to do that\n\r", ch );
+		return;
+	}
+
+	count = 0;
+	for ( och = ch->in_room->first_person; och; och = och->next_in_room )
+	{
+		if ( IS_AFFECTED(och, AFF_CHARM)
+				&&   och->master == ch )
+			count++;
+	}
+	if( count >= 1 )
+	{
+		send_to_char("> you already have a pet program loaded\n\r", ch );
+		return;
+	}
+
+	strcpy( arg, argument );
+
+	switch( ch->substate )
+	{
+	default:
+		if ( ch->backup_wait )
+		{
+			send_to_char( "> &Ryour workmate is already loading\n\r", ch );
+			return;
+		}
+
+//		if ( ch->gold < 5000 )
+//		{
+//			ch_printf( ch, "&R> you do not have enough credits\n\r", ch );
+//			return;
+//		}
+
+		chance = (int) (ch->pcdata->learned[gsn_spacecraft]);
+		if ( number_percent( ) < chance )
+		{
+			send_to_char( "> &Gyou activate your workmate&w\n\r", ch);
+			act( AT_PLAIN, "> $n begins activating $s workmate", ch,
+					NULL, argument , TO_ROOM );
+			add_timer ( ch , TIMER_DO_FUN , 1 , do_workmate , 1 );
+			ch->dest_buf = str_dup(arg);
+			return;
+		}
+		send_to_char("> &Ryou activate your workmate, but it does not respond&w\n\r",ch);
+		learn_from_failure( ch, gsn_spacecraft );
+		return;
+
+	case 1:
+		if ( !ch->dest_buf )
+			return;
+		strcpy(arg, ch->dest_buf);
+		DISPOSE( ch->dest_buf);
+		break;
+
+	case SUB_TIMER_DO_ABORT:
+		DISPOSE( ch->dest_buf );
+		ch->substate = SUB_NONE;
+		send_to_char("> &Ryou are interrupted before you can finish&w\n\r", ch);
+		return;
+	}
+
+	ch->substate = SUB_NONE;
+
+	send_to_char( "> &Gyour workmate is on the way&w\n\r", ch);
+
+//	credits = 5000;
+//	ch_printf( ch, "> it cost you %d credits\n\r", credits);
+//	ch->gold -= UMIN( credits , ch->gold );
+
+	if ( number_percent() == 23 )
+	{
+		send_to_char( "> you feel smarter than before\n\r", ch );
+		ch->perm_int++;
+		ch->perm_int = UMIN( ch->perm_int , 25 );
+	}
+
+	learn_from_success( ch, gsn_spacecraft );
+	learn_from_success( ch, gsn_spacecraft );
+
+	ch->backup_mob = MOB_VNUM_SOLDIER;
+
+	ch->backup_wait = 1;
+
+}
