@@ -3022,6 +3022,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 		//send_to_char( "bar          - liquor is sold here\n\r", ch );
 		//send_to_char( "control      - control tower for patrol ships\n\r", ch );
 		send_to_char( "firewall     - generates ICE [Cost: 20,000]\n\r", ch );
+		send_to_char( "botnet       - generates ICE [Cost: 10,000]\n\r", ch );
 		//send_to_char( "garage       - vehicles are built here\n\r", ch );
 		send_to_char( "bank         - banking node\n\r", ch );
 		send_to_char( "employment   - job office\n\r", ch );
@@ -3079,6 +3080,52 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 		strcat( buf , "&Y.&Csubserver" );
 		strcpy( bufa , "a subserver node.\n\r" );
 		ch->pcdata->qtaxnodes = ch->pcdata->qtaxnodes + 1;
+	}
+	else if ( !str_cmp( argument, "bot" ) )
+	{
+
+//		if ( IS_SET( planet->flags, PLANET_NOCAP ) )
+//		{
+//			send_to_char("> &Ryou cannot build firewalls here&w\n\r", ch );
+//			return;
+//		}
+
+		if( ch->gold < 10000 )
+		{
+			send_to_char("> insufficient funds [10k needed] - \n\r", ch );
+			return;
+		}
+
+		for( xit = location->first_exit; xit; xit = xit->next )
+			if( IS_SET( xit->to_room->room_flags, ROOM_SAFE ) )
+			{
+				send_to_char("&R> safe node nearby.&w\n\r", ch );
+				return;
+			}
+
+		for( xit = location->first_exit; xit; xit = xit->next )
+			if( IS_SET( xit->to_room->room_flags, ROOM_PLR_HOME ) )
+			{
+				send_to_char("&R> home node nearby.&w\n\r", ch );
+				return;
+			}
+
+		for( xit = location->first_exit; xit; xit = xit->next )
+			if( IS_SET( xit->to_room->room_flags, ROOM_EMPTY_HOME ) )
+			{
+				send_to_char("&R> unused home node nearby.&w\n\r", ch );
+				return;
+			}
+
+		location->area->planet->citysize++;
+		location->sector_type = SECT_INSIDE;
+		SET_BIT( location->room_flags , ROOM_GARAGE );
+		// if( location->area->planet->barracks > 4 )
+		ch->gold -= 10000;
+		//location->area->planet->barracks++;
+		strcpy( buf , ch->name );
+		strcat( buf , "&Y.&Cbotnet" );
+		strcpy( bufa , "a botnet node.\n\r" );
 	}
 	else if ( !str_cmp( argument, "home" ) )
 	{
@@ -3177,11 +3224,11 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 	else if ( !str_cmp( argument, "agent" ) )
 	{
 
-		if ( IS_SET( planet->flags, PLANET_NOCAP ) )
-		{
-			send_to_char("> &Ryou cannot build agent nodes here&w\n\r", ch );
-			return;
-		}
+//		if ( IS_SET( planet->flags, PLANET_NOCAP ) )
+//		{
+//			send_to_char("> &Ryou cannot build agent nodes here&w\n\r", ch );
+//			return;
+//		}
 
 		location->area->planet->citysize++;
 		location->sector_type = SECT_INSIDE;
