@@ -1811,6 +1811,31 @@ void add_reinforcements( CHAR_DATA *ch )
 				mob[mob_cnt]->mob_clan = ch->pcdata->clan;
 		}
 	}
+	else if ( ch->backup_mob == MOB_VNUM_WORKMATE       )
+	{
+		CHAR_DATA *mob;
+
+		send_to_char( "> your workmate has loaded\n\r", ch );
+
+			mob = create_mobile( pMobIndex );
+			if ( !mob )
+				return;
+			char_to_room( mob, ch->in_room );
+			act( AT_IMMORT, "> $N has loaded", ch, NULL, mob, TO_ROOM );
+			mob->top_level = 10;
+			mob->hit = 50;
+			mob->max_hit = 50;
+			mob->armor = 50;
+			mob->damroll = 0;
+			mob->hitroll = 1;
+
+			if ( mob->master )
+				stop_follower( mob );
+			add_follower( mob, ch );
+			SET_BIT( mob->affected_by, AFF_CHARM );
+			if ( ch->pcdata && ch->pcdata->clan )
+				mob->mob_clan = ch->pcdata->clan;
+	}
 	else
 	{
 		CHAR_DATA *mob;
