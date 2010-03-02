@@ -1475,3 +1475,656 @@ void do_workmate( CHAR_DATA *ch, char *argument )
 
 		
 }
+
+
+const struct cards allcards[208]={
+        {2, "2 of clubs"}, {2, "2 of hearts"}, {2, "2 of diamonds"}, {2, "2 of spades"},
+        {3, "3 of clubs"}, {3, "3 of hearts"}, {3, "3 of diamonds"}, {3, "3 of spades"},
+        {4, "4 of clubs"}, {4, "4 of hearts"}, {4, "4 of diamonds"}, {4, "4 of spades"},
+        {5, "5 of clubs"}, {5, "5 of hearts"}, {5, "5 of diamonds"}, {5, "5 of spades"},
+        {6, "6 of clubs"}, {6, "6 of hearts"}, {6, "6 of diamonds"}, {6, "6 of spades"},
+        {7, "7 of clubs"}, {7, "7 of hearts"}, {7, "7 of diamonds"}, {7, "7 of spades"},
+        {8, "8 of clubs"}, {8, "8 of hearts"}, {8, "8 of diamonds"}, {8, "8 of spades"},
+        {9, "9 of clubs"}, {9, "9 of hearts"}, {9, "9 of diamonds"}, {9, "9 of spades"},
+        {10, "10 of clubs"}, {10, "10 of hearts"}, {10, "10 of diamonds"}, {10, "10 of spades"},
+        {10, "Jack of clubs"}, {10, "Jack of hearts"}, {10, "Jack of diamonds"}, {10, "Jack of spades"},
+        {10, "Queen of clubs"}, {10, "Queen of hearts"}, {10, "Queen of diamonds"}, {10, "Queen of spades"},
+        {10, "King of clubs"}, {10, "King of hearts"}, {10, "King of diamonds"}, {10, "King of spades"},
+        {11, "Ace of clubs"}, {11, "Ace of hearts"}, {11, "Ace of diamonds"}, {11, "Ace of spades"},
+
+        {2, "2 of clubs"}, {2, "2 of hearts"}, {2, "2 of diamonds"}, {2, "2 of spades"},
+        {3, "3 of clubs"}, {3, "3 of hearts"}, {3, "3 of diamonds"}, {3, "3 of spades"},
+        {4, "4 of clubs"}, {4, "4 of hearts"}, {4, "4 of diamonds"}, {4, "4 of spades"},
+        {5, "5 of clubs"}, {5, "5 of hearts"}, {5, "5 of diamonds"}, {5, "5 of spades"},
+        {6, "6 of clubs"}, {6, "6 of hearts"}, {6, "6 of diamonds"}, {6, "6 of spades"},
+        {7, "7 of clubs"}, {7, "7 of hearts"}, {7, "7 of diamonds"}, {7, "7 of spades"},
+        {8, "8 of clubs"}, {8, "8 of hearts"}, {8, "8 of diamonds"}, {8, "8 of spades"},
+        {9, "9 of clubs"}, {9, "9 of hearts"}, {9, "9 of diamonds"}, {9, "9 of spades"},
+        {10, "10 of clubs"}, {10, "10 of hearts"}, {10, "10 of diamonds"}, {10, "10 of spades"},
+        {10, "Jack of clubs"}, {10, "Jack of hearts"}, {10, "Jack of diamonds"}, {10, "Jack of spades"},
+
+
+        {10, "Queen of clubs"}, {10, "Queen of hearts"}, {10, "Queen of diamonds"}, {10, "Queen of spades"},
+        {10, "King of clubs"}, {10, "King of hearts"}, {10, "King of diamonds"}, {10, "King of spades"},
+        {11, "Ace of clubs"}, {11, "Ace of hearts"}, {11, "Ace of diamonds"}, {11, "Ace of spades"},
+
+        {2, "2 of clubs"}, {2, "2 of hearts"}, {2, "2 of diamonds"}, {2, "2 of spades"},
+        {3, "3 of clubs"}, {3, "3 of hearts"}, {3, "3 of diamonds"}, {3, "3 of spades"},
+        {4, "4 of clubs"}, {4, "4 of hearts"}, {4, "4 of diamonds"}, {4, "4 of spades"},
+        {5, "5 of clubs"}, {5, "5 of hearts"}, {5, "5 of diamonds"}, {5, "5 of spades"},
+        {6, "6 of clubs"}, {6, "6 of hearts"}, {6, "6 of diamonds"}, {6, "6 of spades"},
+        {7, "7 of clubs"}, {7, "7 of hearts"}, {7, "7 of diamonds"}, {7, "7 of spades"},
+        {8, "8 of clubs"}, {8, "8 of hearts"}, {8, "8 of diamonds"}, {8, "8 of spades"},
+        {9, "9 of clubs"}, {9, "9 of hearts"}, {9, "9 of diamonds"}, {9, "9 of spades"},
+        {10, "10 of clubs"}, {10, "10 of hearts"}, {10, "10 of diamonds"}, {10, "10 of spades"},
+        {10, "Jack of clubs"}, {10, "Jack of hearts"}, {10, "Jack of diamonds"}, {10, "Jack of spades"},
+        {10, "Queen of clubs"}, {10, "Queen of hearts"}, {10, "Queen of diamonds"}, {10, "Queen of spades"},
+        {10, "King of clubs"}, {10, "King of hearts"}, {10, "King of diamonds"}, {10, "King of spades"},
+        {11, "Ace of clubs"}, {11, "Ace of hearts"}, {11, "Ace of diamonds"}, {11, "Ace of spades"},
+
+        {2, "2 of clubs"}, {2, "2 of hearts"}, {2, "2 of diamonds"}, {2, "2 of spades"},
+        {3, "3 of clubs"}, {3, "3 of hearts"}, {3, "3 of diamonds"}, {3, "3 of spades"},
+        {4, "4 of clubs"}, {4, "4 of hearts"}, {4, "4 of diamonds"}, {4, "4 of spades"},
+        {5, "5 of clubs"}, {5, "5 of hearts"}, {5, "5 of diamonds"}, {5, "5 of spades"},
+        {6, "6 of clubs"}, {6, "6 of hearts"}, {6, "6 of diamonds"}, {6, "6 of spades"},
+        {7, "7 of clubs"}, {7, "7 of hearts"}, {7, "7 of diamonds"}, {7, "7 of spades"},
+        {8, "8 of clubs"}, {8, "8 of hearts"}, {8, "8 of diamonds"}, {8, "8 of spades"},
+        {9, "9 of clubs"}, {9, "9 of hearts"}, {9, "9 of diamonds"}, {9, "9 of spades"},
+        {10, "10 of clubs"}, {10, "10 of hearts"}, {10, "10 of diamonds"}, {10, "10 of spades"},
+        {10, "Jack of clubs"}, {10, "Jack of hearts"}, {10, "Jack of diamonds"}, {10, "Jack of spades"},
+        {10, "Queen of clubs"}, {10, "Queen of hearts"}, {10, "Queen of diamonds"}, {10, "Queen of spades"},
+        {10, "King of clubs"}, {10, "King of hearts"}, {10, "King of diamonds"}, {10, "King of spades"},
+        {11, "Ace of clubs"}, {11, "Ace of hearts"}, {11, "Ace of diamonds"}, {11, "Ace of spades"}
+};
+
+int total_cards( CHAR_DATA *ch )
+{
+   int i;
+   int aces=0, total=0;
+   for ( i = 0; i < ch->hand->num_cards;i++){
+	total += allcards[ch->hand->card[i]].total;
+	if ( allcards[ch->hand->card[i]].total == 11 )
+		aces++;
+   }
+   if ( total > 21 && aces ){
+	total -= 10;
+	aces--;
+   }
+   if ( total > 21 && aces ){
+	total -= 10;
+	aces--;
+   }
+   if ( total > 21 && aces ){
+	total -= 10;
+	aces--;
+   }
+   if ( total > 21 && aces ){
+	total -= 10;
+	aces--;
+   }
+   return total;
+}
+
+int total_dealer_cards( BLACKJACK_DATA *game ) {
+   int i;
+   int aces=0, total=0;
+
+   for ( i = 0; i < game->num_cards;i++){
+	total += allcards[game->dealerhand->card[i]].total;
+	if ( allcards[game->dealerhand->card[i]].total == 11 )
+		aces++;
+   }
+   if ( total > 21 && aces ){
+	total -= 10;
+	aces--;
+   }
+   if ( total > 21 && aces ){
+	total -= 10;
+	aces--;
+   }
+   if ( total > 21 && aces ){
+	total -= 10;
+	aces--;
+   }
+   if ( total > 21 && aces ){
+	total -= 10;
+	aces--;
+   }
+   return total;
+}
+
+void reset_deck( BLACKJACK_DATA *game )
+{
+    int x;
+
+    if ( game )
+    {
+	for ( x = 0; x < 208; x++ )
+	{
+	    game->deck[x] = -1;
+	}
+    }
+}
+
+void shuffle_cards ( BLACKJACK_DATA *game )
+{
+    int i,j;
+    int count=0;
+    bool found = FALSE;
+
+    game->cards_drawn = 0;
+
+    for ( i = 0; i < 208;i++)
+    {
+	game->deck[i] = -1;
+    }
+
+    while ( count < 208 )
+    {
+	i = number_range( 0, 207 );
+	for ( j = 0; j < 208; j++)
+	{
+	   if ( game->deck[j] == i )
+	   {
+		found = TRUE;
+		break;
+	   }
+	   else if ( game->deck[j] == -1 )
+		break;
+  	}
+	if ( !found )
+	{
+	     game->deck[count] = i;
+	     count++;
+	}
+	found = FALSE;
+    }
+    return;
+}
+
+void reset_cards( CARD_DATA *hand )
+{
+    int x;
+
+    if ( hand )
+    {
+    	for ( x = 0; x < MAX_HELD_CARDS; x++ )
+    	{
+	    hand->card[x] = 0;
+    	}
+    }
+}
+
+void do_blackjack( CHAR_DATA *ch, char *argument )
+{
+    BLACKJACK_DATA *game;
+    CHAR_DATA *tmp;
+    char arg[MAX_STRING_LENGTH];
+    char arg2[MAX_STRING_LENGTH];
+    char buf[MAX_STRING_LENGTH];
+
+    if ( IS_NPC(ch) )
+	return;
+
+//    if ( !IS_SET( ch->in_room->nroom_flags , NROOM_BLACKJACKROOM ) )
+//    {
+//	send_to_char( "You are not in a blackjack room.\n\r", ch );
+//	return;
+//    }
+
+    if ( argument[0] == '\0' )
+    {
+	if ( ch->cur_blackjack )
+	{
+	    game = ch->cur_blackjack;
+
+	    if ( game->hold && ch == game->pturn )
+	    {
+		ch_printf( ch, "The game is waiting for you to %s.\n\r",
+			game->status == STATUS_TAKEBETS ? "place a bet" :
+			game->status == STATUS_DEALEXTRA ? "choose whether to hit or to stay." :
+			"<unkown option:contact gohan>" );
+		ch_printf( ch, "You have %d minutes %d seconds left to decide.\n\r\n\r",
+			ch->count/60, ch->count%60 );
+	    }
+	    else if ( ch->dealout )
+	    {
+		send_to_char( "You have either been dealt out of this hand or you busted.\n\r\n\r", ch );
+	    }
+	    display_status(ch);
+	}
+	else
+	{
+	    send_to_char( "Syntax: blackjack <field>\n\r", ch );
+	    send_to_char( "Where field is on of the following:\n\r", ch );
+	    send_to_char( " create, join, leave, list, bet, stay, hit\n\r", ch );
+	}
+	return;
+    }
+
+    argument = one_argument(argument,arg);
+
+    if ( !str_cmp(arg,"say") )
+    {
+	do_say(ch,argument);
+	display_status(ch);
+	return;
+    }
+
+    if ( !str_cmp(arg,"ooc") )
+    {
+        do_ooc(ch,argument);
+        display_status(ch);
+        return;
+    }
+
+    if ( IS_IMMORTAL( ch ) && !str_cmp( arg, "/!" ) )
+    {
+        DO_FUN *last_cmd;
+        int substate = ch->substate;
+
+        last_cmd = ch->last_cmd;
+        ch->substate = SUB_RESTRICTED;
+        interpret(ch, argument);
+        ch->substate = substate;
+        ch->last_cmd = last_cmd;
+        return;
+    }
+
+    argument = one_argument(argument,arg2);
+
+    if ( !str_cmp(arg,"create") )
+    {
+	if ( ch->cur_blackjack )
+	{
+	    send_to_char( "You are already in a blackjack game, leave before creating a new one.\n\r", ch );
+	    return;
+	}
+
+	CREATE( game, BLACKJACK_DATA, 1 );
+	game->player[1] = ch;
+	game->created_by = ch;
+	LINK( ch, game->first_gambler, game->last_gambler, next_gambler, prev_gambler );
+	game->hold = TRUE;
+	game->status = STATUS_HOLD;
+	game->count = 60;
+	game->num_cards = 0;
+	shuffle_cards(game);
+	ch->dealout = FALSE;
+	game->num_players = 1; // Not including the dealer of course
+	ch->cur_blackjack = game;
+	if ( last_blackjack )
+	    game->game_num = last_blackjack->game_num++;
+	else if ( first_blackjack )
+	    game->game_num = first_blackjack->game_num++;
+	else
+	    game->game_num = 1;
+	LINK( game, first_blackjack, last_blackjack, next, prev );
+	act( AT_PLAIN, "You have created a new blackjack game, the game will commence in 30 seconds.", ch, NULL, NULL, TO_CHAR );
+	sprintf( buf, "$n has created a new blackjack game numbered %d.", game->game_num );
+	act( AT_PLAIN, buf, ch, NULL, NULL, TO_ROOM );
+	sprintf( buf, "NEW BLACKJACK GAME #%d: Created by %s.", game->game_num, ch->name );
+	//game_info( AT_RED, buf );
+	ch->desc->connected = CON_BLACKJACK;
+	return;
+    }
+
+    if ( !str_cmp(arg,"join") )
+    {
+	int num;
+	bool found = FALSE;
+
+	if ( !is_number(arg2) )
+	{
+	    send_to_char( "Syntax: blackjack join <game number>\n\r", ch );
+	    send_to_char( "Type blackjack list to view created games and their numbers.\n\r", ch );
+	    return;
+	}
+
+	num = atoi(arg2);
+
+	for ( game = first_blackjack; game; game = game->next )
+	{
+	    if ( game->game_num == num )
+	    {
+		found = TRUE;
+		break;
+	    }
+	}
+
+	if ( found )
+	{
+	    if ( game->num_players == MAX_BLACKJACK_PLAYERS )
+	    {
+		send_to_char( "Sorry but that blackjack game is full.\n\r", ch );
+		return;
+	    }
+
+	    ch_printf( ch, "You have joined GAME #%d\n\r", game->game_num );
+	    game->num_players++;
+	    ch->cur_blackjack = game;
+	    if ( game->status == STATUS_HOLD )
+		ch_printf( ch, "The game will start in %d seconds.\n\r", game->count );
+	    else
+	    {
+		send_to_char( "The current hand is still in progress, you will join in when the hand finishes.\n\r", ch );
+		ch->dealout = TRUE;
+	    }
+	    for ( tmp = game->first_gambler; tmp; tmp = tmp->next_gambler )
+	    	ch_printf( tmp, "%s has entered the blackjack game.\n\r", ch->name );
+	    LINK( ch, game->first_gambler, game->last_gambler, next_gambler, prev_gambler );
+	    ch->desc->connected = CON_BLACKJACK;
+	    sprintf( buf, "%s has joined blackjack game #%d", ch->name, game->game_num );
+	    //game_info( AT_RED, buf );
+	}
+	else
+	{
+	    send_to_char( "A blackjack game with that game number could not be located.\n\r", ch );
+	    send_to_char( "Type 'blackjack list' to view created games and their numbers.\n\r", ch );
+	}
+	return;
+    }
+
+    if ( !str_cmp( arg, "leave" ) )
+    {
+	if ( !ch->cur_blackjack )
+	{
+	    send_to_char( "You are not currently in a blackjack game.\n\r", ch );
+	    return;
+	}
+
+	game = ch->cur_blackjack;
+
+	game->num_players--;
+
+	for ( tmp = game->first_gambler; tmp; tmp = tmp->next_gambler )
+	{
+	    if ( tmp != ch )
+	    	ch_printf( tmp, "%s has left the game.\n\r", ch->name );
+	}
+	UNLINK( ch, game->first_gambler, game->last_gambler, next_gambler, prev_gambler );
+
+	if ( game->num_players == 0 )
+	{
+	    UNLINK( game, first_blackjack, last_blackjack, next, prev );
+	}
+
+	if ( ch->blackjack_bet > 0 )
+	{
+	    ch->gold -= ch->blackjack_bet;
+	}
+	ch->cur_blackjack = NULL;
+	ch_printf( ch, "You have left the blackjack game.\n\r" );
+	ch->desc->connected = CON_PLAYING;
+	return;
+    }
+
+    if ( !str_cmp( arg, "bet" ) )
+    {
+	int bet;
+
+	if ( !ch->cur_blackjack )
+	{
+	    send_to_char( "You are not currently in a blackjack game.\n\r", ch );
+	    return;
+	}
+
+	if ( ch->dealout )
+	{
+	    send_to_char( "You have been dealt out of this hand, wait until the next one.\n\r", ch );
+	    return;
+	}
+
+	game = ch->cur_blackjack;
+
+	if ( game->status != STATUS_TAKEBETS )
+	{
+	    send_to_char( "The game is not at the betting phase yet.\n\r", ch );
+	    return;
+	}
+
+	if ( game->pturn != ch )
+	{
+	    send_to_char( "It is not your turn to bet.\n\r", ch );
+	    return;
+	}
+
+	if ( !is_number(arg2) )
+	{
+	    send_to_char( "You must enter an amount to bet.\n\r", ch );
+	    return;
+	}
+
+	bet = atoi(arg2);
+
+	if ( bet < 1 || bet > 10000 )
+	{
+	    send_to_char( "Place a bet between 1 and 10,000 coins.\n\r", ch );
+	    return;
+	}
+
+	if ( ch->gold < bet )
+	{
+	    send_to_char( "You don't have that much gold to bet\n\r", ch );
+	    return;
+	}
+
+	ch->blackjack_bet = bet;
+
+	ch_printf( ch, "You placed a bet of %d on this hand of blackjack.\n\r", bet );
+	ch->count = 0;
+
+	for ( tmp = game->first_gambler; tmp; tmp = tmp->next_gambler )
+	{
+	    if ( !tmp || !tmp->desc || tmp == ch )
+		continue;
+
+	    ch_printf( tmp, "%s has placed a bet of %d on this blackjack game.\n\r", ch->name, bet );
+	}
+	game->hold = FALSE;
+	return;
+    }
+
+    if ( !str_cmp(arg,"hit") )
+    {
+	if ( !ch->cur_blackjack )
+	{
+	    send_to_char( "You are not currently in a blackjack game.\n\r", ch );
+	    return;
+	}
+
+	if ( ch->dealout )
+	{
+	    send_to_char( "You have been dealt out of this hand, wait until the next one.\n\r", ch );
+	    return;
+	}
+
+	game = ch->cur_blackjack;
+
+	if ( game->status != STATUS_DEALEXTRA )
+	{
+	    send_to_char( "The game is not at the hit/stay phase yet.\n\r", ch );
+	    return;
+	}
+
+	if ( game->pturn != ch )
+	{
+	    send_to_char( "It is not your turn to hit/stay.\n\r", ch );
+	    return;
+	}
+
+    	if ( game->cards_drawn > 207 )
+	{
+ 	    shuffle_cards(game);
+	    for ( tmp = game->first_gambler; tmp; tmp = tmp->next_gambler )
+	    {
+		if ( tmp && tmp->desc )
+		    ch_printf( tmp, "The dealer reshuffles the deck.\n\r" );
+	    }
+    	}
+
+        for ( tmp = game->first_gambler; tmp; tmp = tmp->next_gambler )
+        {
+            if ( tmp && tmp->desc )
+                ch_printf( tmp, "%s get%s a %s from the dealer.\n\r",
+                        tmp == ch ? "You" : ch->name, tmp == ch ? "" : "s",
+			allcards[game->deck[game->cards_drawn]].name );
+        }
+
+    	ch->hand->card[ch->hand->num_cards] = game->deck[game->cards_drawn];
+    	ch->hand->num_cards++;
+    	game->cards_drawn++;
+    	if ( total_cards( ch ) > 21 )
+	{
+ 	    send_to_char( "You busted, maybe you'll win next game.\n\r", ch );
+ 	    ch->dealout = TRUE;
+	    ch->gold -= ch->blackjack_bet;
+            ch->blackjack_bet = 0;
+	    if ( game->num_players <= 1 )
+	    {
+                game->hold = TRUE;
+                game->count = 60;
+                game->status = STATUS_HOLD;
+		return;
+	    }
+	    for ( tmp = game->first_gambler; tmp; tmp = tmp->next_gambler )
+	    {
+		if ( tmp && tmp->desc && (tmp != ch) )
+		    ch_printf( tmp, "%s busted.\n\r", ch->name );
+	    }
+	    game->hold = FALSE;
+    	    return;
+        }
+        ch_printf( ch, "Your hand total is now %d.\n\r", total_cards(ch));
+	if ( ch->hand->num_cards == MAX_HELD_CARDS )
+	{
+	    send_to_char( "You have reached the maximum allowed cards for a player.\n\r", ch );
+	    do_blackjack( ch, "stay" );
+	}
+	return;
+    }
+
+    if ( !str_cmp(arg,"stay") )
+    {
+	if ( !ch->cur_blackjack )
+	{
+	    send_to_char( "You are not currently in a blackjack game.\n\r", ch );
+	    return;
+	}
+
+	if ( ch->dealout )
+	{
+	    send_to_char( "You have been dealt out of this hand, wait until the next one.\n\r", ch );
+	    return;
+	}
+
+	game = ch->cur_blackjack;
+
+	if ( game->status != STATUS_DEALEXTRA )
+	{
+	    send_to_char( "The game is not at the hit/stay phase yet.\n\r", ch );
+	    return;
+	}
+
+	if ( game->pturn != ch )
+	{
+	    send_to_char( "It is not your turn to hit/stay.\n\r", ch );
+	    return;
+	}
+
+	for ( tmp = game->first_gambler; tmp; tmp = tmp->next_gambler )
+	{
+	    if ( !tmp || tmp == ch )
+		continue;
+
+	    ch_printf( tmp, "%s chooses to stay.\n\r", ch->name );
+	}
+	game->hold = FALSE;
+	return;
+    }
+
+    if ( !str_cmp(arg,"list") )
+    {
+	int cnt = 0;
+        for ( game = first_blackjack; game; game = game->next )
+        {
+	    cnt++;
+	    ch_printf( ch, "#%d:  Created by: %s\n\r", game->game_num, game->created_by->name );
+	    ch_printf( ch, "Current Gamblers: " );
+	    for ( tmp = game->first_gambler; tmp; tmp = tmp->next_gambler )
+	    {
+		if ( !tmp || !tmp->desc )
+		    continue;
+		ch_printf( ch, "%s%s", tmp->name, tmp == game->last_gambler ? "" : ", " );
+	    }
+	    send_to_char( "\n\r--------------------------------------------------------------\n\r", ch );
+        }
+	ch_printf( ch, "Total of %d blackjack games in progress.\n\r", cnt );
+	return;
+    }
+
+    do_blackjack(ch, "");
+    return;
+}
+
+void display_status( CHAR_DATA *ch )
+{
+    BLACKJACK_DATA *game;
+
+    if ( !ch || !ch->desc )
+	return;
+
+    if ( !ch->cur_blackjack )
+	return;
+
+    game = ch->cur_blackjack;
+
+    switch ( game->status )
+    {
+
+	case STATUS_HOLD:
+		ch_printf( ch, "&W[&RGame Status&W] Waiting for next game to start!\n\r" );
+		ch_printf( ch, "&W[&RNumber of Players&W] %d player%s\n\r",
+			game->num_players, game->num_players == 1 ? "" : "s" );
+		break;
+	case STATUS_TAKEBETS:
+                ch_printf( ch, "&W[&RGame Status&W] Taking Bets!\n\r" );
+		if ( game->num_players > 1 )
+		{
+		    if ( game->pturn == game->last_gambler )
+                    	ch_printf( ch, "&W[&RLast Better&W] %s\n\r", game->pturn->name );
+		    else
+			ch_printf( ch, "&W[&RCurrent Better&W] %s  [&RNext Better&W] %s\n\r",
+				game->pturn->name, game->pturn->next_gambler->name );
+		}
+		if ( ch->blackjack_bet )
+		    ch_printf( ch, "&W[&RYour Bet&W] %d\n\r", ch->blackjack_bet );
+		if ( game->pturn == ch )
+		    ch_printf( ch, "\n\rTYPE: BET <1-10,000> to place your bet\n\r\n\r" );
+		break;
+	case STATUS_DEAL:
+	case STATUS_DEALEXTRA:
+                ch_printf( ch, "&W[&RGame Status&W] Taking Bets!\n\r" );
+                if ( game->num_players > 1 )
+                {
+                    if ( game->pturn == game->last_gambler )
+                        ch_printf( ch, "&W[&RLast Player&W] %s\n\r", game->pturn->name );
+                    else
+                        ch_printf( ch, "&W[&RCurrent Player&W] %s  [&RNext Player&W] %s\n\r",
+                                game->pturn->name, game->pturn->next_gambler->name );
+                }
+                ch_printf( ch, "&W[&RYour Bet&W] %d   &W[&RHand Worth&W] %d\n\r",
+			ch->blackjack_bet, total_cards(ch) );
+                if ( game->pturn == ch )
+                    ch_printf( ch, "\n\rTYPE: HIT or STAY\n\r\n\r" );
+		break;
+	case STATUS_FINISH:
+                ch_printf( ch, "&W[&RGame Status&W] Finishing Hand!\n\r\n\r" );
+		break;
+	default:
+		break;
+    }
+
+    ch_printf( ch, "&W[&ROther Options&W] LEAVE, SAY, OOC\n\r" );
+}
+

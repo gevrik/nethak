@@ -491,7 +491,7 @@ void fwrite_char( CHAR_DATA *ch, FILE *fp )
     {
         if ( !pal->name || !pal->cmd || !*pal->name || !*pal->cmd )
             continue;
-        fprintf( fp, "Alias        %s~ %s~\n",
+        fprintf( fp, "AAlias        %s~ %s~\n",
                  pal->name,
                  pal->cmd
                );
@@ -987,7 +987,7 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload )
 // 	    	break;
 //	 	    }
 
-        if ( !str_cmp( word, "Alias" ) )
+        if ( !str_cmp( word, "AAlias" ) )
         {
             ALIAS_DATA *pal;
 

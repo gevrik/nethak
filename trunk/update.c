@@ -40,8 +40,8 @@ void	obj_act_update	args( ( void ) );
 void	char_check	args( ( void ) );
 void    drunk_randoms	args( ( CHAR_DATA *ch ) );
 void    halucinations	args( ( CHAR_DATA *ch ) );
-void	subtract_times	args( ( struct timeval *etime,
-				struct timeval *stime ) );
+void	subtract_times	args( ( struct timeval *etime, struct timeval *stime ) );
+void	update_blackjack args( ( void ) );
 
 /*
  * Global Variables
@@ -1822,7 +1822,8 @@ void update_handler( void )
         if ( number_bits ( 6 ) == 0 )
            channel_noise( );
 	char_check( );
- 	/*reboot_check( "" ); Disabled to check if its lagging a lot - Scryn*/
+	update_blackjack();
+	/*reboot_check( "" ); Disabled to check if its lagging a lot - Scryn*/
  	/* Much faster version enabled by Altrag..
  	   although I dunno how it could lag too much, it was just a bunch
  	   of comparisons.. */
@@ -2329,6 +2330,366 @@ void bank_update()
        send_to_char(buf, ch);
     }
    }
+}
+
+void update_blackjack( )
+{
+    BLACKJACK_DATA *game;
+    CHAR_DATA *player = NULL, *tmp = NULL, *tmp2 = NULL;
+    char tmpbuf[MAX_STRING_LENGTH];
+
+    for ( game = first_blackjack; game; game = game->next )
+    {
+	if ( !game || !game->first_gambler )
+	    break;
+
+	switch ( game->status )
+	{
+	    case STATUS_HOLD:
+		if ( --game->count <= 0 )
+		{
+		    game->hold = TRUE;
+		    game->pturn = game->first_gambler;
+		    game->num_cards = 0;
+        	    if ( game->cards_drawn > 207 )
+        	    {
+            		shuffle_cards(game);
+            		for ( tmp = game->first_gambler; tmp; tmp = tmp->next_gambler )
+            		{
+            		    if ( tmp && tmp->desc )
+                	    	ch_printf( tmp, "The dealer reshuffles the deck.\n\r" );
+            		}
+        	    }
+		    if ( !game->dealerhand )
+			CREATE( game->dealerhand, CARD_DATA, 1 );
+		    reset_cards(game->dealerhand);
+		    for ( tmp = game->first_gambler; tmp; tmp = tmp->next_gambler )
+		    {
+			if ( !tmp || !tmp->desc )
+			    continue;
+			tmp->dealout = FALSE;
+			if ( !tmp->hand )
+			    CREATE( tmp->hand, CARD_DATA, 1 );
+			reset_cards( tmp->hand );
+			tmp->blackjack_bet = 0;
+			tmp->count = 120;
+		    	tmp->hand->num_cards = 0;
+			ch_printf( tmp, "Betting has commenced.\n\r" );
+		    }
+		    game->status = STATUS_TAKEBETS;
+		    display_status(game->first_gambler);
+		}
+		else
+		{
+		    for ( tmp = game->first_gambler; tmp; tmp = tmp->next_gambler )
+		    {
+			if ( tmp && tmp->desc )
+			{
+			    if ( game->count % 15 == 0 )
+			    	ch_printf( tmp, "The blackjack game will start in %d seconds.\n\r", game->count );
+			}
+		    }
+		}
+		break;
+	    case STATUS_TAKEBETS:
+		if ( game->hold )
+		{
+		    player = game->pturn;
+		    //msg current player to make a bet
+		    if ( player && player->desc && !player->dealout )
+		    {
+		    	if ( --player->count <= 0 )
+			{
+			    player->dealout = TRUE;
+			    game->hold = FALSE;
+			    for ( tmp = game->first_gambler; tmp; tmp = tmp->next_gambler )
+			    {
+				if ( tmp == player )
+				    send_to_char( "You have been dealt out of this hand for taking too long.\n\r", player );
+				else
+				    ch_printf( tmp, "%s has been dealt of the hand for taking too long.\n\r", player->name );
+			    }
+			}
+			else
+			{
+			    if ( player->count % 20 == 0 )
+			    {
+			    	ch_printf( player, "You have %d minutes %d seconds to place a bet.\n\r",
+					player->count/60, player->count%60 );
+			    	display_status(player);
+			    }
+			}
+		    }
+		    else
+ 		    {
+			if ( !game->last_gambler || game->pturn == game->last_gambler )
+			{
+			    game->hold = TRUE;
+			    game->status = STATUS_DEAL;
+			    game->pturn = game->first_gambler;
+			}
+			else
+			{
+			    game->pturn = game->pturn->next_gambler;
+			    game->pturn->count = 120;
+			}
+		    }
+		}
+		else
+		{
+		    if ( !game->last_gambler || game->pturn == game->last_gambler )
+		    {
+		    	game->pturn = game->first_gambler;
+			game->hold = TRUE;
+			game->status = STATUS_DEAL;
+		    }
+		    else
+		    {
+			game->pturn = game->pturn->next_gambler;
+			game->pturn->count = 120;
+			game->hold = TRUE;
+		    }
+		}
+		break;
+	    case STATUS_DEAL:
+		if ( game->cards_drawn >= (207-((game->num_players*2)+2)) )
+		{
+		    shuffle_cards(game);
+		    for ( tmp = game->first_gambler; tmp; tmp = tmp->next_gambler )
+		    {
+			if ( !tmp || !tmp->desc )
+			    continue;
+			send_to_char( "The dealer reshuffles the cards.\n\r", tmp );
+		    }
+		}
+		// This is the face down card
+		for ( tmp = game->first_gambler; tmp; tmp = tmp->next_gambler )
+		{
+		    if ( !tmp || !tmp->desc || tmp->dealout )
+			continue;
+
+                    ch_printf( tmp, "You recieve a %s face down from the dealer.\n\r",
+                        allcards[game->deck[game->cards_drawn]].name);
+
+		    tmp->hand->card[tmp->hand->num_cards] = game->deck[game->cards_drawn];
+		    game->cards_drawn++;
+		    tmp->hand->num_cards++;
+		}
+		sprintf( tmpbuf, "%s", allcards[game->deck[game->cards_drawn]].name);
+		game->dealerhand->card[game->num_cards] = game->deck[game->cards_drawn];
+		game->cards_drawn++;
+		game->num_cards++;
+		// This is the face up card
+		for ( tmp = game->first_gambler; tmp; tmp = tmp->next_gambler )
+		{
+		    if ( !tmp || !tmp->desc || tmp->dealout )
+			continue;
+
+                    ch_printf( tmp, "You recieve a %s face up from the dealer.\n\r",
+			allcards[game->deck[game->cards_drawn]].name);
+
+                    for ( tmp2 = game->first_gambler; tmp2; tmp2 = tmp2->next_gambler )
+                    {
+                        if ( !tmp2 || !tmp2->desc )
+                            continue;
+                        if ( tmp2 == tmp )
+                            continue;
+                        ch_printf( tmp2, "%s recieves a %s face up from the dealer.\n\r",
+                            tmp->name, allcards[game->deck[game->cards_drawn]].name);
+                    }
+
+                    tmp->hand->card[tmp->hand->num_cards] = game->deck[game->cards_drawn];
+		    game->cards_drawn++;
+		    tmp->hand->num_cards++;
+
+		    ch_printf( tmp, "Your total hand is worth %d.\n\r", total_cards(tmp) );
+		}
+
+                for ( tmp = game->first_gambler; tmp; tmp = tmp->next_gambler )
+                {
+                    ch_printf( tmp, "The dealer draws a %s from the deck.\n\r",
+                         allcards[game->deck[game->cards_drawn]].name );
+                }
+		game->dealerhand->card[game->num_cards] = game->deck[game->cards_drawn];
+		game->cards_drawn++;
+		game->num_cards++;
+
+		game->hold = TRUE;
+		game->pturn = game->first_gambler;
+		for ( tmp = game->first_gambler; tmp; tmp = tmp->next_gambler )
+		{
+		    if ( tmp && tmp->desc )
+			tmp->count = 120;
+		}
+		game->status = STATUS_DEALEXTRA;
+		break;
+	    case STATUS_DEALEXTRA:
+		if ( game->hold )
+		{
+		    player = game->pturn;
+
+		    if ( player && player->desc && !player->dealout )
+		    {
+		    	if ( --player->count <= 0 )
+			{
+			    player->dealout = TRUE;
+			    game->hold = FALSE;
+			    for ( tmp = game->first_gambler; tmp; tmp = tmp->next_gambler )
+			    {
+				if ( !tmp || !tmp->desc )
+				    continue;
+
+				if ( tmp == player )
+				    send_to_char( "You have been dealt out of this hand for taking too long.\n\r", player );
+				else
+				    ch_printf( tmp, "%s has been dealt of the hand for taking too long.\n\r", player->name );
+			    }
+			}
+			else
+			{
+			    if ( player->count % 20 == 0 )
+			    {
+			    	ch_printf( player, "You have %d seconds to hit or stay.\n\r", player->count );
+			    	display_status(player);
+			    }
+			}
+		    }
+		    else
+ 		    {
+			if ( !game->last_gambler || game->pturn == game->last_gambler )
+			{
+			    game->hold = TRUE;
+			    game->status = STATUS_FINISH;
+			    game->pturn = game->first_gambler;
+			}
+			else
+			{
+			    game->pturn = game->pturn->next_gambler;
+			    game->pturn->count = 120;
+			    game->hold = TRUE;
+			}
+		    }
+		}
+		else
+		{
+		    if ( !game->last_gambler || game->pturn == game->last_gambler )
+		    {
+		    	game->pturn = game->first_gambler;
+			game->hold = TRUE;
+			game->status = STATUS_FINISH;
+		    }
+		    else
+		    {
+			game->pturn = game->pturn->next_gambler;;
+			game->hold = TRUE;
+			game->pturn->count = 120;
+		    }
+		}
+		break;
+	    case STATUS_FINISH:
+		while ( total_dealer_cards(game) < 17 && game->num_cards < MAX_HELD_CARDS )
+		{
+                    if ( game->cards_drawn > 207 )
+                    {
+                        shuffle_cards(game);
+                    }
+
+		    for ( tmp = game->first_gambler; tmp; tmp = tmp->next_gambler )
+		    {
+			if ( !tmp || !tmp->desc )
+			    continue;
+
+                    	ch_printf( tmp, "The dealer draws a %s from the deck.\n\r",
+                            allcards[game->deck[game->cards_drawn]].name );
+		    }
+
+		    game->dealerhand->card[game->num_cards] = game->deck[game->cards_drawn];
+		    game->cards_drawn++;
+		    game->num_cards++;
+
+                    for ( tmp = game->first_gambler; tmp; tmp = tmp->next_gambler )
+                    {
+                        if ( !tmp || !tmp->desc )
+                            continue;
+
+                        ch_printf( tmp, "The dealers hand total increases to %d.\n\r",
+                            total_dealer_cards(game) );
+                    }
+
+	        }
+                if ( total_dealer_cards(game) > 21 )
+                {
+                    for ( tmp = game->first_gambler; tmp; tmp = tmp->next_gambler )
+                    {
+                        if ( !tmp || !tmp->desc )
+                            continue;
+
+                        send_to_char( "The dealer has busted, everyone wins!.\n\r", tmp );
+                        if ( !tmp->dealout )
+                        {
+                            tmp->gold += tmp->blackjack_bet;
+                            ch_printf( tmp, "You have won %d from the blackjack game.\n\r", tmp->blackjack_bet );
+                            tmp->blackjack_bet = 0;
+                        }
+                    }
+                }
+                else
+                {
+                    for ( tmp = game->first_gambler; tmp; tmp = tmp->next_gambler )
+                    {
+                        if ( !tmp || !tmp->desc )
+                            continue;
+
+                        ch_printf( tmp, "The dealer stayed at %d.\n\r", total_dealer_cards(game) );
+                        if ( !tmp->dealout )
+                        {
+                            if ( total_cards(tmp) > total_dealer_cards(game) )
+                            {
+                                tmp->gold += (tmp->blackjack_bet * 2);
+                                ch_printf( tmp, "You have won %d from the blackjack game.\n\r", tmp->blackjack_bet );
+				for ( tmp2 = game->first_gambler; tmp2; tmp2 = tmp2->next_gambler )
+                    		{
+				    if ( !tmp2 || !tmp2->desc || tmp2 == tmp )
+				   	continue;
+
+				    ch_printf( tmp2, "%s won %d from the blackjack game.\n\r", tmp->name, tmp->blackjack_bet );
+				}
+                            }
+                            else if ( total_cards(tmp) == total_dealer_cards(game) )
+                            {
+                                ch_printf( tmp, "You pushed the dealer and keep your bet of %d.\n\r", tmp->blackjack_bet );
+                                for ( tmp2 = game->first_gambler; tmp2; tmp2 = tmp2->next_gambler )
+                                {
+                                    if ( !tmp2 || !tmp2->desc || tmp2 == tmp )
+                                        continue;
+
+                                    ch_printf( tmp2, "%s pushed the dealer and kept the bet of %d.\n\r", tmp->name, tmp->blackjack_bet );
+                                }
+                            }
+                            else
+                            {
+                                ch_printf( tmp, "The dealers hand beat yours, you loose your bet of %d.\n\r", tmp->blackjack_bet );
+				tmp->gold -= tmp->blackjack_bet;
+                                for ( tmp2 = game->first_gambler; tmp2; tmp2 = tmp2->next_gambler )
+                                {
+                                    if ( !tmp2 || !tmp2->desc || tmp2 == tmp )
+                                        continue;
+
+                                    ch_printf( tmp2, "%s lost %d from the blackjack game.\n\r", tmp->name,tmp->blackjack_bet );
+                                }
+                            }
+                            tmp->blackjack_bet = 0;
+                        }
+                    }
+                }
+                game->hold = TRUE;
+                game->count = 60;
+                game->status = STATUS_HOLD;
+		break;
+	    default:
+		break;
+	}
+    }
 }
 
 //done for Neuro

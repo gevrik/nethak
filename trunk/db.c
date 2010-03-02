@@ -51,6 +51,9 @@ TELEPORT_DATA *		last_teleport;
 OBJ_DATA *		extracted_obj_queue;
 EXTRACT_CHAR_DATA *	extracted_char_queue;
 
+BLACKJACK_DATA *	first_blackjack;
+BLACKJACK_DATA *	last_blackjack;
+
 char			bug_buf		[2*MAX_INPUT_LENGTH];
 CHAR_DATA *		first_char;
 CHAR_DATA *		last_char;

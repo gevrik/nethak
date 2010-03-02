@@ -136,15 +136,15 @@ bool check_alias( CHAR_DATA *ch, char *command, char *argument )
 
     sprintf(arg, "%s", alias->cmd);
 
-//    if (ch->cmd_recurse==-1 || ++ch->cmd_recurse>50)
-//    {
-//	if (ch->cmd_recurse!=-1)
-//	{
-//	    send_to_char("Unable to further process command, recurses too much.\n\r", ch);
-//	    ch->cmd_recurse=-1;
-//	}
-//	return FALSE;
-//    }
+    if (ch->cmd_recurse==-1 || ++ch->cmd_recurse>25)
+    {
+	if (ch->cmd_recurse!=-1)
+	{
+	    send_to_char("Unable to further process command, recurses too much.\n\r", ch);
+	    ch->cmd_recurse=-1;
+	}
+	return FALSE;
+    }
 
 /*
    {
