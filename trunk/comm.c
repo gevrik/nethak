@@ -9,6 +9,9 @@
 #include <fcntl.h>
 #include <signal.h>
 #include <stdarg.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+
 #include "mud.h"
 
 /*
@@ -452,6 +455,10 @@ int main( int argc, char **argv )
 	return 0;
 }
 
+int closed( int d )
+{
+  return close(d);
+}
 
 int init_socket( int port )
 {
@@ -646,10 +653,12 @@ void game_loop( )
 	struct timeval	  last_time;
 	char cmdline[MAX_INPUT_LENGTH];
 	DESCRIPTOR_DATA *d;
+//  AREA_DATA *pArea;
+
 	/*  time_t	last_check = 0;  */
 
 	signal( SIGPIPE, SIG_IGN );
-	signal( SIGALRM, caught_alarm );
+    signal( SIGALRM, (void (*) (int) )caught_alarm );
 	/* signal( SIGSEGV, SegVio ); */
 	gettimeofday( &last_time, NULL );
 	current_time = (time_t) last_time.tv_sec;
@@ -900,7 +909,7 @@ void new_descriptor( int new_desc )
 		return;
 	}
 	set_alarm( 20 );
-	if( ( desc = accept( new_desc, ( struct sockaddr * )&sock, &size ) ) < 0 )
+    if ( ( desc = accept( new_desc, (struct sockaddr *) &sock, (socklen_t *)&size) ) < 0 )
 	{
 		perror( "New_descriptormsg: accept");
 		set_alarm( 0 );
@@ -1160,10 +1169,14 @@ void close_socket( DESCRIPTOR_DATA *dclose, bool force )
 	return;
 }
 
+int readd( int handle, char *buffer, int length )
+{
+  return read( handle, buffer, length );
+}
 
 bool read_from_descriptor( DESCRIPTOR_DATA *d )
 {
-	int iStart;
+    unsigned int iStart;
 
 	/* Hold horses if pending command already. */
 	if ( d->incomm[0] != '\0' )
@@ -1307,7 +1320,7 @@ void read_from_buffer( DESCRIPTOR_DATA *d )
 		}
 		else
 		{
-			if ( ++d->repeat >= 20 )
+	    if ( ++d->repeat >= 100 )
 			{
 				/*		sprintf( log_buf, "%s input spamming!", d->host );
 		log_string( log_buf );
@@ -1492,7 +1505,7 @@ void write_to_buffer( DESCRIPTOR_DATA *d, const char *txt, int length )
 	/*
 	 * Expand the buffer as needed.
 	 */
-	while ( d->outtop + length >= d->outsize )
+    while ( d->outtop + (unsigned int ) length >= d->outsize )
 	{
 		if (d->outsize > 32000)
 		{
@@ -1817,7 +1830,7 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 			return;
 		}
 
-		strcpy( buf, ch->name );
+		sprintf( buf, "%s", ch->name );
 		d->character->desc = NULL;
 		free_char( d->character );
 		fOld = load_char_obj( d, buf, FALSE );
@@ -2466,7 +2479,7 @@ void send_to_char_color( const char *txt, CHAR_DATA *ch )
 	d = ch->desc;
 	/* Clear out old color stuff */
 	/*  make_color_sequence(NULL, NULL, NULL);*/
-	while ( (colstr = strpbrk(prevstr, "&^")) != NULL )
+  while ( d && ((colstr = strpbrk(prevstr, "&^")) != NULL ))
 	{
 		if (colstr > prevstr)
 			write_to_buffer(d, prevstr, (colstr-prevstr));
@@ -2508,7 +2521,7 @@ void write_to_pager( DESCRIPTOR_DATA *d, const char *txt, int length )
 		d->pagebuf[1] = '\r';
 		d->pagetop = 2;
 	}
-	while ( d->pagetop + length >= d->pagesize )
+  while ( d->pagetop + (unsigned int) length >= d->pagesize )
 	{
 		if ( d->pagesize > 32000 )
 		{
@@ -2873,10 +2886,14 @@ void act( sh_int AType, const char *format, CHAR_DATA *ch, const void *arg1, con
 	for ( ; to; to = (type == TO_CHAR || type == TO_VICT)
 	? NULL : to->next_in_room )
 	{
-		if ((!to->desc
+	if (((!to || !to->desc) 
 				&& (  IS_NPC(to) && !IS_SET(to->pIndexData->progtypes, ACT_PROG) ))
 				||   !IS_AWAKE(to) )
 			continue;
+
+
+        if(!can_see(to, ch) && type != TO_VICT )
+          continue;
 
 		if ( type == TO_CHAR && to != ch )
 			continue;
@@ -2887,8 +2904,11 @@ void act( sh_int AType, const char *format, CHAR_DATA *ch, const void *arg1, con
 		if ( type == TO_NOTVICT && (to == ch || to == vch) )
 			continue;
 
+        if(!can_see(to, ch) && type != TO_VICT )
+          continue;
+
 		txt = act_string(format, to, ch, arg1, arg2);
-		if (to->desc)
+	if (to && to->desc)
 		{
 			set_char_color(AType, to);
 			send_to_char_color( txt, to );
@@ -2916,7 +2936,7 @@ char *default_prompt( CHAR_DATA *ch )
 
 int getcolor(char clr)
 {
-	static const char colors[16] = "xrgObpcwzRGYBPCW";
+  static const char colors[17] = "xrgObpcwzRGYBPCW";
 	int r;
 
 	for ( r = 0; r < 16; r++ )
@@ -3084,7 +3104,7 @@ void display_prompt( DESCRIPTOR_DATA *d )
 						: (IS_SET(ch->act, PLR_WIZINVIS) ? ch->pcdata->wizinvis : 0));
 				break;
 			}
-			if ( stat != 0x80000000 )
+      if ( stat != (int) 0x80000000 )
 				sprintf(pbuf, "%d", stat);
 			pbuf += strlen(pbuf);
 			break;
