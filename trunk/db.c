@@ -1968,6 +1968,7 @@ void free_char( CHAR_DATA *ch )
 	STRFREE( ch->pcdata->prompt	);
 	if ( ch->pcdata->subprompt )
 	   STRFREE( ch->pcdata->subprompt );
+	free_aliases( ch );
 	DISPOSE( ch->pcdata );
      }
 

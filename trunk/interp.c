@@ -283,6 +283,7 @@ void interpret( CHAR_DATA *ch, char *argument )
     if ( !found )
     {
 	if ( !check_skill( ch, command, argument )
+	&&   !check_alias( ch, command, argument )
 	&&   !check_social( ch, command, argument ) )
 	{
 	    EXIT_DATA *pexit;

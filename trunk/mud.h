@@ -197,6 +197,8 @@ typedef ch_ret	SPELL_FUN	args( ( int sn, int level, CHAR_DATA *ch, void *vo ) );
 #define MAX_SHIP_ROOMS             25
 #define MAX_ALIAS				20
 
+#include "alias.h"
+
 #define PULSE_PER_SECOND	    4
 #define PULSE_MINUTE              ( 60 * PULSE_PER_SECOND)
 #define PULSE_VIOLENCE		  (  3 * PULSE_PER_SECOND)
@@ -1938,6 +1940,7 @@ struct	char_data
     int                 bet_amt;
     sh_int              arenawin;      /* v1.1 Diablo */
     sh_int              arenaloss;     /* v1.1 Diablo */
+    sh_int   			cmd_recurse;
     int					snippets;
 };
 
@@ -2005,8 +2008,10 @@ struct	pc_data
     ROOM_INDEX_DATA *   roomarena;
     NOTIFY_DATA *       first_notify;   /* used to keep track of persons on notify - Sadiq */
     NOTIFY_DATA *       last_notify;
-	char * alias[MAX_ALIAS];
+    char * alias[MAX_ALIAS];
 	char *alias_sub[MAX_ALIAS];
+    ALIAS_DATA *	first_alias;
+    ALIAS_DATA *	last_alias;
 };
 
 
@@ -3211,6 +3216,7 @@ DECLARE_DO_FUN( do_makeship     );
 DECLARE_DO_FUN( do_makeguild    );
 DECLARE_DO_FUN( do_makerepair	);
 DECLARE_DO_FUN( do_makeshop	);
+DECLARE_DO_FUN( do_mapper	);
 DECLARE_DO_FUN(	do_memory	);
 DECLARE_DO_FUN( do_mcreate	);
 DECLARE_DO_FUN(	do_mfind	);
