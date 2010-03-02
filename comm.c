@@ -39,7 +39,7 @@ void    save_sysdata args( ( SYSTEM_DATA sys ) );
 /*  from act_info?  */
 void    show_condition( CHAR_DATA *ch, CHAR_DATA *victim );
 void    write_ship_list args( ( void ) );
-//void 	substitute_alias(DESCRIPTOR_DATA *d, char *argument);
+void 	substitute_alias(DESCRIPTOR_DATA *d, char *argument);
 
 /*
  * Global variables.
@@ -766,8 +766,8 @@ void game_loop( )
 								nanny( d, cmdline );
 								break;
 							case CON_PLAYING:
-								interpret( d->character, cmdline );
-								//substitute_alias( d, cmdline );
+								//interpret( d->character, cmdline );
+								substitute_alias( d, cmdline );
 								break;
 							case CON_EDITING:
 								edit_buffer( d->character, cmdline );
