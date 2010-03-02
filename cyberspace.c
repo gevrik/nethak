@@ -1341,8 +1341,12 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 void do_workmate( CHAR_DATA *ch, char *argument )
 {
 	char arg[MAX_INPUT_LENGTH];
+	char arg1[MAX_INPUT_LENGTH];
 	CHAR_DATA *och;
 	int chance, count;
+	
+	argument = one_argument( argument , arg );
+	argument = one_argument( argument , arg1 );
 
 	if ( IS_NPC( ch ) || !ch->pcdata )
 		return;
@@ -1353,7 +1357,50 @@ void do_workmate( CHAR_DATA *ch, char *argument )
 				"> your mind races as you realize you have no idea how to do that\n\r", ch );
 		return;
 	}
+	
+	if ( ( ch->pcdata->wm_name == '\0' ) && str_cmp( arg, "name" ) )
+	{
+		send_to_char("> please set the name of your workmate with 'workmate name <your desired name>'\n\r", ch );
+		return;
+	}
 
+	if ( !str_cmp( arg, "name") )
+	{
+		if ( !check_parse_name( arg1 ) )
+		{
+			send_to_char( "> &Rinvalid Workmate name&w\n\r", ch );
+			return;
+		}
+
+		ch->pcdata->wm_name = arg1;
+		send_to_char( "> &GWorkmate named&w\n\r", ch );
+	}
+	else if ( !str_cmp( arg, "update") )
+	{
+			send_to_char( "> &Rspecify which Workmate stat you want to upgrade&w\n\r", ch );
+	}
+	else if ( !str_cmp( arg, "dismiss") )
+	{
+
+		count = 0;
+		for ( och = ch->in_room->first_person; och; och = och->next_in_room )
+		{
+			if ( IS_AFFECTED(och, AFF_CHARM)
+					&&   och->master == ch )
+				count++;
+		}
+		if( count < 1 )
+		{
+			send_to_char("> no pet program loaded\n\r", ch );
+			return;
+		}
+
+			send_to_char( "> &Yyour workmate is unloaded&w\n\r", ch );
+			extract_char( och, TRUE );
+			return;
+	}
+	else
+	{
 	count = 0;
 	for ( och = ch->in_room->first_person; och; och = och->next_in_room )
 	{
@@ -1377,13 +1424,6 @@ void do_workmate( CHAR_DATA *ch, char *argument )
 			send_to_char( "> &Ryour workmate is already loading\n\r", ch );
 			return;
 		}
-
-//		if ( ch->gold < 5000 )
-//		{
-//			ch_printf( ch, "&R> you do not have enough credits\n\r", ch );
-//			return;
-//		}
-
 		chance = (int) (ch->pcdata->learned[gsn_spacecraft]);
 		if ( number_percent( ) < chance )
 		{
@@ -1414,11 +1454,7 @@ void do_workmate( CHAR_DATA *ch, char *argument )
 
 	ch->substate = SUB_NONE;
 
-	send_to_char( "> &Gyour workmate is on the way&w\n\r", ch);
-
-//	credits = 5000;
-//	ch_printf( ch, "> it cost you %d credits\n\r", credits);
-//	ch->gold -= UMIN( credits , ch->gold );
+	send_to_char( "> &Gyour workmate is loading...&w\n\r", ch);
 
 	if ( number_percent() == 23 )
 	{
@@ -1428,10 +1464,14 @@ void do_workmate( CHAR_DATA *ch, char *argument )
 	}
 
 	learn_from_success( ch, gsn_spacecraft );
-	learn_from_success( ch, gsn_spacecraft );
 
-	ch->backup_mob = MOB_VNUM_SOLDIER;
+	ch->backup_mob = MOB_VNUM_WORKMATE;
 
 	ch->backup_wait = 1;
 
+	return;
+	}
+	
+
+		
 }

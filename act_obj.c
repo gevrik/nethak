@@ -2274,6 +2274,7 @@ void obj_fall( OBJ_DATA *obj, bool through )
 bool  job_trigger( CHAR_DATA *victim, CHAR_DATA *ch, OBJ_DATA *obj )
 {
      char buf[MAX_STRING_LENGTH];
+     PLANET_DATA *planet;
 
      if( !IS_NPC( victim ) || !victim->pIndexData )
         return FALSE;
@@ -2298,6 +2299,8 @@ bool  job_trigger( CHAR_DATA *victim, CHAR_DATA *ch, OBJ_DATA *obj )
      do_say( victim, "> thank you" );
      ch->gold += 1000;
 
+     planet = ch->in_room->area->planet;
+
      act( AT_GOLD, "> $N gives you 1000 credits" , ch, NULL, victim, TO_CHAR  );
      act( AT_GOLD, "> $N gives $n some credits",  ch, NULL, victim, TO_NOTVICT );
      act( AT_GOLD, "> you give $n some credits",  ch, NULL, victim, TO_VICT  );
@@ -2306,6 +2309,11 @@ bool  job_trigger( CHAR_DATA *victim, CHAR_DATA *ch, OBJ_DATA *obj )
      obj_from_char( obj );
      extract_obj( obj );
      
+ 	planet->pop_support += 1;
+
+     if ( planet->pop_support < 100 )
+         planet->pop_support = 100;
+
      return TRUE;         
 }
 
