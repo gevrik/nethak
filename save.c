@@ -250,6 +250,7 @@ void save_clone( CHAR_DATA *ch )
 void fwrite_char( CHAR_DATA *ch, FILE *fp )
 {
     AFFECT_DATA *paf;
+    ALIAS_DATA *pal;
     int sn, track, i;
     SKILLTYPE *skill;
     int pos;
@@ -476,15 +477,25 @@ void fwrite_char( CHAR_DATA *ch, FILE *fp )
             fprintf(fp,"Notify      %s~\n", temp->name);
     }
 
- 	for ( pos = 0; pos < MAX_ALIAS ; pos++ )
-		{
-		if ( !ch->pcdata->alias[pos]
-		||   !ch->pcdata->alias_sub[pos] )
-		break;
+// 	for ( pos = 0; pos < MAX_ALIAS ; pos++ )
+//		{
+//		if ( !ch->pcdata->alias[pos]
+//		||   !ch->pcdata->alias_sub[pos] )
+//		break;
+//
+//		fprintf( fp, "Alias %s~ %s~\n", ch->pcdata->alias[pos],
+//					      ch->pcdata->alias_sub[pos] );
+// 	}
 
-		fprintf( fp, "Alias %s %s~\n", ch->pcdata->alias[pos],
-					      ch->pcdata->alias_sub[pos] );
- 	}
+    for ( pal = ch->pcdata->first_alias; pal; pal = pal->next )
+    {
+        if ( !pal->name || !pal->cmd || !*pal->name || !*pal->cmd )
+            continue;
+        fprintf( fp, "Alias        %s~ %s~\n",
+                 pal->name,
+                 pal->cmd
+               );
+    }
 
     fprintf( fp, "End\n\n" );
     return;
@@ -795,6 +806,8 @@ bool load_char_obj( DESCRIPTOR_DATA *d, char *name, bool preload )
 	ch->pcdata->authed_by		= STRALLOC( "" );
 	ch->pcdata->prompt		= STRALLOC( "" );
 	ch->pcdata->wizinvis		= 0;
+    ch->pcdata->first_alias		= NULL;
+    ch->pcdata->last_alias		= NULL;
         ch->pcdata->num_skills          = 0;
         ch->pcdata->adept_skills        = 0;
     }
@@ -958,21 +971,40 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload )
 		break;
 	    }
 
-		if ( !str_cmp( word, "Alias" ) )
-	 	    {
- 	    	if( count >= MAX_ALIAS )
- 	    	{
- 	    		fread_to_eol( fp );
- 	    		fMatch = TRUE;
- 	    		break;
- 	    	}
+//		if ( !str_cmp( word, "Alias" ) )
+//	 	    {
+// 	    	if( count >= MAX_ALIAS )
+// 	    	{
+// 	    		fread_to_eol( fp );
+// 	    		fMatch = TRUE;
+// 	    		break;
+// 	    	}
+//
+// 	    	ch->pcdata->alias[count]      =	 str_dup( fread_word( fp ) );
+// 	    	ch->pcdata->alias_sub[count]  =	 fread_string( fp );
+// 	    	count++;
+// 	    	fMatch 			      =  TRUE;
+// 	    	break;
+//	 	    }
 
- 	    	ch->pcdata->alias[count]      =	 str_dup( fread_word( fp ) );
- 	    	ch->pcdata->alias_sub[count]  =	 fread_string( fp );
- 	    	count++;
- 	    	fMatch 			      =  TRUE;
- 	    	break;
-	 	    }
+        if ( !str_cmp( word, "Alias" ) )
+        {
+            ALIAS_DATA *pal;
+
+            if ( preload )
+            {
+                fMatch = TRUE;
+                fread_to_eol( fp );
+                break;
+            }
+            CREATE( pal, ALIAS_DATA, 1 );
+
+            pal->name	= fread_string_nohash( fp );
+            pal->cmd	= fread_string_nohash( fp );
+            LINK(pal, ch->pcdata->first_alias, ch->pcdata->last_alias, next, prev );
+            fMatch = TRUE;
+            break;
+        }
 
 	    if ( !str_cmp( word, "AttrPerm" ) )
 	    {

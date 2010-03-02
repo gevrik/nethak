@@ -49,7 +49,7 @@ DO_FUN *skill_function( char *name )
         if ( !str_cmp( name, "do_ahall" ))              return do_ahall;
         if ( !str_cmp( name, "do_arena" ))              return do_arena;
         if ( !str_cmp( name, "do_awho" ))               return do_awho;
-        if ( !str_cmp( name, "do_alia" ))               return do_alia;
+        //if ( !str_cmp( name, "do_alia" ))               return do_alia;
         if ( !str_cmp( name, "do_alias" ))               return do_alias;
 	if ( !str_cmp( name, "do_adecline" ))		return do_adecline;
 	if ( !str_cmp( name, "do_aassign" ))		return do_aassign;
@@ -273,6 +273,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_makerepair" ))		return do_makerepair;
 	if ( !str_cmp( name, "do_makeshop" ))		return do_makeshop;
 	if ( !str_cmp( name, "do_makeplanet" ))	        return do_makeplanet;
+	if ( !str_cmp( name, "do_mapper" ))		return do_mapper;
 	if ( !str_cmp( name, "do_mcreate" ))		return do_mcreate;
 	if ( !str_cmp( name, "do_memory" ))		return do_memory;
 	if ( !str_cmp( name, "do_mfind" ))		return do_mfind;
@@ -500,7 +501,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_typo" ))		return do_typo;
 	break;
     case 'u':
-    	if ( !str_cmp( name, "do_unalias" ))               return do_unalias;
+    	//if ( !str_cmp( name, "do_unalias" ))               return do_unalias;
 	if ( !str_cmp( name, "do_unfoldarea" ))		return do_unfoldarea;
 	if ( !str_cmp( name, "do_unlock" ))		return do_unlock;
         if ( !str_cmp( name, "do_unsilence" ))          return do_unsilence;
@@ -555,9 +556,9 @@ char *spell_name( SPELL_FUN *spell )
 
 char *skill_name( DO_FUN *skill )
 {
-	if ( skill == do_alia )           return "do_alia";
+	//if ( skill == do_alia )           return "do_alia";
 	if ( skill == do_alias )           return "do_alias";
-	if ( skill == do_unalias )           return "do_unalias";
+	//if ( skill == do_unalias )           return "do_unalias";
 	if ( skill == do_sn_jackhammer )           return "do_sn_jackhammer";
 	if ( skill == do_sn_krash )           return "do_sn_krash";
 	if ( skill == do_sn_randomizer )           return "do_sn_randomizer";
@@ -808,6 +809,7 @@ char *skill_name( DO_FUN *skill )
     if ( skill == do_makerepair )	return "do_makerepair";
     if ( skill == do_makeshop )		return "do_makeshop";
     if ( skill == do_makeship )         return "do_makeship";
+    if ( skill == do_mapper )		return "do_mapper";
     if ( skill == do_mcreate )		return "do_mcreate";
     if ( skill == do_memory )		return "do_memory";
     if ( skill == do_mfind )		return "do_mfind";

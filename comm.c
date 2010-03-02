@@ -775,8 +775,9 @@ void game_loop( )
 								nanny( d, cmdline );
 								break;
 							case CON_PLAYING:
-								//interpret( d->character, cmdline );
-								substitute_alias( d, cmdline );
+								d->character->cmd_recurse = 0;
+								interpret( d->character, cmdline );
+								//substitute_alias( d, cmdline );
 								break;
 							case CON_EDITING:
 								edit_buffer( d->character, cmdline );
