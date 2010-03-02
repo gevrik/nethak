@@ -2311,7 +2311,7 @@ bool  job_trigger( CHAR_DATA *victim, CHAR_DATA *ch, OBJ_DATA *obj )
      
  	planet->pop_support += 1;
 
-     if ( planet->pop_support < 100 )
+     if ( planet->pop_support > 100 )
          planet->pop_support = 100;
 
      return TRUE;         
