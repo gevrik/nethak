@@ -92,6 +92,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_bestow" ))		return do_bestow;
 	if ( !str_cmp( name, "do_bestowarea" ))		return do_bestowarea;
 	if ( !str_cmp( name, "do_bio" ))		return do_bio;
+	if ( !str_cmp( name, "do_blackjack" ))		return do_blackjack;
 	if ( !str_cmp( name, "do_board" ))              return do_board;
 	if ( !str_cmp( name, "do_boards" ))		return do_boards;
 	if ( !str_cmp( name, "do_bodybag" ))		return do_bodybag;
@@ -683,6 +684,7 @@ char *skill_name( DO_FUN *skill )
     if ( skill == do_bestow )		return "do_bestow";
     if ( skill == do_bestowarea )	return "do_bestowarea";
     if ( skill == do_bio )		return "do_bio";
+    if ( skill == do_blackjack )		return "do_blackjack";
     if ( skill == do_board )            return "do_board";
     if ( skill == do_boards )		return "do_boards";
     if ( skill == do_bodybag )		return "do_bodybag";

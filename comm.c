@@ -782,6 +782,9 @@ void game_loop( )
 							case CON_EDITING:
 								edit_buffer( d->character, cmdline );
 								break;
+							 case CON_BLACKJACK:
+											do_blackjack( d->character, cmdline );
+											break;
 							}
 					}
 				}

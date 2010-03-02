@@ -113,6 +113,8 @@ typedef struct	system_data		SYSTEM_DATA;
 typedef	struct	smaug_affect		SMAUG_AFF;
 typedef struct  who_data                WHO_DATA;
 typedef	struct	skill_type		SKILLTYPE;
+typedef	struct	blackjack_data		BLACKJACK_DATA;
+typedef	struct	card_data		CARD_DATA;
 typedef	struct	social_type		SOCIALTYPE;
 typedef	struct	cmd_type		CMDTYPE;
 typedef	struct	killed_data		KILLED_DATA;
@@ -198,6 +200,15 @@ typedef ch_ret	SPELL_FUN	args( ( int sn, int level, CHAR_DATA *ch, void *vo ) );
 #define MAX_ALIAS				20
 
 #include "alias.h"
+
+#define MAX_CARDS		   52
+#define MAX_HELD_CARDS		   10
+#define MAX_BLACKJACK_PLAYERS	    8 // 7 + Dealer
+#define STATUS_HOLD		    0
+#define STATUS_TAKEBETS		    1
+#define STATUS_DEAL		    2
+#define STATUS_DEALEXTRA	    3
+#define STATUS_FINISH		    4
 
 #define PULSE_PER_SECOND	    4
 #define PULSE_MINUTE              ( 60 * PULSE_PER_SECOND)
@@ -320,8 +331,43 @@ typedef enum
   CON_ROLL_STATS,	CON_STATS_OK,		CON_ADD_SKILLS,
   CON_READ_NMOTD,	CON_PICK_CLAN,
   CON_NOTE_TO, 		CON_NOTE_SUBJECT, 	CON_NOTE_EXPIRE,
-  CON_NOTE_TEXT,	CON_NOTE_FINISH
+  CON_NOTE_TEXT,	CON_NOTE_FINISH, 	CON_BLACKJACK
 } connection_types;
+
+
+struct blackjack_data
+{
+    BLACKJACK_DATA *		next;
+    BLACKJACK_DATA *		prev;
+    CHAR_DATA      *		player[MAX_BLACKJACK_PLAYERS]; // player[0] is always Dealer
+    CHAR_DATA	   *		first_gambler;
+    CHAR_DATA      *		last_gambler;
+    bool			hold;
+    int				status;
+    CHAR_DATA      *		pturn;
+    int				deck[208];
+    int				cards_drawn;
+    int				num_players;
+    CARD_DATA      *		dealerhand;
+    int				num_cards;
+    int				count;
+    int				game_num;
+    CHAR_DATA	   *		created_by;
+};
+
+struct card_data
+{
+    int				card[MAX_HELD_CARDS];
+    int				finished;
+    int				num_cards;
+};
+
+struct cards {
+	int total;
+	char *name;
+};
+
+extern const struct cards allcards[208];
 
 /*
  * Character substates
@@ -1942,6 +1988,14 @@ struct	char_data
     sh_int              arenaloss;     /* v1.1 Diablo */
     sh_int   			cmd_recurse;
     int					snippets;
+
+    BLACKJACK_DATA *            cur_blackjack;
+    CHAR_DATA *                 next_gambler;
+    CHAR_DATA *                 prev_gambler;
+    CARD_DATA *                 hand;
+    int                         count;
+    bool                        dealout;
+    int                         blackjack_bet;
 };
 
 
@@ -2890,6 +2944,8 @@ extern		BOARD_DATA	  *	first_board;
 extern		BOARD_DATA	  *	last_board;
 extern		OBJ_DATA	  *	first_object;
 extern		OBJ_DATA	  *	last_object;
+extern		BLACKJACK_DATA	  *	first_blackjack;
+extern		BLACKJACK_DATA	  *	last_blackjack;
 extern		CLAN_DATA	  *	first_clan;
 extern		CLAN_DATA	  *	last_clan;
 extern		GUARD_DATA	  *	first_guard;
@@ -2951,7 +3007,7 @@ DECLARE_DO_FUN(	do_sn_reconstruct	);
 DECLARE_DO_FUN(	do_sn_spun	);
 
 // other
-
+DECLARE_DO_FUN(	do_blackjack	);
 DECLARE_DO_FUN(	do_notell	);
 DECLARE_DO_FUN( do_notify	);
 DECLARE_DO_FUN( do_codemed );
@@ -4425,6 +4481,12 @@ void rprog_act_trigger( char *buf, ROOM_INDEX_DATA *room, CHAR_DATA *ch,
 			OBJ_DATA *obj, void *vo );
 #endif
 
+void 	shuffle_cards		args( ( BLACKJACK_DATA *game ) );
+int 	total_cards		args( ( CHAR_DATA *ch ) );
+int 	total_dealer_cards	args( ( BLACKJACK_DATA *game ) );
+void	reset_cards		args( ( CARD_DATA *hand ) );
+void	reset_deck		args( ( BLACKJACK_DATA *game ) );
+void	display_status		args( ( CHAR_DATA *ch ) );
 
 #define send_to_char  send_to_char_color
 #define send_to_pager send_to_pager_color
