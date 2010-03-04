@@ -2066,6 +2066,10 @@ struct	pc_data
 	char *alias_sub[MAX_ALIAS];
     ALIAS_DATA *	first_alias;
     ALIAS_DATA *	last_alias;
+    char dis_sudoku[9][9];
+    char sudoku[9][9];
+    time_t sstarttime, sfastesttime, sslowesttime, slasttime;
+    unsigned swins, squits;
 };
 
 
@@ -3351,6 +3355,7 @@ DECLARE_DO_FUN( do_scan         );
 DECLARE_DO_FUN(	do_score	);
 DECLARE_DO_FUN( do_search	);
 DECLARE_DO_FUN(	do_securenode );
+DECLARE_DO_FUN(	do_sudoku );
 DECLARE_DO_FUN(	do_examineobject );
 DECLARE_DO_FUN(	do_sedit	);
 DECLARE_DO_FUN(	do_sell		);

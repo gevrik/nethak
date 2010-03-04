@@ -38,6 +38,26 @@
 /*
  * Ported to DOTDII MUD (http://www.dotd.com) by Garil 6-15-99
  */
+ 
+/*
+ const	char *	sector_name	[SECT_MAX]	=
+{
+    "inside", "city", "field", "forest", "hills", "mountain", "water swim", "water noswim", 
+    "underwater", "air", "desert", "unknown", "ocean floor", "underground",
+    "scrub", "rocky", "savanna", "tundra", "glacial", "rainforest", "jungle", 
+    "swamp", "wetlands", "brush", "steppe", "farmland", "volcanic"
+};
+*/
+
+/*
+const	char *	sector_name	[SECT_MAX]	=
+{
+		"inside", "terminal", "database", "database", "database", "database", "water swim", "water noswim",
+		"underwater", "air", "database", "unknown", "ocean floor", "underground",
+		"database", "database", "database", "database", "database", "database", "database",
+		"database", "database", "database", "database", "subserver", "database"
+};
+*/
 
 #include <ctype.h>  /* for isalpha */
 #include <string.h>
@@ -57,36 +77,6 @@ int offsets[4][2] ={ {-2, 0},{ 0, 2},{ 2, 0},{ 0,-2} };
 #define SECT_BLOCKED    ( SECT_UNSEEN + 1 )
 #define SECT_TOP        ( SECT_BLOCKED + 1 )
 
-/*
- const struct map_info_type door_info[] =
- {
- { DOOR_LOCKED, "@@R" , "#@@N", "@@f","Locked door" },
- { DOOR_OPEN, "@@W" , "#@@N", "@@f","Open door" },
- { DOOR_CLOSED, "@@R" , "#@@N", "@@f","Closed Door" },
- { DOOR_NS, "@@W" , "|@@N", "@@f","N/S Exit" },
- { DOOR_EW, "@@W" , "-@@N", "@@f","E/W Exit" },
- { DOOR_NULL, "@@N", " ", "@@f","Invalid" }
- };
-
- const struct map_info_type map_info[] =
- {
- { SECT_BLOCKED, "@@m", "~@@N", "", "blocked" },
- { SECT_UNSEEN, "@@N@@d"," @@N", "", "unknown" },
- { SECT_HERE, "@@N@@W", "*@@N", "", "you!" },
- { SECT_CITY, "@@g@@i", " @@N", "", "city" },
- { SECT_FIELD, "@@r@@i", " @@N", "", "field" },
- { SECT_FOREST, "@@3", " @@N", "@@W", "forest" },
- { SECT_HILLS,  "@@4", " @@N", "@@W","hills" },
- { SECT_MOUNTAIN, "@@2", " @@N", "", "mountain" },
- { SECT_WATER_SWIM,"@@l@@i", " @@N", "", "shallow water" },
- { SECT_WATER_NOSWIM, "@@1", " @@N", "", "deep running water" },
- { SECT_INSIDE, "@@5", " @@N", "","inside" },
- { SECT_AIR, "@@a@@i", " @@N", "","air" },
- { SECT_DESERT, "@@y@@i", " @@N", "","desert" },
- { SECT_INSIDE, "@@d@@i", " @@N", "","inside" },
- { SECT_TOP, "@@y", "~@@N", "","bad sector type" }
- };
-*/
 const struct map_info_type door_info[] =
 {
     { DOOR_LOCKED, "&r" , "#&w", "","Locked door" },
@@ -104,27 +94,32 @@ const struct map_info_type map_info[] =
     { SECT_HERE,         "&w&W", "*&w", "",   "you!" },
 
     { SECT_INSIDE,       "^z&W", " &w", "",   "inside" },
-    { SECT_CITY,         "^w&W", " &w", "",   "city" },
+    { SECT_CITY,         "^Y&O", " &w", "",   "city" },
     { SECT_FIELD,        "^G&g", " &w", "",   "field" },
     { SECT_FOREST,       "^g&G", " &w", "&W", "forest" },
     { SECT_HILLS,        "^Y&O", " &w", "&W", "hills" },
-    { SECT_MOUNTAIN,     "^r&Y", " &w", "",   "mountain" },
+    { SECT_MOUNTAIN,     "^G&g", " &w", "",   "database" },
     { SECT_WATER_SWIM,   "^B&b", " &w", "",   "shallow water" },
     { SECT_WATER_NOSWIM, "^b&B", " &w", "",   "deep running water" },
+	{ SECT_UNDERWATER,	 "^b&B", " &w", "",   "underwater" },
     { SECT_AIR,          "^c&C", " &w", "",   "air" },
-    { SECT_DESERT,       "^O&Y", " &w", "",   "desert" },
-
-    { SECT_UNDERWATER,   "^p&C", " &w", "",   "underwater" },
+    { SECT_DESERT,       "^O&Y", " &w", "",   "bank" },
     { SECT_DUNNO,        "&P",   " &w", "",   "dunno" },
     { SECT_OCEANFLOOR,   "^w&z", " &w", "",   "ocean floor" },
     { SECT_UNDERGROUND,  "^w&z", " &w", "",   "underground" },
-//    { SECT_TREE,         "^w&z", " &w", "",   "tree" },
-//    { SECT_FIRE,         "^w&z", " &w", "",   "fire" },
-//    { SECT_QUICKSAND,    "^w&z", " &w", "",   "quicksand" },
-//    { SECT_ETHER,        "^w&z", " &w", "",   "ether" },
-//    { SECT_GLACIER,      "^w&z", " &w", "",   "glacier" },
-//    { SECT_EARTH,        "^w&z", " &w", "",   "earth" },
-
+    { SECT_SCRUB,		 "^b&B", " &w", "",   "ionode" },
+	{ SECT_ROCKY,  		 "^w&z", " &w", "",   "rocky" },
+	{ SECT_SAVANNA,  	 "^w&z", " &w", "",   "savanna" },
+	{ SECT_TUNDRA,  	 "^w&z", " &w", "",   "tundra" },
+	{ SECT_GLACIAL,  	 "^w&z", " &w", "",   "glacial" },
+	{ SECT_RAINFOREST, 	 "^w&z", " &w", "",   "rainforest" },
+	{ SECT_JUNGLE,  	 "^w&z", " &w", "",   "jungle" },
+	{ SECT_SWAMP,  		 "^r&z", " &w", "",   "firewall" },
+	{ SECT_WETLANDS,  	 "^w&z", " &w", "",   "wetlands" },
+	{ SECT_BRUSH,  		 "^w&z", " &w", "",   "brush" },
+	{ SECT_STEPPE,  	 "^w&z", " &w", "",   "steppe" },
+	{ SECT_FARMLAND,  	 "^B&b", " &w", "",   "subserver" },
+	{ SECT_VOLCANIC,  	 "^w&z", " &w", "",   "volcanic" },
     { SECT_TOP,          "&Y",   "~&w", "",   "bad sector type" }
 };
 
@@ -821,8 +816,7 @@ void ShowMap( CHAR_DATA *ch, int min, int max, int size, int center )
         safe_strcat( MAX_STRING_LENGTH, outbuf, " |\n\r" );
     }
     send_to_char( "\n\r", ch );
-    /* this is the top line of the map itself, currently not part of the mapstr
-ing */
+    /* this is the top line of the map itself, currently not part of the mapstring */
     send_to_char( borderbuf, ch );
     /* this is the contents of the map */
     send_to_char( outbuf, ch );

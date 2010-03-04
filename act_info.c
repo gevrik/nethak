@@ -803,7 +803,6 @@ void do_look
 	send_to_char( ch->in_room->name, ch);
 	set_char_color(AT_WHITE, ch);
 
-
         if ( ! ch->desc->original )
         {
 
@@ -828,7 +827,8 @@ void do_look
 	if ( arg1[0] == '\0'
 	|| ( !IS_NPC(ch) && !IS_SET(ch->act, PLR_BRIEF) ) )
 	{
-	    send_to_char( ch->in_room->description, ch );
+		do_mapper(ch, "3");
+		send_to_char( ch->in_room->description, ch );
 	    send_to_char( "\n\r", ch );
 	}
 
