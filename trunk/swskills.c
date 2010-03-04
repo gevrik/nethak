@@ -3083,7 +3083,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 	else if ( !str_cmp( argument, "database" ) )
 	{
 		location->area->planet->wilderness++;
-		location->sector_type = location->area->planet->sector;
+		location->sector_type = SECT_MOUNTAIN; //location->area->planet->sector;
 		strcpy( buf , ch->name );
 		strcat( buf , "&Y.&Cdatabase" );
 		strcpy( bufa , "a database node.\n\r" );
@@ -3240,7 +3240,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 	else if ( !str_cmp( argument, "bank" ) )
 	{
 		location->area->planet->citysize++;
-		location->sector_type = SECT_INSIDE;
+		location->sector_type = SECT_DESERT;
 		SET_BIT( location->room_flags , ROOM_BANK );
 		strcpy( buf , ch->name );
 		strcat( buf , "&Y.&Cbank" );
@@ -3256,7 +3256,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 //		}
 
 		location->area->planet->citysize++;
-		location->sector_type = SECT_INSIDE;
+		location->sector_type = SECT_FIELD;
 		SET_BIT( location->room_flags , ROOM_HOTEL );
 		strcpy( buf , ch->name );
 		strcat( buf , "&Y.&Cagent" );
@@ -3278,7 +3278,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 			}
 
 		location->area->planet->citysize++;
-		location->sector_type = SECT_CITY;
+		location->sector_type = SECT_SCRUB;
 		SET_BIT( location->room_flags , ROOM_CAN_LAND );
 		strcpy( buf , ch->name );
 		strcat( buf , "&Y.&Cio" );
@@ -3295,7 +3295,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 			}
 
 		location->area->planet->citysize++;
-		location->sector_type = SECT_CITY;
+		location->sector_type = SECT_SCRUB;
 		SET_BIT( location->room_flags , ROOM_PUBLICIO );
 		SET_BIT( location->room_flags , ROOM_NO_MOB );
 		strcpy( buf , ch->name );
@@ -3336,7 +3336,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 	else if ( !str_cmp( argument, "coding" ) )
 	{
 		location->area->planet->citysize++;
-		location->sector_type = SECT_INSIDE;
+		location->sector_type = SECT_MOUNTAIN;
 		SET_BIT( location->room_flags , ROOM_SAFE );
 		SET_BIT( location->room_flags , ROOM_RESTAURANT );
 		SET_BIT( location->room_flags , ROOM_NO_MOB );
@@ -3382,7 +3382,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 			}
 
 		location->area->planet->citysize++;
-		location->sector_type = SECT_INSIDE;
+		location->sector_type = SECT_SWAMP;
 		SET_BIT( location->room_flags , ROOM_BARRACKS );
 		// if( location->area->planet->barracks > 4 )
 		ch->gold -= 20000;
@@ -4130,9 +4130,10 @@ void do_survey ( CHAR_DATA *ch , char *argument )
 	ch_printf( ch, "&Y%s\n\r\n\r", room->name );
 	ch_printf( ch, "&Windex:&Y %d\n\r", room->vnum );
 	if ( room->area && room->area->planet )
-		ch_printf( ch, "&Wsystem:&Y %s\n\r", room->area->planet->name );
-	ch_printf( ch, "&Wsize:&Y %d\n\r", room->tunnel );
+	ch_printf( ch, "&Wsystem:&Y %s\n\r", room->area->planet->name );
+	//ch_printf( ch, "&Wsize:&Y %d\n\r", room->tunnel );
 	ch_printf( ch, "&Wsector:&Y %s\n\r", sector_name[room->sector_type] );
+	ch_printf( ch, "&Wowner:&Y %s\n\r", room->owner );
 	send_to_char( "&Winfo:\n\r", ch );
 
 	if ( IS_SET( room->room_flags , ROOM_DARK) )
