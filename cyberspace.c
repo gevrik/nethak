@@ -2128,3 +2128,45 @@ void display_status( CHAR_DATA *ch )
     ch_printf( ch, "&W[&ROther Options&W] LEAVE, SAY, OOC\n\r" );
 }
 
+//void do_setenlistnode( CHAR_DATA *ch, char *argument )
+//{
+//	ROOM_INDEX_DATA	*location;
+//	CLAN_DATA * clan;
+//
+//	location = ch->in_room;
+//	clan = ch->pcdata->clan;
+//
+//	if ( !clan )
+//	{
+//		send_to_char( "> you need to be part of an organization before you can do that\n\r", ch );
+//		return;
+//	}
+//
+//	if ( nifty_is_name( ch->name, clan->leaders  ) )
+//		;
+//	else
+//	{
+//		send_to_char( "> only organization leaders can set the enlistnode\n\r", ch );
+//		return;
+//	}
+//
+//	if ( !ch->in_room->area || !ch->in_room->area->planet ||
+//			clan != ch->in_room->area->planet->governed_by      )
+//	{
+//		send_to_char( "> your organization does not own this system\n\r", ch );
+//		return;
+//	}
+//
+//	if ( !IS_SET( ch->in_room->room_flags, ROOM_INFO ) )
+//	{
+//		send_to_char( "&R> you need to be in the public lobby of the system\n\r", ch );
+//		return;
+//	}
+//
+//
+//
+//	SET_BIT( ch->in_room->area->flags , AFLAG_MODIFIED );
+//
+//	return;
+//
+//}

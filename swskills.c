@@ -3047,7 +3047,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 		//send_to_char( "bar          - liquor is sold here\n\r", ch );
 		//send_to_char( "control      - control tower for patrol ships\n\r", ch );
 		send_to_char( "firewall     - generates ICE [Cost: 20,000]\n\r", ch );
-		send_to_char( "botnet       - generates ICE [Cost: 10,000]\n\r", ch );
+		//send_to_char( "botnet       - generates ICE [Cost: 10,000]\n\r", ch );
 		//send_to_char( "garage       - vehicles are built here\n\r", ch );
 		send_to_char( "bank         - banking node\n\r", ch );
 		send_to_char( "employment   - job office\n\r", ch );
@@ -3074,7 +3074,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 	else if ( !str_cmp( argument, "terminal" ) )
 	{
 		location->area->planet->citysize++;
-		location->sector_type = SECT_CITY;
+		location->sector_type = SECT_DESERT;
 		strcpy( buf , ch->name );
 		strcat( buf , "&Y.&Cterminal" );
 		strcpy( bufa , "a terminal node.\n\r" );
@@ -3083,7 +3083,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 	else if ( !str_cmp( argument, "database" ) )
 	{
 		location->area->planet->wilderness++;
-		location->sector_type = SECT_MOUNTAIN; //location->area->planet->sector;
+		location->sector_type = SECT_GLACIAL; //location->area->planet->sector;
 		strcpy( buf , ch->name );
 		strcat( buf , "&Y.&Cdatabase" );
 		strcpy( bufa , "a database node.\n\r" );
@@ -3240,7 +3240,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 	else if ( !str_cmp( argument, "bank" ) )
 	{
 		location->area->planet->citysize++;
-		location->sector_type = SECT_DESERT;
+		location->sector_type = SECT_INSIDE;
 		SET_BIT( location->room_flags , ROOM_BANK );
 		strcpy( buf , ch->name );
 		strcat( buf , "&Y.&Cbank" );
@@ -3256,7 +3256,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 //		}
 
 		location->area->planet->citysize++;
-		location->sector_type = SECT_FIELD;
+		location->sector_type = SECT_INSIDE;
 		SET_BIT( location->room_flags , ROOM_HOTEL );
 		strcpy( buf , ch->name );
 		strcat( buf , "&Y.&Cagent" );
@@ -3278,7 +3278,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 			}
 
 		location->area->planet->citysize++;
-		location->sector_type = SECT_SCRUB;
+		location->sector_type = SECT_CITY;
 		SET_BIT( location->room_flags , ROOM_CAN_LAND );
 		strcpy( buf , ch->name );
 		strcat( buf , "&Y.&Cio" );
@@ -3295,7 +3295,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 			}
 
 		location->area->planet->citysize++;
-		location->sector_type = SECT_SCRUB;
+		location->sector_type = SECT_CITY;
 		SET_BIT( location->room_flags , ROOM_PUBLICIO );
 		SET_BIT( location->room_flags , ROOM_NO_MOB );
 		strcpy( buf , ch->name );
@@ -3305,9 +3305,10 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 	else if ( !str_cmp( argument, "trade" ) )
 	{
 		location->area->planet->citysize++;
-		location->sector_type = SECT_INSIDE;
+		location->sector_type = SECT_SAVANNA;
 		SET_BIT( location->room_flags , ROOM_SAFE );
 		SET_BIT( location->room_flags , ROOM_TRADE );
+		SET_BIT( location->room_flags , ROOM_NO_MOB );
 		strcpy( buf , ch->name );
 		strcat( buf , "&Y.&Ctrade" );
 		strcpy( bufa , "a trade node.\n\r" );
@@ -3315,9 +3316,10 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 	else if ( !str_cmp( argument, "supply" ) )
 	{
 		location->area->planet->citysize++;
-		location->sector_type = SECT_INSIDE;
+		location->sector_type = SECT_SAVANNA;
 		SET_BIT( location->room_flags , ROOM_SAFE );
 		SET_BIT( location->room_flags , ROOM_SUPPLY );
+		SET_BIT( location->room_flags , ROOM_NO_MOB );
 		strcpy( buf , ch->name );
 		strcat( buf , "&Y.&Csupply" );
 		strcpy( bufa , "a supply node.\n\r" );
@@ -3325,9 +3327,10 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 	else if ( !str_cmp( argument, "pawn" ) )
 	{
 		location->area->planet->citysize++;
-		location->sector_type = SECT_INSIDE;
+		location->sector_type = SECT_SAVANNA;
 		SET_BIT( location->room_flags , ROOM_SAFE );
 		SET_BIT( location->room_flags , ROOM_PAWN );
+		SET_BIT( location->room_flags , ROOM_NO_MOB );
 		strcpy( buf , ch->name );
 		strcat( buf , "&Y.&Cpawn" );
 		strcpy( bufa , "a pawn node.\n\r" );
@@ -3336,7 +3339,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 	else if ( !str_cmp( argument, "coding" ) )
 	{
 		location->area->planet->citysize++;
-		location->sector_type = SECT_MOUNTAIN;
+		location->sector_type = SECT_INSIDE;
 		SET_BIT( location->room_flags , ROOM_SAFE );
 		SET_BIT( location->room_flags , ROOM_RESTAURANT );
 		SET_BIT( location->room_flags , ROOM_NO_MOB );

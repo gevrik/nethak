@@ -471,6 +471,10 @@ void fwrite_char( CHAR_DATA *ch, FILE *fp )
 	  fprintf( fp, ""
 			  "Qtaxnodes      %d\n",	ch->pcdata->qtaxnodes	);
 
+	if ( ch->pcdata->serverrevision )
+	  fprintf( fp, ""
+			  "Serverrevision      %d\n",	ch->pcdata->serverrevision	);
+
     NOTIFY_DATA *temp;
     for(temp = ch->pcdata->first_notify; temp; temp = temp->next)
     {
@@ -1334,6 +1338,7 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload )
 	    break;
 
 	case 'S':
+		KEY( "Serverrevision", ch->pcdata->serverrevision, fread_number( fp ) );
 	    KEY( "Sex",		ch->sex,		fread_number( fp ) );
 	    KEY( "ShortDescr",	ch->short_descr,	fread_string( fp ) );
 	    KEY( "Susceptible",	ch->susceptible,	fread_number( fp ) );

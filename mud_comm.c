@@ -216,7 +216,7 @@ void do_mp_offer_agent( CHAR_DATA *ch, char *argument )
           return;
     }
     
-    /* package job */
+    /* agent job */
     {  
        if ( ( pObjIndex = get_obj_index( 101 ) ) == NULL )
        {
@@ -247,13 +247,18 @@ void do_mp_offer_agent( CHAR_DATA *ch, char *argument )
           return;
        }
 
+	   if( IS_SET( dPlanet->flags, PLANET_NOCAP ) )
+       {
+          do_say( ch , "There are no jobs at this time" );
+          return;
+       }
+
 	clan = victim->pcdata->clan;
 	tclan = dPlanet->governed_by;
 	planet = ch->in_room->area->planet;
 
-//	ch_printf( victim, "DEBUG: clan: %s tclan: %s\n\r", clan->atwar, tclan->name );
 
-	if ( !victim->pcdata->clan )
+	if ( !clan )
 	{
 	       sprintf( buf , "virus %s" , dPlanet->name );
 
@@ -262,12 +267,6 @@ void do_mp_offer_agent( CHAR_DATA *ch, char *argument )
 	          do_say( ch , "Deliver the virus that is stored in this node." );
 	          return;
 	       }
-
-	   	if( dPlanet->governed_by->name == planet->governed_by->name )
-	          {
-	             do_say( ch , "Sorry, no jobs. Try again." );
-	             return;
-	          }
 
 	       obj = create_object( pObjIndex , 1 );
 	       STRFREE( obj->name );
@@ -285,22 +284,22 @@ void do_mp_offer_agent( CHAR_DATA *ch, char *argument )
 	       obj = obj_to_char( obj, victim );
 		return;
 	}
-
-
-	if( victim->pcdata->clan->name != planet->governed_by->name )
-       {
+	else
+	{
+		if( victim->pcdata->clan->name != planet->governed_by->name )
+		{
           do_say( ch , "I only offer jobs to members of my organization." );
           return;
-       }
-
-	if ( !victim->pcdata->clan )
-	{
-		if( !nifty_is_name( clan->atwar,  tclan->name ) )
-		{
-          do_say( ch , "I have no jobs to offer you at this time! [no war]" );
-          return;
 		}
-	}
+
+		if ( !victim->pcdata->clan )
+		{
+			if( !nifty_is_name( clan->atwar,  tclan->name ) )
+			{
+				do_say( ch , "I have no jobs to offer you at this time! [no war]" );
+				return;
+			}
+		}
 
        sprintf( buf , "virus %s" , dPlanet->name );
        
@@ -327,6 +326,8 @@ void do_mp_offer_agent( CHAR_DATA *ch, char *argument )
       
        return;
     }
+    }
+
 
     do_say( ch , "I have no jobs to offer you at this time!" );
 
