@@ -830,8 +830,8 @@ void do_look
 	send_to_char( "\n\r", ch );
 	//set_char_color( AT_RMDESC, ch );
 
-	if ( !IS_NPC(ch) && IS_SET(ch->act, PLR_AUTOMAP) )
-	do_mapper(ch, "3");
+//	if ( !IS_NPC(ch) && IS_SET(ch->act, PLR_AUTOMAP) )
+//	do_mapper(ch, "3");
 	
 	if ( arg1[0] == '\0'
 	|| ( !IS_NPC(ch) && !IS_SET(ch->act, PLR_BRIEF) ) )

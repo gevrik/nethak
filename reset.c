@@ -675,7 +675,7 @@ void reset_all( )
         if ( number_bits(1) != 0 )
            continue;
            
-        if ( pRoomIndex->sector_type == SECT_CITY )
+        if ( pRoomIndex->sector_type == SECT_DESERT )
         {
            if ( pRoomIndex->area->planet->population >= max_population(pRoomIndex->area->planet) )
               continue;  
@@ -892,7 +892,6 @@ void reset_all( )
 
            case SECT_VOLCANIC:
            case SECT_UNDERGROUND: 
-           case SECT_DESERT:
               if ( anumber == 0 )
                 vnum = MOB_VNUM_INSECT;
               else
