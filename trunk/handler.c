@@ -2093,10 +2093,10 @@ bool can_see( CHAR_DATA *ch, CHAR_DATA *victim )
     if ( ch == victim )
 	return TRUE;
 
-    if ( !IS_NPC(victim)
-    &&   IS_SET(victim->act, PLR_WIZINVIS)
-    &&   get_trust( ch ) < victim->pcdata->wizinvis )
-	return FALSE;
+//    if ( !IS_NPC(victim)
+//    &&   IS_SET(victim->act, PLR_WIZINVIS)
+//    &&   get_trust( ch ) < victim->pcdata->wizinvis )
+//	return FALSE;
 
     if ( victim->position == POS_FIGHTING || victim->position < POS_SLEEPING )
        return TRUE;

@@ -482,10 +482,16 @@ void show_char_to_char_0( CHAR_DATA *victim, CHAR_DATA *ch )
     */
 
     if ( !IS_NPC(victim) && !IS_SET(ch->act, PLR_BRIEF) )
-	{
-	//strcat( buf, "> " );
-	strcat( buf, victim->pcdata->title );
-	}
+    {
+    	//strcat( buf, "> " );
+    	if(victim->pcdata->title != NULL){
+    		strcat( buf, victim->pcdata->title );
+    	}
+    	else
+    	{
+    	strcat( buf, victim->name );
+    	}
+    }
     else
 	{
 	//strcat( buf, "> " );

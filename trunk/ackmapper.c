@@ -614,7 +614,7 @@ void MapArea(ROOM_INDEX_DATA *room, CHAR_DATA *ch,
              int x, int y, int min, int max, int line_of_sight )
 {
     CHAR_DATA * victim;
-    int looper;
+    int looper=0;
     EXIT_DATA *door;
     sh_int door_type = 0;
 
@@ -625,7 +625,7 @@ void MapArea(ROOM_INDEX_DATA *room, CHAR_DATA *ch,
     map[x][y]=room->sector_type;
 
     /* displays seen mobs nearby as numbers */
-    for ( looper = 0, victim = room->first_person; victim; victim = victim->next_in_room )
+    for ( victim = room->first_person; victim; victim = victim->next_in_room )
         if ( can_see( ch, victim ) && !is_same_group( ch, victim ) )
             looper++;
     if ( looper > 0 )
