@@ -2070,6 +2070,7 @@ struct	pc_data
     char sudoku[9][9];
     time_t sstarttime, sfastesttime, sslowesttime, slasttime;
     unsigned swins, squits;
+    int			serverrevision;
 };
 
 

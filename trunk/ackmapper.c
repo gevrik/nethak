@@ -79,48 +79,48 @@ int offsets[4][2] ={ {-2, 0},{ 0, 2},{ 2, 0},{ 0,-2} };
 
 const struct map_info_type door_info[] =
 {
-    { DOOR_LOCKED, "&r" , "#&w", "","Locked door" },
-    { DOOR_OPEN, "&W" , "#&w", "","Open door" },
-    { DOOR_CLOSED, "&r" , "#&w", "","Closed Door" },
-    { DOOR_NS, "&W" , "|&w", "","N/S Exit" },
-    { DOOR_EW, "&W" , "-&w", "","E/W Exit" },
-    { DOOR_NULL, "&w", " &w", "","Invalid" }
+    { DOOR_LOCKED, "^x&r" , "#^x&w", "","Locked door" },
+    { DOOR_OPEN, "^x&W" , "#^x&w", "","Open door" },
+    { DOOR_CLOSED, "^x&r" , "#^x&w", "","Closed Door" },
+    { DOOR_NS, "^x&W" , "|^x&w", "","N/S Exit" },
+    { DOOR_EW, "^x&W" , "-^x&w", "","E/W Exit" },
+    { DOOR_NULL, "^x&w", " ^x&w", "","Invalid" }
 };
 
 const struct map_info_type map_info[] =
 {
     { SECT_BLOCKED,      "&p",   "~&w", "",   "blocked" },
-    { SECT_UNSEEN,       "&w&z", " &w", "",   "unknown" },
-    { SECT_HERE,         "&w&W", "*&w", "",   "you!" },
+    { SECT_UNSEEN,       "&w", " &w", "",   "unknown" },
+    { SECT_HERE,         "&W", "*&w", "",   "you!" },
 
-    { SECT_INSIDE,       "^z&W", " &w", "",   "inside" },
-    { SECT_CITY,         "^Y&O", " &w", "",   "city" },
-    { SECT_FIELD,        "^G&g", " &w", "",   "field" },
-    { SECT_FOREST,       "^g&G", " &w", "&W", "forest" },
-    { SECT_HILLS,        "^Y&O", " &w", "&W", "hills" },
-    { SECT_MOUNTAIN,     "^G&g", " &w", "",   "database" },
-    { SECT_WATER_SWIM,   "^B&b", " &w", "",   "shallow water" },
-    { SECT_WATER_NOSWIM, "^b&B", " &w", "",   "deep running water" },
-	{ SECT_UNDERWATER,	 "^b&B", " &w", "",   "underwater" },
-    { SECT_AIR,          "^c&C", " &w", "",   "air" },
-    { SECT_DESERT,       "^O&Y", " &w", "",   "bank" },
-    { SECT_DUNNO,        "&P",   " &w", "",   "dunno" },
-    { SECT_OCEANFLOOR,   "^w&z", " &w", "",   "ocean floor" },
-    { SECT_UNDERGROUND,  "^w&z", " &w", "",   "underground" },
-    { SECT_SCRUB,		 "^b&B", " &w", "",   "ionode" },
-	{ SECT_ROCKY,  		 "^w&z", " &w", "",   "rocky" },
-	{ SECT_SAVANNA,  	 "^w&z", " &w", "",   "savanna" },
-	{ SECT_TUNDRA,  	 "^w&z", " &w", "",   "tundra" },
-	{ SECT_GLACIAL,  	 "^w&z", " &w", "",   "glacial" },
-	{ SECT_RAINFOREST, 	 "^w&z", " &w", "",   "rainforest" },
-	{ SECT_JUNGLE,  	 "^w&z", " &w", "",   "jungle" },
-	{ SECT_SWAMP,  		 "^r&z", " &w", "",   "firewall" },
-	{ SECT_WETLANDS,  	 "^w&z", " &w", "",   "wetlands" },
-	{ SECT_BRUSH,  		 "^w&z", " &w", "",   "brush" },
-	{ SECT_STEPPE,  	 "^w&z", " &w", "",   "steppe" },
-	{ SECT_FARMLAND,  	 "^B&b", " &w", "",   "subserver" },
-	{ SECT_VOLCANIC,  	 "^w&z", " &w", "",   "volcanic" },
-    { SECT_TOP,          "&Y",   "~&w", "",   "bad sector type" }
+    { SECT_INSIDE,       "^w&x", " ^x&w", "",   "inside" },
+    { SECT_CITY,         "^O&x", " ^x&w", "",   "city" },
+    { SECT_FIELD,        "^g&g", " ^x&w", "",   "field" },
+    { SECT_FOREST,       "^g&G", " ^x&w", "&W", "forest" },
+    { SECT_HILLS,        "^O&x", " ^x&w", "&W", "hills" },
+    { SECT_MOUNTAIN,     "^g&x", " ^x&w", "",   "database" },
+    { SECT_WATER_SWIM,   "^b&W", " ^x&w", "",   "shallow water" },
+    { SECT_WATER_NOSWIM, "^b&W", " ^x&w", "",   "deep running water" },
+	{ SECT_UNDERWATER,	 "^b&W", " ^x&w", "",   "underwater" },
+    { SECT_AIR,          "^c&C", " ^x&w", "",   "air" },
+    { SECT_DESERT,       "^c&x", " ^x&w", "",   "terminal" },
+    { SECT_DUNNO,        "&P",   " ^x&w", "",   "dunno" },
+    { SECT_OCEANFLOOR,   "^w&z", " ^x&w", "",   "ocean floor" },
+    { SECT_UNDERGROUND,  "^w&z", " ^x&w", "",   "underground" },
+    { SECT_SCRUB,		 "^b&W", " ^x&w", "",   "ionode" },
+	{ SECT_ROCKY,  		 "^w&z", " ^x&w", "",   "rocky" },
+	{ SECT_SAVANNA,  	 "^p&W", " ^x&w", "",   "trade" },
+	{ SECT_TUNDRA,  	 "^w&z", " ^x&w", "",   "tundra" },
+	{ SECT_GLACIAL,  	 "^g&x", " ^x&w", "",   "default" },
+	{ SECT_RAINFOREST, 	 "^w&z", " ^x&w", "",   "rainforest" },
+	{ SECT_JUNGLE,  	 "^w&z", " ^x&w", "",   "jungle" },
+	{ SECT_SWAMP,  		 "^r&W", " ^x&w", "",   "firewall" },
+	{ SECT_WETLANDS,  	 "^w&z", " ^x&w", "",   "wetlands" },
+	{ SECT_BRUSH,  		 "^w&z", " ^x&w", "",   "brush" },
+	{ SECT_STEPPE,  	 "^w&z", " ^x&w", "",   "steppe" },
+	{ SECT_FARMLAND,  	 "^b&W", " ^x&w", "",   "subserver" },
+	{ SECT_VOLCANIC,  	 "^w&z", " ^x&w", "",   "volcanic" },
+    { SECT_TOP,          "&Y",   "~^x&w", "",   "bad sector type" }
 };
 
 char * get_sector_display( int sector )
@@ -709,14 +709,14 @@ void ShowRoom( CHAR_DATA *ch, int min, int max, int size, int center )
     sprintf( borderbuf, "%s", "+" );
     for ( looper = 0; looper <= size+1; looper++ )
     {
-        sprintf( catbuf, "%s", "-" );
+        sprintf( catbuf, "%s", "&w-&w" );
         safe_strcat( MAX_STRING_LENGTH, borderbuf, catbuf );
     }
-    safe_strcat( MAX_STRING_LENGTH, borderbuf, "+" );
+    safe_strcat( MAX_STRING_LENGTH, borderbuf, "&W+&w" );
     for (x = min; x <= max; ++x)
     { /* every row */
 
-        safe_strcat( MAX_STRING_LENGTH, outbuf, "| " );
+        safe_strcat( MAX_STRING_LENGTH, outbuf, "^x&W|^x&w " );
         for (y = min; y <= max; ++y)
         { /* every column */
             if ( (y==min) || (map[x][y-1]!=map[x][y]) )
@@ -749,7 +749,7 @@ void ShowRoom( CHAR_DATA *ch, int min, int max, int size, int center )
             }
 
         }
-        safe_strcat( MAX_STRING_LENGTH, outbuf, " |\n\r" );
+        safe_strcat( MAX_STRING_LENGTH, outbuf, " ^x&W|^x&w\n\r" );
     }
 
     disp_map(borderbuf, outbuf, ch);
@@ -771,17 +771,17 @@ void ShowMap( CHAR_DATA *ch, int min, int max, int size, int center )
     char displaybuf[MAX_STRING_LENGTH];
 
     sprintf( outbuf, "%s", "\n\r" );
-    sprintf( borderbuf, "%s", "+" );
+    sprintf( borderbuf, "%s", "^x&W+" );
 
     for ( looper = 0; looper <= size+1; looper++ )
     {
-        sprintf( catbuf, "%s", "-" );
+        sprintf( catbuf, "%s", "^x&W-" );
         safe_strcat( MAX_STRING_LENGTH, borderbuf, catbuf );
     }
-    safe_strcat( MAX_STRING_LENGTH, borderbuf, "+" );
+    safe_strcat( MAX_STRING_LENGTH, borderbuf, "^x&W+" );
     for (x = min; x <= max; ++x)
     {
-        safe_strcat( MAX_STRING_LENGTH, outbuf, "| " );
+        safe_strcat( MAX_STRING_LENGTH, outbuf, "^x&W| " );
         for (y = min; y <= max; ++y)
         {
             if ( (y==min) || (map[x][y-1]!=map[x][y]) )
@@ -813,7 +813,7 @@ void ShowMap( CHAR_DATA *ch, int min, int max, int size, int center )
             }
 
         }
-        safe_strcat( MAX_STRING_LENGTH, outbuf, " |\n\r" );
+        safe_strcat( MAX_STRING_LENGTH, outbuf, " ^x&W|\n\r" );
     }
     send_to_char( "\n\r", ch );
     /* this is the top line of the map itself, currently not part of the mapstring */

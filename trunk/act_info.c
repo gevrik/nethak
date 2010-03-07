@@ -821,13 +821,15 @@ void do_look
 
         }
 
-	send_to_char( "\n\r\n\r", ch );
+	send_to_char( "\n\r", ch );
 	//set_char_color( AT_RMDESC, ch );
+
+	if ( !IS_NPC(ch) && IS_SET(ch->act, PLR_AUTOMAP) )
+	do_mapper(ch, "3");
 	
 	if ( arg1[0] == '\0'
 	|| ( !IS_NPC(ch) && !IS_SET(ch->act, PLR_BRIEF) ) )
 	{
-		do_mapper(ch, "3");
 		send_to_char( ch->in_room->description, ch );
 	    send_to_char( "\n\r", ch );
 	}
@@ -3030,7 +3032,7 @@ void do_config( CHAR_DATA *ch, char *argument )
 	      : "[-vnum     ] you do not see the VNUM of a room\n\r"
 	      , ch );
 
-	if ( IS_IMMORTAL( ch ) )
+	//if ( IS_IMMORTAL( ch ) )
 	  send_to_char(  IS_SET(ch->act, PLR_AUTOMAP)    /* maps */
 	      ? "[+MAP      ] you can see the MAP of a room\n\r"
 	      : "[-map      ] you do not see the MAP of a room\n\r"
@@ -3091,8 +3093,7 @@ void do_config( CHAR_DATA *ch, char *argument )
 	else if ( !str_prefix( arg+1, "shovedrag") ) bit = PLR_SHOVEDRAG;
 	else if ( IS_IMMORTAL( ch )
 	     &&   !str_prefix( arg+1, "vnum"     ) ) bit = PLR_ROOMVNUM;
-	else if ( IS_IMMORTAL( ch )
-	     &&   !str_prefix( arg+1, "map"      ) ) bit = PLR_AUTOMAP;     /* maps */
+	else if ( !str_prefix( arg+1, "map"      ) ) bit = PLR_AUTOMAP;     /* maps */
 
 	if (bit)
         {

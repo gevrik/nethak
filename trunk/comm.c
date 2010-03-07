@@ -2033,12 +2033,15 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
                already turned on.  Very few people don't use those. */
 					SET_BIT( ch->act, PLR_AUTOGOLD );
 					SET_BIT( ch->act, PLR_AUTOEXIT );
+					SET_BIT( ch->act, PLR_AUTOMAP );
 
 					SET_BIT (ch->pcdata->cyber, CYBER_REACTOR );
 
 					obj = create_object( get_obj_index(OBJ_VNUM_SCHOOL_DAGGER), 0 );
 					obj_to_char( obj, ch );
 					equip_char( ch, obj, WEAR_WIELD );
+
+					ch->pcdata->serverrevision = 2;
 
 					//obj = create_object( get_obj_index(OBJ_VNUM_LIGHT), 0 );
 					//obj_to_char( obj, ch );
@@ -2178,6 +2181,47 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 						release_supermob();
 
 					}
+				}
+
+
+				// server revisions
+
+				if ( ch->pcdata->serverrevision < 2)
+				{
+					int currqtaxnodes = ch->pcdata->qtaxnodes;
+					int revcompensation = (500 * currqtaxnodes) + 25000;
+
+
+					if ( revcompensation > 250000 )
+						revcompensation = 250000;
+
+					CLAN_DATA *clan;
+
+					ch->pcdata->bank += revcompensation;
+
+					if ( ch->plr_home != NULL )
+					{
+					ch->plr_home = NULL;
+					}
+
+					clan =  ch->pcdata->clan;
+			        if ( clan != NULL )
+			        {
+			            ch->pcdata->clan = NULL;
+			            STRFREE(ch->pcdata->clan_name);
+			            ch->pcdata->clan_name = STRALLOC( "" );
+			            DISPOSE( ch->pcdata->bestowments );
+			            ch->pcdata->bestowments = str_dup("");
+			        }
+
+		            ch->pcdata->qtaxnodes = 0;
+					ch->pcdata->serverrevision = 2;
+
+					char_to_room( ch, get_room_index( 33 ) );
+					SET_BIT( ch->act, PLR_AUTOMAP );
+
+					save_char_obj( ch );
+
 				}
 
 				//char bufText[MAX_STRING_LENGTH];

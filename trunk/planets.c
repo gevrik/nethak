@@ -633,13 +633,7 @@ void do_showplanet( CHAR_DATA *ch, char *argument )
 	ch_printf( ch, "&system is not yet explored\n\r" );
     }
     if( IS_SET( planet->flags, PLANET_NOCAP ) )
-	ch_printf( ch, "&WPlanet is not capturable\n\r" );
-    if( IS_SET( planet->flags, PLANET_NOPEDIT ) )
-	ch_printf( ch, "&WPlanet is not editable by players\n\r" );
-    if( IS_SET( planet->flags, PLANET_NOINVADE ) )
-  	ch_printf( ch, "&WPlanet is not invadable\n\r" );
-    if( IS_SET( planet->flags, PLANET_NOTARGET ) )
-  	ch_printf( ch, "&WPlanet is not targetable\n\r" );
+	ch_printf( ch, "&Wsystem cannot be captured\n\r" );
 
     if ( IS_IMMORTAL(ch) && !planet->area )
     {
@@ -713,7 +707,7 @@ void do_makeplanet( CHAR_DATA *ch, char *argument )
          if ( rnum == 12 )
 	     {
 	        location->name = STRALLOC( "supply" );
-                strcpy( buf , "the city grid's public supply node.\n\r" );
+                strcpy( buf , "the system's public supply node.\n\r" );
 	        location->description = STRALLOC(buf);
              	location->sector_type = SECT_INSIDE;
 		SET_BIT( location->room_flags , ROOM_INDOORS );
@@ -729,7 +723,7 @@ void do_makeplanet( CHAR_DATA *ch, char *argument )
 	     {
 	        strcpy( buf , "lobby" );
 	        location->name = STRALLOC( buf );
-                strcpy( buf , "the city grid's public lobby node.\n\r" );
+                strcpy( buf , "the system's public lobby node.\n\r" );
 	        location->description = STRALLOC(buf);
              	location->sector_type = SECT_INSIDE;
 		SET_BIT( location->room_flags , ROOM_INDOORS );
@@ -737,16 +731,16 @@ void do_makeplanet( CHAR_DATA *ch, char *argument )
 		SET_BIT( location->room_flags , ROOM_SAFE );
 		SET_BIT( location->room_flags , ROOM_NOPEDIT );
 		SET_BIT( location->room_flags , ROOM_INFO );
+		SET_BIT( location->room_flags , ROOM_RECRUIT );
 	        planet->citysize++;
 	     }
 	     else if ( rnum == 14 )
 	     {
 	        location->name = STRALLOC( "io" );
-                strcpy( buf , "the city grid's main io node.\n\r" );
+                strcpy( buf , "the system's main io node.\n\r" );
 	        location->description = STRALLOC(buf);
              	location->sector_type = SECT_CITY;
-		SET_BIT( location->room_flags , ROOM_SHIPYARD );
-		SET_BIT( location->room_flags , ROOM_CAN_LAND );
+		SET_BIT( location->room_flags , ROOM_PUBLICIO );
 		SET_BIT( location->room_flags , ROOM_NO_MOB );
 		SET_BIT( location->room_flags , ROOM_NOPEDIT );
 	        planet->citysize++;
@@ -756,7 +750,7 @@ void do_makeplanet( CHAR_DATA *ch, char *argument )
 	        //strcpy( buf , planet->name );
 	        strcpy( buf , "agent" );
 	        location->name = STRALLOC( buf );
-                strcpy( buf , "the city grid's public agent node.\n\r" );
+                strcpy( buf , "the system's public agent node.\n\r" );
 	        location->description = STRALLOC(buf);
              	location->sector_type = SECT_INSIDE;
 		SET_BIT( location->room_flags , ROOM_INDOORS );
@@ -771,7 +765,7 @@ void do_makeplanet( CHAR_DATA *ch, char *argument )
 	        //strcpy( buf , planet->name );
 	        strcpy( buf , "employment" );
             location->name = STRALLOC( buf );
-            strcpy( buf , "the city grid's public employment node.\n\r" );
+            strcpy( buf , "the system's public employment node.\n\r" );
 	        location->description = STRALLOC(buf);
             location->sector_type = SECT_INSIDE;
 		SET_BIT( location->room_flags , ROOM_EMPLOYMENT );
@@ -845,9 +839,9 @@ void do_makeplanet( CHAR_DATA *ch, char *argument )
          fold_area( pArea , pArea->filename , FALSE );
          write_area_list();
          write_planet_list();
-         sprintf( buf , "%d" , top_r_vnum - 17 );
-	 //do_goto( ch , buf );
-	 reset_all();
+         sprintf( buf , "%d" , top_r_vnum - 12 );
+         do_goto( ch , buf );
+         reset_all();
 
 	 return;
     }
@@ -857,21 +851,21 @@ void do_makeplanet( CHAR_DATA *ch, char *argument )
 
     if (!ch->in_room || !IS_SET( ch->in_room->room_flags, ROOM_SHIPYARD ) )
     {
-    	send_to_char( "> exploration code can only be launched from an io port\n\r", ch );
+    	send_to_char( "> system creation code can only be started from an io node\n\r", ch );
 	return;
     }
 
-    if ( ch->gold < 100000 )
+    if ( ch->gold < 50000 )
     {
-    	send_to_char( "> it costs 100000 credits to launch an exploration code\n\r", ch );
+    	send_to_char( "> it costs 50,000 credits to start system creation code\n\r", ch );
 	return;
     }
 
     if ( !argument || argument[0] == '\0' )
     {
-	send_to_char( "> would you like to explore an existing region or a new one\n\r\n\r", ch );
-	send_to_char( "> syntax: explore <region name> <system name>\n\r", ch );
-	send_to_char( "> note: the first word in the system's name MUST be unique\n\r", ch );
+	send_to_char( "> specify the city region and the system name\n\r\n\r", ch );
+	send_to_char( "> syntax: foundsys <city name> <system name>\n\r", ch );
+	//send_to_char( "> note: the first word in the system's name MUST be unique\n\r", ch );
 	return;
     }
 
@@ -881,11 +875,11 @@ void do_makeplanet( CHAR_DATA *ch, char *argument )
 	Parse name added for Neuromancer
 	*/
 
-	if( !check_parse_pname( arg1 ) )
-    {
-	send_to_char("> illegal region name - please try another one\n\r", ch );
-	return;
-    }
+//	if( !check_parse_pname( arg1 ) )
+//    {
+//	send_to_char("> illegal region name - please try another one\n\r", ch );
+//	return;
+//    }
 
     starsystem = starsystem_from_name(arg1);
 
@@ -910,14 +904,14 @@ void do_makeplanet( CHAR_DATA *ch, char *argument )
         	return;
          }
 
-         for ( tp = starsystem->first_planet ; tp ; tp = tp->next_in_system )
-           if ( tp->governed_by &&
-           ( !ch->pcdata->clan || ch->pcdata->clan != tp->governed_by ) )
-
-           {
-        	ch_printf( ch, "> you cannot explore in that region without permission from %s\n\r", tp->governed_by->name );
-        	return;
-           }
+//         for ( tp = starsystem->first_planet ; tp ; tp = tp->next_in_system )
+//           if ( tp->governed_by &&
+//           ( !ch->pcdata->clan || ch->pcdata->clan != tp->governed_by ) )
+//
+//           {
+//        	ch_printf( ch, "> you cannot explore in that region without permission from %s\n\r", tp->governed_by->name );
+//        	return;
+//           }
 
       for( tp = first_planet; tp; tp = tp->next )
          if( tp->starsystem == starsystem )
@@ -930,6 +924,13 @@ void do_makeplanet( CHAR_DATA *ch, char *argument )
 	  }
 	  pcount = 0;
          }
+    else
+    {
+		send_to_char("> &Runknown city region&w\n\r", ch );
+	 	return;
+    }
+
+
       for( tp = first_planet; tp; tp = tp->next )
          if( tp->governed_by && tp->governed_by == ch->pcdata->clan )
 	   pcount++;
@@ -946,9 +947,9 @@ void do_makeplanet( CHAR_DATA *ch, char *argument )
 
     if ( !argument || argument[0] == '\0' )
     {
-	send_to_char( "> what would you call the new system if you found it\n\r\n\r", ch );
-	send_to_char( "> syntax: explore <region name> <system name>\n\r", ch );
-	send_to_char( "> note: the first word in the system's name MUST be original\n\r", ch );
+	send_to_char( "> please specify the city region - see REGIONS for a list\n\r\n\r", ch );
+	send_to_char( "> syntax: foundsys <city name> <system name>\n\r", ch );
+	//send_to_char( "> note: the first word in the system's name MUST be original\n\r", ch );
 	return;
     }
 
@@ -971,7 +972,7 @@ void do_makeplanet( CHAR_DATA *ch, char *argument )
     {
 	if ( !str_cmp( pArea->filename, arg3 ) )
 	{
-	  send_to_char( "> first word in the planets name MUST be original\n\r", ch );
+	  send_to_char( "> first word in the system's name MUST be original\n\r", ch );
 	  return;
         }
     }
@@ -990,10 +991,10 @@ void do_makeplanet( CHAR_DATA *ch, char *argument )
     }
 
 
-    ch->gold -= 100000;
+    ch->gold -= 50000;
 
-    send_to_char( "> you spend 100000 credits to launch an explore code\n\r", ch );
-    echo_to_room( AT_WHITE , ch->in_room, "> a small probe lifts off into space" );
+    send_to_char( "> you spend 50,000 credits to start a system creation\n\r", ch );
+    echo_to_room( AT_WHITE , ch->in_room, "> a new system is created" );
 
 //    if (  number_percent() < 20 )
 //	return;
@@ -1027,7 +1028,7 @@ void do_makeplanet( CHAR_DATA *ch, char *argument )
     planet->farmland = 0;
     planet->barracks = 0;
     planet->controls = 0;
-    planet->pop_support = 0;
+    planet->pop_support = 100;
     planet->x      = px;
     planet->y      = py;
     planet->z      = pz;
@@ -1075,10 +1076,10 @@ void do_makeplanet( CHAR_DATA *ch, char *argument )
     sprintf( filename, "%s.planet" , strlower(arg3) );
     planet->filename = str_dup( filename );
 
-    send_to_char( "\n\r&Y> your code has discovered a new system\n\r", ch );
-    send_to_char( "> the terrain: &W", ch );
-    send_to_char( sector_name[sector], ch );
-    send_to_char( "&Y\n\r", ch );
+    send_to_char( "\n\r&Y> your code has created a new system\n\r", ch );
+//    send_to_char( "> the terrain: &W", ch );
+//    send_to_char( sector_name[sector], ch );
+//    send_to_char( "&Y\n\r", ch );
     send_to_char( "\n\r> please enter a description for your system\n\r", ch );
     //send_to_char( "> It should be a short paragraph of 5 or more lines\n\r", ch );
     send_to_char( "> this will be used as the system's default node descriptions\n\r\n\r", ch );
@@ -1111,7 +1112,7 @@ void do_planets( CHAR_DATA *ch, char *argument )
     SPACE_DATA *starsystem;
 
     set_char_color( AT_WHITE, ch );
-    send_to_char( "system          region         owner\n\r" , ch );
+    send_to_char( "system          region         owner           cpu\n\r" , ch );
 
     for ( starsystem = first_starsystem ; starsystem; starsystem = starsystem->next )
 
@@ -1121,9 +1122,15 @@ void do_planets( CHAR_DATA *ch, char *argument )
      {
 		 	if( !IS_SET( planet->flags, PLANET_HIDDEN ) && !IS_SET( planet->flags, PLANET_EXPLORABLE ) )
 	{
-        ch_printf( ch, "&G%-15s %-13s  %s    \n\r",
-                   planet->name , starsystem->name ,
-                   planet->governed_by ? planet->governed_by->name : "" );
+
+		        ch_printf( ch, "&G%-15s %-13s  %-12s    ",
+		                   planet->name , starsystem->name ,
+		                   planet->governed_by ? planet->governed_by->name : "[none]" );
+		        ch_printf( ch, "%.1f\n\r", planet->pop_support );
+
+//        ch_printf( ch, "&G%-15s %-13s  %s    \n\r",
+//                   planet->name , starsystem->name ,
+//                   planet->governed_by ? planet->governed_by->name : "" );
         //ch_printf( ch, "%.1f\n\r", planet->pop_support );
         if ( IS_IMMORTAL(ch) && !planet->area )
         {
