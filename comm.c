@@ -2270,7 +2270,7 @@ bool check_parse_name( char *name )
 	 */
 	if ( is_name( name, "all auto someone immortal self god supreme demigod dog guard cityguard cat cornholio spock hicaine hithoric death ass fuck shit piss crap quit" ) )
 		return FALSE;
-	if ( is_name( name, "luke darth vader skywalker han solo liea leia emporer palpatine chewie chewbacca lando anakin boba fett obiwan kenobi durga moderns freelancers Freelancer Moderns Nethak Netrunners netrunners nethak" ) )
+	if ( is_name( name, "luke darth vader skywalker han solo liea leia emporer palpatine chewie chewbacca lando anakin boba fett obiwan kenobi durga" ) )
 		return FALSE;
 
 	/*
