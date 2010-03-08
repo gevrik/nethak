@@ -286,6 +286,13 @@ void do_mp_offer_agent( CHAR_DATA *ch, char *argument )
 	}
 	else
 	{
+
+		if ( IS_SET( planet->flags, PLANET_NOCAP ) )
+		{
+			do_say( ch , "Go get a job in one of your systems!" );
+			return;
+		}
+
 		if( victim->pcdata->clan->name != planet->governed_by->name )
 		{
           do_say( ch , "I only offer jobs to members of my organization." );

@@ -67,7 +67,7 @@ void reset_all( )
          case 0:
          
             for ( pRoomIndex = dPlanet->area->first_room ; pRoomIndex ; pRoomIndex = pRoomIndex->next_in_area )
-              if ( pRoomIndex->sector_type == SECT_CITY 
+              if ( pRoomIndex->sector_type == SECT_DESERT
               && !IS_SET( pRoomIndex->room_flags , ROOM_NO_MOB ) )
                  break;
             if( pRoomIndex )
@@ -544,7 +544,7 @@ void reset_all( )
 
         anumber = number_bits( 9 );
         
-        if ( pRoomIndex->sector_type != SECT_CITY &&  pRoomIndex->sector_type != SECT_WATER_NOSWIM  
+        if ( pRoomIndex->sector_type != SECT_CITY &&  pRoomIndex->sector_type != SECT_DESERT && pRoomIndex->sector_type != SECT_WATER_NOSWIM
         &&  pRoomIndex->sector_type != SECT_WATER_SWIM &&  pRoomIndex->sector_type != SECT_UNDERWATER
         &&  pRoomIndex->sector_type != SECT_DUNNO  &&  pRoomIndex->sector_type != SECT_AIR        
         &&  pRoomIndex->sector_type != SECT_INSIDE && !pRoomIndex->last_content && number_bits(3) == 0 )
