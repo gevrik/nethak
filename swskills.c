@@ -4289,7 +4289,7 @@ void do_codemed( CHAR_DATA *ch, char *argument )
  {
      if( obj->item_type == ITEM_CONTAINER && !checkcont )
      {
-    	 if( obj->value[1] <= 0 )
+    	 if( obj->value[1] <= 0 && get_obj_weight( obj ) <= 1)
          checkcont = TRUE;
          continue;
      }
