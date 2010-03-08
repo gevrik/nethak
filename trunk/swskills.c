@@ -2887,7 +2887,7 @@ void  clear_roomtype( ROOM_INDEX_DATA * location )
 {
 	if ( location->area && location->area->planet )
 	{
-		if ( location->sector_type <= SECT_CITY )
+		if ( location->sector_type == SECT_DESERT )
 			location->area->planet->citysize--;
 		else if ( location->sector_type == SECT_FARMLAND )
 			location->area->planet->farmland--;

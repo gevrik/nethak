@@ -2109,6 +2109,47 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 				}
 			    }
 
+				// server revisions
+
+				if ( ch->pcdata->serverrevision < 2)
+				{
+					int currqtaxnodes = ch->pcdata->qtaxnodes;
+					int revcompensation = (500 * currqtaxnodes) + 25000;
+
+
+					if ( revcompensation > 250000 )
+						revcompensation = 250000;
+
+					CLAN_DATA *clan;
+
+					ch->pcdata->bank += revcompensation;
+
+					if ( ch->plr_home != NULL )
+					{
+					ch->plr_home = NULL;
+					}
+
+					clan =  ch->pcdata->clan;
+			        if ( clan != NULL )
+			        {
+			            ch->pcdata->clan = NULL;
+			            STRFREE(ch->pcdata->clan_name);
+			            ch->pcdata->clan_name = STRALLOC( "" );
+			            DISPOSE( ch->pcdata->bestowments );
+			            ch->pcdata->bestowments = str_dup("");
+			        }
+
+		            ch->pcdata->qtaxnodes = 0;
+					ch->pcdata->serverrevision = 2;
+
+					char_from_room( ch );
+					char_to_room( ch, get_room_index( 33 ) );
+					SET_BIT( ch->act, PLR_AUTOMAP );
+
+					save_char_obj( ch );
+
+				}
+
 				if ( ch->plr_home != NULL )
 				{
 					char filename[256];
@@ -2181,47 +2222,6 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 						release_supermob();
 
 					}
-				}
-
-
-				// server revisions
-
-				if ( ch->pcdata->serverrevision < 2)
-				{
-					int currqtaxnodes = ch->pcdata->qtaxnodes;
-					int revcompensation = (500 * currqtaxnodes) + 25000;
-
-
-					if ( revcompensation > 250000 )
-						revcompensation = 250000;
-
-					CLAN_DATA *clan;
-
-					ch->pcdata->bank += revcompensation;
-
-					if ( ch->plr_home != NULL )
-					{
-					ch->plr_home = NULL;
-					}
-
-					clan =  ch->pcdata->clan;
-			        if ( clan != NULL )
-			        {
-			            ch->pcdata->clan = NULL;
-			            STRFREE(ch->pcdata->clan_name);
-			            ch->pcdata->clan_name = STRALLOC( "" );
-			            DISPOSE( ch->pcdata->bestowments );
-			            ch->pcdata->bestowments = str_dup("");
-			        }
-
-		            ch->pcdata->qtaxnodes = 0;
-					ch->pcdata->serverrevision = 2;
-
-					char_to_room( ch, get_room_index( 33 ) );
-					SET_BIT( ch->act, PLR_AUTOMAP );
-
-					save_char_obj( ch );
-
 				}
 
 				//char bufText[MAX_STRING_LENGTH];

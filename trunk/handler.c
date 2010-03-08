@@ -2024,6 +2024,7 @@ bool room_is_dark( ROOM_INDEX_DATA *pRoomIndex )
 
     if ( pRoomIndex->sector_type == SECT_INSIDE
     ||   pRoomIndex->sector_type == SECT_CITY
+    ||   pRoomIndex->sector_type == SECT_DESERT
     ||   pRoomIndex->sector_type == SECT_GLACIAL )
 	return FALSE;
 

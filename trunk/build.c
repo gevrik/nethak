@@ -5008,7 +5008,7 @@ void do_aset( CHAR_DATA *ch, char *argument )
            for ( room = tarea->first_room ; room ; room = room->next_in_area )
            {
                planet->size++;
-               if ( room->sector_type <= SECT_CITY )
+               if ( room->sector_type == SECT_DESERT )
                   planet->citysize++;
                else if ( room->sector_type == SECT_FARMLAND )
                   planet->farmland++;

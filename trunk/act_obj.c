@@ -1825,6 +1825,7 @@ void do_bury( CHAR_DATA *ch, char *argument )
     switch( ch->in_room->sector_type )
     {
 	case SECT_CITY:
+	case SECT_DESERT:
 	case SECT_INSIDE:
 	    send_to_char( "> the floor is too hard to dig through\n\r", ch );
 	    return;
