@@ -552,13 +552,9 @@ void reset_all( )
             switch ( pRoomIndex->sector_type )
             {
                 default:
-                   if ( anumber <=1 )
-                      vnum = OBJ_VNUM_PLANT;
-                   else
-                      vnum = OBJ_VNUM_HEMP;
+                	continue;
                    break;
 
-                   /*
                 case SECT_FARMLAND:
                    if ( anumber == 0 )
                       vnum = OBJ_VNUM_FRUIT;
@@ -569,7 +565,6 @@ void reset_all( )
                    else
                       vnum = OBJ_VNUM_PLANT;
                    break;
-                   */
                    
                 case SECT_FOREST:
                 case SECT_BRUSH:
@@ -605,34 +600,21 @@ void reset_all( )
                       vnum = OBJ_VNUM_GOLD;
                    break;
 
-                case SECT_SWAMP:
-                   if ( anumber <=1 )
-                      vnum = OBJ_VNUM_SEAWEED;
-                   else
-                      vnum = OBJ_VNUM_RESIN;
-                   break;
-
                 case SECT_GLACIAL: 
-		anumber = number_range(0,8);
-		  if ( anumber == 0 )
-		    vnum = OBJ_VNUM_FRUIT; // chat log
-		  else if ( anumber == 1 )
-		    vnum = OBJ_VNUM_ROOT; // info file
-		  else if ( anumber == 2 )
-		    vnum = OBJ_VNUM_CRYSTAL;
-		  else if ( anumber == 3 )
-		    vnum = OBJ_VNUM_ROOT;
-		  else if ( anumber == 4 )
-		    vnum = OBJ_VNUM_METAL;
-		  else if ( anumber == 5 )
-		    vnum = 31;
-		  else if ( anumber == 6 )
-		    vnum = OBJ_VNUM_RESIN;
-		  else if ( anumber == 7 )
-		    vnum = 31;
-		  else
-		    vnum = OBJ_VNUM_GOLD;
-          break;
+                	anumber = number_range(0,8);
+                	if ( anumber == 0 )
+                	vnum = 31;
+                	else if ( anumber == 1 )
+                	vnum = 34;
+                	else if ( anumber == 2 )
+                	vnum = 35;
+                	else if ( anumber == 3 )
+                	vnum = 57;
+                	else if ( anumber == 4 )
+                	vnum = 59;
+                	else
+                	vnum = number_range(75, 99);
+                	break;
                 
                 case SECT_OCEANFLOOR: 
                    if ( anumber <=1 )
@@ -648,14 +630,20 @@ void reset_all( )
         	   return;
       	    }
             obj = create_object(pObjIndex , 1);
-            if ( pRoomIndex->sector_type != SECT_FARMLAND )
-            {
-               if ( vnum == OBJ_VNUM_ROOT || vnum == OBJ_VNUM_CRYSTAL 
-               || vnum == OBJ_VNUM_GOLD || vnum == OBJ_VNUM_METAL ) 
-                  SET_BIT ( obj->extra_flags , ITEM_BURRIED );           
-               else
-                  SET_BIT ( obj->extra_flags , ITEM_HIDDEN );           
-            }
+
+            if (number_range(1,2) == 1)
+                SET_BIT ( obj->extra_flags , ITEM_BURRIED );
+             else
+                SET_BIT ( obj->extra_flags , ITEM_HIDDEN );
+
+//            if ( pRoomIndex->sector_type != SECT_GLACIAL )
+//            {
+//               if ( vnum == OBJ_VNUM_ROOT || vnum == OBJ_VNUM_CRYSTAL
+//               || vnum == OBJ_VNUM_GOLD || vnum == OBJ_VNUM_METAL )
+//                  SET_BIT ( obj->extra_flags , ITEM_BURRIED );
+//               else
+//                  SET_BIT ( obj->extra_flags , ITEM_HIDDEN );
+//            }
             if ( vnum == OBJ_VNUM_GOLD )
             {
                obj->value[0] = number_range(1,10);
@@ -917,7 +905,6 @@ void reset_all( )
            case SECT_FIELD:
            case SECT_FOREST:
            case SECT_HILLS:
-           case SECT_SAVANNA:
            case SECT_BRUSH:
            case SECT_STEPPE:
               if ( anumber == 0 )
@@ -945,7 +932,6 @@ void reset_all( )
 
            case SECT_RAINFOREST:
            case SECT_JUNGLE:
-           case SECT_SWAMP:
            case SECT_WETLANDS:
               if ( anumber == 0 )
                 vnum = MOB_VNUM_SMALL_ANIMAL;

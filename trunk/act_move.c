@@ -1210,6 +1210,7 @@ void do_lock(CHAR_DATA *ch, char *argument) {
 			send_to_char("> invalid command\n\r", ch);
 			return;
 		}
+
 		if (!IS_SET(pexit->exit_info, EX_CLOSED)) {
 			send_to_char("> it is not closed\n\r", ch);
 			return;
@@ -1327,6 +1328,7 @@ void do_unlock(CHAR_DATA *ch, char *argument) {
 			act(AT_ACTION, "> $n unlocks the $d\n\r", ch, NULL, pexit->keyword,
 					TO_ROOM);
 			remove_bexit_flag(pexit, EX_LOCKED);
+			remove_bexit_flag(pexit, EX_CLOSED);
 			return;
 		}
 	}

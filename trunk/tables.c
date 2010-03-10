@@ -136,6 +136,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_config" ))		return do_config;
 	if ( !str_cmp( name, "do_consider" ))		return do_consider;
 	if ( !str_cmp( name, "do_construction" ))	return do_construction;
+	if ( !str_cmp( name, "do_contractpropaganda" ))	return do_contractpropaganda;
 	if ( !str_cmp( name, "do_credits" ))		return do_credits;
 	if ( !str_cmp( name, "do_cset" ))		return do_cset;
 	if ( !str_cmp( name, "do_cyber" ))		return do_cyber;
@@ -561,6 +562,7 @@ char *skill_name( DO_FUN *skill )
 	//if ( skill == do_alia )           return "do_alia";
 	if ( skill == do_alias )           return "do_alias";
 	//if ( skill == do_unalias )           return "do_unalias";
+	if ( skill == do_contractpropaganda )           return "do_contractpropaganda";
 	if ( skill == do_sn_jackhammer )           return "do_sn_jackhammer";
 	if ( skill == do_sn_krash )           return "do_sn_krash";
 	if ( skill == do_sn_randomizer )           return "do_sn_randomizer";

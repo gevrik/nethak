@@ -607,8 +607,8 @@ void do_showplanet( CHAR_DATA *ch, char *argument )
     if ( IS_IMMORTAL(ch) )
           ch_printf( ch, "&WFilename: &G%s\n\r", planet->filename);
 
-    ch_printf( ch, "&Wterrain: &G%s\n\r",
-                   sector_name[planet->sector]  );
+//    ch_printf( ch, "&Wterrain: &G%s\n\r",
+//                   sector_name[planet->sector]  );
     ch_printf( ch, "&Wowner: &G%s\n\r",
                    planet->governed_by ? planet->governed_by->name : "" );
     ch_printf( ch, "&Wsize: &G%d\n\r",
@@ -619,7 +619,7 @@ void do_showplanet( CHAR_DATA *ch, char *argument )
     ch_printf( ch, "&Wfirewalls: &G%d\n\r", planet->barracks );
     //ch_printf( ch, "&Wtowers: &G%d\n\r", planet->controls );
     ch_printf( ch, "&Wblack ICE: &G%d&W/%d\n\r", num_guards , planet->barracks*5 );
-    ch_printf( ch, "&Wtotal ICE: &G%d&W/%d\n\r", planet->population , max_population( planet ) );
+    ch_printf( ch, "&Wprograms: &G%d&W/%d\n\r", planet->population , max_population( planet ) );
     ch_printf( ch, "&Wcpu: &G%.2f\n\r",
                    planet->pop_support );
     ch_printf( ch, "&Wmonthly revenue: &G%ld\n\r",
