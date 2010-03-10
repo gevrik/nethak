@@ -113,7 +113,8 @@ void do_mp_offer_job( CHAR_DATA *ch, char *argument )
            if ( ++pCount == rCount )
                break;
        
-       if( !dPlanet || dPlanet == ch->in_room->area->planet || dPlanet == first_planet || IS_SET( dPlanet->flags, PLANET_HIDDEN ) )
+       if( !dPlanet || dPlanet == ch->in_room->area->planet || dPlanet == first_planet || IS_SET( dPlanet->flags, PLANET_HIDDEN)
+    		   || IS_SET( dPlanet->flags, PLANET_NOCAP ) )
        {
           do_say( ch , "I have no jobs to offer you at this time!" );
           return;
@@ -301,7 +302,7 @@ void do_mp_offer_agent( CHAR_DATA *ch, char *argument )
 
 		if ( !victim->pcdata->clan )
 		{
-			if( !nifty_is_name( clan->atwar,  tclan->name ) )
+			if( !nifty_is_name( tclan->name, clan->atwar ) )
 			{
 				do_say( ch , "I have no jobs to offer you at this time! [no war]" );
 				return;

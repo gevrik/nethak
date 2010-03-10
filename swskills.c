@@ -2745,21 +2745,31 @@ void do_propaganda ( CHAR_DATA *ch , char *argument )
 	CHAR_DATA *victim;
 	PLANET_DATA *planet;
 	CLAN_DATA   *clan;
-	int percent;
+	OBJ_DATA *obj;
+	int percent, chance;
+	bool ch_snippet, ch_complete;
 
-	if ( IS_NPC(ch) || !ch->pcdata || !ch->pcdata->clan || !ch->in_room->area || !ch->in_room->area->planet )
+	//if ( IS_NPC(ch) || !ch->pcdata || !ch->pcdata->clan || !ch->in_room->area || !ch->in_room->area->planet )
+	if ( IS_NPC(ch) || !ch->pcdata || !ch->in_room->area || !ch->in_room->area->planet )
 	{
 		send_to_char( "> what would be the point of that\n\r", ch );
 		return;
 	}
 
 	argument = one_argument( argument, arg1 );
+	planet = ch->in_room->area->planet;
 
 	if ( ch->mount )
 	{
 		send_to_char( "> you cannot do that while mounted\n\r", ch );
 		return;
 	}
+
+	   if( IS_SET( planet->flags, PLANET_NOCAP ) )
+    {
+       do_say( ch , "> &Rthis system cannot be affected&w" );
+       return;
+    }
 
 	if ( arg1[0] == '\0' )
 	{
@@ -2833,6 +2843,76 @@ void do_propaganda ( CHAR_DATA *ch , char *argument )
 
 	clan = ch->pcdata->clan;
 
+	if (!clan)
+	{
+
+		ch_snippet = FALSE;
+		ch_complete = FALSE;
+
+		sprintf( buf , "contract for %s" , ch->in_room->area->planet->name );
+
+		for (obj = ch->last_carrying; obj; obj = obj->prev_content) {
+			if (obj->item_type == ITEM_TRASH && !str_cmp(obj->name,
+					buf)) {
+				obj->value[0] -= 1;
+				ch_snippet = TRUE;
+
+				if (obj->value[0] < 1)
+				{
+				ch_complete = TRUE;
+				separate_obj(obj);
+				obj_from_char(obj);
+				extract_obj( obj );
+				}
+
+
+			}
+		}
+
+			if (!ch_snippet) {
+				ch_printf( ch, "> you need: %s\n\r", buf );
+				return;
+			}
+
+			if (ch_complete) {
+				send_to_char( "> &Gyou finish the contract&w\n\r", ch);
+				ch->gold += 1000;
+			}
+
+				WAIT_STATE( ch, skill_table[gsn_propaganda]->beats );
+
+				chance = IS_NPC(ch) ? ch->top_level
+						: (int) (ch->pcdata->learned[gsn_propaganda]);
+				if ( number_percent( ) > chance )
+				{
+					send_to_char( "> &Ryou fail to affect the program&w\n\r", ch);
+					return;
+				}
+
+					planet->pop_support -= .2;
+					send_to_char( "> &Gsupport for the current owner decreases&w\n\r", ch );
+
+					act( AT_ACTION, "> $n injects some code\n\r", ch, NULL, victim, TO_VICT    );
+					act( AT_ACTION, "> $n injects $N with their code\n\r",  ch, NULL, victim, TO_NOTVICT );
+
+				if ( number_percent() == 23 )
+				{
+					send_to_char( "> you feel a bit more charming than you used to\n\r", ch );
+					ch->perm_cha++;
+					ch->perm_cha = UMIN( ch->perm_cha , 25 );
+				}
+
+				learn_from_success( ch, gsn_propaganda );
+
+				if ( planet->pop_support > 100 )
+					planet->pop_support = 100;
+				if ( planet->pop_support < -100 )
+					planet->pop_support = -100;
+				return;
+
+			}
+	else
+	{
 	planet = ch->in_room->area->planet;
 
 	sprintf( buf, ", and delete some of the %s code" , planet->governed_by ? planet->governed_by->name : "AI" );
@@ -2880,7 +2960,7 @@ void do_propaganda ( CHAR_DATA *ch , char *argument )
 		planet->pop_support = 100;
 	if ( planet->pop_support < -100 )
 		planet->pop_support = -100;
-
+	}
 }
 
 void  clear_roomtype( ROOM_INDEX_DATA * location )
@@ -4353,7 +4433,7 @@ void do_codemed( CHAR_DATA *ch, char *argument )
 
  if( obj->item_type == ITEM_CONTAINER && !checkcont )
  {
-     if( obj->value[1] > 0 ) continue;
+     if( obj->value[1] > 0 && get_obj_weight( obj ) <= 1 ) continue;
      cont = obj;
      checkcont = TRUE;
      continue;

@@ -3011,6 +3011,10 @@ DECLARE_DO_FUN(	do_sn_krash	);
 DECLARE_DO_FUN(	do_sn_reconstruct	);
 DECLARE_DO_FUN(	do_sn_spun	);
 
+// contracts
+
+DECLARE_DO_FUN(	do_contractpropaganda	);
+
 // other
 DECLARE_DO_FUN(	do_blackjack	);
 DECLARE_DO_FUN(	do_notell	);
