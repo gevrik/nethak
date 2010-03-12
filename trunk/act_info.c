@@ -1596,7 +1596,7 @@ void do_time( CHAR_DATA *ch, char *argument )
     ch_printf( ch,
 	//"> it is %d o'clock %s, %s, %d%s %s\n\r"
         "> the game started up at:   %s\r"
-        "> the system time (MST): %s\r"
+        "> the system time (GMT): %s\r"
         "> next reboot is set for:   %s\r",
 
 	//(time_info.hour % 12 == 0) ? 12 : time_info.hour % 12,

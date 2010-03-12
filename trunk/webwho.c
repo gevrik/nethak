@@ -134,7 +134,7 @@ void who_html_update (void)
   fprintf(fp, "</TABLE></CENTER>\n");
   fprintf(fp, "<BR><BR><BR><BR>\n\n");
   fprintf(fp, "<font face=""Times New Roman""><center>\n");
-  sprintf(buf, "Last updated at %s MST\n", ((char *) ctime(&current_time )));
+  sprintf(buf, "Last updated at %s GMT\n", ((char *) ctime(&current_time )));
   fprintf(fp, "%s", buf);
   fprintf(fp, "</center></font>\n");
 
