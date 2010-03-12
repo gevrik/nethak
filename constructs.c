@@ -6,3 +6,7 @@
 #include <unistd.h>
 #include "mud.h"
 
+
+// wilderspace port node to access the randomly generated construct
+
+

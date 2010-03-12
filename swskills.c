@@ -2923,6 +2923,8 @@ void do_propaganda ( CHAR_DATA *ch , char *argument )
 
 	WAIT_STATE( ch, skill_table[gsn_propaganda]->beats );
 
+	percent = number_percent( );
+
 	if ( percent - get_curr_cha(ch) + victim->top_level > ch->pcdata->learned[gsn_propaganda]  )
 	{
 
@@ -2933,6 +2935,7 @@ void do_propaganda ( CHAR_DATA *ch , char *argument )
 			global_retcode = multi_hit( victim, ch, TYPE_UNDEFINED );
 		}
 
+		send_to_char( "> &Ryou fail to use propaganda&w\n\r", ch );
 		return;
 	}
 
