@@ -661,7 +661,7 @@ void reset_all( )
            
         if ( pRoomIndex->sector_type == SECT_DESERT )
         {
-           if ( pRoomIndex->area->planet->population >= max_population(pRoomIndex->area->planet) )
+           if ( pRoomIndex->area->planet->population >= max_population(pRoomIndex->area->planet) && !IS_SET( pRoomIndex->area->planet->flags, PLANET_NOCAP ) )
               continue;  
            
            if ( number_bits( 5 ) == 0 )
@@ -816,34 +816,11 @@ void reset_all( )
            continue;
         }
 
+
+        // wildlife
+
         if ( pRoomIndex->area->planet->wildlife >  pRoomIndex->area->planet->wilderness )
               continue;  
-
-        /*
-        if ( pRoomIndex->sector_type > SECT_CITY && number_bits( 16 ) == 0 )
-        {
-              if ( (pMobIndex = get_mob_index(MOB_VNUM_DRAGON)) )
-              {
-                  OBJ_DATA * nest;
-                  
-                  mob = create_mobile(pMobIndex);
-                  SET_BIT ( mob->act , ACT_CITIZEN );           
-                  char_to_room(mob, pRoomIndex);
-                  pRoomIndex->area->planet->population++;
-                  if ( (pObjIndex = get_obj_index( OBJ_VNUM_DRAGON_NEST ) ) )
-                  {
-                        nest = create_object(pObjIndex, 1);
-                        nest = obj_to_room(nest, pRoomIndex);
-                        if ( (pObjIndex = get_obj_index( OBJ_VNUM_DRAGON_CRYSTAL ) ) )
-                        {
-                            obj = create_object(pObjIndex, 1);
-                            obj = obj_to_obj(obj, nest);
-                        }
-                  }
-                  continue;
-              }
-        }
-        */
 
         anumber = number_bits( 3 );
         

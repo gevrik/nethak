@@ -2074,6 +2074,7 @@ struct	pc_data
     time_t sstarttime, sfastesttime, sslowesttime, slasttime;
     unsigned swins, squits;
     int			serverrevision;
+    long   roomconstruct;
 };
 
 
@@ -3107,6 +3108,7 @@ DECLARE_DO_FUN( do_makejewelry );
 DECLARE_DO_FUN( do_makelight );
 DECLARE_DO_FUN( do_makecomlink );
 DECLARE_DO_FUN( do_makeshield );
+DECLARE_DO_FUN( do_makeconstruct );
 DECLARE_DO_FUN( do_makecontainer );
 DECLARE_DO_FUN( do_reinforcements );
 DECLARE_DO_FUN( do_postguard );

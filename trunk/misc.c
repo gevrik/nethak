@@ -48,8 +48,6 @@ void do_buyhome( CHAR_DATA *ch, char *argument )
 
 	if ( ch->plr_home != NULL )
 	{
-		//send_to_char( "&R> you already have a home\n\r&w", ch);
-		//return;
 		
 		cost = 10000;
 
