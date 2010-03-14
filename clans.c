@@ -105,7 +105,9 @@ void save_clan( CLAN_DATA *clan )
 	fprintf( fp, "Atwar        %s~\n",	clan->atwar		);
 	fprintf( fp, "Members      %d\n",	clan->members		);
 	fprintf( fp, "Funds        %ld\n",	clan->funds		);
+	fprintf( fp, "Salary       %d\n",	clan->salary		);
 	fprintf( fp, "Enlist       %d\n", 	clan->enlistroom );
+	fprintf( fp, "Allowenlist  %d\n", 	clan->allowenlist );
 	fprintf( fp, "End\n\n"						);
 	fprintf( fp, "#END\n"						);
 
@@ -152,6 +154,7 @@ void fread_clan( CLAN_DATA *clan, FILE *fp )
 	    break;
 
 	case 'A':
+		KEY( "Allowenlist",	clan->allowenlist,	fread_number( fp ) );
 	    KEY( "Atwar",	clan->atwar,	fread_string( fp ) );
 	    break;
 
@@ -192,6 +195,10 @@ void fread_clan( CLAN_DATA *clan, FILE *fp )
 
 	case 'N':
 	    KEY( "Name",	clan->name,		fread_string( fp ) );
+	    break;
+
+	case 'S':
+	    KEY( "Salary",	clan->salary,		fread_number( fp ) );
 	    break;
 
 	}
@@ -701,8 +708,13 @@ void do_showclan( CHAR_DATA *ch, char *argument )
     			clan->salary);
     ch_printf( ch, "&Wtotal funds: &G%ld\n\r",
     			clan->funds );
-    ch_printf( ch, "&Wenlist room: &G%ld\n\r",
-    			clan->enlistroom );
+
+    if (clan->allowenlist == 1)
+    	send_to_char( "&Wenlist: &Gon&w\n\r", ch );
+    else
+    	send_to_char( "&Wenlist: &Roff&w\n\r", ch );
+//    ch_printf( ch, "&Wenlist room: &G%ld\n\r",
+//    			clan->enlistroom );
 
     return;
 }
@@ -1056,7 +1068,7 @@ void do_enlist( CHAR_DATA *ch, char *argument )
 
 	if ( ch->pcdata->clan )
 	{
-		send_to_char( "> you already belong to a clan\n\r", ch );
+		send_to_char( "> &Ryou already belong to a clan&w\n\r", ch );
 		return;
 	}
 
@@ -1073,6 +1085,13 @@ void do_enlist( CHAR_DATA *ch, char *argument )
 //		if ( ch->in_room->vnum == clan->enlistroom )
 //		{
 			//SET_BIT( ch->speaks, LANG_CLAN );
+
+	if (clan->allowenlist < 1)
+	{
+		send_to_char( "> &Rthey are not recruiting right now&w\n\r", ch );
+		return;
+	}
+
 			++clan->members;
 			STRFREE( ch->pcdata->clan_name );
 			ch->pcdata->clan_name = QUICKLINK( clan->name );
@@ -1748,6 +1767,47 @@ void do_setwages ( CHAR_DATA *ch , char *argument )
     clan->salary = atoi( argument );
 
     ch_printf( ch , "> organization wages set to %d credits per hour\n\r" , clan->salary );
+
+    save_char_obj( ch );	/* clan gets saved when pfile is saved */
+
+
+}
+
+void do_setenlist ( CHAR_DATA *ch , char *argument )
+{
+    CLAN_DATA *clan;
+
+    if ( IS_NPC( ch ) || !ch->pcdata || !ch->pcdata->clan )
+    {
+	send_to_char( "> invalid command\n\r", ch );
+	return;
+    }
+
+    clan = ch->pcdata->clan;
+
+    if ( nifty_is_name( ch->name, clan->leaders  ) )
+	;
+    else
+    {
+	send_to_char( "> &Ronly the leader can set the enlist status&w\n\r", ch );
+	return;
+    }
+
+
+    if ( argument[0] == '\0' )
+    {
+	send_to_char( "> set enlist to 0 (off) or 1 (on)\n\r", ch );
+	return;
+    }
+
+    if( atoi(argument) < 0 || atoi(argument) > 1 )
+    {
+	send_to_char( "> invalid setting\n\r", ch );
+	return;
+    }
+
+    clan->allowenlist = atoi( argument );
+	send_to_char( "> &Gdone&w\n\r", ch );
 
     save_char_obj( ch );	/* clan gets saved when pfile is saved */
 

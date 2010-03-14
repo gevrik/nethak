@@ -556,11 +556,12 @@ void reset_all( )
                    break;
 
                 case SECT_FARMLAND:
-                   if ( anumber == 0 )
+                anumber = number_range(1,4);
+                   if ( anumber == 1 )
                       vnum = OBJ_VNUM_FRUIT;
-                   else  if ( anumber == 1 )
-                      vnum = OBJ_VNUM_ROOT;
                    else  if ( anumber == 2 )
+                      vnum = OBJ_VNUM_ROOT;
+                   else  if ( anumber == 3 )
                       vnum = OBJ_VNUM_MUSHROOM;
                    else
                       vnum = OBJ_VNUM_PLANT;
@@ -631,19 +632,14 @@ void reset_all( )
       	    }
             obj = create_object(pObjIndex , 1);
 
+            if ( vnum > 90 && vnum < 98 )
+            {
             if (number_range(1,2) == 1)
                 SET_BIT ( obj->extra_flags , ITEM_BURRIED );
              else
                 SET_BIT ( obj->extra_flags , ITEM_HIDDEN );
+            }
 
-//            if ( pRoomIndex->sector_type != SECT_GLACIAL )
-//            {
-//               if ( vnum == OBJ_VNUM_ROOT || vnum == OBJ_VNUM_CRYSTAL
-//               || vnum == OBJ_VNUM_GOLD || vnum == OBJ_VNUM_METAL )
-//                  SET_BIT ( obj->extra_flags , ITEM_BURRIED );
-//               else
-//                  SET_BIT ( obj->extra_flags , ITEM_HIDDEN );
-//            }
             if ( vnum == OBJ_VNUM_GOLD )
             {
                obj->value[0] = number_range(1,10);

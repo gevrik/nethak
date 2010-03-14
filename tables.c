@@ -432,6 +432,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_setblaster" ))	        return do_setblaster;
 	if ( !str_cmp( name, "do_set_boot_time" ))	return do_set_boot_time;
 	if ( !str_cmp( name, "do_setclan" ))		return do_setclan;
+	if ( !str_cmp( name, "do_setenlist" ))		return do_setenlist;
 	if ( !str_cmp( name, "do_setship" ))            return do_setship;
 	if ( !str_cmp( name, "do_setstarsystem" ))      return do_setstarsystem;
 	if ( !str_cmp( name, "do_setplanet" ))	        return do_setplanet;
@@ -521,6 +522,7 @@ DO_FUN *skill_function( char *name )
     case 'w':
 	if ( !str_cmp( name, "do_war" ))		return do_war;
 	if ( !str_cmp( name, "do_wake" ))		return do_wake;
+	if ( !str_cmp( name, "do_wchat" ))		return do_wchat;
 	if ( !str_cmp( name, "do_wear" ))		return do_wear;
 	if ( !str_cmp( name, "do_weather" ))		return do_weather;
 	if ( !str_cmp( name, "do_west" ))		return do_west;
@@ -579,6 +581,7 @@ char *skill_name( DO_FUN *skill )
     if ( skill == do_arrest )     return "do_arrest";
     if ( skill == do_buyskill )     return "do_buyskill";
     if ( skill == do_war )     return "do_war";
+    if ( skill == do_setenlist )     return "do_setenlist";
     if ( skill == do_connect )     return "do_connect";
     if ( skill == do_setwages )     return "do_setwages";
     if ( skill == do_prototypes )     return "do_prototypes";
@@ -979,6 +982,7 @@ char *skill_name( DO_FUN *skill )
     if ( skill == do_title )		return "do_title";
     if ( skill == do_track )		return "do_track";
     if ( skill == do_tradechat )		return "do_tradechat";
+    if ( skill == do_wchat )		return "do_wchat";
     if ( skill == do_trajectory )	return "do_trajectory";
     if ( skill == do_transfer )		return "do_transfer";
     if ( skill == do_transship )		return "do_transship";
