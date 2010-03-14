@@ -1582,7 +1582,7 @@ void do_dig( CHAR_DATA *ch, char *argument )
 				return;
 			}
 		}
-		add_timer( ch, TIMER_DO_FUN, 2, do_dig, 1);
+		add_timer( ch, TIMER_DO_FUN, 1, do_dig, 1);
 		ch->dest_buf = str_dup( arg );
 		send_to_char( "> you begin digging\n\r", ch );
 		act( AT_PLAIN, "> $n begins digging", ch, NULL, NULL, TO_ROOM );
@@ -1720,7 +1720,7 @@ void do_search( CHAR_DATA *ch, char *argument )
 				return;
 			}
 		}
-		add_timer( ch, TIMER_DO_FUN, 2,
+		add_timer( ch, TIMER_DO_FUN, 1,
 				do_search, 1 );
 		send_to_char( "> you begin your search\n\r", ch );
 		ch->dest_buf = str_dup( arg );

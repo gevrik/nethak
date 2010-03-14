@@ -672,6 +672,7 @@ struct	model_type
 #define LASER_READY       0
 
 #define NEWBIE_STARSYSTEM 	"tutorial"
+#define CONST_STARSYSTEM 	"construct"
 
 struct space_data
 {
@@ -752,6 +753,7 @@ struct	clan_data
     int		salary;
     char      * tmpstr;
     int		enlistroom;
+    int		allowenlist;
 };
 
 struct ship_prototype_data
@@ -1740,6 +1742,7 @@ struct timer_data
 #define CHANNEL_CLANTALK	   CHANNEL_CLAN
 #define CHANNEL_TRADE             BV27
 #define CHANNEL_SPORTS             BV28
+#define CHANNEL_WCHAT             BV29
 
 /* Area defines - Scryn 8/11
  *
@@ -3028,6 +3031,7 @@ DECLARE_DO_FUN( do_workmate );
 DECLARE_DO_FUN( do_email );
 DECLARE_DO_FUN( do_arrest );
 DECLARE_DO_FUN( do_buyskill );
+DECLARE_DO_FUN( do_setenlist );
 DECLARE_DO_FUN( do_setwages );
 DECLARE_DO_FUN( do_layout );
 DECLARE_DO_FUN( do_war );
@@ -3402,6 +3406,7 @@ DECLARE_DO_FUN(	do_timecmd	);
 DECLARE_DO_FUN(	do_title	);
 DECLARE_DO_FUN( do_track	);
 DECLARE_DO_FUN( do_tradechat   );
+DECLARE_DO_FUN( do_wchat   );
 DECLARE_DO_FUN(	do_transfer	);
 DECLARE_DO_FUN(	do_transship	);
 DECLARE_DO_FUN(	do_trust	);
