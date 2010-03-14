@@ -266,6 +266,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_makeblaster" ))        return do_makeblaster;
 	if ( !str_cmp( name, "do_makelightsaber" ))     return do_makelightsaber;
 	if ( !str_cmp( name, "do_makeshield" ))		return do_makeshield;
+	if ( !str_cmp( name, "do_makeconstruct" ))	return do_makeconstruct;
 	if ( !str_cmp( name, "do_makecontainer" ))	return do_makecontainer;
 	if ( !str_cmp( name, "do_makejewelry" ))	return do_makejewelry;
 	if ( !str_cmp( name, "do_makeboard" ))		return do_makeboard;
@@ -806,6 +807,7 @@ char *skill_name( DO_FUN *skill )
     if ( skill == do_low_purge )	return "do_low_purge";
     if ( skill == do_mailroom )		return "do_mailroom";
     if ( skill == do_make )		return "do_make";
+    if ( skill == do_makeconstruct )	return "do_makeconstruct";
     if ( skill == do_makecontainer )	return "do_makecontainer";
     if ( skill == do_makeshield )	return "do_makeshield";
     if ( skill == do_makeblade )	return "do_makeblade";

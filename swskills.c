@@ -4214,13 +4214,28 @@ void do_survey ( CHAR_DATA *ch , char *argument )
 	}
 
 	ch_printf( ch, "&Y%s\n\r\n\r", room->name );
+
+	if (room->level == 0)
+		send_to_char( "&Wlevel: &Bblue&w\n\r", ch );
+	else if (room->level == 1)
+		send_to_char( "&Wlevel: &Ggreen&w\n\r", ch );
+	else if (room->level == 2)
+		send_to_char( "&Wlevel: &Oorange&w\n\r", ch );
+	else if (room->level == 3)
+		send_to_char( "&Wlevel: &Rred&w\n\r", ch );
+	else if (room->level == 4)
+		send_to_char( "&Wlevel: &puv&w\n\r", ch );
+	else if (room->level == 5)
+		send_to_char( "&Wlevel: &zblack&w\n\r", ch );
+	else
+		send_to_char( "&Wlevel: &wunknown&w\n\r", ch );
+
 	ch_printf( ch, "&Windex:&Y %d\n\r", room->vnum );
 	if ( room->area && room->area->planet )
 	ch_printf( ch, "&Wsystem:&Y %s\n\r", room->area->planet->name );
-	//ch_printf( ch, "&Wsize:&Y %d\n\r", room->tunnel );
 	ch_printf( ch, "&Wsector:&Y %s\n\r", sector_name[room->sector_type] );
 	ch_printf( ch, "&Wowner:&Y %s\n\r", room->owner );
-	send_to_char( "&Winfo:\n\r", ch );
+
 
 	if ( IS_SET( room->room_flags , ROOM_DARK) )
 		ch_printf( ch, "&Y   node is always dark\n\r" );
