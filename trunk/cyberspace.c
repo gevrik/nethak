@@ -198,7 +198,10 @@ void do_homerecall( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
-	if ( !IS_SET( ch->in_room->room_flags, ROOM_SAFE ) )
+	if ( !IS_SET( ch->in_room->room_flags, ROOM_SAFE ) && !IS_SET( ch->in_room->room_flags, ROOM_NO_MOB )
+			&& !IS_SET( ch->in_room->room_flags, ROOM_BANK ) && !IS_SET( ch->in_room->room_flags, ROOM_HOTEL)
+			&& !IS_SET( ch->in_room->room_flags, ROOM_CAN_LAND ) && !IS_SET( ch->in_room->room_flags, ROOM_PUBLICIO)
+			&& !IS_SET( ch->in_room->room_flags, ROOM_EMPLOYMENT) )
 	{
 		send_to_char( "> &Rfind a safe node to connect home&w\n\r", ch );
 		return;
@@ -292,6 +295,13 @@ void do_constructportal( CHAR_DATA *ch, char *argument )
 	if ( !IS_SET( ch->in_room->room_flags, ROOM_SAFE ) )
 	{
 		send_to_char( "> &Rfind a safe node to connect to your construct&w\n\r", ch );
+		return;
+	}
+
+	if ( ch->pcdata->roomconstruct == 0 )
+	{
+		send_to_char( "> &Ryou do not have a construct yet&w\n\r", ch );
+		send_to_char( "> &Rcreate one for 5,000c with MAKECONSTRUCT&w\n\r", ch );
 		return;
 	}
 
@@ -611,10 +621,10 @@ void do_decompile( CHAR_DATA *ch, char *argument )
 			send_to_char( "> &Gyou begin the long process of decompiling\n\r", ch);
 			act( AT_PLAIN, "> $n takes $s compiler as well as some code and begins to work", ch,
 					NULL, argument , TO_ROOM );
-			if ( !str_cmp( arg, "snippet" ) )
-			add_timer ( ch , TIMER_DO_FUN , 2 , do_decompile , 1 );
+			if ( !str_cmp( arg, "snippet" ) || !str_cmp( arg, "datacube" ) )
+			add_timer ( ch , TIMER_DO_FUN , 1 , do_decompile , 1 );
 			else
-			add_timer ( ch , TIMER_DO_FUN , 3 , do_decompile , 1 );
+			add_timer ( ch , TIMER_DO_FUN , 1 , do_decompile , 1 );
 			ch->dest_buf = str_dup(arg);
 			return;
 		}
@@ -1112,7 +1122,7 @@ void do_codesnippet( CHAR_DATA *ch, char *argument )
     send_to_char("> you begin making a med module\n\r",ch);
     act( AT_PLAIN, "> $n begins making a med module.", ch, NULL, NULL, TO_ROOM );
     ch->dest_buf = str_dup(argument);
-    add_timer( ch, TIMER_DO_FUN, 5, do_codesnippet, 1 );
+    add_timer( ch, TIMER_DO_FUN, 2, do_codemed, 1 );
     return;
  }
  send_to_char("> &Ryou fail creating a mod module - try again&w\n\r",ch);
@@ -1317,7 +1327,7 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 			send_to_char( "> &Gyou begin coding an application\n\r", ch);
 //			act( AT_PLAIN, "> $n takes $s compiler as well as some snippets and begins to work", ch,
 //					NULL, argument , TO_ROOM );
-			add_timer ( ch , TIMER_DO_FUN , 2 , do_codeapp , 1 );
+			add_timer ( ch , TIMER_DO_FUN , 1 , do_codeapp , 1 );
 			ch->dest_buf = str_dup(arg);
 			return;
 		}

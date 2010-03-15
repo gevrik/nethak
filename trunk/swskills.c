@@ -119,7 +119,7 @@ void do_makeblade( CHAR_DATA *ch, char *argument )
 			send_to_char( "&G> you begin coding a blade module\n\r", ch);
 			act( AT_PLAIN, "> $n loads $s devkit and a compiler and begins to work on something", ch,
 					NULL, argument , TO_ROOM );
-			add_timer ( ch , TIMER_DO_FUN , 5 , do_makeblade , 1 );
+			add_timer ( ch , TIMER_DO_FUN , 2 , do_makeblade , 1 );
 			ch->dest_buf = str_dup(arg);
 			return;
 		}
@@ -345,7 +345,7 @@ void do_makeblaster( CHAR_DATA *ch, char *argument )
 			send_to_char( "&G> you begin the long process of making a blaster\n\r", ch);
 			act( AT_PLAIN, "> $n takes $s tools and a small oven and begins to work on something", ch,
 					NULL, argument , TO_ROOM );
-			add_timer ( ch , TIMER_DO_FUN , 5 , do_makeblaster , 1 );
+			add_timer ( ch , TIMER_DO_FUN , 2 , do_makeblaster , 1 );
 			ch->dest_buf   = str_dup(arg);
 			return;
 		}
@@ -636,7 +636,7 @@ void do_makelightsaber( CHAR_DATA *ch, char *argument )
 			send_to_char( "&G> you begin the long process of crafting a lightsaber\n\r", ch);
 			act( AT_PLAIN, "> $n takes $s tools and a small oven and begins to work on something", ch,
 					NULL, argument , TO_ROOM );
-			add_timer ( ch , TIMER_DO_FUN , 5 , do_makelightsaber , 1 );
+			add_timer ( ch , TIMER_DO_FUN , 2 , do_makelightsaber , 1 );
 			ch->dest_buf = str_dup(arg);
 			return;
 		}
@@ -901,7 +901,7 @@ void do_makejewelry( CHAR_DATA *ch, char *argument )
 			send_to_char( "&G> you begin the long process of coding some utility\n\r", ch);
 			act( AT_PLAIN, "> $n takes $s devkit, some code bits and begins to work", ch,
 					NULL, argument , TO_ROOM );
-			add_timer ( ch , TIMER_DO_FUN , 5 , do_makejewelry , 1 );
+			add_timer ( ch , TIMER_DO_FUN , 2 , do_makejewelry , 1 );
 			ch->dest_buf = str_dup(arg);
 			ch->dest_buf_2 = str_dup(arg2);
 			return;
@@ -1088,7 +1088,7 @@ void do_makearmor( CHAR_DATA *ch, char *argument )
 			send_to_char( "&G> you begin the long process of coding a defensive module\n\r", ch);
 			act( AT_PLAIN, "> $n takes $s parser, some code fragments and begins to work", ch,
 					NULL, argument , TO_ROOM );
-			add_timer ( ch , TIMER_DO_FUN , 5 , do_makearmor , 1 ); // 10 to 2
+			add_timer ( ch , TIMER_DO_FUN , 2 , do_makearmor , 1 ); // 10 to 2
 			ch->dest_buf = str_dup(arg);
 			ch->dest_buf_2 = str_dup(arg2);
 			return;
@@ -1272,7 +1272,7 @@ void do_makeshield( CHAR_DATA *ch, char *argument )
 			send_to_char( "&G> you begin the long process of coding a shield module\n\r", ch);
 			act( AT_PLAIN, "> $n takes $s devkit and begins to work on something", ch,
 					NULL, argument , TO_ROOM );
-			add_timer ( ch , TIMER_DO_FUN , 5 , do_makeshield , 1 );
+			add_timer ( ch , TIMER_DO_FUN , 2 , do_makeshield , 1 );
 			ch->dest_buf = str_dup(arg);
 			return;
 		}
@@ -1475,7 +1475,7 @@ void do_makecontainer( CHAR_DATA *ch, char *argument )
 			send_to_char( "&G> you begin the long process of coding a container module\n\r", ch);
 			act( AT_PLAIN, "> $n takes $s parser and some code and begins to work", ch,
 					NULL, argument , TO_ROOM );
-			add_timer ( ch , TIMER_DO_FUN , 5 , do_makecontainer , 1 );
+			add_timer ( ch , TIMER_DO_FUN , 2 , do_makecontainer , 1 );
 			ch->dest_buf = str_dup(arg);
 			ch->dest_buf_2 = str_dup(arg2);
 			return;
