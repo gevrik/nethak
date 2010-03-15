@@ -2076,6 +2076,7 @@ struct	pc_data
     int			serverrevision;
     long   roomconstruct;
     sh_int   constructlevel;
+    sh_int   threatlevel;
 };
 
 
