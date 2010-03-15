@@ -290,6 +290,13 @@ void fwrite_char( CHAR_DATA *ch, FILE *fp )
     if ( ch->pcdata->cyber )
                fprintf( fp, "Cyber             %d\n",  ch->pcdata->cyber       );
 
+    fprintf( fp, "MaxCargo     %d\n",       ch->pcdata->maxcargo          );
+    if (ch->pcdata->cargo > 0)
+    {
+       fprintf( fp, "Cargo     %d\n",       ch->pcdata->cargo          );
+       fprintf( fp, "CargoType %d\n",       ch->pcdata->cargotype          );
+    }
+
     fprintf( fp, "Bank         %ld\n",	ch->pcdata->bank		);
     if ( ch->act )
       fprintf( fp, "Act          %d\n", ch->act			);
@@ -1069,6 +1076,11 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload )
 	case 'C':
 		KEY( "Cyber",   ch->pcdata->cyber,              fread_number( fp ) );
 	    KEY( "ConstLevel",	ch->pcdata->constructlevel, fread_number( fp ) );
+        KEY( "Cargo",       ch->pcdata->cargo,      fread_number( fp ) );
+        KEY( "CargoType",   ch->pcdata->cargotype,  fread_number( fp ) );
+
+        if (ch->pcdata->cargotype != CARGO_NONE && ch->pcdata->cargo < 1)
+        	ch->pcdata->cargotype = CARGO_NONE;
 
 		if ( !str_cmp( word, "Clan" ) )
 	    {
@@ -1228,6 +1240,7 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload )
 	    KEY( "MGlory",      ch->pcdata->quest_accum,fread_number( fp ) );
 	    KEY( "Minsnoop",	ch->pcdata->min_snoop,	fread_number( fp ) );
 	    KEY( "Mobinvis",	ch->mobinvis,		fread_number( fp ) );
+	    KEY( "MaxCargo",    ch->pcdata->maxcargo,   fread_number( fp ) );
 	    break;
 
 	case 'N':

@@ -2034,7 +2034,7 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
                already turned on.  Very few people don't use those. */
 					SET_BIT( ch->act, PLR_AUTOGOLD );
 					SET_BIT( ch->act, PLR_AUTOEXIT );
-					SET_BIT( ch->act, PLR_AUTOMAP );
+					//SET_BIT( ch->act, PLR_AUTOMAP );
 
 					SET_BIT (ch->pcdata->cyber, CYBER_REACTOR );
 

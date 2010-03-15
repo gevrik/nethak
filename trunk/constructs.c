@@ -237,6 +237,8 @@ void do_makeconstructupgrade(CHAR_DATA *ch, char *argument) {
 
 				troom = get_room_index(ch->pcdata->roomconstruct + 3);
 
+				ch->pcdata->roomconstruct = top_r_vnum;
+
 				for (exitposs = 1; exitposs <= 4; exitposs++) {
 					edir = number_range(0, 3);
 					xit = get_exit(troom, rev_dir[edir]);
@@ -406,7 +408,9 @@ void do_makeconstructupgrade(CHAR_DATA *ch, char *argument) {
 				constnode->description = STRALLOC("a safehouse node.");
 				constnode->name = STRALLOC( "safehouse" );
 
-				troom = get_room_index(ch->pcdata->roomconstruct + 11);
+				troom = get_room_index(ch->pcdata->roomconstruct + 7);
+
+				ch->pcdata->roomconstruct = top_r_vnum;
 
 				for (exitposs = 1; exitposs <= 4; exitposs++) {
 					edir = number_range(0, 3);

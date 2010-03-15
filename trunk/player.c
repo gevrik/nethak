@@ -10,6 +10,8 @@
  */
 char *tiny_affect_loc_name(int location);
 
+extern char * const cargo_names[CARGO_MAX];
+
 void do_gold(CHAR_DATA * ch, char *argument)
 {
    set_char_color( AT_GOLD, ch );
@@ -52,6 +54,11 @@ void do_score(CHAR_DATA * ch, char *argument)
     	ch_printf( ch, "&Wcredits:  &G%ld\n\r" , ch->gold );
     	ch_printf( ch, "&Wbank   :  &G%ld\n\r" , ch->pcdata->bank );
     	ch_printf( ch, "&W-----------------------------------------------------\n\r" );
+        ch_printf( ch, "data load: %d/%d  type: %s \n\r",
+                            ch->pcdata->cargo,
+                            ch->pcdata->maxcargo,
+                            cargo_names[ch->pcdata->cargotype]);
+       	ch_printf( ch, "&W-----------------------------------------------------\n\r" );
 
 //    ch_printf( ch,
 //	"&Wautoexit: &G%s   &Wautoloot: &G%s   &Wautosac: &G%s   &Wautocred: &G%s\n\r",
@@ -60,7 +67,7 @@ void do_score(CHAR_DATA * ch, char *argument)
 //	(!IS_NPC(ch) && IS_SET(ch->act, PLR_AUTOSAC) ) ? "yes" : "no",
 //  	(!IS_NPC(ch) && IS_SET(ch->act, PLR_AUTOGOLD)) ? "yes" : "no" );
 
-    ch_printf( ch, "&Wwimpy set to &G%d &Wpercent\n\r", ch->wimpy );
+//    ch_printf( ch, "&Wwimpy set to &G%d &Wpercent\n\r", ch->wimpy );
     
 //    	ch_printf( ch, "&W-----------------------------------------------------\n\r" );
 //

@@ -255,7 +255,10 @@ void do_homestray( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
-	if ( !IS_SET( ch->in_room->room_flags, ROOM_SAFE ) )
+	if ( !IS_SET( ch->in_room->room_flags, ROOM_SAFE ) && !IS_SET( ch->in_room->room_flags, ROOM_NO_MOB )
+			&& !IS_SET( ch->in_room->room_flags, ROOM_BANK ) && !IS_SET( ch->in_room->room_flags, ROOM_HOTEL)
+			&& !IS_SET( ch->in_room->room_flags, ROOM_CAN_LAND ) && !IS_SET( ch->in_room->room_flags, ROOM_PUBLICIO)
+			&& !IS_SET( ch->in_room->room_flags, ROOM_EMPLOYMENT) )
 	{
 		send_to_char( "> &Rfind a safe node to connect to straylight&w\n\r", ch );
 		return;
@@ -292,7 +295,10 @@ void do_constructportal( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
-	if ( !IS_SET( ch->in_room->room_flags, ROOM_SAFE ) )
+	if ( !IS_SET( ch->in_room->room_flags, ROOM_SAFE ) && !IS_SET( ch->in_room->room_flags, ROOM_NO_MOB )
+			&& !IS_SET( ch->in_room->room_flags, ROOM_BANK ) && !IS_SET( ch->in_room->room_flags, ROOM_HOTEL)
+			&& !IS_SET( ch->in_room->room_flags, ROOM_CAN_LAND ) && !IS_SET( ch->in_room->room_flags, ROOM_PUBLICIO)
+			&& !IS_SET( ch->in_room->room_flags, ROOM_EMPLOYMENT) )
 	{
 		send_to_char( "> &Rfind a safe node to connect to your construct&w\n\r", ch );
 		return;
@@ -2690,5 +2696,125 @@ void do_reverseengineer( CHAR_DATA * ch, char *argument )
    else
    send_to_char( "> revengi what?\r\n", ch );
 
+   return;
+}
+
+extern char * const cargo_names[CARGO_MAX];
+
+void do_unload_cargo( CHAR_DATA *ch, char *argument)
+{
+   SHIP_DATA *ship;
+   SHIP_DATA *target;
+   int cost;
+   PLANET_DATA  *planet;
+
+   if ( ch->pcdata->cargo == 0 )
+   {
+      send_to_char("> &Ryou don't have any data&w\n\r",ch);
+      return;
+   }
+
+   if ( ch->in_room->sector_type == SECT_FARMLAND )
+   {
+      send_to_char("> &Ryou can't do that here&w\n\r", ch);
+      return;
+   }
+
+   planet = ch->in_room->area->planet;
+
+   if (planet->import[ch->pcdata->cargotype] < 1)
+   {
+      send_to_char("You can't deliver that here.\r\n",ch);
+      return;
+   }
+
+   cost = ch->pcdata->cargo;
+   cost *= planet->import[ch->pcdata->cargotype];
+
+   ch->gold += cost;
+   ch->pcdata->cargo = 0;
+   ch_printf(ch,"You recieve %d credits for a load of %s.\r\n", cost, cargo_names[ch->pcdata->cargotype]);
+   ch->pcdata->cargotype = CARGO_NONE;
+   return;
+}
+
+void do_load_cargo( CHAR_DATA *ch, char *argument)
+{
+   SHIP_DATA *ship;
+   SHIP_DATA *target;
+   int cost,cargo, i;
+   PLANET_DATA  *planet;
+   char arg1[MAX_INPUT_LENGTH];
+
+   argument = one_argument(argument, arg1);
+
+   target = ship_in_room( ch->in_room , arg1 );
+
+   if ( ch->in_room->sector_type == SECT_FARMLAND )
+   {
+      send_to_char("> &Ryou can't do that here&w\n\r", ch);
+      return;
+   }
+
+   planet = ch->in_room->area->planet;
+
+   if (ch->pcdata->maxcargo - ch->pcdata->cargo <= 0)
+   {
+      send_to_char("> no room for more data.\r\n", ch);
+      return;
+   }
+   for(i = 1; i < CARGO_MAX; i++)
+   {
+      if(!strcmp(argument, cargo_names[i]))
+         cargo = i;
+   }
+
+   if ((ch->pcdata->cargo > 0) && (ch->pcdata->cargotype != cargo))
+   {
+      send_to_char("> &deliver your current data&w\r\n",ch);
+      return;
+   }
+
+   if (planet->export[cargo] < 1)
+   {
+      send_to_char("> resource not available here\r\n", ch);
+      return;
+   }
+
+   if (planet->resource[cargo] < 1)
+   {
+      send_to_char("> &Rnone left for sale&w\r\n", ch);
+      return;
+   }
+
+   if ((ch->pcdata->maxcargo - ch->pcdata->cargo) >= planet->resource[cargo])
+      cost = planet->resource[cargo];
+   else
+      cost = (ch->pcdata->maxcargo - ch->pcdata->cargo);
+
+   cost *= planet->export[cargo];
+
+   if (ch->gold < cost)
+   {
+      send_to_char("You can't afford it!\r\n", ch);
+      return;
+   }
+   ch->gold -= cost;
+
+   if ((ch->pcdata->maxcargo - ch->pcdata->cargo) >= planet->resource[cargo])
+   {
+
+	 ch->pcdata->cargo += planet->resource[cargo];
+     planet->resource[cargo] = 0;
+     ch->pcdata->cargotype = cargo;
+   }
+   else
+   {
+     planet->resource[cargo] -= ch->pcdata->maxcargo - ch->pcdata->cargo;
+     ch->pcdata->cargo = ch->pcdata->maxcargo;
+     ch->pcdata->cargotype = cargo;
+   }
+
+   ch_printf(ch,"You pay %d credits for a load of %s.\r\n", cost, cargo_names[cargo]);
    return;
 }

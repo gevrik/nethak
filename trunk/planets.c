@@ -11,6 +11,7 @@ extern int top_r_vnum;
 void write_area_list();
 void write_starsystem_list();
 extern const   char *  sector_name     [SECT_MAX];
+extern char * const cargo_names[CARGO_MAX];
 
 PLANET_DATA * first_planet;
 PLANET_DATA * last_planet;
@@ -105,6 +106,7 @@ void save_planet( PLANET_DATA *planet )
     FILE *fp;
     char filename[256];
     char buf[MAX_STRING_LENGTH];
+    int i;
 
     if ( !planet )
     {
@@ -147,6 +149,10 @@ void save_planet( PLANET_DATA *planet )
 	if (pArea->filename)
          	fprintf( fp, "Area         %s~\n",	pArea->filename  );
 	fprintf( fp, "Flags	   %d\n",	planet->flags		);
+
+    for(i = 1; i<CARGO_MAX; i++)
+       fprintf(fp, "Resource %d %d %d %d %d %d", i, planet->import[i], planet->export[i], planet->resource[i], planet->consumes[i], planet->produces[i]);
+
 	fprintf( fp, "End\n\n"						);
 	fprintf( fp, "#END\n"						);
     }
@@ -173,6 +179,9 @@ void fread_planet( PLANET_DATA *planet, FILE *fp )
     char buf[MAX_STRING_LENGTH];
     char *word;
     bool fMatch;
+
+    char *line;
+    int x0,x1,x2,x3,x4,x5;
 
     for ( ; ; )
     {
@@ -258,6 +267,21 @@ void fread_planet( PLANET_DATA *planet, FILE *fp )
 	case 'P':
 	    KEY( "PopSupport",	planet->pop_support,		fread_float( fp ) );
 	    break;
+
+    case 'R':
+        if( !str_cmp( word, "Resource" ) );
+        {
+           line = fread_line(fp);
+           x0=x1=x2=x3=x4=x5=0;
+           sscanf(line, "%d %d %d %d %d %d\n",
+                  &x0, &x1, &x2, &x3, &x4, &x5);
+           planet->import[x0] = x1;
+           planet->export[x0] = x2;
+           planet->resource[x0] = x3;
+           planet->consumes[x0] = x4;
+           planet->produces[x0] = x5;
+        }
+        break;
 
 	case 'S':
 	    KEY( "Sector",	planet->sector,		fread_number( fp ) );
@@ -415,7 +439,7 @@ void do_setplanet( CHAR_DATA *ch, char *argument )
     char arg2[MAX_INPUT_LENGTH];
     char arg3[MAX_INPUT_LENGTH];
     PLANET_DATA *planet;
-    int value;
+    int value, i;
 
     if ( IS_NPC( ch ) )
     {
@@ -510,6 +534,83 @@ void do_setplanet( CHAR_DATA *ch, char *argument )
 	return;
     }
 
+    if ( !strcmp( arg2, "import"))
+     {
+        for (i = 0; i < CARGO_MAX; i++)
+        {
+           if (!str_cmp( arg3, cargo_names[i]))
+           {
+              planet->import[i] = atoi(argument);
+              planet->export[i] = 0;
+              send_to_char("done.\n\r", ch );
+              save_planet( planet );
+              return;
+           }
+        }
+        send_to_char("No such resource type\r\n", ch);
+        return;
+     }
+     if ( !strcmp( arg2, "export"))
+     {
+        for (i = 0; i < CARGO_MAX; i++)
+        {
+           if (!str_cmp( arg3, cargo_names[i]))
+           {
+              planet->export[i] = atoi(argument);
+              planet->import[i] = 0;
+              send_to_char("done.\n\r", ch );
+              save_planet( planet );
+              return;
+           }
+        }
+        send_to_char("No such resource type\r\n", ch);
+        return;
+     }
+     if ( !strcmp( arg2, "resource"))
+     {
+        for (i = 0; i < CARGO_MAX; i++)
+        {
+           if (!str_cmp( arg3, cargo_names[i]))
+           {
+              planet->resource[i] = atoi(argument);
+              send_to_char("done.\n\r", ch );
+              save_planet( planet );
+              return;
+           }
+        }
+        send_to_char("No such resource type\r\n", ch);
+        return;
+     }
+     if ( !strcmp( arg2, "produces"))
+     {
+        for (i = 0; i < CARGO_MAX; i++)
+        {
+           if (!str_cmp( arg3, cargo_names[i]))
+           {
+              planet->produces[i] = atoi(argument);
+              send_to_char("done.\n\r", ch );
+              save_planet( planet );
+              return;
+           }
+        }
+        send_to_char("No such resource type\r\n", ch);
+        return;
+     }
+     if ( !strcmp( arg2, "consumes"))
+     {
+        for (i = 0; i < CARGO_MAX; i++)
+        {
+           if (!str_cmp( arg3, cargo_names[i]))
+           {
+              planet->consumes[i] = atoi(argument);
+              send_to_char("done.\n\r", ch );
+              save_planet( planet );
+              return;
+           }
+        }
+        send_to_char("No such resource type\r\n", ch);
+        return;
+     }
 
     do_setplanet( ch, "" );
 
@@ -1356,6 +1457,34 @@ void do_hideplanet( CHAR_DATA *ch, char *argument )
 	}
 	save_planet( planet );
 
+}
+
+void do_imports( CHAR_DATA *ch, char *argument )
+{
+   PLANET_DATA *planet;
+   int i;
+
+   if (argument[0] == '\0')
+   {
+      send_to_char("Usage: imports <planet>\r\n", ch);
+      return;
+   }
+
+   planet = get_planet( argument );
+
+   if (!planet)
+   {
+      send_to_char("&RNo such planet\r\n", ch);
+      return;
+   }
+   ch_printf(ch,"&BImport and Export data for %s:\r\n", planet->name);
+   ch_printf(ch,"&GResource    &CImport     &YExport    &PProduces    &RConsumes         &GAmount\r\n");
+   ch_printf(ch, "&G----------   ------     ------    --------    --------         ------\r\n");
+   for (i = 1; i < CARGO_MAX; i++)
+   ch_printf(ch,"&G%-10.10s    &C%5d/ton  &Y%5d/ton &P%6d tons  &R%6d tons  &G%9d\r\n",
+             cargo_names[i], planet->import[i], planet->export[i],
+             planet->produces[i], planet->consumes[i], planet->resource[i]);
+   return;
 }
 
 //done for Neuro
