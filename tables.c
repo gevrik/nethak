@@ -232,6 +232,7 @@ DO_FUN *skill_function( char *name )
     case 'i':
 	if ( !str_cmp( name, "do_immortalize" ))	return do_immortalize;
 	if ( !str_cmp( name, "do_immtalk" ))		return do_immtalk;
+	if ( !str_cmp( name, "do_imports"))             return do_imports;
 	if ( !str_cmp( name, "do_info" ))               return do_info;
 	if ( !str_cmp( name, "do_induct" ))		return do_induct;
 	if ( !str_cmp( name, "do_inventory" ))		return do_inventory;
@@ -253,6 +254,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_leaveship" ))		return do_leaveship;
 	if ( !str_cmp( name, "do_level" ))		return do_level;
 	if ( !str_cmp( name, "do_list" ))		return do_list;
+	if ( !str_cmp( name, "do_load_cargo"))          return do_load_cargo;
 	if ( !str_cmp( name, "do_loadup" ))		return do_loadup;
 	if ( !str_cmp( name, "do_lock" ))		return do_lock;
 	if ( !str_cmp( name, "do_log" ))		return do_log;
@@ -513,6 +515,7 @@ DO_FUN *skill_function( char *name )
     case 'u':
     	//if ( !str_cmp( name, "do_unalias" ))               return do_unalias;
 	if ( !str_cmp( name, "do_unfoldarea" ))		return do_unfoldarea;
+	if ( !str_cmp( name, "do_unload_cargo"))        return do_unload_cargo;
 	if ( !str_cmp( name, "do_unlock" ))		return do_unlock;
         if ( !str_cmp( name, "do_unsilence" ))          return do_unsilence;
 	if ( !str_cmp( name, "do_up" ))			return do_up;
@@ -567,6 +570,11 @@ char *spell_name( SPELL_FUN *spell )
 
 char *skill_name( DO_FUN *skill )
 {
+
+    if ( skill == do_imports)           return "do_imports";
+    if ( skill == do_load_cargo)        return "do_load_cargo";
+    if ( skill == do_unload_cargo )     return "do_unload_cargo";
+
 	//if ( skill == do_alia )           return "do_alia";
 	if ( skill == do_alias )           return "do_alias";
 	//if ( skill == do_unalias )           return "do_unalias";

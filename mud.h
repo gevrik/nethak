@@ -710,6 +710,18 @@ struct guard_data
     PLANET_DATA * planet;
 };
 
+/* cargo types */
+
+#define CARGO_NONE              0
+#define CARGO_LOMMITE           1
+#define CARGO_MELEEN            2
+#define CARGO_NEUTRON           3
+#define CARGO_ZERSIUM           4
+#define CARGO_STEEL             5
+#define CARGO_RYLL              6
+#define CARGO_ALAZHI            7
+#define CARGO_MAX               8
+
 struct  planet_data
 {
     PLANET_DATA    * next;
@@ -735,6 +747,11 @@ struct  planet_data
     int		     barracks;
     int		     controls;
 	int				flags;
+    int              import[CARGO_MAX];
+    int              export[CARGO_MAX];
+    int              resource[CARGO_MAX];
+    int              consumes[CARGO_MAX];
+    int              produces[CARGO_MAX];
 };
 
 struct	clan_data
@@ -2077,6 +2094,9 @@ struct	pc_data
     long   roomconstruct;
     sh_int   constructlevel;
     sh_int   threatlevel;
+    int         maxcargo;
+    int         cargo;
+    int         cargotype;
 };
 
 
@@ -3009,6 +3029,10 @@ extern		struct act_prog_data *	mob_act_list;
  * Defined in act_*.c (mostly).
  */
 
+DECLARE_DO_FUN( do_load_cargo );
+DECLARE_DO_FUN( do_unload_cargo );
+DECLARE_DO_FUN( do_imports );
+
 // snippets
 
 DECLARE_DO_FUN(	do_sn_randomizer	);
@@ -3018,6 +3042,7 @@ DECLARE_DO_FUN(	do_sn_reconstruct	);
 DECLARE_DO_FUN(	do_sn_spun	);
 DECLARE_DO_FUN(	do_sn_dropline	);
 DECLARE_DO_FUN(	do_sn_uninstall	);
+
 // contracts
 
 DECLARE_DO_FUN(	do_contractpropaganda	);

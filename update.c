@@ -614,6 +614,7 @@ void update_taxes( void )
      CHAR_DATA *och;
      int pay;
      int paya;
+     int i;
 
     for ( planet = first_planet; planet; planet = planet->next )
     {
@@ -631,6 +632,14 @@ void update_taxes( void )
             save_clan( clan );
             save_planet( planet );
         }
+
+        for( i = 1; i < CARGO_MAX; i++)
+        {
+           planet->resource[i] += planet->produces[i];
+           planet->resource[i] -= planet->consumes[i];
+         }
+        save_planet(planet);
+
     }
 
     for ( d = last_descriptor; d; d = d->prev )

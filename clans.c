@@ -20,6 +20,11 @@ bool	load_clan_file	args( ( char *clanfile ) );
 void	write_clan_list	args( ( void ) );
 
 
+char * const cargo_names[CARGO_MAX] = {
+  "none", "lommite","Meleenium","Neutronium","Zersium",
+  "steel", "rhyll","alazhi"
+};
+
 /*
  * Get pointer to clan structure from clan name.
  */
