@@ -354,4 +354,148 @@ void do_sn_reconstruct(CHAR_DATA *ch, char *argument) {
 
 }
 
-//done for Neuro
+void do_sn_dropline(CHAR_DATA *ch, char *argument) {
+
+	OBJ_DATA *obj;
+	char buf[MAX_STRING_LENGTH];
+	bool ch_snippet;
+
+	if ( IS_NPC(ch) || !ch->pcdata )
+	   {
+	       send_to_char ( "huh?\n\r" , ch );
+	       return;
+	   }
+
+
+		if ( ch->position <= POS_SLEEPING )
+		{
+			send_to_char( "> you are hibernating\n\r" , ch );
+			return;
+		}
+
+		if ( ch->fighting )
+		{
+			send_to_char( "> dropline cannot be used in combat\n\r", ch );
+			return;
+		}
+
+		if ( IS_SET( ch->in_room->room_flags, ROOM_ARENA ) )
+		{
+			send_to_char( "> &Rfinish the current match first&w\n\r", ch );
+			return;
+		}
+
+		if ( ch->in_room->vnum <= 20 )
+		{
+			send_to_char( "> &Ryou cannot use this command in the tutorial&w\n\r", ch );
+			return;
+		}
+
+		ch_snippet = FALSE;
+
+		for (obj = ch->last_carrying; obj; obj = obj->prev_content) {
+			if (obj->item_type == ITEM_SNIPPET && !strcmp(obj->name,
+					"dropline")) {
+				ch_snippet = TRUE;
+				separate_obj(obj);
+				obj_from_char(obj);
+				extract_obj( obj );
+			}
+		}
+
+		if (!ch_snippet) {
+			send_to_char("> &Rdropline application needed&w\n\r", ch);
+			return;
+		}
+
+		WAIT_STATE( ch, skill_table[gsn_propaganda]->beats );
+
+		sprintf(buf, "> %s drops their line",
+				ch->name);
+		echo_to_room(AT_RED, ch->in_room, buf);
+
+		if( !ch->plr_home )
+		{
+			char_from_room( ch );
+			char_to_room( ch, get_room_index( ROOM_VNUM_STRAY ) );
+			do_look( ch, "auto" );
+			return;
+		}
+
+		char_from_room( ch );
+		char_to_room( ch, ch->plr_home );
+		do_look( ch, "auto" );
+
+		return;
+
+
+}
+
+void do_sn_uninstall(CHAR_DATA *ch, char *argument) {
+
+	DESCRIPTOR_DATA *d;
+	OBJ_DATA *obj;
+	EXIT_DATA *xit, *texit;
+	int edir;
+	ROOM_INDEX_DATA *location;
+	char buf[MAX_STRING_LENGTH];
+	PLANET_DATA *planet;
+	bool ch_snippet;
+
+	if (IS_NPC(ch) || !ch->pcdata)
+		return;
+
+	if (argument[0] == '\0') {
+		send_to_char("> syntax: uninstall <skillsoft>\n\r", ch);
+		return;
+	}
+
+		ch_snippet = FALSE;
+
+		for (obj = ch->last_carrying; obj; obj = obj->prev_content) {
+			if ( obj->item_type == ITEM_SNIPPET && !strcmp(obj->name,
+					"uninstall") ) {
+				ch_snippet = TRUE;
+				separate_obj(obj);
+				obj_from_char(obj);
+				extract_obj( obj );
+			}
+		}
+
+		if (!ch_snippet) {
+			send_to_char("> &Runinstall application needed&w\n\r", ch);
+			return;
+		}
+
+	    int sn;
+
+	    sn = skill_lookup( argument );
+
+	    if ( sn == -1 )
+	    {
+	        send_to_char( "> no such skillsoft\n\r", ch );
+		return;
+	    }
+
+	    if ( ch->pcdata->learned[sn] <= 0 )
+	    {
+	    send_to_char( "> you dont know that skillsoft\n\r", ch );
+		return;
+	    }
+
+		sprintf(buf, "> %s uninstalls a skillsoft",
+				ch->name);
+		echo_to_room(AT_YELLOW, ch->in_room, buf);
+
+	    send_to_char( "> you uninstalled the skillsoft\n\r", ch );
+
+	    if ( ch->pcdata->learned[sn] == 100 )
+	    {
+		    ch->pcdata->adept_skills--;
+	    }
+
+	    ch->pcdata->learned[sn] = 0;
+	    ch->pcdata->num_skills--;
+	    save_char_obj(ch);
+
+}

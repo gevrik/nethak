@@ -136,6 +136,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_config" ))		return do_config;
 	if ( !str_cmp( name, "do_consider" ))		return do_consider;
 	if ( !str_cmp( name, "do_construction" ))	return do_construction;
+	if ( !str_cmp( name, "do_constructportal" ))		return do_constructportal;
 	if ( !str_cmp( name, "do_contractpropaganda" ))	return do_contractpropaganda;
 	if ( !str_cmp( name, "do_credits" ))		return do_credits;
 	if ( !str_cmp( name, "do_cset" ))		return do_cset;
@@ -267,6 +268,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_makelightsaber" ))     return do_makelightsaber;
 	if ( !str_cmp( name, "do_makeshield" ))		return do_makeshield;
 	if ( !str_cmp( name, "do_makeconstruct" ))	return do_makeconstruct;
+	if ( !str_cmp( name, "do_makeconstructupgrade" ))	return do_makeconstructupgrade;
 	if ( !str_cmp( name, "do_makecontainer" ))	return do_makecontainer;
 	if ( !str_cmp( name, "do_makejewelry" ))	return do_makejewelry;
 	if ( !str_cmp( name, "do_makeboard" ))		return do_makeboard;
@@ -412,6 +414,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_retire" ))		return do_retire;
 	if ( !str_cmp( name, "do_retran" ))		return do_retran;
 	if ( !str_cmp( name, "do_return" ))		return do_return;
+	if ( !str_cmp( name, "do_reverseengineer" ))		return do_reverseengineer;
 	if ( !str_cmp( name, "do_revert" ))		return do_revert;
 	if ( !str_cmp( name, "do_rlist" ))		return do_rlist;
 	if ( !str_cmp( name, "do_rpedit" ))		return do_rpedit;
@@ -460,11 +463,13 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_slice" ))		return do_slice;
 	if ( !str_cmp( name, "do_slist" ))		return do_slist;
 	if ( !str_cmp( name, "do_slookup" ))		return do_slookup;
+	if ( !str_cmp( name, "do_sn_dropline" )) 		return do_sn_dropline;
 	if ( !str_cmp( name, "do_sn_jackhammer" )) 		return do_sn_jackhammer;
 	if ( !str_cmp( name, "do_sn_krash" )) 		return do_sn_krash;
 	if ( !str_cmp( name, "do_sn_randomizer" )) 		return do_sn_randomizer;
 	if ( !str_cmp( name, "do_sn_reconstruct" )) 		return do_sn_reconstruct;
 	if ( !str_cmp( name, "do_sn_spun" )) 		return do_sn_spun;
+	if ( !str_cmp( name, "do_sn_uninstall" )) 		return do_sn_uninstall;
 	if ( !str_cmp( name, "do_snipe" ))		return do_snipe;
 	if ( !str_cmp( name, "do_sneak" ))		return do_sneak;
 	if ( !str_cmp( name, "do_snoop" ))		return do_snoop;
@@ -568,9 +573,12 @@ char *skill_name( DO_FUN *skill )
 	if ( skill == do_contractpropaganda )           return "do_contractpropaganda";
 	if ( skill == do_sn_jackhammer )           return "do_sn_jackhammer";
 	if ( skill == do_sn_krash )           return "do_sn_krash";
+	if ( skill == do_sn_dropline )           return "do_sn_dropline";
 	if ( skill == do_sn_randomizer )           return "do_sn_randomizer";
 	if ( skill == do_sn_reconstruct )           return "do_sn_reconstruct";
 	if ( skill == do_sn_spun )           return "do_sn_spun";
+	if ( skill == do_sn_uninstall )           return "do_sn_uninstall";
+	if ( skill == do_reverseengineer )           return "do_reverseengineer";
     if ( skill == do_aaccept )           return "do_aaccept";
     if ( skill == do_ahall )            return "do_ahall";
     if ( skill == do_arena )            return "do_arena";
@@ -584,6 +592,7 @@ char *skill_name( DO_FUN *skill )
     if ( skill == do_war )     return "do_war";
     if ( skill == do_setenlist )     return "do_setenlist";
     if ( skill == do_connect )     return "do_connect";
+    if ( skill == do_constructportal )     return "do_constructportal";
     if ( skill == do_setwages )     return "do_setwages";
     if ( skill == do_prototypes )     return "do_prototypes";
     if ( skill == do_setprototype )     return "do_setprototype";
@@ -808,6 +817,7 @@ char *skill_name( DO_FUN *skill )
     if ( skill == do_mailroom )		return "do_mailroom";
     if ( skill == do_make )		return "do_make";
     if ( skill == do_makeconstruct )	return "do_makeconstruct";
+    if ( skill == do_makeconstructupgrade )	return "do_makeconstructupgrade";
     if ( skill == do_makecontainer )	return "do_makecontainer";
     if ( skill == do_makeshield )	return "do_makeshield";
     if ( skill == do_makeblade )	return "do_makeblade";

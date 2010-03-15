@@ -1043,6 +1043,21 @@ void do_mset( CHAR_DATA *ch, char *argument )
 	return;
     }
 
+    if ( !str_cmp( arg2, "level" ) )
+    {
+	if ( !can_mmodify( ch, victim ) )
+	  return;
+	if ( value < 1 || value > 200 )
+	{
+	    ch_printf( ch, "level range is %d to %d.\n\r", 1, 200 );
+	    return;
+	}
+	victim->top_level = value;
+	if ( IS_NPC(victim) && IS_SET( victim->act, ACT_PROTOTYPE ) )
+	  victim->pIndexData->level = value;
+	return;
+    }
+
     if ( !str_cmp( arg2, "frc" ) )
     {
 	if ( !can_mmodify( ch, victim ) )

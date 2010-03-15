@@ -212,8 +212,8 @@ typedef ch_ret	SPELL_FUN	args( ( int sn, int level, CHAR_DATA *ch, void *vo ) );
 
 #define PULSE_PER_SECOND	    4
 #define PULSE_MINUTE              ( 60 * PULSE_PER_SECOND)
-#define PULSE_VIOLENCE		  (  3 * PULSE_PER_SECOND)
-#define PULSE_MOBILE		  (  4 * PULSE_PER_SECOND)
+#define PULSE_VIOLENCE		  (  5 * PULSE_PER_SECOND)
+#define PULSE_MOBILE		  (  10 * PULSE_PER_SECOND)
 #define PULSE_TICK		  ( 70 * PULSE_PER_SECOND)
 #define PULSE_AUCTION             ( 10 * PULSE_PER_SECOND)
 #define PULSE_SPACE               ( 10 * PULSE_PER_SECOND)
@@ -1488,7 +1488,7 @@ typedef enum
 #define ROOM_VNUM_SCHOOL              6
 #define ROOM_NEWBIE_SHIPYARD	      5
 #define ROOM_VNUM_JAIL		      19
-#define ROOM_VNUM_STRAY		      33
+#define ROOM_VNUM_STRAY		      34
 
 /*
  * Room flags.           Holy cow!  Talked about stripped away..
@@ -2075,6 +2075,7 @@ struct	pc_data
     unsigned swins, squits;
     int			serverrevision;
     long   roomconstruct;
+    sh_int   constructlevel;
 };
 
 
@@ -3014,12 +3015,14 @@ DECLARE_DO_FUN(	do_sn_jackhammer	);
 DECLARE_DO_FUN(	do_sn_krash	);
 DECLARE_DO_FUN(	do_sn_reconstruct	);
 DECLARE_DO_FUN(	do_sn_spun	);
-
+DECLARE_DO_FUN(	do_sn_dropline	);
+DECLARE_DO_FUN(	do_sn_uninstall	);
 // contracts
 
 DECLARE_DO_FUN(	do_contractpropaganda	);
 
 // other
+DECLARE_DO_FUN(	do_reverseengineer	);
 DECLARE_DO_FUN(	do_blackjack	);
 DECLARE_DO_FUN(	do_notell	);
 DECLARE_DO_FUN( do_notify	);
@@ -3084,6 +3087,7 @@ DECLARE_DO_FUN( do_hijack  );
 DECLARE_DO_FUN( do_pickshiplock  );
 DECLARE_DO_FUN( do_hail );
 DECLARE_DO_FUN( do_connect );
+DECLARE_DO_FUN( do_constructportal );
 DECLARE_DO_FUN( do_homerecall );
 DECLARE_DO_FUN( do_homestray );
 DECLARE_DO_FUN( do_foundorg );
@@ -3109,6 +3113,7 @@ DECLARE_DO_FUN( do_makelight );
 DECLARE_DO_FUN( do_makecomlink );
 DECLARE_DO_FUN( do_makeshield );
 DECLARE_DO_FUN( do_makeconstruct );
+DECLARE_DO_FUN( do_makeconstructupgrade );
 DECLARE_DO_FUN( do_makecontainer );
 DECLARE_DO_FUN( do_reinforcements );
 DECLARE_DO_FUN( do_postguard );

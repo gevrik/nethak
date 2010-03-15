@@ -161,7 +161,7 @@ void do_buyskill( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
-	if ( (ch->pcdata->num_skills - ch->pcdata->adept_skills) >= 7 )
+	if ( (ch->pcdata->num_skills - ch->pcdata->adept_skills) >= 10 )
 	{
 		send_to_char( "> you need to perfect another skill first\n\r", ch );
 		return;
@@ -192,6 +192,18 @@ void do_homerecall( CHAR_DATA *ch, char *argument )
 		return;
 	}
 	
+	if ( ch->in_room->sector_type == SECT_RAINFOREST )
+	{
+		send_to_char( "> &Rfind a safehouse in the construct first&w\n\r", ch );
+		return;
+	}
+
+	if ( !IS_SET( ch->in_room->room_flags, ROOM_SAFE ) )
+	{
+		send_to_char( "> &Rfind a safe node to connect home&w\n\r", ch );
+		return;
+	}
+
 	if ( ch->in_room->vnum <= 20 )
 	{
 		send_to_char( "> &Ryou cannot use this command in the tutorial&w\n\r", ch );
@@ -234,10 +246,59 @@ void do_homestray( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
+	if ( ch->in_room->sector_type == SECT_RAINFOREST )
+	{
+		send_to_char( "> &Rfind a safehouse in the construct first&w\n\r", ch );
+		return;
+	}
+
+	if ( !IS_SET( ch->in_room->room_flags, ROOM_SAFE ) )
+	{
+		send_to_char( "> &Rfind a safe node to connect to straylight&w\n\r", ch );
+		return;
+	}
+
 	send_to_char( "> you connect to the straylight lobby\n\r", ch );
 	act(AT_GREEN, "> $n connects to straylight lobby", ch, NULL, NULL, TO_ROOM );
 	char_from_room( ch );
 	char_to_room( ch, get_room_index( ROOM_VNUM_STRAY ) );
+	do_look( ch, "auto" );
+
+	return;
+
+}
+
+void do_constructportal( CHAR_DATA *ch, char *argument )
+{
+
+	if ( ch->fighting )
+	{
+		send_to_char( "> &Ryou can't do that in combat&w\n\r", ch );
+		return;
+	}
+
+	if ( IS_SET( ch->in_room->room_flags, ROOM_ARENA ) )
+	{
+		send_to_char( "> &Rfinish the current match first&w\n\r", ch );
+		return;
+	}
+
+	if ( ch->in_room->sector_type == SECT_RAINFOREST )
+	{
+		send_to_char( "> &Rfind a safehouse in the construct first&w\n\r", ch );
+		return;
+	}
+
+	if ( !IS_SET( ch->in_room->room_flags, ROOM_SAFE ) )
+	{
+		send_to_char( "> &Rfind a safe node to connect to your construct&w\n\r", ch );
+		return;
+	}
+
+	send_to_char( "> you connect to your construct\n\r", ch );
+	act(AT_GREEN, "> $n connects to their construct", ch, NULL, NULL, TO_ROOM );
+	char_from_room( ch );
+	char_to_room( ch, get_room_index( ch->pcdata->roomconstruct ) );
 	do_look( ch, "auto" );
 
 	return;
@@ -1178,10 +1239,13 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 		if ( str_cmp( arg, "jackhammer" )
 				&& str_cmp( arg, "krash" )
 				&& str_cmp( arg, "spun" )
-				&& str_cmp( arg, "reconstruct" ))
+				&& str_cmp( arg, "reconstruct")
+				&& str_cmp( arg, "dropline" )
+				&& str_cmp( arg, "uninstall" ))
 		{
 			send_to_char( "> &Ryou cannot code that app, try:\n\r&w", ch);
 			send_to_char( "> jackhammer, krash, spun, reconstruct\n\r", ch);
+			send_to_char( "> dropline, uninstall\n\r", ch);
 			return;
 		}
 
@@ -1201,10 +1265,19 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 		{
 			cost = 100;
 		}
+		else if ( !str_cmp( arg, "dropline" ) )
+		{
+			cost = 10;
+		}
+		else if ( !str_cmp( arg, "uninstall" ) )
+		{
+			cost = 1000;
+		}
 		else
 		{
 			send_to_char( "> &Ryou cannot code that app, try:\n\r&w", ch);
 			send_to_char( "> jackhammer, krash, spun, reconstruct\n\r", ch);
+			send_to_char( "> dropline, uninstall\n\r", ch);
 			return;
 		}
 
@@ -2128,45 +2201,484 @@ void display_status( CHAR_DATA *ch )
     ch_printf( ch, "&W[&ROther Options&W] LEAVE, SAY, OOC\n\r" );
 }
 
-//void do_setenlistnode( CHAR_DATA *ch, char *argument )
+//void do_reverseengineer( CHAR_DATA *ch, char *argument )
 //{
-//	ROOM_INDEX_DATA	*location;
-//	CLAN_DATA * clan;
+//	OBJ_INDEX_DATA *pObjIndex = NULL;
+//	int level, chance;
+//	bool checksew, checkfab;
+//	OBJ_DATA *obj;
 //
-//	location = ch->in_room;
-//	clan = ch->pcdata->clan;
 //
-//	if ( !clan )
+//	switch( ch->substate )
 //	{
-//		send_to_char( "> you need to be part of an organization before you can do that\n\r", ch );
+//	default:
+//
+//
+//		if ( argument[0] == '\0' )
+//		{
+//			send_to_char( "> &Yspecify object&w\n\r", ch );
+//			return;
+//		}
+//
+//		if ( (obj = find_obj(ch, argument, TRUE)) == NULL )
+//		{
+//
+//			return;
+//		}
+//
+//
+//		if ( !IS_SET( ch->in_room->room_flags, ROOM_RESTAURANT ) )
+//		{
+//			send_to_char( "> &Ryou need to be in a coding node\n\r", ch );
+//			return;
+//		}
+//
+//		checksew = FALSE;
+//
+//		for ( obj = ch->last_carrying; obj; obj = obj->prev_content )
+//		{
+//			if (obj->item_type == ITEM_OVEN)
+//				checksew = TRUE;
+//		}
+//
+//		if ( !checksew )
+//		{
+//			send_to_char( "&R> you need a compiler\n\r", ch);
+//			return;
+//		}
+//
+//		chance = IS_NPC(ch) ? ch->top_level
+//				: (int) (ch->pcdata->learned[gsn_spacecraft]);
+//		if ( number_percent( ) < chance )
+//		{
+//			send_to_char( "> &Gyou begin the long process of reverse engineering\n\r", ch);
+//			act( AT_PLAIN, "> $n takes $s compiler as well as a module and begins to work", ch,
+//					NULL, argument , TO_ROOM );
+//			add_timer ( ch , TIMER_DO_FUN , 3 , do_reverseengineer , 1 );
+//			ch->dest_buf = str_dup(argument);
+//			return;
+//		}
+//		send_to_char("> &Ryou cannot figure out what to do\n\r",ch);
+//		learn_from_failure( ch, gsn_spacecraft );
+//		return;
+//
+//	case 1:
+//		if ( !ch->dest_buf )
+//			return;
+//		strcpy(argument, ch->dest_buf);
+//		DISPOSE( ch->dest_buf);
+//		break;
+//
+//	case SUB_TIMER_DO_ABORT:
+//		DISPOSE( ch->dest_buf );
+//		ch->substate = SUB_NONE;
+//		send_to_char("> &Ryou are interrupted and fail to finish your work\n\r", ch);
 //		return;
 //	}
 //
-//	if ( nifty_is_name( ch->name, clan->leaders  ) )
-//		;
-//	else
+//	ch->substate = SUB_NONE;
+//
+//	level = IS_NPC(ch) ? ch->top_level : (int) (ch->pcdata->learned[gsn_spacecraft]);
+//
+//	checksew = FALSE;
+//	checkfab = FALSE;
+//
+//	for ( obj = ch->last_carrying; obj; obj = obj->prev_content )
 //	{
-//		send_to_char( "> only organization leaders can set the enlistnode\n\r", ch );
+//		if (obj->item_type == ITEM_OVEN)
+//			checksew = TRUE;
+//
+//		if ( (obj = find_obj(ch, argument, TRUE)) != NULL )
+//		{
+//			checkfab = TRUE;
+//		}
+//
+//	}
+//
+//	if ( ( !checkfab ) || ( !checksew ) )
+//	{
+//		send_to_char( "> &Ryou could not reverse engineer anything&w\n\r", ch);
+//		learn_from_failure( ch, gsn_spacecraft );
 //		return;
 //	}
 //
-//	if ( !ch->in_room->area || !ch->in_room->area->planet ||
-//			clan != ch->in_room->area->planet->governed_by      )
+//	if ( obj->value[3] == WEAPON_BLASTER )
 //	{
-//		send_to_char( "> your organization does not own this system\n\r", ch );
-//		return;
+//
+//		separate_obj( obj );
+//		extract_obj(obj);
+//
+//		if ( number_range(1, 100) > level )
+//		{
+//			pObjIndex = get_obj_index( 31 );
+//			obj = create_object(pObjIndex, 1);
+//			SET_BIT(obj->extra_flags, ITEM_INVENTORY);
+//			obj = obj_to_char(obj, ch);
+//		}
+//
+//		if ( number_range(1, 100) > level )
+//		{
+//			pObjIndex = get_obj_index( 37 );
+//			obj = create_object(pObjIndex, 1);
+//			SET_BIT(obj->extra_flags, ITEM_INVENTORY);
+//			obj = obj_to_char(obj, ch);
+//		}
+//
+//		if ( number_range(1, 100) > level )
+//		{
+//			pObjIndex = get_obj_index( 38 );
+//			obj = create_object(pObjIndex, 1);
+//			SET_BIT(obj->extra_flags, ITEM_INVENTORY);
+//			obj = obj_to_char(obj, ch);
+//		}
+//
+//
 //	}
 //
-//	if ( !IS_SET( ch->in_room->room_flags, ROOM_INFO ) )
+//	if ( obj->value[3] == WEAPON_VIBRO_BLADE )
 //	{
-//		send_to_char( "&R> you need to be in the public lobby of the system\n\r", ch );
-//		return;
+//
+//		separate_obj( obj );
+//		extract_obj(obj);
+//
+//		if ( number_range(1, 100) > level )
+//		{
+//			pObjIndex = get_obj_index( 34 );
+//			obj = create_object(pObjIndex, 1);
+//			SET_BIT(obj->extra_flags, ITEM_INVENTORY);
+//			obj = obj_to_char(obj, ch);
+//		}
+//
 //	}
 //
+//	if ( obj->item_type == ITEM_ARMOR )
+//	{
 //
+//		int objnum = obj->pIndexData->vnum;
+//		separate_obj( obj );
+//		extract_obj(obj);
 //
-//	SET_BIT( ch->in_room->area->flags , AFLAG_MODIFIED );
+//		if ( number_range(1, 100) > level )
+//		{
+//			pObjIndex = get_obj_index( objnum );
+//			obj = create_object(pObjIndex, 1);
+//			SET_BIT(obj->extra_flags, ITEM_INVENTORY);
+//			obj = obj_to_char(obj, ch);
+//		}
 //
+//	}
+//
+//	if ( obj->item_type == ITEM_CONTAINER )
+//	{
+//
+//		int objnum = obj->pIndexData->vnum;
+//		separate_obj( obj );
+//		extract_obj(obj);
+//
+//		if ( number_range(1, 100) > level )
+//		{
+//			pObjIndex = get_obj_index( objnum );
+//			obj = create_object(pObjIndex, 1);
+//			SET_BIT(obj->extra_flags, ITEM_INVENTORY);
+//			obj = obj_to_char(obj, ch);
+//		}
+//
+//	}
+//
+//	if ( obj->item_type == ITEM_MEDPAC )
+//	{
+//
+//		int objnum = obj->pIndexData->vnum;
+//		separate_obj( obj );
+//		extract_obj(obj);
+//
+//		if ( number_range(1, 100) > level )
+//		{
+//			pObjIndex = get_obj_index( objnum );
+//			obj = create_object(pObjIndex, 1);
+//			SET_BIT(obj->extra_flags, ITEM_INVENTORY);
+//			obj = obj_to_char(obj, ch);
+//		}
+//
+//	}
+//
+//	int anumber = number_range(1,100);
+//	if ( anumber == 23 )
+//	learn_from_success( ch , gsn_spacecraft );
+//
+//	send_to_char( "> &Gyou finish reverse engineering&w\n\r", ch);
 //	return;
 //
 //}
+
+void do_reverseengineer( CHAR_DATA * ch, char *argument )
+{
+   OBJ_DATA *obj, *obj_next;
+   OBJ_INDEX_DATA *pObjIndex = NULL;
+   bool found = FALSE;
+   int level;
+
+   if( !argument || argument[0] == '\0' )
+   {
+      send_to_char( "> revengi what?\r\n", ch );
+      return;
+   }
+
+   for( obj = ch->first_carrying; obj; obj = obj_next )
+   {
+      obj_next = obj->next_content;
+      if( ( nifty_is_name( argument, obj->name ) ) && can_see_obj( ch, obj ) && obj->wear_loc == WEAR_NONE )
+      {
+         found = TRUE;
+         break;
+      }
+   }
+
+   if( found )
+   {
+      if( !can_drop_obj( ch, obj ) && ch->top_level < 200 )
+      {
+         send_to_char( "> you cannot delete that - it is corrupted!\r\n", ch );
+         return;
+      }
+
+      level = IS_NPC(ch) ? ch->top_level : (int) (ch->pcdata->learned[gsn_spacecraft]);
+
+      act( AT_ACTION, "> $n reverse engineered $p", ch, obj, NULL, TO_ROOM );
+      act( AT_ACTION, "> you reverse engineered $p", ch, obj, NULL, TO_CHAR );
+
+      separate_obj( obj );
+      obj_from_char( obj );
+      extract_obj( obj );
+
+  	if ( obj->value[3] == WEAPON_BLASTER )
+  	{
+
+  		if ( number_range(1, 100) > level )
+  		{
+  			pObjIndex = get_obj_index( 31 );
+  			obj = create_object(pObjIndex, 1);
+  			SET_BIT(obj->extra_flags, ITEM_INVENTORY);
+  			obj = obj_to_char(obj, ch);
+
+  	  		if ( number_range(1, 100) < level )
+  	  		{
+  				pObjIndex = get_obj_index( 55 );
+  				obj = create_object(pObjIndex, 1);
+  				SET_BIT(obj->extra_flags, ITEM_INVENTORY);
+  				obj = obj_to_char(obj, ch);
+  	  		}
+
+  		}
+  		else
+  		{
+  			send_to_char( "> class failed\r\n", ch );
+  	  		if ( number_range(1, 100) < level )
+  	  		{
+  				pObjIndex = get_obj_index( 55 );
+  				obj = create_object(pObjIndex, 1);
+  				SET_BIT(obj->extra_flags, ITEM_INVENTORY);
+  				obj = obj_to_char(obj, ch);
+  	  		}
+  		}
+
+  		if ( number_range(1, 100) > level )
+  		{
+  			pObjIndex = get_obj_index( 37 );
+  			obj = create_object(pObjIndex, 1);
+  			SET_BIT(obj->extra_flags, ITEM_INVENTORY);
+  			obj = obj_to_char(obj, ch);
+  		}
+  		else
+  		{
+  			send_to_char( "> var1 failed\r\n", ch );
+  	  		if ( number_range(1, 100) < level )
+  	  		{
+  				pObjIndex = get_obj_index( 55 );
+  				obj = create_object(pObjIndex, 1);
+  				SET_BIT(obj->extra_flags, ITEM_INVENTORY);
+  				obj = obj_to_char(obj, ch);
+  	  		}
+  		}
+
+  		if ( number_range(1, 100) > level )
+  		{
+  			pObjIndex = get_obj_index( 38 );
+  			obj = create_object(pObjIndex, 1);
+  			SET_BIT(obj->extra_flags, ITEM_INVENTORY);
+  			obj = obj_to_char(obj, ch);
+  		}
+  		else
+  	  		{
+  	  			send_to_char( "> var2 failed\r\n", ch );
+  	  	  		if ( number_range(1, 100) < level )
+  	  	  		{
+  	  				pObjIndex = get_obj_index( 55 );
+  	  				obj = create_object(pObjIndex, 1);
+  	  				SET_BIT(obj->extra_flags, ITEM_INVENTORY);
+  	  				obj = obj_to_char(obj, ch);
+  	  	  		}
+  	  		}
+
+
+  	}
+
+  	else if ( obj->value[3] == WEAPON_VIBRO_BLADE )
+  	{
+
+  		if ( number_range(1, 100) < level )
+  		{
+  			pObjIndex = get_obj_index( 34 );
+  			obj = create_object(pObjIndex, 1);
+  			SET_BIT(obj->extra_flags, ITEM_INVENTORY);
+  			obj = obj_to_char(obj, ch);
+
+  			if ( number_range(1, 100) < level )
+  	  		{
+  				pObjIndex = get_obj_index( 55 );
+  				obj = create_object(pObjIndex, 1);
+  				SET_BIT(obj->extra_flags, ITEM_INVENTORY);
+  				obj = obj_to_char(obj, ch);
+  	  		}
+
+  		}
+  		else
+  		{
+  			send_to_char( "> class failed\r\n", ch );
+  	  		if ( number_range(1, 100) < level )
+  	  		{
+  				pObjIndex = get_obj_index( 55 );
+  				obj = create_object(pObjIndex, 1);
+  				SET_BIT(obj->extra_flags, ITEM_INVENTORY);
+  				obj = obj_to_char(obj, ch);
+  	  		}
+  		}
+
+  	}
+
+  	else if ( obj->item_type == ITEM_ARMOR )
+  	{
+
+  		int objnum = obj->pIndexData->vnum;
+
+  		if ( number_range(1, 100) < level )
+  		{
+  			pObjIndex = get_obj_index( objnum );
+  			obj = create_object(pObjIndex, 1);
+  			SET_BIT(obj->extra_flags, ITEM_INVENTORY);
+  			obj = obj_to_char(obj, ch);
+
+  	  		if ( number_range(1, 100) < level )
+  	  		{
+  				pObjIndex = get_obj_index( 55 );
+  				obj = create_object(pObjIndex, 1);
+  				SET_BIT(obj->extra_flags, ITEM_INVENTORY);
+  				obj = obj_to_char(obj, ch);
+  	  		}
+
+  		}
+  		else
+  		{
+  			send_to_char( "> class failed\r\n", ch );
+  	  		if ( number_range(1, 100) < level )
+  	  		{
+  				pObjIndex = get_obj_index( 55 );
+  				obj = create_object(pObjIndex, 1);
+  				SET_BIT(obj->extra_flags, ITEM_INVENTORY);
+  				obj = obj_to_char(obj, ch);
+  	  		}
+  		}
+
+  	}
+
+  	else if ( obj->item_type == ITEM_CONTAINER )
+  	{
+
+  		int objnum = obj->pIndexData->vnum;
+
+  		if ( number_range(1, 100) < level )
+  		{
+  			pObjIndex = get_obj_index( objnum );
+  			obj = create_object(pObjIndex, 1);
+  			SET_BIT(obj->extra_flags, ITEM_INVENTORY);
+  			obj = obj_to_char(obj, ch);
+
+  	  		if ( number_range(1, 100) < level )
+  	  		{
+  				pObjIndex = get_obj_index( 55 );
+  				obj = create_object(pObjIndex, 1);
+  				SET_BIT(obj->extra_flags, ITEM_INVENTORY);
+  				obj = obj_to_char(obj, ch);
+  	  		}
+
+  		}
+  		else
+  		{
+  			send_to_char( "> class failed\r\n", ch );
+  	  		if ( number_range(1, 100) < level )
+  	  		{
+  				pObjIndex = get_obj_index( 55 );
+  				obj = create_object(pObjIndex, 1);
+  				SET_BIT(obj->extra_flags, ITEM_INVENTORY);
+  				obj = obj_to_char(obj, ch);
+  	  		}
+  		}
+
+  	}
+
+  	else if ( obj->item_type == ITEM_MEDPAC )
+  	{
+
+  		int objnum = obj->pIndexData->vnum;
+
+  		if ( number_range(1, 100) < level )
+  		{
+  			pObjIndex = get_obj_index( objnum );
+  			obj = create_object(pObjIndex, 1);
+  			SET_BIT(obj->extra_flags, ITEM_INVENTORY);
+  			obj = obj_to_char(obj, ch);
+
+  	  		if ( number_range(1, 100) < level )
+  	  		{
+  				pObjIndex = get_obj_index( 55 );
+  				obj = create_object(pObjIndex, 1);
+  				SET_BIT(obj->extra_flags, ITEM_INVENTORY);
+  				obj = obj_to_char(obj, ch);
+  	  		}
+
+  		}
+  		else
+  		{
+  			send_to_char( "> class failed\r\n", ch );
+  	  		if ( number_range(1, 100) < level )
+  	  		{
+  				pObjIndex = get_obj_index( 55 );
+  				obj = create_object(pObjIndex, 1);
+  				SET_BIT(obj->extra_flags, ITEM_INVENTORY);
+  				obj = obj_to_char(obj, ch);
+  	  		}
+  		}
+
+  	}
+
+  	else
+  	{
+  		ch->gold += obj->cost / 2;
+  		ch->snippets += obj->cost / 2;
+
+  		if ( number_range(1, 100) < level )
+  		{
+			pObjIndex = get_obj_index( 55 );
+			obj = create_object(pObjIndex, 1);
+			SET_BIT(obj->extra_flags, ITEM_INVENTORY);
+			obj = obj_to_char(obj, ch);
+  		}
+
+  	}
+
+   }
+   else
+   send_to_char( "> revengi what?\r\n", ch );
+
+   return;
+}

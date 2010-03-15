@@ -280,7 +280,8 @@ void fwrite_char( CHAR_DATA *ch, FILE *fp )
        fprintf( fp, "PlrHome      %ld\n",          ch->plr_home->vnum );
     if ( ch->pcdata->roomconstruct != NULL )
        fprintf( fp, "RoomConst      %ld\n",          ch->pcdata->roomconstruct );
-
+    if ( ch->pcdata->constructlevel != NULL )
+       fprintf( fp, "ConstLevel      %d\n",          ch->pcdata->constructlevel );
     fprintf( fp, "HpManaMove   %d %d 0 0 %d %d\n",
 	ch->hit, ch->max_hit, ch->move, ch->max_move );
     fprintf( fp, "Force        %d %d %d %d\n", ch->perm_frc, ch->mod_frc, ch->mana, ch->max_mana );
@@ -1067,6 +1068,7 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload )
 
 	case 'C':
 		KEY( "Cyber",   ch->pcdata->cyber,              fread_number( fp ) );
+	    KEY( "ConstLevel",	ch->pcdata->constructlevel, fread_number( fp ) );
 
 		if ( !str_cmp( word, "Clan" ) )
 	    {
@@ -1328,7 +1330,7 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload )
 	    KEY( "Rank",        ch->pcdata->rank,	fread_string_nohash( fp ) );
 	    KEY( "Resistant",	ch->resistant,		fread_number( fp ) );
 	    KEY( "Restore_time",ch->pcdata->restore_time, fread_number( fp ) );
-	    KEY( "RoomConst",ch->pcdata->roomconstruct, fread_number( fp ) );
+	    KEY( "RoomConst",	ch->pcdata->roomconstruct, fread_number( fp ) );
 
 	    if ( !str_cmp( word, "Room" ) )
 	    {
