@@ -369,6 +369,7 @@ struct cards {
 
 extern const struct cards allcards[208];
 
+
 /*
  * Character substates
  */
@@ -717,10 +718,7 @@ struct guard_data
 #define CARGO_MELEEN            2
 #define CARGO_NEUTRON           3
 #define CARGO_ZERSIUM           4
-#define CARGO_STEEL             5
-#define CARGO_RYLL              6
-#define CARGO_ALAZHI            7
-#define CARGO_MAX               8
+#define CARGO_MAX               5
 
 struct  planet_data
 {
@@ -1547,6 +1545,13 @@ typedef enum
 #define ROOM_RECRUIT		BV30
 #define ROOM_AUCTION            BV31
 
+
+/* Second Set of Room Flags */
+#define ROOM_ENTERTAINMENT BV00
+#define ROOM_MULTIMEDIA BV01
+#define ROOM_PRODUCTIVITY BV02
+#define ROOM_FINANCE BV03
+
 /*
  *  Planet flags, some are also used with starsystems
  */
@@ -2314,6 +2319,7 @@ struct	room_index_data
     int			seccode;
     char * 		owner;
     sh_int		level;
+    int room_flags2;
 };
 
 /*
@@ -2491,6 +2497,8 @@ extern	sh_int	gsn_second_attack;
 extern	sh_int	gsn_third_attack;
 extern	sh_int	gsn_dual_wield;
 
+extern	sh_int	gsn_slicebank;
+extern  sh_int  gsn_inquire;
 
 extern	sh_int	gsn_aid;
 
@@ -2911,6 +2919,7 @@ extern	char *	const	where_name	[];
 extern	const	sh_int	rev_dir		[];
 extern	const	int	trap_door	[];
 extern	char *	const	r_flags		[];
+extern	char *	const	r_flags2		[];
 extern	char *	const	w_flags		[];
 extern	char *	const	o_flags		[];
 extern	char *	const	a_flags		[];
@@ -3106,6 +3115,8 @@ DECLARE_DO_FUN( do_quicktalk );
 DECLARE_DO_FUN( do_propaganda );
 DECLARE_DO_FUN( do_autopilot  );
 DECLARE_DO_FUN( do_allspeeders  );
+DECLARE_DO_FUN( do_slicebank  );
+DECLARE_DO_FUN( do_inquire  );
 DECLARE_DO_FUN( do_speeders  );
 DECLARE_DO_FUN( do_suicide  );
 DECLARE_DO_FUN( do_bank  );

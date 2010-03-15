@@ -896,6 +896,9 @@ void do_rstat( CHAR_DATA *ch, char *argument )
 
     ch_printf( ch, "Room flags: %s\n\r",
 	flag_string(location->room_flags, r_flags) );
+    ch_printf( ch, "&GRoom flags2: &W%s\n\r",
+    flag_string(location->room_flags2, r_flags2) );
+
     ch_printf( ch, "Description:\n\r%s", location->description );
 
     if ( location->first_extradesc )

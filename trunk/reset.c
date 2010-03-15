@@ -617,8 +617,7 @@ void reset_all() {
 
 			if (pRoomIndex->sector_type == SECT_DESERT) {
 				if (pRoomIndex->area->planet->population >= max_population(
-						pRoomIndex->area->planet)
-						&& !IS_SET( pRoomIndex->area->planet->flags, PLANET_NOCAP ))
+						pRoomIndex->area->planet))
 					continue;
 
 				if (number_bits(5) == 0) {
@@ -769,7 +768,7 @@ void reset_all() {
 			// wildlife
 
 			if (pRoomIndex->area->planet->wildlife
-					> pRoomIndex->area->planet->wilderness && !IS_SET( pRoomIndex->area->planet->flags, PLANET_NOCAP ) )
+					> pRoomIndex->area->planet->wilderness && !IS_SET( pRoomIndex->area->planet->flags, PLANET_HIDDEN ) )
 				continue;
 
 			anumber = number_bits(3);

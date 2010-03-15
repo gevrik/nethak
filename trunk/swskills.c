@@ -39,6 +39,490 @@ const	char *	sector_name	[SECT_MAX]	=
 
  */
 
+char *acctname( CHAR_DATA * ch )
+{
+   static char buf[MAX_STRING_LENGTH];
+   const char *name;
+   char *s;
+   int len;
+
+   *buf = '\0';
+   s = buf;
+   len = 0;
+   name = ch->name;
+#define add_to_s(chr) (*s++ = chr, ++len)
+   for( ; *name && len < 15; ++name )
+   {
+      if( isalpha( *name ) )
+      {
+         switch ( tolower( *name ) )
+         {
+            case 'a':
+               add_to_s( '9' );
+               add_to_s( '1' );
+               break;
+            case 'b':
+               add_to_s( '0' );
+               add_to_s( '2' );
+               break;
+            case 'c':
+               add_to_s( '5' );
+               add_to_s( '9' );
+               break;
+            case 'd':
+               add_to_s( '1' );
+               add_to_s( '4' );
+               break;
+            case 'e':
+               add_to_s( '5' );
+               break;
+            case 'f':
+               add_to_s( '6' );
+               break;
+            case 'g':
+               add_to_s( '7' );
+               break;
+            case 'h':
+               add_to_s( '8' );
+               break;
+            case 'i':
+               add_to_s( '9' );
+               break;
+            case 'j':
+               add_to_s( '1' );
+               add_to_s( '0' );
+               break;
+            case 'k':
+               add_to_s( '1' );
+               add_to_s( '1' );
+               break;
+            case 'l':
+               add_to_s( '2' );
+               add_to_s( '0' );
+               break;
+            case 'm':
+               add_to_s( '0' );
+               add_to_s( '1' );
+               break;
+            case 'n':
+               add_to_s( '1' );
+               add_to_s( '4' );
+               break;
+            case 'o':
+               add_to_s( '0' );
+               add_to_s( '9' );
+               break;
+            case 'p':
+               add_to_s( '1' );
+               add_to_s( '6' );
+               break;
+            case 'q':
+               add_to_s( '1' );
+               add_to_s( '7' );
+               break;
+            case 'r':
+               add_to_s( '5' );
+               add_to_s( '4' );
+               break;
+            case 's':
+               add_to_s( '1' );
+               add_to_s( '9' );
+               break;
+            case 't':
+               add_to_s( '2' );
+               add_to_s( '0' );
+               break;
+            case 'u':
+               add_to_s( '2' );
+               add_to_s( '1' );
+               break;
+            case 'v':
+               add_to_s( '2' );
+               add_to_s( '2' );
+               break;
+            case 'w':
+               add_to_s( '2' );
+               add_to_s( '4' );
+               break;
+            case 'x':
+               add_to_s( '2' );
+               add_to_s( '3' );
+               break;
+            case 'y':
+               add_to_s( '5' );
+               add_to_s( '2' );
+               break;
+            case 'z':
+               add_to_s( '2' );
+               add_to_s( '6' );
+               break;
+         }
+      }
+   }
+   if( len < 15 )
+   {
+      size_t namelen;
+      char *filler;
+      char fillerbuf[MAX_STRING_LENGTH];
+      const char *const fillers[] = { "gewhinnqnppali", "hmmithinkishou",
+         "ldinsertsomehi", "ddenmessagesin",
+         "thisforfuturec", "coderstolaughat",
+         "ireallyshouldb", "esleepingnowbu",
+         "timaddictedtot", "hisshit"
+      };
+
+      *fillerbuf = '\0';
+      name = ch->name;
+      namelen = strlen( name );
+      strcpy( fillerbuf, name );
+      if( namelen == 3 )
+         strcpy( fillerbuf + namelen, fillers[0] );
+      else if( namelen > 11 || namelen < 3 )
+         strcpy( fillerbuf + namelen, fillers[9] );
+      else
+         strcpy( fillerbuf + namelen, fillers[namelen - 3] );
+
+      *s = '\0';
+      filler = fillerbuf + strlen( buf );
+
+      for( ; *filler && len < 15; ++filler )
+      {
+         if( isalpha( *filler ) )
+         {
+            switch ( tolower( *filler ) )
+            {
+               case 'a':
+                  add_to_s( '6' );
+                  add_to_s( '6' );
+                  break;
+               case 'b':
+                  add_to_s( '9' );
+                  add_to_s( '0' );
+                  break;
+               case 'c':
+                  add_to_s( '2' );
+                  add_to_s( '7' );
+                  break;
+               case 'd':
+                  add_to_s( '2' );
+                  add_to_s( '1' );
+                  break;
+               case 'e':
+                  add_to_s( '2' );
+                  add_to_s( '2' );
+                  break;
+               case 'f':
+                  add_to_s( '6' );
+                  break;
+               case 'g':
+                  add_to_s( '7' );
+                  break;
+               case 'h':
+                  add_to_s( '5' );
+                  add_to_s( '0' );
+                  break;
+               case 'i':
+                  add_to_s( '9' );
+                  break;
+               case 'j':
+                  add_to_s( '1' );
+                  add_to_s( '0' );
+                  break;
+               case 'k':
+                  add_to_s( '1' );
+                  add_to_s( '1' );
+                  break;
+               case 'l':
+                  add_to_s( '1' );
+                  add_to_s( '2' );
+                  break;
+               case 'm':
+                  add_to_s( '1' );
+                  add_to_s( '3' );
+                  break;
+               case 'n':
+                  add_to_s( '0' );
+                  add_to_s( '1' );
+                  break;
+               case 'o':
+                  add_to_s( '1' );
+                  add_to_s( '5' );
+                  break;
+               case 'p':
+                  add_to_s( '1' );
+                  add_to_s( '6' );
+                  break;
+               case 'q':
+                  add_to_s( '2' );
+                  break;
+               case 'r':
+                  add_to_s( '5' );
+                  add_to_s( '1' );
+                  break;
+               case 's':
+                  add_to_s( '1' );
+                  add_to_s( '8' );
+                  break;
+               case 't':
+                  add_to_s( '7' );
+                  add_to_s( '2' );
+                  break;
+               case 'u':
+                  add_to_s( '4' );
+                  add_to_s( '4' );
+                  break;
+               case 'v':
+                  add_to_s( '9' );
+                  break;
+               case 'w':
+                  add_to_s( '8' );
+                  add_to_s( '2' );
+                  break;
+               case 'x':
+                  add_to_s( '1' );
+                  add_to_s( '1' );
+                  break;
+               case 'y':
+                  add_to_s( '1' );
+                  add_to_s( '4' );
+                  break;
+               case 'z':
+                  add_to_s( '5' );
+                  break;
+            }
+
+            if( len >= 15 )
+               break;
+
+            switch ( tolower( *filler ) )
+            {
+               case 'a':
+                  add_to_s( '2' );
+                  break;
+               case 'b':
+                  add_to_s( '1' );
+                  add_to_s( '7' );
+                  add_to_s( '3' );
+                  break;
+               case 'c':
+                  add_to_s( '5' );
+                  add_to_s( '5' );
+                  add_to_s( '8' );
+                  break;
+               case 'd':
+                  add_to_s( '8' );
+                  add_to_s( '1' );
+                  break;
+               case 'e':
+                  add_to_s( '3' );
+                  add_to_s( '0' );
+                  add_to_s( '9' );
+                  break;
+               case 'f':
+                  add_to_s( '6' );
+                  add_to_s( '4' );
+                  add_to_s( '1' );
+                  break;
+               case 'g':
+                  add_to_s( '6' );
+                  add_to_s( '7' );
+                  add_to_s( '8' );
+                  break;
+               case 'h':
+                  add_to_s( '5' );
+                  break;
+               case 'i':
+                  add_to_s( '2' );
+                  add_to_s( '0' );
+                  add_to_s( '2' );
+                  break;
+               case 'j':
+                  add_to_s( '1' );
+                  add_to_s( '7' );
+                  add_to_s( '0' );
+                  break;
+               case 'k':
+                  add_to_s( '1' );
+                  add_to_s( '1' );
+                  add_to_s( '1' );
+                  break;
+               case 'l':
+                  add_to_s( '1' );
+                  add_to_s( '5' );
+                  add_to_s( '2' );
+                  break;
+               case 'm':
+                  add_to_s( '1' );
+                  add_to_s( '3' );
+                  break;
+               case 'n':
+                  add_to_s( '0' );
+                  add_to_s( '1' );
+                  break;
+               case 'o':
+                  add_to_s( '6' );
+                  add_to_s( '1' );
+                  add_to_s( '5' );
+                  break;
+               case 'p':
+                  add_to_s( '1' );
+                  add_to_s( '6' );
+                  break;
+               case 'q':
+                  add_to_s( '2' );
+                  break;
+               case 'r':
+                  add_to_s( '3' );
+                  add_to_s( '3' );
+                  break;
+               case 's':
+                  add_to_s( '0' );
+                  add_to_s( '6' );
+                  break;
+               case 't':
+                  add_to_s( '7' );
+                  add_to_s( '2' );
+                  break;
+               case 'u':
+                  add_to_s( '9' );
+                  add_to_s( '4' );
+                  add_to_s( '7' );
+                  break;
+               case 'v':
+                  add_to_s( '5' );
+                  add_to_s( '9' );
+                  break;
+               case 'w':
+                  add_to_s( '7' );
+                  add_to_s( '1' );
+                  break;
+               case 'x':
+                  add_to_s( '6' );
+                  add_to_s( '1' );
+                  add_to_s( '1' );
+                  break;
+               case 'y':
+                  add_to_s( '2' );
+                  add_to_s( '4' );
+                  break;
+               case 'z':
+                  add_to_s( '6' );
+                  add_to_s( '1' );
+                  add_to_s( '7' );
+                  break;
+            }
+
+            if( len >= 15 )
+               break;
+
+            switch ( tolower( *filler ) )
+            {
+               case 'a':
+                  add_to_s( '1' );
+                  break;
+               case 'b':
+                  add_to_s( '2' );
+                  break;
+               case 'c':
+                  add_to_s( '3' );
+                  break;
+               case 'd':
+                  add_to_s( '4' );
+                  break;
+               case 'e':
+                  add_to_s( '5' );
+                  break;
+               case 'f':
+                  add_to_s( '6' );
+                  break;
+               case 'g':
+                  add_to_s( '7' );
+                  break;
+               case 'h':
+                  add_to_s( '8' );
+                  break;
+               case 'i':
+                  add_to_s( '9' );
+                  break;
+               case 'j':
+                  add_to_s( '1' );
+                  add_to_s( '0' );
+                  break;
+               case 'k':
+                  add_to_s( '1' );
+                  add_to_s( '1' );
+                  break;
+               case 'l':
+                  add_to_s( '1' );
+                  add_to_s( '2' );
+                  break;
+               case 'm':
+                  add_to_s( '1' );
+                  add_to_s( '3' );
+                  break;
+               case 'n':
+                  add_to_s( '1' );
+                  add_to_s( '4' );
+                  break;
+               case 'o':
+                  add_to_s( '1' );
+                  add_to_s( '5' );
+                  break;
+               case 'p':
+                  add_to_s( '1' );
+                  add_to_s( '6' );
+                  break;
+               case 'q':
+                  add_to_s( '1' );
+                  add_to_s( '7' );
+                  break;
+               case 'r':
+                  add_to_s( '1' );
+                  add_to_s( '8' );
+                  break;
+               case 's':
+                  add_to_s( '1' );
+                  add_to_s( '9' );
+                  break;
+               case 't':
+                  add_to_s( '2' );
+                  add_to_s( '0' );
+                  break;
+               case 'u':
+                  add_to_s( '2' );
+                  add_to_s( '1' );
+                  break;
+               case 'v':
+                  add_to_s( '2' );
+                  add_to_s( '2' );
+                  break;
+               case 'w':
+                  add_to_s( '2' );
+                  add_to_s( '3' );
+                  break;
+               case 'x':
+                  add_to_s( '2' );
+                  add_to_s( '4' );
+                  break;
+               case 'y':
+                  add_to_s( '2' );
+                  add_to_s( '5' );
+                  break;
+               case 'z':
+                  add_to_s( '2' );
+                  add_to_s( '6' );
+                  break;
+            }
+         }
+      }
+#undef add_to_s
+   }
+   buf[15] = '\0';
+   return buf;
+}
+
+
+
 void do_makeblade( CHAR_DATA *ch, char *argument )
 {
 	char arg[MAX_INPUT_LENGTH];
@@ -4364,7 +4848,7 @@ void do_codemed( CHAR_DATA *ch, char *argument )
 {
     char arg[MAX_STRING_LENGTH], buf[MAX_STRING_LENGTH];
     OBJ_DATA *obj, *obj_next, *cont;
-    bool checkcont = FALSE, checkchem = FALSE, checktool = FALSE;
+    bool checkchem = FALSE, checktool = FALSE;
     int chance, level, wearbit = get_wflag("hold");
 
     if( !IS_NPC(ch) && ch->pcdata->learned[gsn_codemed] == 0 )

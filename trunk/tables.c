@@ -235,6 +235,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_imports"))             return do_imports;
 	if ( !str_cmp( name, "do_info" ))               return do_info;
 	if ( !str_cmp( name, "do_induct" ))		return do_induct;
+	if ( !str_cmp( name, "do_inquire" ))		return do_inquire;
 	if ( !str_cmp( name, "do_inventory" ))		return do_inventory;
 	if ( !str_cmp( name, "do_invis" ))		return do_invis;
 	break;
@@ -462,6 +463,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_sla" ))		return do_sla;
 	if ( !str_cmp( name, "do_slay" ))		return do_slay;
 	if ( !str_cmp( name, "do_sleep" ))		return do_sleep;
+	if ( !str_cmp( name, "do_slicebank" ))		return do_slicebank;
 	if ( !str_cmp( name, "do_slice" ))		return do_slice;
 	if ( !str_cmp( name, "do_slist" ))		return do_slist;
 	if ( !str_cmp( name, "do_slookup" ))		return do_slookup;
@@ -595,6 +597,8 @@ char *skill_name( DO_FUN *skill )
     if ( skill == do_challenge )        return "do_challenge";
     if ( skill == do_chaos )            return "do_chaos";
     if ( skill == do_adecline )          return "do_adecline";
+    if ( skill == do_slicebank )     return "do_slicebank";
+    if ( skill == do_inquire )     return "do_inquire";
     if ( skill == do_arrest )     return "do_arrest";
     if ( skill == do_buyskill )     return "do_buyskill";
     if ( skill == do_war )     return "do_war";
