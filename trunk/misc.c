@@ -106,7 +106,7 @@ void do_buyhome( CHAR_DATA *ch, char *argument )
 	STRFREE( room->description );
 	room->description = STRALLOC( "home, sweet home." ); //
 
-	ch->gold -= cost;
+	ch->gold -= 10000;
 
 	REMOVE_BIT( room->room_flags , ROOM_EMPTY_HOME );
 	SET_BIT( room->room_flags , ROOM_PLR_HOME );

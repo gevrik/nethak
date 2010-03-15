@@ -112,7 +112,7 @@ const struct map_info_type map_info[] =
 	{ SECT_SAVANNA,  	 "^p&W", " ^x&w", "",   "trade" },
 	{ SECT_TUNDRA,  	 "^w&z", " ^x&w", "",   "tundra" },
 	{ SECT_GLACIAL,  	 "^g&x", " ^x&w", "",   "default" },
-	{ SECT_RAINFOREST, 	 "^w&z", " ^x&w", "",   "rainforest" },
+	{ SECT_RAINFOREST, 	 "^p&z", " ^x&w", "",   "construct" },
 	{ SECT_JUNGLE,  	 "^w&z", " ^x&w", "",   "jungle" },
 	{ SECT_SWAMP,  		 "^r&W", " ^x&w", "",   "firewall" },
 	{ SECT_WETLANDS,  	 "^w&z", " ^x&w", "",   "wetlands" },

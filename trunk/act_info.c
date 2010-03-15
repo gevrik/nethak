@@ -572,7 +572,7 @@ void show_char_to_char_0( CHAR_DATA *victim, CHAR_DATA *ch )
 	    strcat( buf, "someone who left" );
 	break;
     case POS_FIGHTING:
-	strcat( buf, " is here fighting" );
+	strcat( buf, " is here fighting " );
 	if ( !victim->fighting )
 	    strcat( buf, "thin air" );
 	else if ( who_fighting( victim ) == ch )
@@ -2465,7 +2465,7 @@ void do_teach( CHAR_DATA *ch, char *argument )
 	    return;
 	}
 
-	if ( (victim->pcdata->num_skills - victim->pcdata->adept_skills) >= 7 )
+	if ( (victim->pcdata->num_skills - victim->pcdata->adept_skills) >= 5 )
 	{
 	    act( AT_TELL, "> $N needs to perfect some of the skills $E has before learning new ones", ch, NULL, victim, TO_CHAR );
 	    return;
@@ -2479,7 +2479,7 @@ void do_teach( CHAR_DATA *ch, char *argument )
 
 	if ( ( sn == gsn_lightsaber_crafting || sn == gsn_parry || sn == gsn_lightsabers ) && ( get_curr_frc(victim) <= 0 || victim->max_mana  <= 0 ) )
 	{
-	    act( AT_TELL, "> $n is not a jedi", victim, NULL, ch, TO_VICT );
+	    act( AT_TELL, "> $n is not experienced enough", victim, NULL, ch, TO_VICT );
 	    return;
 	}
 

@@ -851,7 +851,7 @@ void do_makeplanet( CHAR_DATA *ch, char *argument )
 
     if (!ch->in_room || !IS_SET( ch->in_room->room_flags, ROOM_SHIPYARD ) )
     {
-    	send_to_char( "> system creation code can only be started from an io node\n\r", ch );
+    	send_to_char( "> go to the straylight io node\n\r", ch );
 	return;
     }
 

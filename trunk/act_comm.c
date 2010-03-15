@@ -1087,7 +1087,7 @@ void do_bug( CHAR_DATA *ch, char *argument )
       send_to_char( "&w> syntax&B:&C BUG &B<&wmessage&B>\n\r", ch );
       return;
    }
-    append_file( ch, BUG_FILE, argument );
+    append_file( ch, TYPO_FILE, argument );
     send_to_char( "> bug submitted\n\r", ch );
     return;
 }

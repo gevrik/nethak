@@ -1944,8 +1944,9 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 			ch->pcdata->learned[gsn_landscape] = 50;
 			ch->pcdata->learned[gsn_construction] = 50;
 			ch->pcdata->learned[gsn_bridge] = 50;
+			ch->pcdata->learned[gsn_codeapp] = 50;
 			ch->pcdata->learned[gsn_spacecraft] = 50;
-			ch->pcdata->num_skills = 5;
+			ch->pcdata->num_skills = 6;
 			sprintf( buf, "%s",ch->name );
 			set_title( ch, buf );
 

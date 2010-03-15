@@ -22,10 +22,10 @@ extern int top_r_vnum;
 
 const	char *	sector_name	[SECT_MAX]	=
 {
-		"inside", "terminal", "database", "database", "database", "database", "water swim", "water noswim",
-		"underwater", "air", "database", "unknown", "ocean floor", "underground",
-		"database", "database", "database", "database", "database", "database", "database",
-		"database", "database", "database", "database", "subserver", "database"
+		"system", "terminal", "unknown", "unknown", "unknown", "unknown", "unknown", "unkown",
+		"unknown", "unkown", "database", "unknown", "unknown", "unknown",
+		"unknown", "unknown", "shopping", "unknown", "database", "graveyard", "unknown",
+		"firewall", "unknown", "unknown", "unknown", "subserver", "unknown"
 };
 
 /*
@@ -4385,14 +4385,8 @@ void do_codemed( CHAR_DATA *ch, char *argument )
 
  for( obj = ch->first_carrying; obj; obj = obj->next_content )
  {
-     if( obj->item_type == ITEM_CONTAINER && !checkcont )
-     {
-    	 if( obj->value[1] <= 0 && get_obj_weight( obj ) <= 1)
-         checkcont = TRUE;
-         continue;
-     }
 
-     if( obj->item_type == ITEM_MIRROR && !checkchem )
+	 if( obj->item_type == ITEM_MIRROR && !checkchem )
      {
   checkchem = TRUE;
   continue;
@@ -4400,12 +4394,6 @@ void do_codemed( CHAR_DATA *ch, char *argument )
 
      if( obj->item_type == ITEM_TOOLKIT && !checktool )
   checktool = TRUE;
- }
-
- if( !checkcont )
- {
-     send_to_char("> &Ryou need an empty container module&w\n\r",ch);
-     return;
  }
 
  if( !checkchem )
@@ -4449,19 +4437,10 @@ void do_codemed( CHAR_DATA *ch, char *argument )
     {
  obj_next = obj->next_content;
 
- if( obj->item_type == ITEM_CONTAINER && !checkcont )
- {
-     if( obj->value[1] > 0 && get_obj_weight( obj ) <= 1 ) continue;
-     cont = obj;
-     checkcont = TRUE;
-     continue;
- }
-
  if( obj->item_type == ITEM_MIRROR && !checkchem )
  {
 	 separate_obj(obj);
-     obj_from_char( obj );
-     extract_obj( obj );
+     cont = obj;
      checkchem = TRUE;
      continue;
  }
@@ -4472,7 +4451,7 @@ void do_codemed( CHAR_DATA *ch, char *argument )
 
     level = chance = IS_NPC(ch) ? ch->top_level : ch->pcdata->learned[gsn_codemed];
 
-    if( number_percent() > chance || !checkcont || !checkchem || !checktool )
+    if( number_percent() > chance || !checkchem || !checktool )
     {
 		send_to_char( "> &Ryou fail to code the med module&w\n\r", ch);
 		return;
@@ -4505,7 +4484,4 @@ void do_codemed( CHAR_DATA *ch, char *argument )
 
 }
 
-
-
-//done for swrip
 //done for Neuro
