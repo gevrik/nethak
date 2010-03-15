@@ -111,6 +111,10 @@ sh_int   gsn_makearmor;
 sh_int   gsn_makeshield;
 sh_int   gsn_makecontainer;
 sh_int   gsn_makejewelry;
+
+sh_int	 gsn_slicebank;
+sh_int	 gsn_inquire;
+
 sh_int   gsn_codemed;
 sh_int   gsn_codeapp;
 
@@ -445,6 +449,8 @@ void boot_db( void )
         ASSIGN_GSN( gsn_makecontainer  , "codecontainer" );
         ASSIGN_GSN( gsn_reinforcements  , "reinforcements" );
         ASSIGN_GSN( gsn_postguard   , "postguard" );
+    	ASSIGN_GSN( gsn_slicebank   , "slicebank" );
+    	ASSIGN_GSN( gsn_inquire   , "inquire" );
         ASSIGN_GSN( gsn_torture   , "torture" );
         ASSIGN_GSN( gsn_throw   , "throw" );
         ASSIGN_GSN( gsn_disguise   , "disguise" );
@@ -1085,7 +1091,7 @@ void load_rooms( AREA_DATA *tarea, FILE *fp )
 	int iHash;
 	bool tmpBootDb;
 	bool oldroom;
-	int x1, x2, x3, x4, x5, x6, x7, x8;
+	int x1, x2, x3, x4, x5, x6, x7, x8, x9;
 
 	letter				= fread_letter( fp );
 	if ( letter != '#' )
@@ -1151,9 +1157,9 @@ void load_rooms( AREA_DATA *tarea, FILE *fp )
 
 	/* Area number			  fread_number( fp ); */
 	ln = fread_line( fp );
-	x1=x2=x3=x4=x5=x6=x7=x8=0;
-	sscanf( ln, "%d %d %d %d %d %d %d %d",
-	      &x1, &x2, &x3, &x4, &x5, &x6, &x7, &x8 );
+	x1=x2=x3=x4=x5=x6=x7=x8=x9=0;
+	sscanf( ln, "%d %d %d %d %d %d %d %d %d",
+	      &x1, &x2, &x3, &x4, &x5, &x6, &x7, &x8, &x9 );
 
 	pRoomIndex->room_flags		= x2;
 	pRoomIndex->sector_type		= x3;
@@ -1162,6 +1168,7 @@ void load_rooms( AREA_DATA *tarea, FILE *fp )
 	pRoomIndex->tunnel		= x6;
 	pRoomIndex->seccode		= x7;
 	pRoomIndex->level		= x8;
+	pRoomIndex->room_flags2		= x9;
 
 	if (pRoomIndex->sector_type < 0 || pRoomIndex->sector_type == SECT_MAX)
 	{

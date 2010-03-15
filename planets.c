@@ -11,7 +11,6 @@ extern int top_r_vnum;
 void write_area_list();
 void write_starsystem_list();
 extern const   char *  sector_name     [SECT_MAX];
-extern char * const cargo_names[CARGO_MAX];
 
 PLANET_DATA * first_planet;
 PLANET_DATA * last_planet;
@@ -26,6 +25,10 @@ int	get_pflag( char *flag );
 void	fread_planet	args( ( PLANET_DATA *planet, FILE *fp ) );
 bool	load_planet_file	args( ( char *planetfile ) );
 void	write_planet_list	args( ( void ) );
+
+char * const cargo_names[CARGO_MAX] = {
+  "none", "finance", "multimedia", "entertainment", "productivity"
+};
 
 /*
 Parse Planet Names
@@ -151,7 +154,7 @@ void save_planet( PLANET_DATA *planet )
 	fprintf( fp, "Flags	   %d\n",	planet->flags		);
 
     for(i = 1; i<CARGO_MAX; i++)
-       fprintf(fp, "Resource %d %d %d %d %d %d", i, planet->import[i], planet->export[i], planet->resource[i], planet->consumes[i], planet->produces[i]);
+       fprintf(fp, "Resource %d %d %d %d %d %d\n", i, planet->import[i], planet->export[i], planet->resource[i], planet->consumes[i], planet->produces[i]);
 
 	fprintf( fp, "End\n\n"						);
 	fprintf( fp, "#END\n"						);
@@ -449,6 +452,7 @@ void do_setplanet( CHAR_DATA *ch, char *argument )
 
     argument = one_argument( argument, arg1 );
     argument = one_argument( argument, arg2 );
+    argument = one_argument( argument, arg3 );
 
     if ( arg1[0] == '\0' )
     {
@@ -1478,10 +1482,10 @@ void do_imports( CHAR_DATA *ch, char *argument )
       return;
    }
    ch_printf(ch,"&BImport and Export data for %s:\r\n", planet->name);
-   ch_printf(ch,"&GResource    &CImport     &YExport    &PProduces    &RConsumes         &GAmount\r\n");
+   ch_printf(ch,"&GResource     &CImport     &YExport    &PProduces    &RConsumes         &GAmount\r\n");
    ch_printf(ch, "&G----------   ------     ------    --------    --------         ------\r\n");
    for (i = 1; i < CARGO_MAX; i++)
-   ch_printf(ch,"&G%-10.10s    &C%5d/ton  &Y%5d/ton &P%6d tons  &R%6d tons  &G%9d\r\n",
+   ch_printf(ch,"&G%-10.10s    &C%5d/mb   &Y%5d/mb   &P%6d mb   &R%6d mb   &G%9d\r\n",
              cargo_names[i], planet->import[i], planet->export[i],
              planet->produces[i], planet->consumes[i], planet->resource[i]);
    return;

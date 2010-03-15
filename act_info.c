@@ -822,6 +822,9 @@ void do_look
 	  send_to_char("[", ch);
 	  send_to_char(flag_string(ch->in_room->room_flags, r_flags), ch);
 	  send_to_char("]", ch);
+	  send_to_char("[", ch);
+	  send_to_char(flag_string(ch->in_room->room_flags2, r_flags2), ch);
+	  send_to_char("]", ch);
 	  set_char_color(AT_WHITE, ch);
 	 }
 

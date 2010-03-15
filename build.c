@@ -51,6 +51,14 @@ char *	const	r_flags	[] =
 "bar", "employment", "spacecraft", "recruit", "auction"
 };
 
+char * const r_flags2 [] =
+{
+"r00", "r01", "r02", "r03", "r04", "r05",
+"r06", "r07", "r08", "r09", "r10", "r11",
+"r12", "r13", "r14", "r15", "r16", "r17", "r18", "r19", "r20", "r21", "r22", "r23",
+"r24", "r25", "r26", "r27", "r28", "r29", "r30", "r31"
+};
+
 char *	const	o_flags	[] =
 {
 "glow", "hum", "dark", "hutt_size", "i4", "invis", "magic", "nodrop", "bless",
@@ -382,6 +390,16 @@ int get_rflag( char *flag )
       if ( !str_cmp( flag, r_flags[x] ) )
         return x;
     return -1;
+}
+
+int get_rflag2( char *flag )
+{
+int x;
+
+for ( x = 0; x < 32; x++ )
+if ( !str_cmp( flag, r_flags2[x] ) )
+return x;
+return -1;
 }
 
 int get_mpflag( char *flag )
@@ -3430,6 +3448,27 @@ void do_redit( CHAR_DATA *ch, char *argument )
 	return;
     }
 
+    if ( !str_cmp( arg, "flags2" ) )
+    {
+    if ( !argument || argument[0] == '\0' )
+    {
+    send_to_char( "Toggle the room flags.\n\r", ch );
+    send_to_char( "Usage: redit flags <flag> [flag]...\n\r", ch );
+    send_to_char( "\n\rPossible Flags: \n\r", ch );
+    send_to_char( "blah blah blah\n\r", ch );
+    return;
+    }
+    while ( argument[0] != '\0' )
+    {
+    argument = one_argument( argument, arg2 );
+    value = get_rflag2( arg2 );
+    if ( value < 0 || value > 31 )
+    ch_printf( ch, "Unknown flag: %s\n\r", arg2 );
+    TOGGLE_BIT( location->room_flags2, 1 << value );
+    }
+    return;
+    }
+
     if ( !str_cmp( arg, "teledelay" ) )
     {
 	if ( !argument || argument[0] == '\0' )
@@ -4737,7 +4776,7 @@ void fold_area( AREA_DATA *tarea, char *filename, bool install )
 	fprintf( fpout, "%s~\n",	strip_cr( room->description )	);
 	fprintf( fpout, "%s~\n",	room->owner			);
 	if ( (room->tele_delay > 0 && room->tele_vnum > 0) || room->tunnel > 0 || room->seccode > 0 || room->level > 0 )
-	  fprintf( fpout, "0 %d %d %d %ld %d %d %d\n",	room->room_flags,
+	  fprintf( fpout, "0 %d %d %d %d %ld %d %d %d\n",	room->room_flags, room->room_flags2,
 						room->sector_type,
 						room->tele_delay,
 						room->tele_vnum,
@@ -4745,7 +4784,7 @@ void fold_area( AREA_DATA *tarea, char *filename, bool install )
 						room->seccode,
 						room->level );
 	else
-	  fprintf( fpout, "0 %d %d\n",	room->room_flags,
+	  fprintf( fpout, "0 %d %d %d\n",	room->room_flags, room->room_flags2,
 					room->sector_type	);
 	for ( xit = room->first_exit; xit; xit = xit->next )
 	{
