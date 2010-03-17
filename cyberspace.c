@@ -976,7 +976,7 @@ void do_examineobject( CHAR_DATA *ch, char *argument )
 		if ( obj->item_type == ITEM_SNIPPET )
 	{
 
-			if ( !strcmp(obj->name, "anchor")) {
+			if ( !strcmp(obj->name, "anchor") || !strcmp(obj->name, "audit" ) || !strcmp(obj->name, "shortcut") ) {
 					ch_printf( ch, "> &Gcharges:&W %d&w\n\r", obj->value[0] );
 			}
 	}
@@ -1252,11 +1252,13 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 				&& str_cmp( arg, "dropline" )
 				&& str_cmp( arg, "uninstall" )
 				&& str_cmp( arg, "anchor" )
-				&& str_cmp( arg, "audit" ))
+				&& str_cmp( arg, "audit" )
+				&& str_cmp( arg, "shortcut" ))
 		{
 			send_to_char( "> &Ryou cannot code that app, try:\n\r&w", ch);
 			send_to_char( "> jackhammer, krash, spun, reconstruct\n\r", ch);
 			send_to_char( "> dropline, uninstall, anchor, audit\n\r", ch);
+			send_to_char( "> shortcut\n\r", ch);
 			return;
 		}
 
@@ -1299,11 +1301,16 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 		{
 			cost = 100;
 		}
+		else if ( !str_cmp( arg, "shortcut" ) )
+		{
+			cost = 500;
+		}
 		else
 		{
 			send_to_char( "> &Ryou cannot code that app, try:\n\r&w", ch);
 			send_to_char( "> jackhammer, krash, spun, reconstruct\n\r", ch);
 			send_to_char( "> dropline, uninstall, anchor, audit\n\r", ch);
+			send_to_char( "> shortcut\n\r", ch);
 			return;
 		}
 
@@ -1432,6 +1439,10 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 	{
 		cost = 75;
 	}
+	else if ( !str_cmp( arg, "shortcut" ) )
+	{
+		cost = 100;
+	}
 	else
 	{
 		send_to_char( "> &Rsomething went wrong\n\r", ch);
@@ -1472,6 +1483,12 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 		{
 			obj->value[0] = level / 10;
 			obj->cost = ( level / 10 ) * 10;
+		}
+
+	if ( !str_cmp( arg, "shortcut" ) )
+		{
+			obj->value[0] = level / 10;
+			obj->cost = ( level / 10 ) * 50;
 		}
 
 	obj = obj_to_char( obj, ch );
@@ -2523,6 +2540,12 @@ void do_reverseengineer( CHAR_DATA * ch, char *argument )
          return;
       }
 
+      if( ( obj->item_type == ITEM_CONTAINER ) )
+      {
+         send_to_char( "> you cannot reverse engineer containers\r\n", ch );
+         return;
+      }
+
       if( ( obj->pIndexData->vnum == 100 && ch->top_level < 200 ) )
       {
          send_to_char( "> you cannot reverse engineer that\r\n", ch );
@@ -2537,7 +2560,10 @@ void do_reverseengineer( CHAR_DATA * ch, char *argument )
 
       if( ( obj->pIndexData->vnum == 15 && ch->top_level < 200 ) )
       {
-         send_to_char( "> you cannot reverse engineer that\r\n", ch );
+         send_to_char( "> you delete the message\r\n", ch );
+         separate_obj( obj );
+         obj_from_char( obj );
+         extract_obj( obj );
          return;
       }
 
@@ -3246,7 +3272,7 @@ void do_nodeupgrade( CHAR_DATA *ch, char *argument )
 	ROOM_INDEX_DATA	*location;
 	CLAN_DATA *clan;
 	PLANET_DATA *planet;
-	int level, cost, newlevel;
+	int level, cost = 0, newlevel;
 
 	location = ch->in_room;
 	clan = ch->pcdata->clan;
@@ -3296,7 +3322,10 @@ void do_nodeupgrade( CHAR_DATA *ch, char *argument )
 
     switch( level )
     {
-    default: send_to_char("> &Rnode already at maximum level&w\n\r", ch );	break;
+    default:
+    	send_to_char("> &Rnode already at maximum level&w\n\r", ch );
+    	return;
+    break;
     case 0:  cost = 2000;	break;
     case 1:  cost = 4000;	break;
     case 2:  cost = 8000;	break;
@@ -3316,7 +3345,10 @@ void do_nodeupgrade( CHAR_DATA *ch, char *argument )
 
     switch( newlevel )
     {
-    default: send_to_char("> &Rsomething went wrong (contact Wintermute)&w\n\r", ch );	break;
+    default:
+    send_to_char("> &Rsomething went wrong (contact Wintermute)&w\n\r", ch );
+    return;
+    break;
     case 1:
     send_to_char("> &Wnode upgraded to:&w &Ggreen&w\n\r", ch );
     location->level = 1;
@@ -3336,6 +3368,10 @@ void do_nodeupgrade( CHAR_DATA *ch, char *argument )
     case 5:
     send_to_char("> &Wnode upgraded to:&w &zblack&w\n\r", ch );
     location->level = 5;
+    break;
+    case 6:
+    send_to_char("> &Rnode already at maximum level&w\n\r", ch );
+    return;
     break;
     }
 

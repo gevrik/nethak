@@ -3053,6 +3053,8 @@ DECLARE_DO_FUN(	do_sn_dropline	);
 DECLARE_DO_FUN(	do_sn_uninstall	);
 DECLARE_DO_FUN(	do_sn_anchor	);
 DECLARE_DO_FUN(	do_sn_audit	);
+DECLARE_DO_FUN(	do_sn_shortcut	);
+
 
 // contracts
 
