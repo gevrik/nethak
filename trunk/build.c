@@ -891,7 +891,7 @@ void do_mset( CHAR_DATA *ch, char *argument )
 	send_to_char( "  resistant immune susceptible (see RIS)\n\r",	ch );
 	send_to_char( "  attack defense numattacks\n\r",		ch );
 	send_to_char( "  name short long description title spec spec2\n\r", ch );
-	send_to_char( "  clan vip wanted\n\r",                  ch );
+	send_to_char( "  clan vip wanted bank\n\r",                  ch );
 	send_to_char( "\n\r",						ch );
 	send_to_char( "For editing index/prototype mobiles:\n\r",	ch );
 	send_to_char( "  hitnumdie hitsizedie hitplus (hit points)\n\r",ch );
@@ -1227,13 +1227,19 @@ void do_mset( CHAR_DATA *ch, char *argument )
 	return;
     }
 
+    if ( !str_cmp( arg2, "bank" ) )
+    {
+	if ( !can_mmodify( ch, victim ) )
+	  return;
+	victim->pcdata->bank = value;
+	return;
+    }
+
     if ( !str_cmp( arg2, "snippets" ) )
     {
 	if ( !can_mmodify( ch, victim ) )
 	  return;
 	victim->snippets = value;
-	if ( IS_NPC(victim) && IS_SET( victim->act, ACT_PROTOTYPE ) )
-	  victim->pIndexData->gold = value;
 	return;
     }
 

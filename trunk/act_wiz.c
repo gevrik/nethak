@@ -1141,12 +1141,13 @@ ch_printf( ch,
         victim->leader      ? victim->leader->name   : "(none)" );
     if ( !IS_NPC(victim) )
 	ch_printf( ch,
-	    "Thirst: %d   Full: %d   Drunk: %d     Glory: %d/%d\n\r",
+	    "Thirst: %d   Full: %d   Drunk: %d     Glory: %d/%d\n\rbank: %ld\n\r",
 	    victim->pcdata->condition[COND_THIRST],
 	    victim->pcdata->condition[COND_FULL],
 	    victim->pcdata->condition[COND_DRUNK],
 	    victim->pcdata->quest_curr,
-	    victim->pcdata->quest_accum );
+	    victim->pcdata->quest_accum,
+	    victim->pcdata->bank);
     else
 	ch_printf( ch, "Hit dice: %dd%d+%d.  Damage dice: %dd%d+%d.\n\r",
 		victim->pIndexData->hitnodice,
