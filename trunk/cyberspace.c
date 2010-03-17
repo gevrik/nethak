@@ -401,11 +401,12 @@ void do_connect( CHAR_DATA *ch, char *argument )
 			send_to_char("&C> specify lobby\n\r",ch);
 			ch_printf( ch , "> choices for %s:\n\r\n\r", planet->name);
 			for ( room = planet->area->first_room ; room ; room = room->next_in_area )
-				if ( IS_SET( room->room_flags, ROOM_CAN_LAND ) )
-					ch_printf( ch , "%-15d  %s &C[&Rprot&C]\n\r", room->vnum, room->name);
-			for ( room = planet->area->first_room ; room ; room = room->next_in_area )
 				if ( IS_SET( room->room_flags, ROOM_PUBLICIO ) )
 					ch_printf( ch , "%-15d  %s &C[&Gpublic&C]\n\r", room->vnum, room->name);
+			for ( room = planet->area->first_room ; room ; room = room->next_in_area )
+				if ( IS_SET( room->room_flags, ROOM_CAN_LAND ) )
+					ch_printf( ch , "%-15d  %s &C[&Rprot&C]\n\r", room->vnum, room->name);
+
 
 			return;
 		}
@@ -1250,11 +1251,12 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 				&& str_cmp( arg, "reconstruct")
 				&& str_cmp( arg, "dropline" )
 				&& str_cmp( arg, "uninstall" )
-				&& str_cmp( arg, "anchor" ))
+				&& str_cmp( arg, "anchor" )
+				&& str_cmp( arg, "audit" ))
 		{
 			send_to_char( "> &Ryou cannot code that app, try:\n\r&w", ch);
 			send_to_char( "> jackhammer, krash, spun, reconstruct\n\r", ch);
-			send_to_char( "> dropline, uninstall, anchor\n\r", ch);
+			send_to_char( "> dropline, uninstall, anchor, audit\n\r", ch);
 			return;
 		}
 
@@ -1293,11 +1295,15 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 				}
 
 		}
+		else if ( !str_cmp( arg, "audit" ) )
+		{
+			cost = 100;
+		}
 		else
 		{
 			send_to_char( "> &Ryou cannot code that app, try:\n\r&w", ch);
 			send_to_char( "> jackhammer, krash, spun, reconstruct\n\r", ch);
-			send_to_char( "> dropline, uninstall, anchor\n\r", ch);
+			send_to_char( "> dropline, uninstall, anchor, audit\n\r", ch);
 			return;
 		}
 
@@ -1418,6 +1424,10 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 	{
 		cost = 1000;
 	}
+	else if ( !str_cmp( arg, "audit" ) )
+	{
+		cost = 100;
+	}
 	else if ( !str_cmp( arg, "anchor" ) )
 	{
 		cost = 75;
@@ -1455,6 +1465,13 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 		    STRFREE( obj->short_descr );
 		    sprintf( buf , "anchor [%s] [%ld]" , planet->name, ch->in_room->vnum );
 		    obj->short_descr = STRALLOC( buf );
+			obj->cost = ( level / 10 ) * 10;
+		}
+
+	if ( !str_cmp( arg, "audit" ) )
+		{
+			obj->value[0] = level / 10;
+			obj->cost = ( level / 10 ) * 10;
 		}
 
 	obj = obj_to_char( obj, ch );
@@ -3225,11 +3242,11 @@ void do_slicebank( CHAR_DATA * ch, char *argument )
 
 void do_nodeupgrade( CHAR_DATA *ch, char *argument )
 {
-	char buf [MAX_STRING_LENGTH];
+	//char buf [MAX_STRING_LENGTH];
 	ROOM_INDEX_DATA	*location;
-	int level;
-
-	location = ch->in_room;
+	CLAN_DATA *clan;
+	PLANET_DATA *planet;
+	int level, cost, newlevel;
 
 	location = ch->in_room;
 	clan = ch->pcdata->clan;
@@ -3277,32 +3294,52 @@ void do_nodeupgrade( CHAR_DATA *ch, char *argument )
 
 	level = location->level;
 
-		if ( level == 0 )
-		{
-			cost = 2000;
-		}
-		else if ( level == 1 )
-		{
-			cost = 4000;
-		}
-		else if ( level == 2 )
-		{
-			cost = 8000;
-		}
-		else if ( level == 3 )
-		{
-			cost = 16000;
-		}
-		else if ( level == 4 )
-		{
-			cost = 32000;
-		}
-		else if ( level == 5 )
-		{
-			cost = 4000;
-		}
+    switch( level )
+    {
+    default: send_to_char("> &Rnode already at maximum level&w\n\r", ch );	break;
+    case 0:  cost = 2000;	break;
+    case 1:  cost = 4000;	break;
+    case 2:  cost = 8000;	break;
+    case 3:  cost = 16000;	break;
+    case 4:  cost = 32000;	break;
+    }
 
+    if ( ch->gold < cost )
+    {
+    	ch_printf( ch, "> &Rinsufficient credits - costs:&W %d&w\n\r", cost );
+    	return;
+    }
 
+	newlevel = level + 1;
+	location->level = newlevel;
+    ch->gold -= cost;
+
+    switch( newlevel )
+    {
+    default: send_to_char("> &Rsomething went wrong (contact Wintermute)&w\n\r", ch );	break;
+    case 1:
+    send_to_char("> &Wnode upgraded to:&w &Ggreen&w\n\r", ch );
+    location->level = 1;
+    break;
+    case 2:
+    send_to_char("> &Wnode upgraded to:&w &Oorange&w\n\r", ch );
+    location->level = 2;
+    break;
+    case 3:
+    send_to_char("> &Wnode upgraded to:&w &Rred&w\n\r", ch );
+    location->level = 3;
+	break;
+    case 4:
+    send_to_char("> &Wnode upgraded to:&w &pultra-violet&w\n\r", ch );
+    location->level = 4;
+    break;
+    case 5:
+    send_to_char("> &Wnode upgraded to:&w &zblack&w\n\r", ch );
+    location->level = 5;
+    break;
+    }
+
+    SET_BIT( location->area->flags , AFLAG_MODIFIED );
 	return;
 
 }
