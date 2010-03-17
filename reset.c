@@ -27,7 +27,9 @@ void reset_all() {
 	OBJ_DATA * obj = NULL;
 	EXIT_DATA *xit;
 	bool found = FALSE;
-	int vnum, anumber, onum;
+	int vnum, anumber, onum, nodelevel;
+	char buf[MAX_STRING_LENGTH];
+	char buf1[MAX_STRING_LENGTH];
 
 	/* natural disasters */
 	{
@@ -518,16 +520,147 @@ void reset_all() {
 					break;
 
 				case SECT_FARMLAND:
-					anumber = number_range(1, 4);
-					if (anumber == 1)
-						vnum = OBJ_VNUM_FRUIT;
-					else if (anumber == 2)
-						vnum = OBJ_VNUM_ROOT;
-					else if (anumber == 3)
-						vnum = OBJ_VNUM_MUSHROOM;
+
+					nodelevel = pRoomIndex->level;
+
+					anumber = number_range(1, 10);
+					if (anumber <= 4)
+						vnum = 110;
+					else if (anumber <= 7)
+						vnum = 111;
+					else if (anumber <= 9)
+						vnum = 112;
+					else if (anumber == 10)
+						vnum = 113;
 					else
-						vnum = OBJ_VNUM_PLANT;
+						vnum = 110;
+
+					if (nodelevel == 0)
+					{
+
+						if (!(pObjIndex = get_obj_index(vnum))) {
+							bug("Reset_all: Missing obj (%d)", vnum);
+							return;
+						}
+
+						obj = create_object(pObjIndex, 1);
+						obj->cost = obj->cost * 2;
+					    STRFREE( obj->short_descr );
+					    sprintf( buf , "%s [alpha]" , obj->name );
+					    obj->short_descr = STRALLOC( buf );
+					    STRFREE( obj->description );
+					    sprintf( buf1 , "%s [alpha]" , obj->name );
+					    obj->description = STRALLOC( buf1 );
+
+					}
+					else if (nodelevel == 1)
+					{
+
+							if (!(pObjIndex = get_obj_index(vnum))) {
+								bug("Reset_all: Missing obj (%d)", vnum);
+								return;
+							}
+
+							obj = create_object(pObjIndex, 1);
+							obj->cost = obj->cost * 4;
+						    STRFREE( obj->short_descr );
+						    sprintf( buf , "%s [beta]" , obj->name );
+						    obj->short_descr = STRALLOC( buf );
+						    STRFREE( obj->description );
+						    sprintf( buf1 , "%s [beta]" , obj->name );
+						    obj->description = STRALLOC( buf1 );
+						}
+					else if (nodelevel == 2)
+					{
+
+							if (!(pObjIndex = get_obj_index(vnum))) {
+								bug("Reset_all: Missing obj (%d)", vnum);
+								return;
+							}
+
+							obj = create_object(pObjIndex, 1);
+							obj->cost = obj->cost * 8;
+						    STRFREE( obj->short_descr );
+						    sprintf( buf , "%s [candidate]" , obj->name );
+						    obj->short_descr = STRALLOC( buf );
+						    STRFREE( obj->description );
+						    sprintf( buf1 , "%s [candidate]" , obj->name );
+						    obj->description = STRALLOC( buf1 );
+						}
+					else if (nodelevel == 3)
+					{
+
+							if (!(pObjIndex = get_obj_index(vnum))) {
+								bug("Reset_all: Missing obj (%d)", vnum);
+								return;
+							}
+
+							obj = create_object(pObjIndex, 1);
+							obj->cost = obj->cost * 16;
+						    STRFREE( obj->short_descr );
+						    sprintf( buf , "%s [release]" , obj->name );
+						    obj->short_descr = STRALLOC( buf );
+						    STRFREE( obj->description );
+						    sprintf( buf1 , "%s [release]" , obj->name );
+						    obj->description = STRALLOC( buf1 );
+						}
+					else if (nodelevel == 4)
+					{
+
+							if (!(pObjIndex = get_obj_index(vnum))) {
+								bug("Reset_all: Missing obj (%d)", vnum);
+								return;
+							}
+
+							obj = create_object(pObjIndex, 1);
+							obj->cost = obj->cost * 32;
+						    STRFREE( obj->short_descr );
+						    sprintf( buf , "%s [prototype]" , obj->name );
+						    obj->short_descr = STRALLOC( buf );
+						    STRFREE( obj->description );
+						    sprintf( buf1 , "%s [prototype]" , obj->name );
+						    obj->description = STRALLOC( buf1 );
+						}
+					else if (nodelevel == 5)
+					{
+
+							if (!(pObjIndex = get_obj_index(vnum))) {
+								bug("Reset_all: Missing obj (%d)", vnum);
+								return;
+							}
+
+							obj = create_object(pObjIndex, 1);
+							obj->cost = obj->cost * 64;
+						    STRFREE( obj->short_descr );
+						    sprintf( buf , "%s [wilderspace]" , obj->name );
+						    obj->short_descr = STRALLOC( buf );
+						    STRFREE( obj->description );
+						    sprintf( buf1 , "%s [wilderspace]" , obj->name );
+						    obj->description = STRALLOC( buf1 );
+						}
+					else
+					{
+
+							if (!(pObjIndex = get_obj_index(vnum))) {
+								bug("Reset_all: Missing obj (%d)", vnum);
+								return;
+							}
+
+							obj = create_object(pObjIndex, 1);
+							obj->cost = obj->cost * 2;
+						    STRFREE( obj->short_descr );
+						    sprintf( buf , "%s [buggy]" , obj->name );
+						    obj->short_descr = STRALLOC( buf );
+						    STRFREE( obj->description );
+						    sprintf( buf1 , "%s [buggy]" , obj->name );
+						    obj->description = STRALLOC( buf1 );
+						}
+
+					obj_to_room(obj, pRoomIndex);
+
 					break;
+
+
 
 				case SECT_FOREST:
 				case SECT_BRUSH:
@@ -562,6 +695,7 @@ void reset_all() {
 
 				case SECT_RAINFOREST:
 				case SECT_GLACIAL:
+
 					anumber = number_range(0, 8);
 					if (anumber == 0)
 						vnum = 31;
@@ -575,6 +709,7 @@ void reset_all() {
 						vnum = 59;
 					else
 						vnum = number_range(75, 99);
+
 					break;
 
 				case SECT_OCEANFLOOR:
@@ -603,6 +738,8 @@ void reset_all() {
 					obj->value[1] = obj->value[0];
 					obj->cost = obj->value[0] * 10;
 				}
+
+				if ( pRoomIndex->sector_type != SECT_FARMLAND )
 				obj_to_room(obj, pRoomIndex);
 
 			}

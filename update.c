@@ -684,6 +684,7 @@ void update_taxnodes( void )
 
     for ( d = last_descriptor; d; d = d->prev )
     {
+
 	if ( (d->connected != CON_PLAYING && d->connected != CON_EDITING)
 	|| d->original)
 	    continue;
@@ -1779,20 +1780,21 @@ void update_handler( void )
     if ( --pulse_space   <= 0 )
     {
        pulse_space    = PULSE_SPACE;
-       update_space  ( );
+       //update_space  ( );
        who_html_update ( );
+       update_taxnodes();
     }
 
     if ( --pulse_recharge <= 0 )
     {
          pulse_recharge = PULSE_SPACE/3;
-         recharge_ships ( );
+         //recharge_ships ( );
     }
 
     if ( --pulse_ship   <= 0 )
     {
        pulse_ship  = PULSE_SPACE/10;
-       move_ships  ( );
+       //move_ships  ( );
     }
 
     if ( --pulse_violence <= 0 )
