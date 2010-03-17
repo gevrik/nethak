@@ -2571,7 +2571,7 @@ void do_reverseengineer( CHAR_DATA * ch, char *argument )
       level = IS_NPC(ch) ? ch->top_level : (int) (ch->pcdata->learned[gsn_spacecraft]);
 
       act( AT_ACTION, "> $n reverse engineered $p", ch, obj, NULL, TO_ROOM );
-      act( AT_ACTION, "> you reverse engineered $p", ch, obj, NULL, TO_CHAR );
+      act( AT_GREEN, "> you reverse engineered $p", ch, obj, NULL, TO_CHAR );
 
       separate_obj( obj );
       obj_from_char( obj );
@@ -2792,12 +2792,19 @@ void do_reverseengineer( CHAR_DATA * ch, char *argument )
   		ch->gold += obj->cost / 2;
   		ch->snippets += obj->cost / 2;
 
-  		if ( number_range(1, 100) < level )
+  		ch_printf( ch, "> &Gcredits:&W %d  &Gsnippets:&W %d&w&w\n\r", obj->cost / 2, obj->cost / 2 );
+
+  		if ( number_range(1, 100) < level && obj->pIndexData->vnum != 55 )
   		{
+
+  			if ( number_range(1, 100) > 50)
+  			{
 			pObjIndex = get_obj_index( 55 );
 			obj = create_object(pObjIndex, 1);
 			SET_BIT(obj->extra_flags, ITEM_INVENTORY);
 			obj = obj_to_char(obj, ch);
+			send_to_char( "> &Gyou received an unfinished function&w\r\n", ch );
+  			}
   		}
 
   	}
