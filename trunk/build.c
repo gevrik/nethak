@@ -4776,16 +4776,17 @@ void fold_area( AREA_DATA *tarea, char *filename, bool install )
 	fprintf( fpout, "%s~\n",	strip_cr( room->description )	);
 	fprintf( fpout, "%s~\n",	room->owner			);
 	if ( (room->tele_delay > 0 && room->tele_vnum > 0) || room->tunnel > 0 || room->seccode > 0 || room->level > 0 )
-	  fprintf( fpout, "0 %d %d %d %d %ld %d %d %d\n",	room->room_flags, room->room_flags2,
+	  fprintf( fpout, "0 %d %d %d %d %ld %d %d %d\n",	room->room_flags,
 						room->sector_type,
+						room->room_flags2,
 						room->tele_delay,
 						room->tele_vnum,
 						room->tunnel,
 						room->seccode,
 						room->level );
 	else
-	  fprintf( fpout, "0 %d %d %d\n",	room->room_flags, room->room_flags2,
-					room->sector_type	);
+	  fprintf( fpout, "0 %d %d %d\n",	room->room_flags,
+					room->sector_type, room->room_flags2	);
 	for ( xit = room->first_exit; xit; xit = xit->next )
 	{
 	   if ( IS_SET(xit->exit_info, EX_PORTAL) ) /* don't fold portals */

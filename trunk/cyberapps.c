@@ -433,13 +433,8 @@ void do_sn_dropline(CHAR_DATA *ch, char *argument) {
 
 void do_sn_uninstall(CHAR_DATA *ch, char *argument) {
 
-	DESCRIPTOR_DATA *d;
 	OBJ_DATA *obj;
-	EXIT_DATA *xit, *texit;
-	int edir;
-	ROOM_INDEX_DATA *location;
 	char buf[MAX_STRING_LENGTH];
-	PLANET_DATA *planet;
 	bool ch_snippet;
 
 	if (IS_NPC(ch) || !ch->pcdata)
@@ -499,3 +494,93 @@ void do_sn_uninstall(CHAR_DATA *ch, char *argument) {
 	    save_char_obj(ch);
 
 }
+
+void do_sn_anchor( CHAR_DATA *ch, char *argument )
+{
+	OBJ_DATA *obj;
+	ROOM_INDEX_DATA *destination;
+	char buf[MAX_STRING_LENGTH];
+	bool ch_snippet;
+	int targetnode;
+
+	if ( IS_NPC(ch) || !ch->pcdata )
+	   {
+	       send_to_char ( "huh?\n\r" , ch );
+	       return;
+	   }
+
+
+		if ( ch->position <= POS_SLEEPING )
+		{
+			send_to_char( "> you are hibernating\n\r" , ch );
+			return;
+		}
+
+		if ( ch->fighting )
+		{
+			send_to_char( "> anchor cannot be used in combat\n\r", ch );
+			return;
+		}
+
+		if ( IS_SET( ch->in_room->room_flags, ROOM_ARENA ) )
+		{
+			send_to_char( "> &Rfinish the current match first&w\n\r", ch );
+			return;
+		}
+
+		if ( ch->in_room->vnum <= 20 )
+		{
+			send_to_char( "> &Ryou cannot use this in the tutorial&w\n\r", ch );
+			return;
+		}
+
+		ch_snippet = FALSE;
+
+		for (obj = ch->last_carrying; obj; obj = obj->prev_content) {
+			if (obj->item_type == ITEM_SNIPPET && !strcmp(obj->name,
+					"anchor")) {
+				ch_snippet = TRUE;
+				targetnode = obj->value[1];
+
+				destination = get_room_index( targetnode );
+
+				if ( IS_SET( destination->room_flags , ROOM_PLR_HOME ) )
+				{
+					send_to_char( "> &Rtarget location is not valid&w\n\r", ch );
+					separate_obj(obj);
+					obj_from_char(obj);
+					extract_obj( obj );
+					return;
+				}
+
+				obj->value[0] -= 1;
+
+				if (obj->value[0] < 1)
+				{
+				separate_obj(obj);
+				obj_from_char(obj);
+				extract_obj( obj );
+				send_to_char("> &Ranchor application has expired&w\n\r", ch);
+				}
+			}
+		}
+
+		if (!ch_snippet) {
+			send_to_char("> &Ranchor application needed&w\n\r", ch);
+			return;
+		}
+
+
+
+		WAIT_STATE( ch, skill_table[gsn_propaganda]->beats );
+
+		sprintf(buf, "> %s uses an anchor app",
+				ch->name);
+		echo_to_room(AT_RED, ch->in_room, buf);
+
+			char_from_room( ch );
+			char_to_room( ch, get_room_index( targetnode ) );
+			do_look( ch, "auto" );
+			return;
+
+	}
