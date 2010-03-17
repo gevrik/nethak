@@ -584,3 +584,132 @@ void do_sn_anchor( CHAR_DATA *ch, char *argument )
 			return;
 
 	}
+
+void do_sn_audit( CHAR_DATA *ch, char *argument )
+{
+	char buf [MAX_STRING_LENGTH];
+	ROOM_INDEX_DATA	*location;
+	AREA_DATA *area;
+	PLANET_DATA *planet;
+	OBJ_DATA *obj;
+	bool ch_snippet;
+	int chance, roll, margin, count = 0;
+
+	location = ch->in_room;
+	planet = ch->in_room->area->planet;
+	area = ch->in_room->area;
+
+	if ( IS_NPC(ch) || !ch->pcdata )
+	   {
+	       send_to_char ( "huh?\n\r" , ch );
+	       return;
+	   }
+
+
+		if ( ch->position <= POS_SLEEPING )
+		{
+			send_to_char( "> you are hibernating\n\r" , ch );
+			return;
+		}
+
+		if ( ch->fighting )
+		{
+			send_to_char( "> audit cannot be used in combat\n\r", ch );
+			return;
+		}
+
+		if ( IS_SET( ch->in_room->room_flags, ROOM_SAFE ) )
+		{
+			send_to_char( "> &Raudit cannot be used in safe nodes&w\n\r", ch );
+			return;
+		}
+
+		if ( ch->in_room->vnum <= 20 )
+		{
+			send_to_char( "> &Ryou cannot use this in the tutorial&w\n\r", ch );
+			return;
+		}
+
+
+		if ( argument[0] == '\0' )
+		{
+			send_to_char("> &Rsyntax: audit [option]&w\n\r", ch);
+			send_to_char("> &Wgain information about specified node&w\n\r", ch);
+			send_to_char("> &Woptions: fw (firewall)&w\n\r", ch);
+			return;
+		}
+
+		ch_snippet = FALSE;
+
+		for (obj = ch->last_carrying; obj; obj = obj->prev_content) {
+			if (obj->item_type == ITEM_SNIPPET && !strcmp(obj->name,
+					"audit")) {
+				ch_snippet = TRUE;
+			}
+
+			obj->value[0] -= 1;
+
+			if (obj->value[0] < 1)
+			{
+			separate_obj(obj);
+			obj_from_char(obj);
+			extract_obj( obj );
+			send_to_char("> &Raudit application has expired&w\n\r", ch);
+			}
+		}
+
+	if (!ch_snippet) {
+		send_to_char("> &Raudit application needed&w\n\r", ch);
+		return;
+	}
+
+	WAIT_STATE( ch, skill_table[gsn_propaganda]->beats );
+
+    sprintf(buf,"> &y%s uses an audit application", ch->name);
+    act(AT_WHITE,buf, ch, NULL, NULL, TO_ROOM);
+
+	chance = IS_NPC(ch) ? ch->top_level
+			: (int) (ch->pcdata->learned[gsn_spacecraft]);
+
+	if ( location->level != 0 )
+	chance -= ( location->level * 10 );
+
+	roll = number_percent();
+
+	if ( roll >= chance )
+	{
+		send_to_char("> &Ryou failed the audit&w\n\r", ch);
+		return;
+	}
+
+	margin = chance - roll;
+
+	if ( !str_cmp( argument, "fw" ) )
+	{
+		ch_printf( ch, "> &Gaudit for: %s - type: %s&w\n\r", planet->name, argument );
+
+		for ( location = planet->area->first_room ; location ; location = location->next_in_area )
+		{
+			if ( IS_SET( location->room_flags, ROOM_BARRACKS ) )
+			{
+				ch_printf( ch , "   %-15d  %s\n\r", location->vnum, location->name);
+				count++;
+			}
+		}
+
+	    if ( !count )
+	    {
+		set_char_color( AT_BLOOD, ch);
+	        send_to_char( "     no firewalls in this system\n\r", ch );
+	    }
+	    else
+	    {
+			ch_printf( ch, "\n\r   &Wtotal: %d&w\n\r", count );
+
+	    }
+
+	}
+
+    return;
+
+}

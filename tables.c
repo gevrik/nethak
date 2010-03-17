@@ -333,6 +333,7 @@ DO_FUN *skill_function( char *name )
     case 'n':
 	if ( !str_cmp( name, "do_newbiechat" ))		return do_newbiechat;
 	if ( !str_cmp( name, "do_newbieset" ))		return do_newbieset;
+	if ( !str_cmp( name, "do_nodeupgrade" ))		return do_nodeupgrade;
 	if ( !str_cmp( name, "do_noemote" ))		return do_noemote;
 	if ( !str_cmp( name, "do_noresolve" ))		return do_noresolve;
 	if ( !str_cmp( name, "do_north" ))		return do_north;
@@ -468,6 +469,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_slist" ))		return do_slist;
 	if ( !str_cmp( name, "do_slookup" ))		return do_slookup;
 	if ( !str_cmp( name, "do_sn_anchor" )) 		return do_sn_anchor;
+	if ( !str_cmp( name, "do_sn_audit" )) 		return do_sn_audit;
 	if ( !str_cmp( name, "do_sn_dropline" )) 		return do_sn_dropline;
 	if ( !str_cmp( name, "do_sn_jackhammer" )) 		return do_sn_jackhammer;
 	if ( !str_cmp( name, "do_sn_krash" )) 		return do_sn_krash;
@@ -590,6 +592,7 @@ char *skill_name( DO_FUN *skill )
 	if ( skill == do_sn_spun )           return "do_sn_spun";
 	if ( skill == do_sn_uninstall )           return "do_sn_uninstall";
 	if ( skill == do_sn_anchor )           return "do_sn_anchor";
+	if ( skill == do_sn_audit )           return "do_sn_audit";
 	if ( skill == do_reverseengineer )           return "do_reverseengineer";
     if ( skill == do_aaccept )           return "do_aaccept";
     if ( skill == do_ahall )            return "do_ahall";
@@ -600,6 +603,7 @@ char *skill_name( DO_FUN *skill )
     if ( skill == do_chaos )            return "do_chaos";
     if ( skill == do_adecline )          return "do_adecline";
     if ( skill == do_slicebank )     return "do_slicebank";
+    if ( skill == do_nodeupgrade )     return "do_nodeupgrade";
     if ( skill == do_inquire )     return "do_inquire";
     if ( skill == do_arrest )     return "do_arrest";
     if ( skill == do_buyskill )     return "do_buyskill";

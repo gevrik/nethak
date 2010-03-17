@@ -3052,6 +3052,7 @@ DECLARE_DO_FUN(	do_sn_spun	);
 DECLARE_DO_FUN(	do_sn_dropline	);
 DECLARE_DO_FUN(	do_sn_uninstall	);
 DECLARE_DO_FUN(	do_sn_anchor	);
+DECLARE_DO_FUN(	do_sn_audit	);
 
 // contracts
 
@@ -3118,6 +3119,7 @@ DECLARE_DO_FUN( do_autopilot  );
 DECLARE_DO_FUN( do_allspeeders  );
 DECLARE_DO_FUN( do_slicebank  );
 DECLARE_DO_FUN( do_inquire  );
+DECLARE_DO_FUN( do_nodeupgrade  );
 DECLARE_DO_FUN( do_speeders  );
 DECLARE_DO_FUN( do_suicide  );
 DECLARE_DO_FUN( do_bank  );

@@ -2042,6 +2042,9 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 					obj_to_char( obj, ch );
 					equip_char( ch, obj, WEAR_WIELD );
 
+					obj = create_object( get_obj_index(11), 0 );
+					obj_to_char( obj, ch );
+
 					ch->pcdata->serverrevision = 2;
 
 					//obj = create_object( get_obj_index(OBJ_VNUM_LIGHT), 0 );
