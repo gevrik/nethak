@@ -1162,13 +1162,13 @@ void load_rooms( AREA_DATA *tarea, FILE *fp )
 	      &x1, &x2, &x3, &x4, &x5, &x6, &x7, &x8, &x9 );
 
 	pRoomIndex->room_flags		= x2;
-	pRoomIndex->sector_type		= x3;
-	pRoomIndex->tele_delay		= x4;
-	pRoomIndex->tele_vnum		= x5;
-	pRoomIndex->tunnel		= x6;
-	pRoomIndex->seccode		= x7;
-	pRoomIndex->level		= x8;
-	pRoomIndex->room_flags2		= x9;
+	pRoomIndex->sector_type		= x4;
+	pRoomIndex->room_flags2		= x3;
+	pRoomIndex->tele_delay		= x5;
+	pRoomIndex->tele_vnum		= x6;
+	pRoomIndex->tunnel		= x7;
+	pRoomIndex->seccode		= x8;
+	pRoomIndex->level		= x9;
 
 	if (pRoomIndex->sector_type < 0 || pRoomIndex->sector_type == SECT_MAX)
 	{

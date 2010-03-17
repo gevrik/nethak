@@ -955,25 +955,6 @@ void do_examineobject( CHAR_DATA *ch, char *argument )
 		ch_printf( ch, "> &Gdefence:&W %d&w\n\r", defencebonus );
 		ch_printf( ch, "> &Gcoder:&W %s&w\n\r", obj->description );
 		
-//		if ( obj->layers == 1 )
-//		send_to_char( "> &Glayer:&W 1&w\n\r", ch );
-//		else if ( obj->layers == 2 )
-//		send_to_char( "> &Glayer:&W 2&w\n\r", ch );
-//		else if ( obj->layers == 4 )
-//		send_to_char( "> &Glayer:&W 3&w\n\r", ch );
-//		else if ( obj->layers == 8 )
-//		send_to_char( "> &Glayer:&W 4&w\n\r", ch );
-//		else if ( obj->layers == 16 )
-//		send_to_char( "> &Glayer:&W 5&w\n\r", ch );
-//		else if ( obj->layers == 32 )
-//		send_to_char( "> &Glayer:&W 6&w\n\r", ch );
-//		else if ( obj->layers == 64 )
-//		send_to_char( "> &Glayer:&W 7&w\n\r", ch );
-//		else if ( obj->layers == 128 )
-//		send_to_char( "> &Glayer:&W 8&w\n\r", ch );
-//		else
-//		send_to_char( "> &Glayer:&W N/A&w\n\r", ch );
-		
 	}
 
 	if ( obj->item_type == ITEM_CONTAINER )
@@ -989,6 +970,14 @@ void do_examineobject( CHAR_DATA *ch, char *argument )
 
 		ch_printf( ch, "> &Gcharges:&W %d&w\n\r", obj->value[0] );
 
+	}
+
+		if ( obj->item_type == ITEM_SNIPPET )
+	{
+
+			if ( !strcmp(obj->name, "anchor")) {
+					ch_printf( ch, "> &Gcharges:&W %d&w\n\r", obj->value[0] );
+			}
 	}
 
 	int anumber = number_range(1,100);
@@ -1239,7 +1228,8 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 	bool checksew, checkfab;
 	OBJ_DATA *obj;
 	OBJ_DATA *material;
-	int cost = 100;
+	int cost;
+	PLANET_DATA * planet;
 
 	strcpy( arg , strlower(argument) );
 
@@ -1259,17 +1249,18 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 				&& str_cmp( arg, "spun" )
 				&& str_cmp( arg, "reconstruct")
 				&& str_cmp( arg, "dropline" )
-				&& str_cmp( arg, "uninstall" ))
+				&& str_cmp( arg, "uninstall" )
+				&& str_cmp( arg, "anchor" ))
 		{
 			send_to_char( "> &Ryou cannot code that app, try:\n\r&w", ch);
 			send_to_char( "> jackhammer, krash, spun, reconstruct\n\r", ch);
-			send_to_char( "> dropline, uninstall\n\r", ch);
+			send_to_char( "> dropline, uninstall, anchor\n\r", ch);
 			return;
 		}
 
 		if ( !str_cmp( arg, "jackhammer" ) )
 		{
-			cost = 360;
+			cost = 500;
 		}
 		else if ( !str_cmp( arg, "krash" ) )
 		{
@@ -1277,11 +1268,11 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 		}
 		else if ( !str_cmp( arg, "spun" ) )
 		{
-			cost = 50;
+			cost = 25;
 		}
 		else if ( !str_cmp( arg, "reconstruct" ) )
 		{
-			cost = 100;
+			cost = 50;
 		}
 		else if ( !str_cmp( arg, "dropline" ) )
 		{
@@ -1291,11 +1282,22 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 		{
 			cost = 1000;
 		}
+		else if ( !str_cmp( arg, "anchor" ) )
+		{
+			cost = 75;
+
+				if ( IS_SET( ch->in_room->room_flags , ROOM_NOPEDIT ) && ch->in_room->vnum != ch->pcdata->roomconstruct )
+				{
+					send_to_char( "> &Ryou can not anchor into this node&w\n\r", ch );
+					return;
+				}
+
+		}
 		else
 		{
 			send_to_char( "> &Ryou cannot code that app, try:\n\r&w", ch);
 			send_to_char( "> jackhammer, krash, spun, reconstruct\n\r", ch);
-			send_to_char( "> dropline, uninstall\n\r", ch);
+			send_to_char( "> dropline, uninstall, anchor\n\r", ch);
 			return;
 		}
 
@@ -1333,8 +1335,6 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 		if ( number_percent( ) < chance )
 		{
 			send_to_char( "> &Gyou begin coding an application\n\r", ch);
-//			act( AT_PLAIN, "> $n takes $s compiler as well as some snippets and begins to work", ch,
-//					NULL, argument , TO_ROOM );
 			add_timer ( ch , TIMER_DO_FUN , 1 , do_codeapp , 1 );
 			ch->dest_buf = str_dup(arg);
 			return;
@@ -1394,6 +1394,42 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
+	if ( !str_cmp( arg, "jackhammer" ) )
+	{
+		cost = 500;
+	}
+	else if ( !str_cmp( arg, "krash" ) )
+	{
+		cost = 250;
+	}
+	else if ( !str_cmp( arg, "spun" ) )
+	{
+		cost = 25;
+	}
+	else if ( !str_cmp( arg, "reconstruct" ) )
+	{
+		cost = 50;
+	}
+	else if ( !str_cmp( arg, "dropline" ) )
+	{
+		cost = 10;
+	}
+	else if ( !str_cmp( arg, "uninstall" ) )
+	{
+		cost = 1000;
+	}
+	else if ( !str_cmp( arg, "anchor" ) )
+	{
+		cost = 75;
+	}
+	else
+	{
+		send_to_char( "> &Rsomething went wrong\n\r", ch);
+		learn_from_failure( ch, gsn_codeapp );
+		ch->snippets     -= 1;
+		return;
+	}
+
 	ch->snippets     -= cost;
 
 	obj = material;
@@ -1410,6 +1446,16 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 	obj->description = STRALLOC( buf );
 	obj->value[0] = level;
 	obj->cost = cost;
+
+	if ( !str_cmp( arg, "anchor" ) )
+		{
+			obj->value[1] = ch->in_room->vnum;
+			obj->value[0] = level / 10;
+		    planet = ch->in_room->area->planet;
+		    STRFREE( obj->short_descr );
+		    sprintf( buf , "anchor [%s] [%ld]" , planet->name, ch->in_room->vnum );
+		    obj->short_descr = STRALLOC( buf );
+		}
 
 	obj = obj_to_char( obj, ch );
 
@@ -2460,6 +2506,25 @@ void do_reverseengineer( CHAR_DATA * ch, char *argument )
          return;
       }
 
+      if( ( obj->pIndexData->vnum == 100 && ch->top_level < 200 ) )
+      {
+         send_to_char( "> you cannot reverse engineer that\r\n", ch );
+         return;
+      }
+
+      if( ( obj->pIndexData->vnum == 101 && ch->top_level < 200 ) )
+      {
+         send_to_char( "> you cannot reverse engineer that\r\n", ch );
+         return;
+      }
+
+      if( ( obj->pIndexData->vnum == 15 && ch->top_level < 200 ) )
+      {
+         send_to_char( "> you cannot reverse engineer that\r\n", ch );
+         return;
+      }
+
+
       level = IS_NPC(ch) ? ch->top_level : (int) (ch->pcdata->learned[gsn_spacecraft]);
 
       act( AT_ACTION, "> $n reverse engineered $p", ch, obj, NULL, TO_ROOM );
@@ -2703,8 +2768,7 @@ void do_reverseengineer( CHAR_DATA * ch, char *argument )
 
 void do_unload_cargo( CHAR_DATA *ch, char *argument)
 {
-   SHIP_DATA *ship;
-   SHIP_DATA *target;
+
    int cost;
    PLANET_DATA  *planet;
 
@@ -2740,15 +2804,13 @@ void do_unload_cargo( CHAR_DATA *ch, char *argument)
 
 void do_load_cargo( CHAR_DATA *ch, char *argument)
 {
-   SHIP_DATA *ship;
-   SHIP_DATA *target;
    int cost,cargo, i;
    PLANET_DATA  *planet;
    char arg1[MAX_INPUT_LENGTH];
 
    argument = one_argument(argument, arg1);
 
-   target = ship_in_room( ch->in_room , arg1 );
+   //target = ship_in_room( ch->in_room , arg1 );
 
    if ( ch->in_room->sector_type == SECT_FARMLAND )
    {
@@ -2919,7 +2981,7 @@ void do_inquire( CHAR_DATA * ch, char *argument )
          continue;
       if( IS_IMMORTAL( d->character ) )
          continue;
-      ch_printf( ch, "&z|^g&x     # %s                                  %-9.9d      ^x&z|\n\r", acctname( d->character ),
+      ch_printf( ch, "&z|^g&x     # %s                                  %-9.9d      ^x&z|\n\r", ch->name,
                  d->character->pcdata->bank );
    }
    ch_printf( ch, "&z|^g                                                                       ^x&z|\n\r" );
@@ -2984,7 +3046,7 @@ void do_slicebank( CHAR_DATA * ch, char *argument )
             send_to_char( "You need a devkit module to slice into the banking computer system.\n\r", ch );
             return;
          }
-         if( !str_cmp( arg2, acctname( ch ) ) )
+         if( !str_cmp( arg2, ch->name ) )
          {
             send_to_char( "That's your account. Insurance fraud is not possible.\n\r", ch );
             return;
@@ -3044,7 +3106,7 @@ void do_slicebank( CHAR_DATA * ch, char *argument )
       if( IS_IMMORTAL( d->character ) )
          continue;
 
-      if( !str_cmp( arg2, acctname( d->character ) ) )
+      if( !str_cmp( arg2, ch->name ) )
       {
          found = TRUE;
          break;
@@ -3158,5 +3220,89 @@ void do_slicebank( CHAR_DATA * ch, char *argument )
 */
    learn_from_success( ch, gsn_slicebank );
    return;
+
+}
+
+void do_nodeupgrade( CHAR_DATA *ch, char *argument )
+{
+	char buf [MAX_STRING_LENGTH];
+	ROOM_INDEX_DATA	*location;
+	int level;
+
+	location = ch->in_room;
+
+	location = ch->in_room;
+	clan = ch->pcdata->clan;
+	planet = ch->in_room->area->planet;
+
+	if ( !IS_SET( planet->flags, PLANET_NOCAP ) )
+	{
+
+		if ( !clan )
+		{
+			send_to_char( "> you need to be part of an organization before you can do that\n\r", ch );
+			return;
+		}
+
+		if ( (ch->pcdata && ch->pcdata->bestowments
+				&&    is_name("build", ch->pcdata->bestowments))
+				|| nifty_is_name( ch->name, clan->leaders  ) )
+			;
+		else
+		{
+			send_to_char( "> your organization has not given you permission to modify their systems\n\r", ch );
+			return;
+		}
+
+		if ( !location->area || !location->area->planet ||
+				clan != location->area->planet->governed_by  )
+		{
+			send_to_char( "> you may only modify nodes in systems that your organization controls\n\r", ch );
+			return;
+		}
+
+	}
+
+	if( strcmp(location->owner, ch->name) )
+	{
+		send_to_char( "&R> this is not your node&w\n\r", ch );
+		return;
+	}
+
+	if ( IS_SET( location->room_flags , ROOM_NOPEDIT ) )
+	{
+		send_to_char( "> you may not edit this node\n\r", ch );
+		return;
+	}
+
+	level = location->level;
+
+		if ( level == 0 )
+		{
+			cost = 2000;
+		}
+		else if ( level == 1 )
+		{
+			cost = 4000;
+		}
+		else if ( level == 2 )
+		{
+			cost = 8000;
+		}
+		else if ( level == 3 )
+		{
+			cost = 16000;
+		}
+		else if ( level == 4 )
+		{
+			cost = 32000;
+		}
+		else if ( level == 5 )
+		{
+			cost = 4000;
+		}
+
+
+	return;
 
 }
