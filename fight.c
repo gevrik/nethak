@@ -693,7 +693,17 @@ ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
 
     /* Weapon proficiency bonus */
     //victim_ac += prof_bonus/20;
-    att_bonus += prof_bonus/20;
+
+    if ( IS_NPC(ch) )
+    att_bonus += victim->top_level / 20;
+    else
+    att_bonus += prof_bonus / 20;
+
+    if ( IS_NPC(victim) )
+    att_bonus -= victim->top_level / 20;
+    else
+    att_bonus -= victim->perm_con / 4;
+
     /*
      * The moment of excitement!
      */

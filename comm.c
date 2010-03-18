@@ -2042,8 +2042,28 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 					obj_to_char( obj, ch );
 					equip_char( ch, obj, WEAR_WIELD );
 
-					obj = create_object( get_obj_index(11), 0 );
-					obj_to_char( obj, ch );
+					obj = create_object( get_obj_index(97), 0 );
+
+					obj->item_type = ITEM_CONTAINER;
+					SET_BIT( obj->wear_flags, ITEM_TAKE );
+					SET_BIT( obj->wear_flags, ITEM_HOLD );
+					obj->level = 10;
+					STRFREE( obj->name );
+					strcpy( buf, "bag " );
+					strcat( buf, ch->name );
+					obj->name = STRALLOC( buf );
+					strcat( buf, " [cont]" );
+					STRFREE( obj->short_descr );
+					obj->short_descr = STRALLOC( buf );
+					STRFREE( obj->description );
+					obj->description = STRALLOC( buf );
+					obj->value[0] = 10;
+					obj->value[1] = 0;
+					obj->value[2] = 0;
+					obj->value[3] = 10;
+					obj->cost = 10;
+
+					obj = obj_to_char( obj, ch );
 
 					ch->pcdata->serverrevision = 2;
 

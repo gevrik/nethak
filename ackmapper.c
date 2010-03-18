@@ -95,19 +95,19 @@ const struct map_info_type map_info[] =
 
     { SECT_INSIDE,       "^w&x", " ^x&w", "",   "inside" },
     { SECT_CITY,         "^O&x", " ^x&w", "",   "city" },
-    { SECT_FIELD,        "^g&g", " ^x&w", "",   "field" },
-    { SECT_FOREST,       "^g&G", " ^x&w", "&W", "forest" },
-    { SECT_HILLS,        "^O&x", " ^x&w", "&W", "hills" },
+    { SECT_FIELD,        "^z&g", "@^x&w", "",   "entertain" },
+    { SECT_FOREST,       "^x&Y", "@^x&w", "",   "multimedia" },
+    { SECT_HILLS,        "^x&r", "@^x&w", "",   "finance" },
     { SECT_MOUNTAIN,     "^g&x", " ^x&w", "",   "database" },
     { SECT_WATER_SWIM,   "^b&W", " ^x&w", "",   "shallow water" },
     { SECT_WATER_NOSWIM, "^b&W", " ^x&w", "",   "deep running water" },
 	{ SECT_UNDERWATER,	 "^b&W", " ^x&w", "",   "underwater" },
     { SECT_AIR,          "^c&C", " ^x&w", "",   "air" },
     { SECT_DESERT,       "^c&x", " ^x&w", "",   "terminal" },
-    { SECT_DUNNO,        "&P",   " ^x&w", "",   "dunno" },
+    { SECT_DUNNO,        "^x&P", " ^x&w", "",   "dunno" },
     { SECT_OCEANFLOOR,   "^w&z", " ^x&w", "",   "ocean floor" },
     { SECT_UNDERGROUND,  "^w&z", " ^x&w", "",   "underground" },
-    { SECT_SCRUB,		 "^b&W", " ^x&w", "",   "ionode" },
+    { SECT_SCRUB,		 "^x&C", "@^x&w", "",   "ionode" },
 	{ SECT_ROCKY,  		 "^w&z", " ^x&w", "",   "rocky" },
 	{ SECT_SAVANNA,  	 "^p&W", " ^x&w", "",   "trade" },
 	{ SECT_TUNDRA,  	 "^w&z", " ^x&w", "",   "tundra" },
@@ -120,7 +120,7 @@ const struct map_info_type map_info[] =
 	{ SECT_STEPPE,  	 "^w&z", " ^x&w", "",   "steppe" },
 	{ SECT_FARMLAND,  	 "^b&W", " ^x&w", "",   "subserver" },
 	{ SECT_VOLCANIC,  	 "^w&z", " ^x&w", "",   "volcanic" },
-    { SECT_TOP,          "&Y",   "~^x&w", "",   "bad sector type" }
+    { SECT_TOP,          "^x&Y", "~^x&w", "",   "bad sector type" }
 };
 
 char * get_sector_display( int sector )

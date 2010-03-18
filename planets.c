@@ -156,6 +156,35 @@ void save_planet( PLANET_DATA *planet )
     for(i = 1; i<CARGO_MAX; i++)
        fprintf(fp, "Resource %d %d %d %d %d %d\n", i, planet->import[i], planet->export[i], planet->resource[i], planet->consumes[i], planet->produces[i]);
 
+    fprintf(fp, "Rentertain_plus 		%d\n", planet->entertain_plus );
+    fprintf(fp, "Rentertain_minus 		%d\n", planet->entertain_minus );
+    fprintf(fp, "Rentertain_amount 		%d\n", planet->entertain_amount );
+    fprintf(fp, "Rentertain_min 			%d\n", planet->entertain_min);
+    fprintf(fp, "Rentertain_max 			%d\n", planet->entertain_max );
+    fprintf(fp, "Rentertain_buyprice 	%d\n", planet->entertain_buyprice );
+    fprintf(fp, "Rentertain_sellprice	%d\n", planet->entertain_sellprice );
+    fprintf(fp, "Rmultimedia_plus 		%d\n", planet->multimedia_plus );
+    fprintf(fp, "Rmultimedia_minus 		%d\n", planet->multimedia_minus );
+    fprintf(fp, "Rmultimedia_amount 		%d\n", planet->multimedia_amount );
+    fprintf(fp, "Rmultimedia_min 			%d\n", planet->multimedia_min);
+    fprintf(fp, "Rmultimedia_max 			%d\n", planet->multimedia_max );
+    fprintf(fp, "Rmultimedia_buyprice 	%d\n", planet->multimedia_buyprice );
+    fprintf(fp, "Rmultimedia_sellprice	%d\n", planet->multimedia_sellprice );
+    fprintf(fp, "Rfinance_plus 		%d\n", planet->finance_plus );
+    fprintf(fp, "Rfinance_minus 		%d\n", planet->finance_minus );
+    fprintf(fp, "Rfinance_amount 		%d\n", planet->finance_amount );
+    fprintf(fp, "Rfinance_min 			%d\n", planet->finance_min);
+    fprintf(fp, "Rfinance_max 			%d\n", planet->finance_max );
+    fprintf(fp, "Rfinance_buyprice 	%d\n", planet->finance_buyprice );
+    fprintf(fp, "Rfinance_sellprice	%d\n", planet->finance_sellprice );
+    fprintf(fp, "Rproduct_plus 		%d\n", planet->product_plus );
+    fprintf(fp, "Rproduct_minus 		%d\n", planet->product_minus );
+    fprintf(fp, "Rproduct_amount 		%d\n", planet->product_amount );
+    fprintf(fp, "Rproduct_min 			%d\n", planet->product_min);
+    fprintf(fp, "Rproduct_max 			%d\n", planet->product_max );
+    fprintf(fp, "Rproduct_buyprice 	%d\n", planet->product_buyprice );
+    fprintf(fp, "Rproduct_sellprice	%d\n", planet->product_sellprice );
+
 	fprintf( fp, "End\n\n"						);
 	fprintf( fp, "#END\n"						);
     }
@@ -272,11 +301,41 @@ void fread_planet( PLANET_DATA *planet, FILE *fp )
 	    break;
 
     case 'R':
+
+		KEY( "Rentertain_plus",	planet->entertain_plus,		fread_number( fp ) );
+		KEY( "Rentertain_minus",	planet->entertain_minus,		fread_number( fp ) );
+		KEY( "Rentertain_amount",	planet->entertain_amount,		fread_number( fp ) );
+		KEY( "Rentertain_min",	planet->entertain_min,		fread_number( fp ) );
+		KEY( "Rentertain_max",	planet->entertain_max,		fread_number( fp ) );
+		KEY( "Rentertain_buyprice",	planet->entertain_buyprice,		fread_number( fp ) );
+		KEY( "Rentertain_sellprice",	planet->entertain_sellprice,		fread_number( fp ) );
+		KEY( "Rmultimedia_plus",	planet->multimedia_plus,		fread_number( fp ) );
+		KEY( "Rmultimedia_minus",	planet->multimedia_minus,		fread_number( fp ) );
+		KEY( "Rmultimedia_amount",	planet->multimedia_amount,		fread_number( fp ) );
+		KEY( "Rmultimedia_min",	planet->multimedia_min,		fread_number( fp ) );
+		KEY( "Rmultimedia_max",	planet->multimedia_max,		fread_number( fp ) );
+		KEY( "Rmultimedia_buyprice",	planet->multimedia_buyprice,		fread_number( fp ) );
+		KEY( "Rmultimedia_sellprice",	planet->multimedia_sellprice,		fread_number( fp ) );
+		KEY( "Rfinance_plus",	planet->finance_plus,		fread_number( fp ) );
+		KEY( "Rfinance_minus",	planet->finance_minus,		fread_number( fp ) );
+		KEY( "Rfinance_amount",	planet->finance_amount,		fread_number( fp ) );
+		KEY( "Rfinance_min",	planet->finance_min,		fread_number( fp ) );
+		KEY( "Rfinance_max",	planet->finance_max,		fread_number( fp ) );
+		KEY( "Rfinance_buyprice",	planet->finance_buyprice,		fread_number( fp ) );
+		KEY( "Rfinance_sellprice",	planet->finance_sellprice,		fread_number( fp ) );
+		KEY( "Rproduct_plus",	planet->product_plus,		fread_number( fp ) );
+		KEY( "Rproduct_minus",	planet->product_minus,		fread_number( fp ) );
+		KEY( "Rproduct_amount",	planet->product_amount,		fread_number( fp ) );
+		KEY( "Rproduct_min",	planet->product_min,		fread_number( fp ) );
+		KEY( "Rproduct_max",	planet->product_max,		fread_number( fp ) );
+		KEY( "Rproduct_buyprice",	planet->product_buyprice,		fread_number( fp ) );
+		KEY( "Rproduct_sellprice",	planet->product_sellprice,		fread_number( fp ) );
+
         if( !str_cmp( word, "Resource" ) );
         {
            line = fread_line(fp);
            x0=x1=x2=x3=x4=x5=0;
-           sscanf(line, "%d %d %d %d %d %d\n",
+           sscanf(line, "%d %d %d %d %d %d",
                   &x0, &x1, &x2, &x3, &x4, &x5);
            planet->import[x0] = x1;
            planet->export[x0] = x2;

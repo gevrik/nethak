@@ -750,6 +750,35 @@ struct  planet_data
     int              resource[CARGO_MAX];
     int              consumes[CARGO_MAX];
     int              produces[CARGO_MAX];
+    int			entertain_plus;
+    int			entertain_minus;
+    int			entertain_amount;
+    int			entertain_min;
+    int			entertain_max;
+    int			entertain_buyprice;
+    int			entertain_sellprice;
+    int			multimedia_plus;
+    int			multimedia_minus;
+    int			multimedia_amount;
+    int			multimedia_min;
+    int			multimedia_max;
+    int			multimedia_buyprice;
+    int			multimedia_sellprice;
+    int			finance_plus;
+    int			finance_minus;
+    int			finance_amount;
+    int			finance_min;
+    int			finance_max;
+    int			finance_buyprice;
+    int			finance_sellprice;
+    int			product_plus;
+    int			product_minus;
+    int			product_amount;
+    int			product_min;
+    int			product_max;
+    int			product_buyprice;
+    int			product_sellprice;
+
 };
 
 struct	clan_data
