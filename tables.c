@@ -132,6 +132,9 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_coding" ))		return do_coding;
 	if ( !str_cmp( name, "do_commands" ))		return do_commands;
 	if ( !str_cmp( name, "do_compare" ))		return do_compare;
+	#ifdef MCCP
+		if ( !str_cmp( name, "do_compress" ))		return do_compress;
+	#endif
 	if ( !str_cmp( name, "do_connect" ))		return do_connect;
 	if ( !str_cmp( name, "do_config" ))		return do_config;
 	if ( !str_cmp( name, "do_consider" ))		return do_consider;
@@ -749,6 +752,9 @@ char *skill_name( DO_FUN *skill )
     if ( skill == do_coding )		return "do_coding";
     if ( skill == do_commands )		return "do_commands";
     if ( skill == do_compare )		return "do_compare";
+    #ifdef MCCP
+        if ( skill == do_compress )		return "do_compress";
+    #endif
     if ( skill == do_config )		return "do_config";
     if ( skill == do_consider )		return "do_consider";
     if ( skill == do_credits )		return "do_credits";

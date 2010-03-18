@@ -34,6 +34,17 @@ const	char	echo_off_str	[] = { IAC, WILL, TELOPT_ECHO, '\0' };
 const	char	echo_on_str	[] = { IAC, WONT, TELOPT_ECHO, '\0' };
 const	char 	go_ahead_str	[] = { IAC, GA, '\0' };
 
+#ifdef MCCP
+#define TELOPT_COMPRESS 85
+#define TELOPT_COMPRESS2 86
+const   char    eor_on_str      [] = { IAC, WILL, TELOPT_EOR, '\0' };
+const   char    compress_on_str [] = { IAC, WILL, TELOPT_COMPRESS, '\0' };
+const   char    compress2_on_str [] = { IAC, WILL, TELOPT_COMPRESS2, '\0' };
+
+bool    compressStart   args( ( DESCRIPTOR_DATA *d, unsigned char telopt ) );
+bool    compressEnd     args( ( DESCRIPTOR_DATA *d ) );
+#endif
+
 void    send_auth args( ( struct descriptor_data *d ) );
 void    read_auth args( ( struct descriptor_data *d ) );
 void    start_auth args( ( struct descriptor_data *d ) );
@@ -993,6 +1004,12 @@ void new_descriptor( int new_desc )
 
 	LINK( dnew, first_descriptor, last_descriptor, next, prev );
 
+	#ifdef MCCP
+	    write_to_buffer(dnew, eor_on_str, 0);
+	    write_to_buffer(dnew, compress2_on_str, 0);
+	    write_to_buffer(dnew, compress_on_str, 0);
+	#endif
+
 	/*
 	 * Send the greeting.
 	 */
@@ -1032,6 +1049,11 @@ void free_desc( DESCRIPTOR_DATA *d )
 	STRFREE( d->user );    /* identd */
 	if ( d->pagebuf )
 		DISPOSE( d->pagebuf );
+
+	#ifdef MCCP
+	    compressEnd(d);
+	#endif
+
 	DISPOSE( d );
 	--num_descriptors;
 	return;
@@ -1164,6 +1186,10 @@ void close_socket( DESCRIPTOR_DATA *dclose, bool force )
 		UNLINK( dclose, first_descriptor, last_descriptor, next, prev );
 	}
 
+	#ifdef MCCP
+	    compressEnd(dclose);
+	#endif
+
 	if ( dclose->descriptor == maxdesc )
 		--maxdesc;
 	if ( dclose->auth_fd != -1 )
@@ -1235,6 +1261,9 @@ bool read_from_descriptor( DESCRIPTOR_DATA *d )
 void read_from_buffer( DESCRIPTOR_DATA *d )
 {
 	int i, j, k;
+	#ifdef MCCP
+	    int iac = 0;
+	#endif
 	unsigned char * p;
 
 	/*
@@ -1299,6 +1328,32 @@ void read_from_buffer( DESCRIPTOR_DATA *d )
 			d->inbuf[i+1] = '\0';
 			break;
 		}
+
+		#ifdef MCCP
+		        if ( d->inbuf[i] == (signed char)IAC )
+		            iac=1;
+		        else if ( iac==1 && (d->inbuf[i] == (signed char)DO || d->inbuf[i] == (signed char)DONT) )
+		            iac=2;
+		        else if ( iac==2 )
+		        {
+		            iac = 0;
+		            if ( d->inbuf[i] == (signed char)TELOPT_COMPRESS )
+		            {
+		                if ( d->inbuf[i-1] == (signed char)DO )
+		                    compressStart(d, TELOPT_COMPRESS);
+		                else if ( d->inbuf[i-1] == (signed char)DONT )
+		                    compressEnd(d);
+		            }
+		            else if ( d->inbuf[i] == (signed char)TELOPT_COMPRESS2 )
+		            {
+		                if ( d->inbuf[i-1] == (signed char)DO )
+		                    compressStart(d, TELOPT_COMPRESS2);
+		                else if ( d->inbuf[i-1] == (signed char)DONT )
+		                    compressEnd(d);
+		            }
+		        }
+		        else
+		#endif
 
 		if ( d->inbuf[i] == '\b' && k > 0 )
 			--k;
@@ -1456,8 +1511,6 @@ bool flush_buffer( DESCRIPTOR_DATA *d, bool fPrompt )
 	}
 }
 
-
-
 /*
  * Append onto an output buffer.
  */
@@ -1534,6 +1587,86 @@ void write_to_buffer( DESCRIPTOR_DATA *d, const char *txt, int length )
 }
 
 
+#ifdef MCCP
+#define COMPRESS_BUF_SIZE 1024
+
+bool write_to_descriptor( int desc, char *txt, int length )
+{
+    DESCRIPTOR_DATA *d;
+    int     iStart = 0;
+    int     nWrite = 0;
+    int     nBlock;
+    int     len;
+
+    if (length <= 0)
+        length = strlen(txt);
+
+    for (d = first_descriptor; d; d = d->next)
+        if (d->descriptor == desc)
+            break;
+
+    if (d->descriptor != desc)
+        d = NULL;
+
+    if (d && d->out_compress)
+    {
+        d->out_compress->next_in = (unsigned char *)txt;
+        d->out_compress->avail_in = length;
+
+        while (d->out_compress->avail_in)
+        {
+            d->out_compress->avail_out = COMPRESS_BUF_SIZE - (d->out_compress->next_out - d->out_compress_buf);
+
+            if (d->out_compress->avail_out)
+            {
+                int status = deflate(d->out_compress, Z_SYNC_FLUSH);
+
+                if (status != Z_OK)
+                    return FALSE;
+            }
+
+            len = d->out_compress->next_out - d->out_compress_buf;
+            if (len > 0)
+            {
+                for (iStart = 0; iStart < len; iStart += nWrite)
+                {
+                    nBlock = UMIN (len - iStart, 4096);
+                    if ((nWrite = write(d->descriptor, d->out_compress_buf + iStart, nBlock)) < 0)
+                    {
+                        perror( "Write_to_descriptor: compressed" );
+                        return FALSE;
+                    }
+
+                    if (!nWrite)
+                        break;
+                }
+
+                if (!iStart)
+                    break;
+
+                if (iStart < len)
+                    memmove(d->out_compress_buf, d->out_compress_buf+iStart, len - iStart);
+
+                d->out_compress->next_out = d->out_compress_buf + len - iStart;
+            }
+        }
+        return TRUE;
+    }
+
+    for (iStart = 0; iStart < length; iStart += nWrite)
+    {
+        nBlock = UMIN (length - iStart, 4096);
+        if ((nWrite = write(desc, txt + iStart, nBlock)) < 0)
+        {
+            perror( "Write_to_descriptor" );
+            return FALSE;
+        }
+    }
+
+    return TRUE;
+}
+#else
+
 /*
  * Lowest level output function.
  * Write a block of text to the file descriptor.
@@ -1559,7 +1692,7 @@ bool write_to_descriptor( int desc, char *txt, int length )
 	return TRUE;
 }
 
-
+#endif
 
 void show_title( DESCRIPTOR_DATA *d )
 {
@@ -3378,5 +3511,177 @@ bool pager_output( DESCRIPTOR_DATA *d )
 	}
 	return ret;
 }
+
+#ifdef MCCP
+/*
+ * Ported to SMAUG by Garil of DOTDII Mud
+ * aka Jesse DeFer <dotd@dotd.com>  http://www.dotd.com
+ *
+ * revision 1: MCCP v1 support
+ * revision 2: MCCP v2 support
+ * revision 3: Correct MMCP v2 support
+ * revision 4: clean up of write_to_descriptor() suggested by Noplex@CB
+ *
+ * See the web site below for more info.
+ */
+
+/*
+ * mccp.c - support functions for mccp (the Mud Client Compression Protocol)
+ *
+ * see http://homepages.ihug.co.nz/~icecube/compress/ and README.Rom24-mccp
+ *
+ * Copyright (c) 1999, Oliver Jowett <icecube@ihug.co.nz>.
+ *
+ * This code may be freely distributed and used if this copyright notice is
+ * retained intact.
+ */
+
+void *zlib_alloc(void *opaque, unsigned int items, unsigned int size)
+{
+    return calloc(items, size);
+}
+
+void zlib_free(void *opaque, void *address)
+{
+    DISPOSE(address);
+}
+
+bool process_compressed(DESCRIPTOR_DATA *d)
+{
+    int iStart = 0, nBlock, nWrite, len;
+
+    if (!d->out_compress)
+        return TRUE;
+
+    // Try to write out some data..
+    len = d->out_compress->next_out - d->out_compress_buf;
+
+    if (len > 0)
+    {
+        // we have some data to write
+        for (iStart = 0; iStart < len; iStart += nWrite)
+        {
+            nBlock = UMIN (len - iStart, 4096);
+            if ((nWrite = write(d->descriptor, d->out_compress_buf + iStart, nBlock)) < 0)
+            {
+                if (errno == EAGAIN ||
+                    errno == ENOSR)
+                    break;
+
+                return FALSE;
+            }
+
+            if (!nWrite)
+                break;
+        }
+
+        if (iStart)
+        {
+            // We wrote "iStart" bytes
+            if (iStart < len)
+                memmove(d->out_compress_buf, d->out_compress_buf+iStart, len - iStart);
+
+            d->out_compress->next_out = d->out_compress_buf + len - iStart;
+        }
+    }
+
+    return TRUE;
+}
+
+char enable_compress[] =
+{
+    IAC, SB, TELOPT_COMPRESS, WILL, SE, 0
+};
+char enable_compress2[] =
+{
+    IAC, SB, TELOPT_COMPRESS2, IAC, SE, 0
+};
+
+bool compressStart(DESCRIPTOR_DATA *d, unsigned char telopt)
+{
+    z_stream *s;
+
+    if (d->out_compress)
+        return TRUE;
+
+    bug("Starting compression for descriptor %d", d->descriptor);
+
+    CREATE(s, z_stream, 1);
+    CREATE(d->out_compress_buf, unsigned char, COMPRESS_BUF_SIZE);
+
+    s->next_in = NULL;
+    s->avail_in = 0;
+
+    s->next_out = d->out_compress_buf;
+    s->avail_out = COMPRESS_BUF_SIZE;
+
+    s->zalloc = zlib_alloc;
+    s->zfree  = zlib_free;
+    s->opaque = NULL;
+
+    if (deflateInit(s, 9) != Z_OK)
+    {
+        DISPOSE(d->out_compress_buf);
+        DISPOSE(s);
+        return FALSE;
+    }
+
+    if (telopt == TELOPT_COMPRESS)
+        write_to_descriptor(d->descriptor, enable_compress, 0);
+    else if (telopt == TELOPT_COMPRESS2)
+        write_to_descriptor(d->descriptor, enable_compress2, 0);
+    else
+        bug("compressStart: bad TELOPT passed");
+
+    d->compressing = telopt;
+    d->out_compress = s;
+
+    return TRUE;
+}
+
+bool compressEnd(DESCRIPTOR_DATA *d)
+{
+    unsigned char dummy[1];
+
+    if (!d->out_compress)
+        return TRUE;
+
+    bug("Stopping compression for descriptor %d", d->descriptor);
+
+    d->out_compress->avail_in = 0;
+    d->out_compress->next_in = dummy;
+
+    if (deflate(d->out_compress, Z_FINISH) != Z_STREAM_END)
+        return FALSE;
+
+    if (!process_compressed(d)) /* try to send any residual data */
+        return FALSE;
+
+    deflateEnd(d->out_compress);
+    DISPOSE(d->out_compress_buf);
+    DISPOSE(d->out_compress);
+    d->compressing = 0;
+
+    return TRUE;
+}
+
+void do_compress( CHAR_DATA *ch, char *argument )
+{
+    if (!ch->desc) {
+        send_to_char("What descriptor?!\n", ch);
+        return;
+    }
+
+    if (!ch->desc->out_compress) {
+        send_to_char("Initiating compression.\n\r", ch);
+        write_to_buffer( ch->desc, compress2_on_str, 0 );
+        write_to_buffer( ch->desc, compress_on_str, 0 );
+    } else {
+        send_to_char("Terminating compression.\n\r", ch);
+        compressEnd(ch->desc);
+    }
+
+}
+#endif
 
 //done for Neuro
