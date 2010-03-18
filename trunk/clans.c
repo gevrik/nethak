@@ -1261,6 +1261,8 @@ void do_clan_withdraw( CHAR_DATA *ch, char *argument )
        return;
     }
 
+    clan = ch->pcdata->clan;
+
     if ( (ch->pcdata && ch->pcdata->bestowments
     &&    is_name("withdraw", ch->pcdata->bestowments))
     ||   nifty_is_name( ch->name, ch->pcdata->clan->leaders  ))
@@ -1270,8 +1272,6 @@ void do_clan_withdraw( CHAR_DATA *ch, char *argument )
    	send_to_char( "&R>your organization has not seen fit to bestow you with that ability" ,ch );
    	return;
     }
-
-    clan = ch->pcdata->clan;
 
     amount = atoi( argument );
 

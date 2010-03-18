@@ -246,6 +246,14 @@ void fread_planet( PLANET_DATA *planet, FILE *fp )
 	             planet->farmland = 0;
 	             planet->barracks = 0;
 	             planet->controls = 0;
+	             planet->entertain_plus = 0;
+	             planet->entertain_minus = 0;
+	             planet->multimedia_plus = 0;
+	             planet->multimedia_minus = 0;
+	             planet->finance_plus = 0;
+	             planet->finance_minus = 0;
+	             planet->product_plus = 0;
+	             planet->product_minus = 0;
 	             pArea->planet = planet;
 	             planet->area = pArea;
 	             for( room = pArea->first_room ; room ; room = room->next_in_area )
@@ -255,8 +263,29 @@ void fread_planet( PLANET_DATA *planet, FILE *fp )
                              planet->citysize++;
                           else if ( room->sector_type == SECT_FARMLAND )
                              planet->farmland++;
-                          else if ( room->sector_type != SECT_DUNNO )
+                          else if ( room->sector_type == SECT_GLACIAL )
                              planet->wilderness++;
+                          else if ( room->sector_type == SECT_FIELD )
+                          {
+                             planet->entertain_plus++;
+							 planet->multimedia_minus++;
+                          }
+                          else if ( room->sector_type == SECT_FOREST )
+                          {
+	                         planet->multimedia_plus++;
+							 planet->entertain_minus++;
+                          }
+                          else if ( room->sector_type == SECT_HILLS )
+                          {
+	                         planet->finance_plus++;
+							 planet->product_minus++;
+                          }
+                          else if ( room->sector_type == SECT_SCRUB )
+                          {
+	                         planet->product_plus++;
+							 planet->finance_minus++;
+                          }
+
 
                           if ( IS_SET( room->room_flags , ROOM_CONTROL ))
                              planet->controls++;

@@ -3577,7 +3577,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 
 	if( strcmp(location->owner, ch->name) )
 	{
-		send_to_char( "&R> this is not your node&w\n\r", ch );
+		send_to_char( "> &Rthis is not your node&w\n\r", ch );
 		return;
 	}
 
@@ -3604,7 +3604,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 		send_to_char( "trade        - users can sell resources\n\r", ch );
 		send_to_char( "supply       - supply node\n\r", ch );
 		send_to_char( "pawn         - will trade useful code\n\r", ch );
-		send_to_char( "coding	    - users can code classes here\n\r", ch );
+		send_to_char( "coding       - users can code classes here\n\r", ch );
 		send_to_char( "firewall     - generates ICE [cost: 20,000]\n\r", ch );
 		send_to_char( "bank         - banking node\n\r", ch );
 		send_to_char( "employment   - job office\n\r", ch );
@@ -3752,6 +3752,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 		location->area->planet->citysize++;
 		location->sector_type = SECT_INSIDE;
 		SET_BIT( location->room_flags , ROOM_BANK );
+		SET_BIT( location->room_flags , ROOM_SAFE );
 		strcpy( buf , ch->name );
 		strcat( buf , "&Y.&Cbank" );
 		strcpy( bufa , "a bank node.\n\r" );
@@ -3762,6 +3763,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 		location->area->planet->citysize++;
 		location->sector_type = SECT_INSIDE;
 		SET_BIT( location->room_flags , ROOM_HOTEL );
+		SET_BIT( location->room_flags , ROOM_SAFE );
 		strcpy( buf , ch->name );
 		strcat( buf , "&Y.&Cagent" );
 		strcpy( bufa , "an agent node.\n\r" );
@@ -3802,6 +3804,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 		location->sector_type = SECT_CITY;
 		SET_BIT( location->room_flags , ROOM_PUBLICIO );
 		SET_BIT( location->room_flags , ROOM_NO_MOB );
+		SET_BIT( location->room_flags , ROOM_SAFE );
 		strcpy( buf , ch->name );
 		strcat( buf , "&Y.&Cio" );
 		strcpy( bufa , "a public io node.\n\r" );
@@ -3904,6 +3907,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 		location->area->planet->citysize++;
 		location->sector_type = SECT_INSIDE;
 		SET_BIT( location->room_flags , ROOM_EMPLOYMENT );
+		SET_BIT( location->room_flags , ROOM_SAFE );
 		strcpy( buf , ch->name );
 		strcat( buf , "&Y.&Cemployment" );
 		strcpy( bufa , "an employment node.\n\r" );
