@@ -3593,31 +3593,25 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 	{
 		send_to_char( "> syntax: MODIFY  <node type>  <new node name>\n\r", ch );
 		send_to_char( " <node type> may be one of the following:\n\r\n\r", ch );
-		send_to_char( " (commands costs 500 credits unless listed otherwise.\n\r\n\r", ch );
 
 		send_to_char( "database     - generates resources\n\r", ch );
 		send_to_char( "subserver    - supports terminals\n\r", ch );
 		send_to_char( "terminal     - generates funds\n\r", ch );
 		send_to_char( "ionode       - protected io node\n\r", ch );
 		send_to_char( "publicio     - public io node\n\r", ch );
-		//send_to_char( "shipyard     - ships are built here\n\r", ch );
-		//send_to_char( "inside       - somewhere inside\n\r", ch );
 		send_to_char( "home         - may be used as a private node\n\r", ch );
-		//send_to_char( "datamine     - dug out tunnel\n\r", ch );
-		//send_to_char( "info         - message and information node\n\r", ch );
-		//send_to_char( "mail         - mail node\n\r", ch );
 		send_to_char( "agent        - users can get jobs here\n\r", ch );
 		send_to_char( "trade        - users can sell resources\n\r", ch );
 		send_to_char( "supply       - supply node\n\r", ch );
 		send_to_char( "pawn         - will trade useful code\n\r", ch );
 		send_to_char( "coding	    - users can code classes here\n\r", ch );
-		//send_to_char( "bar          - liquor is sold here\n\r", ch );
-		//send_to_char( "control      - control tower for patrol ships\n\r", ch );
-		send_to_char( "firewall     - generates ICE [Cost: 20,000]\n\r", ch );
-		//send_to_char( "botnet       - generates ICE [Cost: 10,000]\n\r", ch );
-		//send_to_char( "garage       - vehicles are built here\n\r", ch );
+		send_to_char( "firewall     - generates ICE [cost: 20,000]\n\r", ch );
 		send_to_char( "bank         - banking node\n\r", ch );
 		send_to_char( "employment   - job office\n\r", ch );
+		send_to_char( "entertain    - entertainment repo\n\r", ch );
+		send_to_char( "product      - productivity repo\n\r", ch );
+		send_to_char( "finance      - finance repo\n\r", ch );
+		send_to_char( "multimedia   - multimedia repo\n\r", ch );
 		return;
 	}
 
@@ -3638,6 +3632,38 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 		SET_BIT( location->room_flags , ROOM_HOTEL );
 		SET_BIT( location->room_flags , ROOM_SAFE );
 	}
+	else if ( !str_cmp( argument, "entertain" ) )
+	{
+		location->sector_type = SECT_FIELD;
+		strcpy( buf , ch->name );
+		strcat( buf , "&Y.&Centertainment" );
+		strcpy( bufa , "an entertainment repository node\n\r" );
+		ch->pcdata->qtaxnodes = ch->pcdata->qtaxnodes + 1;
+	}
+	else if ( !str_cmp( argument, "multimedia" ) )
+	{
+		location->sector_type = SECT_FOREST;
+		strcpy( buf , ch->name );
+		strcat( buf , "&Y.&Cmultimedia" );
+		strcpy( bufa , "a multimedia repository node\n\r" );
+		ch->pcdata->qtaxnodes = ch->pcdata->qtaxnodes + 1;
+	}
+	else if ( !str_cmp( argument, "finance" ) )
+	{
+		location->sector_type = SECT_HILLS;
+		strcpy( buf , ch->name );
+		strcat( buf , "&Y.&Cfinance" );
+		strcpy( bufa , "a finance repository node\n\r" );
+		ch->pcdata->qtaxnodes = ch->pcdata->qtaxnodes + 1;
+	}
+	else if ( !str_cmp( argument, "product" ) )
+	{
+		location->sector_type = SECT_SCRUB;
+		strcpy( buf , ch->name );
+		strcat( buf , "&Y.&Cproductivity" );
+		strcpy( bufa , "a productivity repository node\n\r" );
+		ch->pcdata->qtaxnodes = ch->pcdata->qtaxnodes + 1;
+	}
 	else if ( !str_cmp( argument, "terminal" ) )
 	{
 		location->area->planet->citysize++;
@@ -3656,14 +3682,6 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 		strcpy( bufa , "a database node.\n\r" );
 		ch->pcdata->qtaxnodes = ch->pcdata->qtaxnodes + 1;
 	}
-	else if ( !str_cmp( argument, "inside" ) )
-	{
-		location->area->planet->citysize++;
-		location->sector_type = SECT_INSIDE;
-		strcpy( buf , ch->name );
-		strcat( buf , "&Y.&Cconstruct" );
-		strcpy( bufa , "an inside node.\n\r" );
-	}
 	else if ( !str_cmp( argument, "subserver" ) )
 	{
 		location->area->planet->farmland++;
@@ -3672,52 +3690,6 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 		strcat( buf , "&Y.&Csubserver" );
 		strcpy( bufa , "a subserver node.\n\r" );
 		ch->pcdata->qtaxnodes = ch->pcdata->qtaxnodes + 1;
-	}
-	else if ( !str_cmp( argument, "bot" ) )
-	{
-
-//		if ( IS_SET( planet->flags, PLANET_NOCAP ) )
-//		{
-//			send_to_char("> &Ryou cannot build firewalls here&w\n\r", ch );
-//			return;
-//		}
-
-		if( ch->gold < 10000 )
-		{
-			send_to_char("> insufficient funds [10k needed] - \n\r", ch );
-			return;
-		}
-
-		for( xit = location->first_exit; xit; xit = xit->next )
-			if( IS_SET( xit->to_room->room_flags, ROOM_SAFE ) )
-			{
-				send_to_char("&R> safe node nearby.&w\n\r", ch );
-				return;
-			}
-
-		for( xit = location->first_exit; xit; xit = xit->next )
-			if( IS_SET( xit->to_room->room_flags, ROOM_PLR_HOME ) )
-			{
-				send_to_char("&R> home node nearby.&w\n\r", ch );
-				return;
-			}
-
-		for( xit = location->first_exit; xit; xit = xit->next )
-			if( IS_SET( xit->to_room->room_flags, ROOM_EMPTY_HOME ) )
-			{
-				send_to_char("&R> unused home node nearby.&w\n\r", ch );
-				return;
-			}
-
-		location->area->planet->citysize++;
-		location->sector_type = SECT_INSIDE;
-		SET_BIT( location->room_flags , ROOM_GARAGE );
-		// if( location->area->planet->barracks > 4 )
-		ch->gold -= 10000;
-		//location->area->planet->barracks++;
-		strcpy( buf , ch->name );
-		strcat( buf , "&Y.&Cbotnet" );
-		strcpy( bufa , "a botnet node.\n\r" );
 	}
 	else if ( !str_cmp( argument, "home" ) )
 	{
@@ -3775,35 +3747,6 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 		strcpy( buf , "&Chomenode" );
 		strcpy( bufa , "use BUYHOME to buy this node for 10k.\n\r" );
 	}
-	else if ( !str_cmp( argument, "datamine" ) )
-	{
-		location->area->planet->wilderness++;
-		location->sector_type = SECT_UNDERGROUND;
-		SET_BIT( location->room_flags , ROOM_DARK );
-		strcpy( buf , ch->name );
-		strcat( buf , "&Y.&Cdatamine" );
-		strcpy( bufa , "a datamine node.\n\r" );
-	}
-	else if ( !str_cmp( argument, "info" ) )
-	{
-		location->area->planet->citysize++;
-		location->sector_type = SECT_INSIDE;
-		SET_BIT( location->room_flags , ROOM_INFO );
-		SET_BIT( location->room_flags , ROOM_NO_MOB );
-		strcpy( buf , ch->name );
-		strcat( buf , "&Y.&Cinfo" );
-		strcpy( bufa , "an info node.\n\r" );
-	}
-	else if ( !str_cmp( argument, "mail" ) )
-	{
-		location->area->planet->citysize++;
-		location->sector_type = SECT_INSIDE;
-		SET_BIT( location->room_flags , ROOM_MAIL );
-		SET_BIT( location->room_flags , ROOM_NO_MOB );
-		strcpy( buf , ch->name );
-		strcat( buf , "&Y.&Cmail" );
-		strcpy( bufa , "a mail node.\n\r" );
-	}
 	else if ( !str_cmp( argument, "bank" ) )
 	{
 		location->area->planet->citysize++;
@@ -3815,12 +3758,6 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 	}
 	else if ( !str_cmp( argument, "agent" ) )
 	{
-
-//		if ( IS_SET( planet->flags, PLANET_NOCAP ) )
-//		{
-//			send_to_char("> &Ryou cannot build agent nodes here&w\n\r", ch );
-//			return;
-//		}
 
 		location->area->planet->citysize++;
 		location->sector_type = SECT_INSIDE;

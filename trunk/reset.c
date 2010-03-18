@@ -27,7 +27,7 @@ void reset_all() {
 	OBJ_DATA * obj = NULL;
 	EXIT_DATA *xit;
 	bool found = FALSE;
-	int vnum, anumber, onum, nodelevel;
+	int vnum, anumber, onum, nodelevel, mobvnum, mobgold;
 	char buf[MAX_STRING_LENGTH];
 	char buf1[MAX_STRING_LENGTH];
 
@@ -660,11 +660,7 @@ void reset_all() {
 
 					break;
 
-
-
-				case SECT_FOREST:
 				case SECT_BRUSH:
-				case SECT_SCRUB:
 					if (anumber <= 1)
 						vnum = OBJ_VNUM_ROOT;
 					else
@@ -819,84 +815,54 @@ void reset_all() {
 					}
 				}
 
-				if (!(pMobIndex = get_mob_index(MOB_VNUM_CITIZEN))) {
-					bug("Reset_all: Missing default colonist (%d)", vnum);
+
+//				switch (number_bits(4)) {
+				switch ( pRoomIndex->level ) {
+					default:
+						mobvnum = 60;
+						mobgold = number_range(1, 2);
+						break;
+
+					case 0:
+						mobvnum = 60;
+						mobgold = number_range(1, 2);
+						break;
+
+					case 1:
+						mobvnum = 61;
+						mobgold = number_range(2, 4);
+						break;
+
+					case 2:
+						mobvnum = 62;
+						mobgold = number_range(4, 8);
+						break;
+
+					case 3:
+						mobvnum = 63;
+						mobgold = number_range(8, 16);
+						break;
+
+					case 4:
+						mobvnum = 64;
+						mobgold = number_range(16, 32);
+						break;
+
+					case 5:
+						mobvnum = 65;
+						mobgold = number_range(32, 64);
+						break;
+					}
+
+				if (!(pMobIndex = get_mob_index(mobvnum))) {
+					bug("Reset_all: Missing default user (%d)", mobvnum);
 					return;
 				}
 				mob = create_mobile(pMobIndex);
 				SET_BIT ( mob->act , ACT_CITIZEN );
 				mob->sex = number_bits(1) + 1;
-				STRFREE( mob->long_descr );
-				if (mob->sex == 2)
-					switch (number_bits(4)) {
-					default:
-						mob->long_descr
-								= STRALLOC( "program [communication]\n\r" );
-						mob->gold = number_range(10, 20);
-						break;
+				mob->gold = mobgold;
 
-					case 0:
-						mob->long_descr
-								= STRALLOC( "program [entertainment]\n\r" );
-						mob->gold = number_range(20, 50);
-						break;
-
-					case 1:
-						mob->long_descr = STRALLOC( "program [finance]\n\r" );
-						mob->gold = number_range(20, 100);
-						break;
-
-					case 2:
-						mob->long_descr = STRALLOC( "program [multimedia]\n\r" );
-						mob->gold = number_range(10, 20);
-						break;
-
-					case 3:
-						mob->long_descr = STRALLOC( "program [news]\n\r" );
-						mob->gold = number_range(20, 50);
-						break;
-
-					case 4:
-						mob->long_descr
-								= STRALLOC( "program [productivity]\n\r" );
-						mob->gold = number_range(10, 20);
-						break;
-					}
-				else
-					switch (number_bits(3)) {
-					default:
-						mob->long_descr
-								= STRALLOC( "program [communication]\n\r" );
-						mob->gold = number_range(10, 20);
-						break;
-
-					case 0:
-						mob->long_descr
-								= STRALLOC( "program [entertainment]\n\r" );
-						mob->gold = number_range(20, 50);
-						break;
-
-					case 1:
-						mob->long_descr = STRALLOC( "program [finance]\n\r" );
-						mob->gold = number_range(20, 100);
-						break;
-
-					case 2:
-						mob->long_descr = STRALLOC( "program [multimedia]\n\r" );
-						mob->gold = number_range(10, 20);
-						break;
-
-					case 3:
-						mob->long_descr = STRALLOC( "program [news]\n\r" );
-						mob->gold = number_range(20, 50);
-						break;
-
-					case 4:
-						mob->long_descr
-								= STRALLOC( "program [productivity]\n\r" );
-						mob->gold = number_range(10, 20);
-						break;
-					}
 				char_to_room(mob, pRoomIndex);
 				pRoomIndex->area->planet->population++;
 				continue;
@@ -945,7 +911,6 @@ void reset_all() {
 				break;
 
 			case SECT_MOUNTAIN:
-			case SECT_SCRUB:
 			case SECT_ROCKY:
 				if (anumber == 0)
 					vnum = MOB_VNUM_INSECT;
@@ -959,9 +924,6 @@ void reset_all() {
 					vnum = MOB_VNUM_BIRD;
 				break;
 
-			case SECT_FIELD:
-			case SECT_FOREST:
-			case SECT_HILLS:
 			case SECT_BRUSH:
 			case SECT_STEPPE:
 				if (anumber == 0)

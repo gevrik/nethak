@@ -1782,7 +1782,6 @@ void update_handler( void )
        pulse_space    = PULSE_SPACE;
        //update_space  ( );
        who_html_update ( );
-       update_taxnodes();
     }
 
     if ( --pulse_recharge <= 0 )
