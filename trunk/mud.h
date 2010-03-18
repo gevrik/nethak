@@ -4,6 +4,10 @@
 #include <sys/time.h>
 #include <math.h>
 
+#ifdef MCCP
+#include <zlib.h>
+#endif
+
 typedef	int				ch_ret;
 typedef	int				obj_ret;
 
@@ -426,6 +430,12 @@ struct	descriptor_data
     unsigned char	prevcolor;
 
     bool    mxp;   /* player using MXP flag */
+
+    #ifdef MCCP
+        unsigned char	compressing;
+        z_stream *          out_compress;
+        unsigned char *     out_compress_buf;
+    #endif
 
 };
 
@@ -3277,6 +3287,9 @@ DECLARE_DO_FUN(	do_cmenu	);
 DECLARE_DO_FUN(	do_coding	);
 DECLARE_DO_FUN(	do_commands	);
 DECLARE_DO_FUN(	do_compare	);
+#ifdef MCCP
+DECLARE_DO_FUN( do_compress	);
+#endif
 DECLARE_DO_FUN(	do_config	);
 DECLARE_DO_FUN(	do_consider	);
 DECLARE_DO_FUN( do_credits	);

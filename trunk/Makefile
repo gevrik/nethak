@@ -3,8 +3,10 @@ PROF    =
 NOCRYPT =
 #Uncomment the next line if you want request support
 #DBUGFLG = -DREQUESTS
+OPT_FLAG = -DMCCP
 C_FLAGS = -g3 -Wall $(PROF) $(NOCRYPT) $(DBUGFLG)
-L_FLAGS = $(PROF)
+L_FLAGS = $(PROF) -lz
+
 
 O_FILES = act_comm.o act_info.o act_move.o act_obj.o act_wiz.o boards.o \
 	  build.o clans.o comm.o const.o db.o fight.o \
