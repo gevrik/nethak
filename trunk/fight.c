@@ -1927,6 +1927,38 @@ void raw_kill( CHAR_DATA *ch, CHAR_DATA *victim )
          if ( victim->in_room->area->planet->pop_support < -100 )
            victim->in_room->area->planet->pop_support = -100;
        }
+       else if ( victim->pIndexData->vnum == 56  )
+       {
+
+    	  sh_int decrease = victim->top_level / 20;
+    	 victim->in_room->area->planet->entertain_count = victim->in_room->area->planet->entertain_count - decrease;
+    	 victim->in_room->area->planet->entertain_count = UMAX( victim->in_room->area->planet->entertain_count , 0 );
+
+       }
+       else if ( victim->pIndexData->vnum == 57  )
+       {
+
+    	  sh_int decrease = victim->top_level / 20;
+    	 victim->in_room->area->planet->multimedia_count = victim->in_room->area->planet->multimedia_count - decrease;
+    	 victim->in_room->area->planet->multimedia_count = UMAX( victim->in_room->area->planet->multimedia_count , 0 );
+
+       }
+       else if ( victim->pIndexData->vnum == 58  )
+       {
+
+    	  sh_int decrease = victim->top_level / 20;
+    	 victim->in_room->area->planet->finance_count = victim->in_room->area->planet->finance_count - decrease;
+    	 victim->in_room->area->planet->finance_count = UMAX( victim->in_room->area->planet->finance_count , 0 );
+
+       }
+       else if ( victim->pIndexData->vnum == 59  )
+       {
+
+    	  sh_int decrease = victim->top_level / 20;
+    	 victim->in_room->area->planet->product_count = victim->in_room->area->planet->product_count - decrease;
+    	 victim->in_room->area->planet->product_count = UMAX( victim->in_room->area->planet->product_count , 0 );
+
+       }
        else
        {
          victim->in_room->area->planet->wildlife--;

@@ -760,6 +760,7 @@ struct  planet_data
     int              resource[CARGO_MAX];
     int              consumes[CARGO_MAX];
     int              produces[CARGO_MAX];
+    int			entertain_count;
     int			entertain_plus;
     int			entertain_minus;
     int			entertain_amount;
@@ -767,6 +768,7 @@ struct  planet_data
     int			entertain_max;
     int			entertain_buyprice;
     int			entertain_sellprice;
+    int			multimedia_count;
     int			multimedia_plus;
     int			multimedia_minus;
     int			multimedia_amount;
@@ -774,6 +776,7 @@ struct  planet_data
     int			multimedia_max;
     int			multimedia_buyprice;
     int			multimedia_sellprice;
+    int			finance_count;
     int			finance_plus;
     int			finance_minus;
     int			finance_amount;
@@ -781,6 +784,7 @@ struct  planet_data
     int			finance_max;
     int			finance_buyprice;
     int			finance_sellprice;
+    int			product_count;
     int			product_plus;
     int			product_minus;
     int			product_amount;

@@ -156,29 +156,21 @@ void save_planet( PLANET_DATA *planet )
     for(i = 1; i<CARGO_MAX; i++)
        fprintf(fp, "Resource %d %d %d %d %d %d\n", i, planet->import[i], planet->export[i], planet->resource[i], planet->consumes[i], planet->produces[i]);
 
-    fprintf(fp, "Rentertain_plus 		%d\n", planet->entertain_plus );
-    fprintf(fp, "Rentertain_minus 		%d\n", planet->entertain_minus );
     fprintf(fp, "Rentertain_amount 		%d\n", planet->entertain_amount );
     fprintf(fp, "Rentertain_min 			%d\n", planet->entertain_min);
     fprintf(fp, "Rentertain_max 			%d\n", planet->entertain_max );
     fprintf(fp, "Rentertain_buyprice 	%d\n", planet->entertain_buyprice );
     fprintf(fp, "Rentertain_sellprice	%d\n", planet->entertain_sellprice );
-    fprintf(fp, "Rmultimedia_plus 		%d\n", planet->multimedia_plus );
-    fprintf(fp, "Rmultimedia_minus 		%d\n", planet->multimedia_minus );
     fprintf(fp, "Rmultimedia_amount 		%d\n", planet->multimedia_amount );
     fprintf(fp, "Rmultimedia_min 			%d\n", planet->multimedia_min);
     fprintf(fp, "Rmultimedia_max 			%d\n", planet->multimedia_max );
     fprintf(fp, "Rmultimedia_buyprice 	%d\n", planet->multimedia_buyprice );
     fprintf(fp, "Rmultimedia_sellprice	%d\n", planet->multimedia_sellprice );
-    fprintf(fp, "Rfinance_plus 		%d\n", planet->finance_plus );
-    fprintf(fp, "Rfinance_minus 		%d\n", planet->finance_minus );
     fprintf(fp, "Rfinance_amount 		%d\n", planet->finance_amount );
     fprintf(fp, "Rfinance_min 			%d\n", planet->finance_min);
     fprintf(fp, "Rfinance_max 			%d\n", planet->finance_max );
     fprintf(fp, "Rfinance_buyprice 	%d\n", planet->finance_buyprice );
     fprintf(fp, "Rfinance_sellprice	%d\n", planet->finance_sellprice );
-    fprintf(fp, "Rproduct_plus 		%d\n", planet->product_plus );
-    fprintf(fp, "Rproduct_minus 		%d\n", planet->product_minus );
     fprintf(fp, "Rproduct_amount 		%d\n", planet->product_amount );
     fprintf(fp, "Rproduct_min 			%d\n", planet->product_min);
     fprintf(fp, "Rproduct_max 			%d\n", planet->product_max );
@@ -211,6 +203,7 @@ void fread_planet( PLANET_DATA *planet, FILE *fp )
     char buf[MAX_STRING_LENGTH];
     char *word;
     bool fMatch;
+    int nodelevel, baselevel;
 
     char *line;
     int x0,x1,x2,x3,x4,x5;
@@ -241,9 +234,14 @@ void fread_planet( PLANET_DATA *planet, FILE *fp )
 	             ROOM_INDEX_DATA *room;
 
 	             planet->size = 0;
+
+	             if ( !str_cmp(planet->name, "straylight") || !str_cmp(planet->name, "chatsubo") )
+	             planet->citysize = 800;
+	             else
 	             planet->citysize = 0;
+
 	             planet->wilderness = 0;
-	             planet->farmland = 0;
+            	 planet->farmland = 0;
 	             planet->barracks = 0;
 	             planet->controls = 0;
 	             planet->entertain_plus = 0;
@@ -254,36 +252,56 @@ void fread_planet( PLANET_DATA *planet, FILE *fp )
 	             planet->finance_minus = 0;
 	             planet->product_plus = 0;
 	             planet->product_minus = 0;
+	             planet->entertain_count = 0;
+	             planet->multimedia_count = 0;
+	             planet->finance_count = 0;
+	             planet->product_count = 0;
 	             pArea->planet = planet;
 	             planet->area = pArea;
 	             for( room = pArea->first_room ; room ; room = room->next_in_area )
                      {
+
+						 baselevel = room->level;
+						 if (baselevel == 0)
+							 nodelevel = 1;
+						 else if (baselevel == 1)
+							 nodelevel = 2;
+						 else if (baselevel == 2)
+							 nodelevel = 4;
+						 else if (baselevel == 3)
+							 nodelevel = 8;
+						 else if (baselevel == 4)
+							 nodelevel = 16;
+						 else if (baselevel == 5)
+							 nodelevel = 32;
+
                        	  planet->size++;
+
                           if ( room->sector_type == SECT_DESERT )
-                             planet->citysize++;
+                             planet->citysize = planet->citysize++; // + nodelevel;
                           else if ( room->sector_type == SECT_FARMLAND )
-                             planet->farmland++;
+                             planet->farmland = planet->farmland++; // + nodelevel;
                           else if ( room->sector_type == SECT_GLACIAL )
-                             planet->wilderness++;
+                             planet->wilderness = planet->wilderness++;// + nodelevel;
                           else if ( room->sector_type == SECT_FIELD )
                           {
-                             planet->entertain_plus++;
-							 planet->multimedia_minus++;
+                             planet->entertain_plus = planet->entertain_plus + nodelevel;
+							 planet->multimedia_minus = planet->multimedia_minus + nodelevel;
                           }
                           else if ( room->sector_type == SECT_FOREST )
                           {
-	                         planet->multimedia_plus++;
-							 planet->entertain_minus++;
+	                         planet->multimedia_plus = planet->multimedia_plus + nodelevel;
+							 planet->entertain_minus = planet->entertain_minus + nodelevel;
                           }
                           else if ( room->sector_type == SECT_HILLS )
                           {
-	                         planet->finance_plus++;
-							 planet->product_minus++;
+	                         planet->finance_plus = planet->finance_plus + nodelevel;
+							 planet->product_minus = planet->product_minus + nodelevel;
                           }
                           else if ( room->sector_type == SECT_SCRUB )
                           {
-	                         planet->product_plus++;
-							 planet->finance_minus++;
+	                         planet->product_plus = planet->product_plus + nodelevel;
+							 planet->finance_minus = planet->finance_minus + nodelevel;
                           }
 
 
@@ -331,29 +349,21 @@ void fread_planet( PLANET_DATA *planet, FILE *fp )
 
     case 'R':
 
-		KEY( "Rentertain_plus",	planet->entertain_plus,		fread_number( fp ) );
-		KEY( "Rentertain_minus",	planet->entertain_minus,		fread_number( fp ) );
 		KEY( "Rentertain_amount",	planet->entertain_amount,		fread_number( fp ) );
 		KEY( "Rentertain_min",	planet->entertain_min,		fread_number( fp ) );
 		KEY( "Rentertain_max",	planet->entertain_max,		fread_number( fp ) );
 		KEY( "Rentertain_buyprice",	planet->entertain_buyprice,		fread_number( fp ) );
 		KEY( "Rentertain_sellprice",	planet->entertain_sellprice,		fread_number( fp ) );
-		KEY( "Rmultimedia_plus",	planet->multimedia_plus,		fread_number( fp ) );
-		KEY( "Rmultimedia_minus",	planet->multimedia_minus,		fread_number( fp ) );
 		KEY( "Rmultimedia_amount",	planet->multimedia_amount,		fread_number( fp ) );
 		KEY( "Rmultimedia_min",	planet->multimedia_min,		fread_number( fp ) );
 		KEY( "Rmultimedia_max",	planet->multimedia_max,		fread_number( fp ) );
 		KEY( "Rmultimedia_buyprice",	planet->multimedia_buyprice,		fread_number( fp ) );
 		KEY( "Rmultimedia_sellprice",	planet->multimedia_sellprice,		fread_number( fp ) );
-		KEY( "Rfinance_plus",	planet->finance_plus,		fread_number( fp ) );
-		KEY( "Rfinance_minus",	planet->finance_minus,		fread_number( fp ) );
 		KEY( "Rfinance_amount",	planet->finance_amount,		fread_number( fp ) );
 		KEY( "Rfinance_min",	planet->finance_min,		fread_number( fp ) );
 		KEY( "Rfinance_max",	planet->finance_max,		fread_number( fp ) );
 		KEY( "Rfinance_buyprice",	planet->finance_buyprice,		fread_number( fp ) );
 		KEY( "Rfinance_sellprice",	planet->finance_sellprice,		fread_number( fp ) );
-		KEY( "Rproduct_plus",	planet->product_plus,		fread_number( fp ) );
-		KEY( "Rproduct_minus",	planet->product_minus,		fread_number( fp ) );
 		KEY( "Rproduct_amount",	planet->product_amount,		fread_number( fp ) );
 		KEY( "Rproduct_min",	planet->product_min,		fread_number( fp ) );
 		KEY( "Rproduct_max",	planet->product_max,		fread_number( fp ) );
@@ -747,6 +757,7 @@ void do_showplanet( CHAR_DATA *ch, char *argument )
     int pf = 0;
     int pc = 0;
     int pw = 0;
+    int sysnodes, entertainmax, multimediamax, financemax, productmax;
 
     if ( IS_NPC( ch ) )
     {
@@ -796,6 +807,13 @@ void do_showplanet( CHAR_DATA *ch, char *argument )
        pf = tempf / planet->size *  100;
     }
 
+    sysnodes = planet->size - planet->citysize - planet->wilderness - planet->farmland;
+
+	entertainmax = planet->entertain_plus - planet->entertain_minus;
+	multimediamax = planet->multimedia_plus - planet->multimedia_minus;
+	financemax = planet->finance_plus - planet->finance_minus;
+	productmax = planet->product_plus - planet->product_minus;
+
     ch_printf( ch, "&W%s\n\r", planet->name);
     if ( IS_IMMORTAL(ch) )
           ch_printf( ch, "&WFilename: &G%s\n\r", planet->filename);
@@ -806,15 +824,20 @@ void do_showplanet( CHAR_DATA *ch, char *argument )
                    planet->governed_by ? planet->governed_by->name : "" );
     ch_printf( ch, "&Wsize: &G%d\n\r",
                    planet->size );
-    ch_printf( ch, "&Wterminals: &G%d\n\r", pc ) ;
-    ch_printf( ch, "&Wdatabase: &G%d\n\r", pw ) ;
-    ch_printf( ch, "&Wsubservers: &G%d\n\r", pf ) ;
+    ch_printf( ch, "&Wterminals: &G%d\n\r", planet->citysize ) ;
+    ch_printf( ch, "&Wdatabase: &G%d\n\r", planet->wilderness ) ;
+    ch_printf( ch, "&Wsubservers: &G%d\n\r", planet->farmland ) ;
+    ch_printf( ch, "&Wsystem: &G%d\n\r", sysnodes ) ;
     ch_printf( ch, "&Wfirewalls: &G%d\n\r", planet->barracks );
     //ch_printf( ch, "&Wtowers: &G%d\n\r", planet->controls );
     ch_printf( ch, "&Wblack ICE: &G%d&W/%d\n\r", num_guards , planet->barracks*5 );
     ch_printf( ch, "&Wprograms: &G%d&W/%d\n\r", planet->population , max_population( planet ) );
     ch_printf( ch, "&Wcpu: &G%.2f\n\r",
                    planet->pop_support );
+    ch_printf( ch, "&Wentertaimment: &G%d\n\r", planet->entertain_amount ) ;
+    ch_printf( ch, "&Wmultimedia: &G%d\n\r", planet->multimedia_amount ) ;
+    ch_printf( ch, "&Wfinance: &G%d\n\r", planet->finance_amount ) ;
+    ch_printf( ch, "&Wproduct: &G%d\n\r", planet->product_amount ) ;
     ch_printf( ch, "&Wmonthly revenue: &G%ld\n\r",
                    get_taxes( planet) );
 
