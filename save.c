@@ -481,6 +481,22 @@ void fwrite_char( CHAR_DATA *ch, FILE *fp )
 	  fprintf( fp, ""
 			  "Qtaxnodes      %d\n",	ch->pcdata->qtaxnodes	);
 
+	if ( ch->pcdata->rentertain )
+	  fprintf( fp, ""
+			  "Rentertain      %d\n",	ch->pcdata->rentertain	);
+
+	if ( ch->pcdata->rmultimedia )
+	  fprintf( fp, ""
+			  "Rmultimedia      %d\n",	ch->pcdata->rmultimedia	);
+
+	if ( ch->pcdata->rfinance )
+	  fprintf( fp, ""
+			  "Rfinance      %d\n",	ch->pcdata->rfinance	);
+
+	if ( ch->pcdata->rproduct )
+	  fprintf( fp, ""
+			  "Rproduct      %d\n",	ch->pcdata->rproduct	);
+
 	if ( ch->pcdata->serverrevision )
 	  fprintf( fp, ""
 			  "Serverrevision      %d\n",	ch->pcdata->serverrevision	);
@@ -1344,6 +1360,10 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload )
 	    KEY( "Resistant",	ch->resistant,		fread_number( fp ) );
 	    KEY( "Restore_time",ch->pcdata->restore_time, fread_number( fp ) );
 	    KEY( "RoomConst",	ch->pcdata->roomconstruct, fread_number( fp ) );
+	    KEY( "Rentertain",	ch->pcdata->rentertain, fread_number( fp ) );
+	    KEY( "Rmultimedia",	ch->pcdata->rmultimedia, fread_number( fp ) );
+	    KEY( "Rfinance",	ch->pcdata->rfinance, fread_number( fp ) );
+	    KEY( "Rproduct",	ch->pcdata->rproduct, fread_number( fp ) );
 
 	    if ( !str_cmp( word, "Room" ) )
 	    {
