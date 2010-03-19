@@ -22,9 +22,9 @@ extern int top_r_vnum;
 
 const	char *	sector_name	[SECT_MAX]	=
 {
-		"system", "terminal", "unknown", "unknown", "unknown", "unknown", "unknown", "unkown",
+		"system", "terminal", "entertainment", "multimedia", "finance", "unknown", "unknown", "unkown",
 		"unknown", "unkown", "database", "unknown", "unknown", "unknown",
-		"unknown", "unknown", "shopping", "unknown", "database", "graveyard", "unknown",
+		"producivity", "unknown", "shopping", "unknown", "database", "graveyard", "unknown",
 		"firewall", "unknown", "unknown", "unknown", "subserver", "unknown"
 };
 
@@ -3452,14 +3452,56 @@ void do_propaganda ( CHAR_DATA *ch , char *argument )
 
 void  clear_roomtype( ROOM_INDEX_DATA * location )
 {
+
+	int nodelevel, baselevel;
+
 	if ( location->area && location->area->planet )
 	{
+
+		baselevel = location->level;
+
+		if ( baselevel == 0 )
+			nodelevel = 1;
+		else if (baselevel == 1 )
+			nodelevel = 2;
+		else if (baselevel == 2 )
+			nodelevel = 4;
+		else if (baselevel == 3 )
+			nodelevel = 8;
+		else if (baselevel == 4 )
+			nodelevel = 16;
+		else if (baselevel == 5 )
+			nodelevel = 32;
+		else
+			nodelevel = 1;
+
 		if ( location->sector_type == SECT_DESERT )
-			location->area->planet->citysize--;
+			location->area->planet->citysize = location->area->planet->citysize - nodelevel;
 		else if ( location->sector_type == SECT_FARMLAND )
-			location->area->planet->farmland--;
-		else if ( location->sector_type != SECT_DUNNO )
-			location->area->planet->wilderness--;
+			location->area->planet->farmland = location->area->planet->farmland - nodelevel;
+		else if ( location->sector_type == SECT_GLACIAL )
+			location->area->planet->wilderness = location->area->planet->wilderness - nodelevel;
+		else if ( location->sector_type == SECT_FIELD )
+		{
+			location->area->planet->entertain_plus = location->area->planet->entertain_plus - nodelevel;
+			location->area->planet->multimedia_minus = location->area->planet->multimedia_minus - nodelevel;
+		}
+		else if ( location->sector_type == SECT_FOREST )
+		{
+			location->area->planet->multimedia_plus = location->area->planet->multimedia_plus - nodelevel;
+			location->area->planet->entertain_minus = location->area->planet->entertain_minus - nodelevel;
+		}
+		else if ( location->sector_type == SECT_HILLS )
+		{
+			location->area->planet->finance_plus = location->area->planet->finance_plus - nodelevel;
+			location->area->planet->product_minus = location->area->planet->product_minus - nodelevel;
+		}
+		else if ( location->sector_type == SECT_SCRUB )
+		{
+			location->area->planet->product_plus = location->area->planet->product_plus - nodelevel;
+			location->area->planet->finance_minus = location->area->planet->finance_minus - nodelevel;
+		}
+
 
 		if ( IS_SET( location->room_flags , ROOM_BARRACKS ) )
 			location->area->planet->barracks--;
@@ -3635,6 +3677,8 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 	else if ( !str_cmp( argument, "entertain" ) )
 	{
 		location->sector_type = SECT_FIELD;
+		location->area->planet->entertain_plus++;
+		location->area->planet->multimedia_minus++;
 		strcpy( buf , ch->name );
 		strcat( buf , "&Y.&Centertainment" );
 		strcpy( bufa , "an entertainment repository node\n\r" );
@@ -3643,6 +3687,8 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 	else if ( !str_cmp( argument, "multimedia" ) )
 	{
 		location->sector_type = SECT_FOREST;
+		location->area->planet->multimedia_plus++;
+		location->area->planet->entertain_minus++;
 		strcpy( buf , ch->name );
 		strcat( buf , "&Y.&Cmultimedia" );
 		strcpy( bufa , "a multimedia repository node\n\r" );
@@ -3651,6 +3697,8 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 	else if ( !str_cmp( argument, "finance" ) )
 	{
 		location->sector_type = SECT_HILLS;
+		location->area->planet->finance_plus++;
+		location->area->planet->product_minus++;
 		strcpy( buf , ch->name );
 		strcat( buf , "&Y.&Cfinance" );
 		strcpy( bufa , "a finance repository node\n\r" );
@@ -3659,6 +3707,8 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 	else if ( !str_cmp( argument, "product" ) )
 	{
 		location->sector_type = SECT_SCRUB;
+		location->area->planet->product_plus++;
+		location->area->planet->finance_minus++;
 		strcpy( buf , ch->name );
 		strcat( buf , "&Y.&Cproductivity" );
 		strcpy( bufa , "a productivity repository node\n\r" );

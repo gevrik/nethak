@@ -27,7 +27,8 @@ void reset_all() {
 	OBJ_DATA * obj = NULL;
 	EXIT_DATA *xit;
 	bool found = FALSE;
-	int vnum, anumber, onum, nodelevel, mobvnum, mobgold;
+	int vnum, anumber, onum, nodelevel, mobvnum, mobgold, numguards;
+	int baselevel, entertainmax, multimediamax, financemax, productmax;
 	char buf[MAX_STRING_LENGTH];
 	char buf1[MAX_STRING_LENGTH];
 
@@ -119,49 +120,6 @@ void reset_all() {
 						SET_BIT( xit->exit_info , EX_LOCKED );
 				}
 
-			if (IS_SET(pRoomIndex->room_flags, ROOM_CONTROL )
-					&& pRoomIndex->area && pRoomIndex->area->planet
-					&& pRoomIndex->area->planet->starsystem
-					&& pRoomIndex->area->planet->governed_by) {
-				SPACE_DATA * system = pRoomIndex->area->planet->starsystem;
-				SHIP_DATA * ship;
-				int numpatrols = 0;
-				int numdestroyers = 0;
-				int numbattleships = 0;
-				int numcruisers = 0;
-				int fleetsize = 0;
-
-				for (ship = system->first_ship; ship; ship
-						= ship->next_in_starsystem)
-					if (!str_cmp(ship->owner,
-							pRoomIndex->area->planet->governed_by->name)
-							&& ship->type == MOB_SHIP) {
-						if (ship->model == MOB_DESTROYER)
-							numdestroyers++;
-						else if (ship->model == MOB_CRUISER)
-							numcruisers++;
-						else if (ship->model == MOB_BATTLESHIP)
-							numbattleships++;
-						else
-							numpatrols++;
-					}
-
-				fleetsize = 100 * numbattleships + 25 * numcruisers + 5
-						* numdestroyers + numpatrols;
-
-				if (fleetsize + 100 < pRoomIndex->area->planet->controls)
-					make_mob_ship(pRoomIndex->area->planet, MOB_BATTLESHIP);
-				else if (fleetsize + 25 < pRoomIndex->area->planet->controls
-						&& numcruisers < 5)
-					make_mob_ship(pRoomIndex->area->planet, MOB_CRUISER);
-				else if (fleetsize + 5 < pRoomIndex->area->planet->controls
-						&& numdestroyers < 5)
-					make_mob_ship(pRoomIndex->area->planet, MOB_DESTROYER);
-				else if (fleetsize < pRoomIndex->area->planet->controls
-						&& numpatrols < 5)
-					make_mob_ship(pRoomIndex->area->planet, MOB_PATROL);
-			}
-
 			if (IS_SET(pRoomIndex->room_flags, ROOM_TRADE ))
 				vnum = MOB_VNUM_TRADER;
 			if (IS_SET(pRoomIndex->room_flags, ROOM_SUPPLY ))
@@ -172,16 +130,8 @@ void reset_all() {
 				vnum = MOB_VNUM_WAITER;
 			if (IS_SET(pRoomIndex->room_flags, ROOM_GARAGE ))
 				vnum = MOB_VNUM_MECHANIC;
-			if (IS_SET(pRoomIndex->room_flags, ROOM_CONTROL ))
-				vnum = MOB_VNUM_CONTROLLER;
-			if (IS_SET(pRoomIndex->room_flags, ROOM_BAR ))
-				vnum = MOB_VNUM_BARTENDER;
-//			if (IS_SET(pRoomIndex->room_flags, ROOM_SHIPYARD ))
-//				vnum = MOB_VNUM_TECHNICIAN;
 			if (IS_SET(pRoomIndex->room_flags, ROOM_EMPLOYMENT ))
 				vnum = MOB_VNUM_JOB_OFFICER;
-			//if ( IS_SET(pRoomIndex->room_flags, ROOM_INFO ) )
-			//     vnum = 32;
 
 			if (vnum > 0) {
 				found = FALSE;
@@ -199,6 +149,7 @@ void reset_all() {
 						bug("Reset_all: Missing mob (%d)", vnum);
 						return;
 					}
+
 					mob = create_mobile(pMobIndex);
 					SET_BIT ( mob->act , ACT_CITIZEN );
 					if (room_is_dark(pRoomIndex))
@@ -316,92 +267,11 @@ void reset_all() {
 						}
 					}
 
-					if (vnum == MOB_VNUM_WAITER) {
-						if ((pObjIndex = get_obj_index(OBJ_VNUM_APPETIZER))) {
-							obj = create_object(pObjIndex, 1);
-							SET_BIT(obj->extra_flags, ITEM_INVENTORY);
-							obj = obj_to_char(obj, mob);
-						}
-						if ((pObjIndex = get_obj_index(OBJ_VNUM_SALAD))) {
-							obj = create_object(pObjIndex, 1);
-							SET_BIT(obj->extra_flags, ITEM_INVENTORY);
-							obj = obj_to_char(obj, mob);
-						}
-						if ((pObjIndex = get_obj_index(OBJ_VNUM_LUNCH))) {
-							obj = create_object(pObjIndex, 1);
-							SET_BIT(obj->extra_flags, ITEM_INVENTORY);
-							obj = obj_to_char(obj, mob);
-						}
-						if ((pObjIndex = get_obj_index(OBJ_VNUM_DINNER))) {
-							obj = create_object(pObjIndex, 1);
-							SET_BIT(obj->extra_flags, ITEM_INVENTORY);
-							obj = obj_to_char(obj, mob);
-						}
-						if ((pObjIndex = get_obj_index(OBJ_VNUM_GLASSOFWATER))) {
-							obj = create_object(pObjIndex, 1);
-							SET_BIT(obj->extra_flags, ITEM_INVENTORY);
-							obj = obj_to_char(obj, mob);
-						}
-						if ((pObjIndex = get_obj_index(OBJ_VNUM_COFFEE))) {
-							obj = create_object(pObjIndex, 1);
-							SET_BIT(obj->extra_flags, ITEM_INVENTORY);
-							obj = obj_to_char(obj, mob);
-						}
-					}
-
-					if (vnum == MOB_VNUM_BARTENDER) {
-						if ((pObjIndex = get_obj_index(OBJ_VNUM_BEER))) {
-							obj = create_object(pObjIndex, 1);
-							SET_BIT(obj->extra_flags, ITEM_INVENTORY);
-							obj = obj_to_char(obj, mob);
-						}
-						if ((pObjIndex = get_obj_index(OBJ_VNUM_WHISKEY))) {
-							obj = create_object(pObjIndex, 1);
-							SET_BIT(obj->extra_flags, ITEM_INVENTORY);
-							obj = obj_to_char(obj, mob);
-						}
-						if ((pObjIndex = get_obj_index(OBJ_VNUM_GLASSOFWATER))) {
-							obj = create_object(pObjIndex, 1);
-							SET_BIT(obj->extra_flags, ITEM_INVENTORY);
-							obj = obj_to_char(obj, mob);
-						}
-						if ((pObjIndex = get_obj_index(OBJ_VNUM_COFFEE))) {
-							obj = create_object(pObjIndex, 1);
-							SET_BIT(obj->extra_flags, ITEM_INVENTORY);
-							obj = obj_to_char(obj, mob);
-						}
-					}
 				}
 
 			}
 
-			//        if ( IS_SET( pRoomIndex->room_flags, ROOM_MAIL ) )
-			//        {
-			//   	   if ( !(pObjIndex = get_obj_index(OBJ_VNUM_MAIL_TERMINAL)) )
-			//   	   {
-			//             bug( "Reset_all: Missing mail terminal (%d)", OBJ_VNUM_MAIL_TERMINAL );
-			//             return;
-			//   	   }
-			//   	   if ( count_obj_list(pObjIndex, pRoomIndex->first_content) <= 0 )
-			//   	   {
-			//      	     obj = create_object(pObjIndex, 1);
-			//             obj_to_room(obj, pRoomIndex);
-			//   	   }
-			//        }
-			//
-			//        if ( IS_SET( pRoomIndex->room_flags, ROOM_INFO ) )
-			//        {
-			//   	   if ( !(pObjIndex = get_obj_index(OBJ_VNUM_MESSAGE_TERMINAL)) )
-			//   	   {
-			//             bug( "Reset_all: Missing message terminal (%d)", OBJ_VNUM_MESSAGE_TERMINAL );
-			//             return;
-			//   	   }
-			//   	   if ( count_obj_list(pObjIndex, pRoomIndex->first_content) <= 0 )
-			//   	   {
-			//      	     obj = create_object(pObjIndex, 1);
-			//             obj_to_room(obj, pRoomIndex);
-			//   	   }
-			//        }
+			// firewalls
 
 			if (IS_SET( pRoomIndex->room_flags, ROOM_BARRACKS )
 					&& pRoomIndex->area && pRoomIndex->area->planet) {
@@ -462,7 +332,7 @@ void reset_all() {
 					&& pRoomIndex->area && pRoomIndex->area->planet) {
 				char tmpbuf[MAX_STRING_LENGTH];
 				CHAR_DATA * rch;
-				int numguards = 0;
+				numguards = 0;
 
 				if (!(pMobIndex = get_mob_index(MOB_VNUM_GUARD))) {
 					bug("Reset_all: Missing default guard (%d)", vnum);
@@ -499,6 +369,138 @@ void reset_all() {
 
 			}
 
+			// repos
+
+			if (pRoomIndex->sector_type == SECT_FIELD
+					|| pRoomIndex->sector_type == SECT_FOREST
+					|| pRoomIndex->sector_type == SECT_HILLS
+					|| pRoomIndex->sector_type == SECT_SCRUB ) {
+
+			baselevel = pRoomIndex->level;
+
+			if ( baselevel == 0 )
+			nodelevel = 1;
+			else if ( baselevel == 1 )
+			nodelevel = 2;
+			else if ( baselevel == 2 )
+			nodelevel = 4;
+			else if ( baselevel == 3 )
+			nodelevel = 8;
+			else if ( baselevel == 4 )
+			nodelevel = 16;
+			else if ( baselevel == 5 )
+			nodelevel = 32;
+
+			if (baselevel < 1)
+				baselevel = 1;
+
+			entertainmax = pRoomIndex->area->planet->entertain_plus - pRoomIndex->area->planet->entertain_minus;
+			multimediamax = pRoomIndex->area->planet->multimedia_plus - pRoomIndex->area->planet->multimedia_minus;
+			financemax = pRoomIndex->area->planet->finance_plus - pRoomIndex->area->planet->finance_minus;
+			productmax = pRoomIndex->area->planet->product_plus - pRoomIndex->area->planet->product_minus;
+
+			numguards = 0;
+			CHAR_DATA * rch;
+
+			switch (pRoomIndex->sector_type) {
+
+			default:
+				continue;
+				break;
+
+			case SECT_FIELD:
+
+				if ( pRoomIndex->area->planet->entertain_count + nodelevel > entertainmax )
+					continue;
+
+				vnum = 56;
+
+				for (rch = pRoomIndex->first_person; rch; rch
+						= rch->next_in_room)
+					if (IS_NPC(rch) && rch->pIndexData && rch->pIndexData->vnum
+							== vnum)
+						numguards++;
+
+				if (numguards >= 1)
+					continue;
+
+				pRoomIndex->area->planet->entertain_count += nodelevel;
+			break;
+
+			case SECT_FOREST:
+
+				if ( pRoomIndex->area->planet->multimedia_count + nodelevel > multimediamax )
+					continue;
+
+				vnum = 57;
+
+				for (rch = pRoomIndex->first_person; rch; rch
+						= rch->next_in_room)
+					if (IS_NPC(rch) && rch->pIndexData && rch->pIndexData->vnum
+							== vnum)
+						numguards++;
+
+				if (numguards >= 1)
+					continue;
+
+				pRoomIndex->area->planet->multimedia_count += nodelevel;
+			break;
+			case SECT_HILLS:
+
+				if ( pRoomIndex->area->planet->finance_count + nodelevel > financemax )
+					continue;
+
+				vnum = 58;
+
+				for (rch = pRoomIndex->first_person; rch; rch
+						= rch->next_in_room)
+					if (IS_NPC(rch) && rch->pIndexData && rch->pIndexData->vnum
+							== vnum)
+						numguards++;
+
+				if (numguards >= 1)
+					continue;
+
+				pRoomIndex->area->planet->finance_count += nodelevel;
+			break;
+			case SECT_SCRUB:
+
+				if ( pRoomIndex->area->planet->product_count + nodelevel > productmax )
+					continue;
+
+				vnum = 59;
+
+				for (rch = pRoomIndex->first_person; rch; rch
+						= rch->next_in_room)
+					if (IS_NPC(rch) && rch->pIndexData && rch->pIndexData->vnum
+							== vnum)
+						numguards++;
+
+				if (numguards >= 1)
+					continue;
+				pRoomIndex->area->planet->product_count += nodelevel;
+			break;
+			}
+
+			if (!(pMobIndex = get_mob_index(vnum))) {
+				bug("Reset_all: Missing mob (%d)", vnum);
+				return;
+			}
+
+				mob = create_mobile(pMobIndex);
+				if (room_is_dark(pRoomIndex))
+					SET_BIT(mob->affected_by, AFF_INFRARED);
+				char_to_room(mob, pRoomIndex);
+				mob->top_level = 20 * baselevel;
+				mob->hit = 20 * baselevel;
+				mob->max_hit = 20 * baselevel;
+				mob->armor = -20 * baselevel;
+				mob->damroll = 2 * baselevel;
+				mob->hitroll = 4 * baselevel;
+				continue;
+
+		}
+
 			/* hidden food & resources */
 
 			if (!pRoomIndex->area || !pRoomIndex->area->planet)
@@ -506,14 +508,11 @@ void reset_all() {
 
 			anumber = number_bits(9);
 
-			if (pRoomIndex->sector_type != SECT_CITY && pRoomIndex->sector_type
-					!= SECT_DESERT && pRoomIndex->sector_type
-					!= SECT_WATER_NOSWIM && pRoomIndex->sector_type
-					!= SECT_WATER_SWIM && pRoomIndex->sector_type
-					!= SECT_UNDERWATER && pRoomIndex->sector_type != SECT_DUNNO
-					&& pRoomIndex->sector_type != SECT_AIR
-					&& pRoomIndex->sector_type != SECT_INSIDE
-					&& !pRoomIndex->last_content && number_bits(3) == 0) {
+			if ( ( pRoomIndex->sector_type == SECT_FARMLAND && !pRoomIndex->last_content && number_bits(3) == 0 )
+			|| ( pRoomIndex->sector_type == SECT_RAINFOREST && !pRoomIndex->last_content && number_bits(3) == 0 )
+			|| ( pRoomIndex->sector_type == SECT_GLACIAL && !pRoomIndex->last_content && number_bits(3) == 0 ) )
+			{
+
 				switch (pRoomIndex->sector_type) {
 				default:
 					continue;
@@ -660,35 +659,6 @@ void reset_all() {
 
 					break;
 
-				case SECT_BRUSH:
-					if (anumber <= 1)
-						vnum = OBJ_VNUM_ROOT;
-					else
-						vnum = OBJ_VNUM_HEMP;
-					break;
-
-				case SECT_JUNGLE:
-					if (anumber <= 1)
-						vnum = OBJ_VNUM_FRUIT;
-					else
-						vnum = OBJ_VNUM_RESIN;
-					break;
-
-				case SECT_MOUNTAIN:
-				case SECT_UNDERGROUND:
-				case SECT_ROCKY:
-				case SECT_TUNDRA:
-				case SECT_VOLCANIC:
-					if (anumber == 0)
-						vnum = OBJ_VNUM_MUSHROOM;
-					else if (anumber == 1)
-						vnum = OBJ_VNUM_CRYSTAL;
-					else if (anumber == 2)
-						vnum = OBJ_VNUM_METAL;
-					else
-						vnum = OBJ_VNUM_GOLD;
-					break;
-
 				case SECT_RAINFOREST:
 				case SECT_GLACIAL:
 
@@ -707,14 +677,6 @@ void reset_all() {
 						vnum = number_range(75, 99);
 
 					break;
-
-				case SECT_OCEANFLOOR:
-					if (anumber <= 1)
-						vnum = OBJ_VNUM_SEAWEED;
-					else
-						vnum = OBJ_VNUM_CRYSTAL;
-					break;
-				}
 
 				if (!(pObjIndex = get_obj_index(vnum))) {
 					bug("Reset_all: Missing obj (%d)", vnum);
@@ -739,6 +701,7 @@ void reset_all() {
 				obj_to_room(obj, pRoomIndex);
 
 			}
+			}
 
 			/* random mobs start here */
 
@@ -749,11 +712,13 @@ void reset_all() {
 				continue;
 
 			if (pRoomIndex->sector_type == SECT_DESERT) {
+
 				if (pRoomIndex->area->planet->population >= max_population(
 						pRoomIndex->area->planet))
 					continue;
 
 				if (number_bits(5) == 0) {
+
 					if ((pMobIndex = get_mob_index(MOB_VNUM_VENDOR))) {
 						int rep;
 
@@ -792,6 +757,7 @@ void reset_all() {
 						continue;
 					}
 				}
+
 				if (number_bits(6) == 0) {
 					int mnum;
 
@@ -806,6 +772,7 @@ void reset_all() {
 						mnum = MOB_VNUM_THIEF;
 						break;
 					}
+
 					if ((pMobIndex = get_mob_index(mnum))) {
 						mob = create_mobile(pMobIndex);
 						SET_BIT ( mob->act , ACT_CITIZEN );
@@ -815,8 +782,6 @@ void reset_all() {
 					}
 				}
 
-
-//				switch (number_bits(4)) {
 				switch ( pRoomIndex->level ) {
 					default:
 						mobvnum = 60;
@@ -858,6 +823,7 @@ void reset_all() {
 					bug("Reset_all: Missing default user (%d)", mobvnum);
 					return;
 				}
+
 				mob = create_mobile(pMobIndex);
 				SET_BIT ( mob->act , ACT_CITIZEN );
 				mob->sex = number_bits(1) + 1;
@@ -877,76 +843,26 @@ void reset_all() {
 			anumber = number_bits(3);
 
 			switch (pRoomIndex->sector_type) {
+
 			default:
 				continue;
 				break;
 
-			case SECT_WATER_SWIM:
-				if (anumber == 0)
-					vnum = MOB_VNUM_INSECT;
-				else if (anumber == 1)
-					vnum = MOB_VNUM_BIRD;
-				else
-					vnum = MOB_VNUM_FISH;
-				break;
 
-			case SECT_OCEANFLOOR:
-			case SECT_UNDERWATER:
-				vnum = MOB_VNUM_FISH;
-				break;
-
-			case SECT_AIR:
+			case SECT_GLACIAL:
+				anumber = number_range(0, 5);
 				if (anumber == 0)
-					vnum = MOB_VNUM_INSECT;
-				else
-					vnum = MOB_VNUM_BIRD;
-				break;
-
-			case SECT_VOLCANIC:
-			case SECT_UNDERGROUND:
-				if (anumber == 0)
-					vnum = MOB_VNUM_INSECT;
-				else
-					vnum = MOB_VNUM_SCAVENGER;
-				break;
-
-			case SECT_MOUNTAIN:
-			case SECT_ROCKY:
-				if (anumber == 0)
-					vnum = MOB_VNUM_INSECT;
-				else if (anumber == 1)
 					vnum = MOB_VNUM_SMALL_ANIMAL;
-				else if (anumber == 2)
-					vnum = MOB_VNUM_SCAVENGER;
-				else if (anumber == 3)
-					vnum = MOB_VNUM_PREDITOR;
-				else
-					vnum = MOB_VNUM_BIRD;
-				break;
-
-			case SECT_BRUSH:
-			case SECT_STEPPE:
-				if (anumber == 0)
-					vnum = MOB_VNUM_INSECT;
 				else if (anumber == 1)
 					vnum = MOB_VNUM_BIRD;
 				else if (anumber == 2)
 					vnum = MOB_VNUM_SCAVENGER;
 				else if (anumber == 3)
 					vnum = MOB_VNUM_PREDITOR;
+				else if (anumber == 4)
+					vnum = MOB_VNUM_DATAMINER;
 				else
-					vnum = MOB_VNUM_SMALL_ANIMAL;
-				break;
-
-			case SECT_TUNDRA:
-				if (anumber == 0)
-					vnum = MOB_VNUM_SMALL_ANIMAL;
-				else if (anumber == 2)
-					vnum = MOB_VNUM_SCAVENGER;
-				else if (anumber == 3)
-					vnum = MOB_VNUM_PREDITOR;
-				else
-					vnum = MOB_VNUM_BIRD;
+					vnum = MOB_VNUM_INSECT;
 				break;
 
 			case SECT_RAINFOREST:
@@ -954,7 +870,7 @@ void reset_all() {
 				if (pRoomIndex->level == 0)
 				{
 					CHAR_DATA * rch;
-					int numguards = 0;
+					numguards = 0;
 					for (rch = pRoomIndex->first_person; rch; rch
 							= rch->next_in_room)
 						if (IS_NPC(rch) && rch->pIndexData && rch->pIndexData->vnum
@@ -1145,7 +1061,7 @@ void reset_all() {
 				else if (pRoomIndex->level == 1)
 				{
 					CHAR_DATA * rch;
-					int numguards = 0;
+					numguards = 0;
 					for (rch = pRoomIndex->first_person; rch; rch
 							= rch->next_in_room)
 						if (IS_NPC(rch) && rch->pIndexData && rch->pIndexData->vnum
@@ -1478,7 +1394,7 @@ void reset_all() {
 				else if (pRoomIndex->level == 2)
 				{
 					CHAR_DATA * rch;
-					int numguards = 0;
+					numguards = 0;
 					for (rch = pRoomIndex->first_person; rch; rch
 							= rch->next_in_room)
 						if (IS_NPC(rch) && rch->pIndexData && rch->pIndexData->vnum
@@ -1805,42 +1721,13 @@ void reset_all() {
 			}
 				break;
 
-			case SECT_JUNGLE:
-			case SECT_WETLANDS:
-				if (anumber == 0)
-					vnum = MOB_VNUM_SMALL_ANIMAL;
-				else if (anumber == 1)
-					vnum = MOB_VNUM_BIRD;
-				else if (anumber == 2)
-					vnum = MOB_VNUM_SCAVENGER;
-				else if (anumber == 3)
-					vnum = MOB_VNUM_PREDITOR;
-				else
-					vnum = MOB_VNUM_INSECT;
-				break;
-
-			case SECT_GLACIAL:
-				anumber = number_range(0, 5);
-				if (anumber == 0)
-					vnum = MOB_VNUM_SMALL_ANIMAL;
-				else if (anumber == 1)
-					vnum = MOB_VNUM_BIRD;
-				else if (anumber == 2)
-					vnum = MOB_VNUM_SCAVENGER;
-				else if (anumber == 3)
-					vnum = MOB_VNUM_PREDITOR;
-				else if (anumber == 4)
-					vnum = MOB_VNUM_DATAMINER;
-				else
-					vnum = MOB_VNUM_INSECT;
-				break;
-
 			}
 
 			if (!(pMobIndex = get_mob_index(vnum))) {
 				bug("Reset_all: Missing mob (%d)", vnum);
 				return;
 			}
+
 			mob = create_mobile(pMobIndex);
 			REMOVE_BIT ( mob->act , ACT_CITIZEN );
 			if (room_is_dark(pRoomIndex))
@@ -1848,9 +1735,8 @@ void reset_all() {
 			char_to_room(mob, pRoomIndex);
 			pRoomIndex->area->planet->wildlife++;
 
-		}
-	}
-
+			}
+			}
 }
 
 SHIP_DATA * make_mob_ship(PLANET_DATA *planet, int model) {

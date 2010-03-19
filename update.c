@@ -707,6 +707,29 @@ void update_taxnodes( void )
     }
 }
 
+void update_repos( void )
+{
+     PLANET_DATA *planet;
+     int entertainmax, multimediamax, financemax, productmax;
+
+    for ( planet = first_planet; planet; planet = planet->next )
+    {
+
+    	entertainmax = planet->entertain_plus - planet->entertain_minus;
+    	multimediamax = planet->multimedia_plus - planet->multimedia_minus;
+    	financemax = planet->finance_plus - planet->finance_minus;
+    	productmax = planet->product_plus - planet->product_minus;
+
+    	planet->entertain_amount = planet->entertain_amount + entertainmax;
+    	planet->multimedia_amount = planet->multimedia_amount + multimediamax;
+    	planet->finance_amount = planet->finance_amount + financemax;
+    	planet->product_amount = planet->product_amount + productmax;
+
+        save_planet(planet);
+
+    }
+
+}
 
 /*
  * Update the weather.
@@ -1769,6 +1792,7 @@ void update_handler( void )
 	pulse_taxes	= PULSE_TAXES ;
 	bank_update     ( );
 	update_taxes	( );
+	update_repos();
     }
 
     if ( --pulse_mobile   <= 0 )
@@ -1781,6 +1805,7 @@ void update_handler( void )
     {
        pulse_space    = PULSE_SPACE;
        //update_space  ( );
+       //update_repos();
        who_html_update ( );
     }
 

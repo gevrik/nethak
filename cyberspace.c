@@ -200,13 +200,16 @@ void do_homerecall( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
-	if ( !IS_SET( ch->in_room->room_flags, ROOM_SAFE ) && !IS_SET( ch->in_room->room_flags, ROOM_NO_MOB )
-			&& !IS_SET( ch->in_room->room_flags, ROOM_BANK ) && !IS_SET( ch->in_room->room_flags, ROOM_HOTEL)
-			&& !IS_SET( ch->in_room->room_flags, ROOM_CAN_LAND ) && !IS_SET( ch->in_room->room_flags, ROOM_PUBLICIO)
-			&& !IS_SET( ch->in_room->room_flags, ROOM_EMPLOYMENT) )
+	if ( get_age(ch) <= 20 )
 	{
-		send_to_char( "> &Rfind a safe node to connect home&w\n\r", ch );
-		return;
+		if ( !IS_SET( ch->in_room->room_flags, ROOM_SAFE ) && !IS_SET( ch->in_room->room_flags, ROOM_NO_MOB )
+				&& !IS_SET( ch->in_room->room_flags, ROOM_BANK ) && !IS_SET( ch->in_room->room_flags, ROOM_HOTEL)
+				&& !IS_SET( ch->in_room->room_flags, ROOM_CAN_LAND ) && !IS_SET( ch->in_room->room_flags, ROOM_PUBLICIO)
+				&& !IS_SET( ch->in_room->room_flags, ROOM_EMPLOYMENT) )
+		{
+			send_to_char( "> &Rfind a safe node to connect home&w\n\r", ch );
+			return;
+		}
 	}
 
 	if ( ch->in_room->vnum <= 20 )
@@ -3356,25 +3359,228 @@ void do_nodeupgrade( CHAR_DATA *ch, char *argument )
     send_to_char("> &Rsomething went wrong (contact Wintermute)&w\n\r", ch );
     return;
     break;
+
     case 1:
     send_to_char("> &Wnode upgraded to:&w &Ggreen&w\n\r", ch );
     location->level = 1;
+
+		switch( location->sector_type) {
+
+		default:
+			break;
+
+		case SECT_DESERT:
+				location->area->planet->citysize++;
+		break;
+
+		case SECT_FARMLAND:
+				location->area->planet->farmland++;
+		break;
+
+		case SECT_GLACIAL:
+				location->area->planet->wilderness++;
+		break;
+
+		case SECT_FIELD:
+			location->area->planet->entertain_plus++;
+			location->area->planet->multimedia_minus++;
+			break;
+
+		case SECT_FOREST:
+				location->area->planet->multimedia_plus++;
+				location->area->planet->entertain_minus++;
+			break;
+
+		case SECT_HILLS:
+				location->area->planet->finance_plus++;
+				location->area->planet->product_minus++;
+				break;
+
+		case SECT_SCRUB:
+				location->area->planet->product_plus++;
+				location->area->planet->finance_minus++;
+		break;
+
+		}
+
     break;
     case 2:
     send_to_char("> &Wnode upgraded to:&w &Oorange&w\n\r", ch );
     location->level = 2;
+
+	switch( location->sector_type) {
+
+	default:
+		break;
+
+	case SECT_DESERT:
+			location->area->planet->citysize += 2;
+	break;
+
+	case SECT_FARMLAND:
+			location->area->planet->farmland += 2;
+	break;
+
+	case SECT_GLACIAL:
+			location->area->planet->wilderness += 2;
+	break;
+
+	case SECT_FIELD:
+		location->area->planet->entertain_plus += 2;
+		location->area->planet->multimedia_minus += 2;
+		break;
+
+	case SECT_FOREST:
+			location->area->planet->multimedia_plus += 2;
+			location->area->planet->entertain_minus += 2;
+		break;
+
+	case SECT_HILLS:
+			location->area->planet->finance_plus += 2;
+			location->area->planet->product_minus += 2;
+			break;
+
+	case SECT_SCRUB:
+			location->area->planet->product_plus += 2;
+			location->area->planet->finance_minus += 2;
+	break;
+
+	}
+
     break;
     case 3:
     send_to_char("> &Wnode upgraded to:&w &Rred&w\n\r", ch );
     location->level = 3;
+
+	switch( location->sector_type) {
+
+	default:
+		break;
+
+	case SECT_DESERT:
+			location->area->planet->citysize += 4;
+	break;
+
+	case SECT_FARMLAND:
+			location->area->planet->farmland += 4;
+	break;
+
+	case SECT_GLACIAL:
+			location->area->planet->wilderness += 4;
+	break;
+
+	case SECT_FIELD:
+		location->area->planet->entertain_plus += 4;
+		location->area->planet->multimedia_minus += 4;
+		break;
+
+	case SECT_FOREST:
+			location->area->planet->multimedia_plus += 4;
+			location->area->planet->entertain_minus += 4;
+		break;
+
+	case SECT_HILLS:
+			location->area->planet->finance_plus += 4;
+			location->area->planet->product_minus += 4;
+			break;
+
+	case SECT_SCRUB:
+			location->area->planet->product_plus += 4;
+			location->area->planet->finance_minus += 4;
+	break;
+
+	}
+
 	break;
     case 4:
     send_to_char("> &Wnode upgraded to:&w &pultra-violet&w\n\r", ch );
     location->level = 4;
+
+	switch( location->sector_type) {
+
+	default:
+		break;
+
+	case SECT_DESERT:
+			location->area->planet->citysize += 8;
+	break;
+
+	case SECT_FARMLAND:
+			location->area->planet->farmland += 8;
+	break;
+
+	case SECT_GLACIAL:
+			location->area->planet->wilderness += 8;
+	break;
+
+	case SECT_FIELD:
+		location->area->planet->entertain_plus += 8;
+		location->area->planet->multimedia_minus += 8;
+		break;
+
+	case SECT_FOREST:
+			location->area->planet->multimedia_plus += 8;
+			location->area->planet->entertain_minus += 8;
+		break;
+
+	case SECT_HILLS:
+			location->area->planet->finance_plus += 8;
+			location->area->planet->product_minus += 8;
+			break;
+
+	case SECT_SCRUB:
+			location->area->planet->product_plus += 8;
+			location->area->planet->finance_minus += 8;
+	break;
+
+	}
+
+
     break;
     case 5:
     send_to_char("> &Wnode upgraded to:&w &zblack&w\n\r", ch );
     location->level = 5;
+
+	switch( location->sector_type) {
+
+	default:
+		break;
+
+	case SECT_DESERT:
+			location->area->planet->citysize += 16;
+	break;
+
+	case SECT_FARMLAND:
+			location->area->planet->farmland += 16;
+	break;
+
+	case SECT_GLACIAL:
+			location->area->planet->wilderness += 16;
+	break;
+
+	case SECT_FIELD:
+		location->area->planet->entertain_plus += 16;
+		location->area->planet->multimedia_minus += 16;
+		break;
+
+	case SECT_FOREST:
+			location->area->planet->multimedia_plus += 16;
+			location->area->planet->entertain_minus += 16;
+		break;
+
+	case SECT_HILLS:
+			location->area->planet->finance_plus += 16;
+			location->area->planet->product_minus += 16;
+			break;
+
+	case SECT_SCRUB:
+			location->area->planet->product_plus += 16;
+			location->area->planet->finance_minus += 16;
+	break;
+
+	}
+
+
     break;
     case 6:
     send_to_char("> &Rnode already at maximum level&w\n\r", ch );
