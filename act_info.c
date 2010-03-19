@@ -48,6 +48,37 @@ void    show_condition          args( ( CHAR_DATA *ch, CHAR_DATA *victim ) );
 bool 	is_online		args( ( char * argument ) );
 
 
+/**********************************************************************
+*   Function to format big numbers, so you can easy understand it.    *
+*    Added by Desden, el Chaman Tibetano (J.L.Sogorb) in Oct-1998     *
+*                Email: jose@luisso.net                     *
+*								                      *
+**********************************************************************/
+
+char *num_punct(int foo)
+{
+int index,index_new,rest;
+char buf[32];
+static char buf_new[32];
+
+sprintf(buf,"%d",foo);
+rest = strlen(buf)%3;
+
+for (index=index_new=0;index<strlen(buf);index++,index_new++)
+  {
+   if (index!=0 && (index-rest)%3==0 )
+    {
+     buf_new[index_new]='.';
+     index_new++;
+     buf_new[index_new]=buf[index];
+    }
+  else
+  buf_new[index_new] = buf[index];
+  }
+buf_new[index_new]='\0';
+return buf_new;
+}
+
 char *format_obj_to_char( OBJ_DATA *obj, CHAR_DATA *ch, bool fShort )
 {
     static char buf[MAX_STRING_LENGTH];

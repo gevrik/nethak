@@ -1878,7 +1878,7 @@ void do_auction (CHAR_DATA *ch, char *argument)
     if ( !IS_SET( ch->in_room->room_flags , ROOM_AUCTION ) )
     {
        set_char_color ( AT_LBLUE, ch );
-       send_to_char ( "\n\r> you must go to an auction hall to do that\n\r", ch );
+       send_to_char ( "\n\r> you must go to an auction node to do that\n\r", ch );
        return;
     }
 
@@ -2115,7 +2115,6 @@ void do_auction (CHAR_DATA *ch, char *argument)
 /* insert any more item types here... items with a timer MAY NOT BE
    AUCTIONED!
 */
-    case ITEM_LIGHT:
     case ITEM_RARE_METAL:
     case ITEM_CRYSTAL:
     case ITEM_FABRIC:

@@ -3476,11 +3476,11 @@ void  clear_roomtype( ROOM_INDEX_DATA * location )
 			nodelevel = 1;
 
 		if ( location->sector_type == SECT_DESERT )
-			location->area->planet->citysize = location->area->planet->citysize - nodelevel;
+			location->area->planet->citysize--;// = location->area->planet->citysize - nodelevel;
 		else if ( location->sector_type == SECT_FARMLAND )
-			location->area->planet->farmland = location->area->planet->farmland - nodelevel;
+			location->area->planet->farmland--; // = location->area->planet->farmland - nodelevel;
 		else if ( location->sector_type == SECT_GLACIAL )
-			location->area->planet->wilderness = location->area->planet->wilderness - nodelevel;
+			location->area->planet->wilderness--; // = location->area->planet->wilderness - nodelevel;
 		else if ( location->sector_type == SECT_FIELD )
 		{
 			location->area->planet->entertain_plus = location->area->planet->entertain_plus - nodelevel;
@@ -3789,7 +3789,6 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 				return;
 			}
 
-		location->area->planet->citysize++;
 		location->sector_type = SECT_INSIDE;
 		SET_BIT( location->room_flags , ROOM_EMPTY_HOME );
 		SET_BIT( location->room_flags , ROOM_NO_MOB );
@@ -3799,7 +3798,6 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 	}
 	else if ( !str_cmp( argument, "bank" ) )
 	{
-		location->area->planet->citysize++;
 		location->sector_type = SECT_INSIDE;
 		SET_BIT( location->room_flags , ROOM_BANK );
 		SET_BIT( location->room_flags , ROOM_SAFE );
@@ -3810,7 +3808,6 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 	else if ( !str_cmp( argument, "agent" ) )
 	{
 
-		location->area->planet->citysize++;
 		location->sector_type = SECT_INSIDE;
 		SET_BIT( location->room_flags , ROOM_HOTEL );
 		SET_BIT( location->room_flags , ROOM_SAFE );
@@ -3833,7 +3830,6 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 				return;
 			}
 
-		location->area->planet->citysize++;
 		location->sector_type = SECT_CITY;
 		SET_BIT( location->room_flags , ROOM_CAN_LAND );
 		strcpy( buf , ch->name );
@@ -3850,7 +3846,6 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 				return;
 			}
 
-		location->area->planet->citysize++;
 		location->sector_type = SECT_CITY;
 		SET_BIT( location->room_flags , ROOM_PUBLICIO );
 		SET_BIT( location->room_flags , ROOM_NO_MOB );
@@ -3861,7 +3856,6 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 	}
 	else if ( !str_cmp( argument, "trade" ) )
 	{
-		location->area->planet->citysize++;
 		location->sector_type = SECT_SAVANNA;
 		SET_BIT( location->room_flags , ROOM_SAFE );
 		SET_BIT( location->room_flags , ROOM_TRADE );
@@ -3872,7 +3866,6 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 	}
 	else if ( !str_cmp( argument, "supply" ) )
 	{
-		location->area->planet->citysize++;
 		location->sector_type = SECT_SAVANNA;
 		SET_BIT( location->room_flags , ROOM_SAFE );
 		SET_BIT( location->room_flags , ROOM_SUPPLY );
@@ -3883,7 +3876,6 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 	}
 	else if ( !str_cmp( argument, "pawn" ) )
 	{
-		location->area->planet->citysize++;
 		location->sector_type = SECT_SAVANNA;
 		SET_BIT( location->room_flags , ROOM_SAFE );
 		SET_BIT( location->room_flags , ROOM_PAWN );
@@ -3895,7 +3887,6 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 
 	else if ( !str_cmp( argument, "coding" ) )
 	{
-		location->area->planet->citysize++;
 		location->sector_type = SECT_INSIDE;
 		SET_BIT( location->room_flags , ROOM_SAFE );
 		SET_BIT( location->room_flags , ROOM_RESTAURANT );
@@ -3941,7 +3932,6 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 				return;
 			}
 
-		location->area->planet->citysize++;
 		location->sector_type = SECT_SWAMP;
 		SET_BIT( location->room_flags , ROOM_BARRACKS );
 		// if( location->area->planet->barracks > 4 )
@@ -3954,7 +3944,6 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 
 	else if ( !str_cmp( argument, "employment" ) )
 	{
-		location->area->planet->citysize++;
 		location->sector_type = SECT_INSIDE;
 		SET_BIT( location->room_flags , ROOM_EMPLOYMENT );
 		SET_BIT( location->room_flags , ROOM_SAFE );

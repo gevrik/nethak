@@ -38,6 +38,8 @@ void silent_end();
 void write_fame_list(void);
 void load_hall_of_fame(void);
 
+char *  num_punct        args( (  int foo ) );
+
 /*
  * Short scalar types.
  * Diavolo reports AIX compiler has bugs with short types.
@@ -3103,6 +3105,12 @@ DECLARE_DO_FUN(	do_sn_checkout	);
 DECLARE_DO_FUN(	do_sn_audit	);
 DECLARE_DO_FUN(	do_sn_shortcut	);
 
+// cyberspace
+
+DECLARE_DO_FUN(	do_cy_rsell	);
+DECLARE_DO_FUN(	do_cy_rbuy	);
+DECLARE_DO_FUN(	do_cy_resset	);
+
 
 // contracts
 
@@ -3447,6 +3455,7 @@ DECLARE_DO_FUN(	do_rescue	);
 DECLARE_DO_FUN(	do_rest		);
 DECLARE_DO_FUN( do_reset	);
 DECLARE_DO_FUN( do_resetship	);
+DECLARE_DO_FUN( do_resources	);
 DECLARE_DO_FUN(	do_restore	);
 DECLARE_DO_FUN(	do_restoretime	);
 DECLARE_DO_FUN(	do_restrict	);
@@ -3478,6 +3487,7 @@ DECLARE_DO_FUN( do_shove  	);
 DECLARE_DO_FUN( do_showclan	);
 DECLARE_DO_FUN( do_showship     );
 DECLARE_DO_FUN( do_showplanet   );
+DECLARE_DO_FUN( do_sresources   );
 DECLARE_DO_FUN(	do_shutdow	);
 DECLARE_DO_FUN(	do_shutdown	);
 DECLARE_DO_FUN(	do_silence	);

@@ -711,6 +711,7 @@ void update_repos( void )
 {
      PLANET_DATA *planet;
      int entertainmax, multimediamax, financemax, productmax;
+     int entertainamount, multimediaamount, financeamount, productamount;
 
     for ( planet = first_planet; planet; planet = planet->next )
     {
@@ -720,10 +721,39 @@ void update_repos( void )
     	financemax = planet->finance_plus - planet->finance_minus;
     	productmax = planet->product_plus - planet->product_minus;
 
-    	planet->entertain_amount = planet->entertain_amount + entertainmax;
-    	planet->multimedia_amount = planet->multimedia_amount + multimediamax;
-    	planet->finance_amount = planet->finance_amount + financemax;
-    	planet->product_amount = planet->product_amount + productmax;
+    	entertainamount = planet->entertain_amount;
+    	multimediaamount = planet->multimedia_amount;
+    	financeamount = planet->finance_amount;
+    	productamount = planet->product_amount;
+
+
+    	if ( entertainmax > 0 ) {
+    		if ( (multimediaamount + multimediamax) > 0 ) {
+    			planet->entertain_amount = planet->entertain_amount + entertainmax;
+    			planet->multimedia_amount = planet->multimedia_amount + multimediamax;
+    		}
+    	}
+
+    	if ( multimediamax > 0 ) {
+    		if ( (entertainamount + entertainmax) > 0 ) {
+    			planet->multimedia_amount = planet->multimedia_amount + multimediamax;
+    			planet->entertain_amount = planet->entertain_amount + entertainmax;
+    		}
+    	}
+
+    	if ( financemax > 0 ) {
+    		if ( (productamount + productmax) > 0 ) {
+    			planet->finance_amount = planet->finance_amount + financemax;
+    			planet->product_amount = planet->product_amount + productmax;
+    		}
+    	}
+
+    	if ( productmax > 0 ) {
+    		if ( (financeamount + financemax) > 0 ) {
+    			planet->product_amount = planet->product_amount + productmax;
+    			planet->finance_amount = planet->finance_amount + financemax;
+    		}
+    	}
 
         save_planet(planet);
 
