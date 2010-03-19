@@ -34,7 +34,7 @@ void do_score(CHAR_DATA * ch, char *argument)
     	ch_printf( ch, "&W-----------------------------------------------------\n\r" );
 
 	ch_printf( ch, "&Wname: &G%s   &Wuptime: &G%d\n\r", ch->name, get_age(ch) );
-	ch_printf( ch, "&W-----------------------------------------------------\n\r" );
+	ch_printf( ch, "&W--stats----------------------------------------------\n\r" );
 
 	ch_printf( ch, "&Wstrength:  &G%d", get_curr_str( ch ) );
 	ch_printf( ch, "   &Wconstitution: &G%d", get_curr_con( ch ) );
@@ -43,54 +43,23 @@ void do_score(CHAR_DATA * ch, char *argument)
 	ch_printf( ch, "&Wdexterity: &G%d", get_curr_dex( ch ) );
 	ch_printf( ch, "   &Wintelligence: &G%d", get_curr_int( ch ) );
 	ch_printf( ch, "   &Wcharisma: &G%d\n\r", get_curr_cha( ch ) );
-    	ch_printf( ch, "&W-----------------------------------------------------\n\r" );
+    	ch_printf( ch, "&W--info-----------------------------------------------\n\r" );
 	ch_printf( ch, "&Whealth:  &G%d", ch->hit );
 	ch_printf( ch, "   &Wenergy: &G%d", ch->move );
 	ch_printf( ch, "   &Wwillpower: &G%d\n\r", ch->mental_state );
-	ch_printf( ch, "&Warmor dam mod: &G%d", ch->armor / 10 );
-	//ch_printf( ch, "&Wdefence: &G%d", GET_AC(ch) );
-	//ch_printf( ch, "   &Wkarma:  &G%d", ch->alignment );
-    	ch_printf( ch, "   &Wsnippets:  &G%d\n\r" , ch->snippets );
-    	ch_printf( ch, "&Wcredits:  &G%ld\n\r" , ch->gold );
-    	ch_printf( ch, "&Wbank   :  &G%ld\n\r" , ch->pcdata->bank );
-    	ch_printf( ch, "&W-----------------------------------------------------\n\r" );
-        ch_printf( ch, "data load: %d/%d  type: %s \n\r",
-                            ch->pcdata->cargo,
-                            ch->pcdata->maxcargo,
-                            cargo_names[ch->pcdata->cargotype]);
-       	ch_printf( ch, "&W-----------------------------------------------------\n\r" );
+	ch_printf( ch, "&Warmor dam mod: &G%d\n\r", ch->armor / 10 );
+	ch_printf( ch, "&W--resources------------------------------------------\n\r" );
+    	ch_printf( ch, "&Wsnippets :  &G%d\n\r" , ch->snippets );
+    	ch_printf( ch, "&Wcredits  :  &G%ld\n\r" , ch->gold );
+    	ch_printf( ch, "&Wbank     :  &G%ld\n\r" , ch->pcdata->bank );
+    	ch_printf( ch, "&W--repos----------------------------------------------\n\r" );
+    	ch_printf( ch, "&Wentertainment   :  &G%d\n\r" , ch->pcdata->rentertain );
+    	ch_printf( ch, "&Wmultimedia      :  &G%d\n\r" , ch->pcdata->rmultimedia );
+    	ch_printf( ch, "&Wfinance         :  &G%d\n\r" , ch->pcdata->rfinance );
+    	ch_printf( ch, "&Wproductivity    :  &G%d\n\r" , ch->pcdata->rproduct );
 
-//    ch_printf( ch,
-//	"&Wautoexit: &G%s   &Wautoloot: &G%s   &Wautosac: &G%s   &Wautocred: &G%s\n\r",
-//	(!IS_NPC(ch) && IS_SET(ch->act, PLR_AUTOEXIT)) ? "yes" : "no",
-//	(!IS_NPC(ch) && IS_SET(ch->act, PLR_AUTOLOOT)) ? "yes" : "no",
-//	(!IS_NPC(ch) && IS_SET(ch->act, PLR_AUTOSAC) ) ? "yes" : "no",
-//  	(!IS_NPC(ch) && IS_SET(ch->act, PLR_AUTOGOLD)) ? "yes" : "no" );
-
-//    ch_printf( ch, "&Wwimpy set to &G%d &Wpercent\n\r", ch->wimpy );
-    
-//    	ch_printf( ch, "&W-----------------------------------------------------\n\r" );
-//
-//    if ( !IS_NPC(ch) && ch->pcdata )
-//    {
-//    	int sn;
-//
-//        send_to_char( "&Wskilled at: &G" , ch );
-//    	for ( sn = 0; sn < top_sn ; sn++ )
-//    	   if ( ch->pcdata->learned[sn] > 0 && ch->pcdata->learned[sn] < 100 )
-//               ch_printf( ch,  "%s  ", skill_table[sn]->name );
-//        send_to_char( "\n\r" , ch );
-//
-//        send_to_char( "&Wadept at: &G" , ch );
-//    	for ( sn = 0; sn < top_sn ; sn++ )
-//    	   if ( ch->pcdata->learned[sn] >= 100 )
-//               ch_printf( ch,  "%s  ", skill_table[sn]->name );
-//        send_to_char( "\n\r" , ch );
-//
-//    }
-    
-    send_to_char( "&W-----------------------------------------------------\n\r", ch);
-    ch_printf(ch, "arena:   wins: %d   losses: %d\n\r",
+    	send_to_char( "&W--arena----------------------------------------------\n\r", ch);
+    	ch_printf(ch, "arena:   wins: %d   losses: %d\n\r",
            ch->arenawin, ch->arenaloss );
 
     	ch_printf( ch, "&W-----------------------------------------------------\n\r" );

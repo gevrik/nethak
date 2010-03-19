@@ -860,3 +860,168 @@ void do_sn_shortcut( CHAR_DATA *ch, char *argument )
     return;
 
 }
+
+void do_sn_checkout( CHAR_DATA *ch, char *argument )
+{
+	char buf [MAX_STRING_LENGTH];
+	char arg[MAX_INPUT_LENGTH];
+	CHAR_DATA *victim;
+	ROOM_INDEX_DATA	*location;
+	AREA_DATA *area;
+	PLANET_DATA *planet;
+	OBJ_DATA *obj;
+	bool ch_snippet;
+	int chance, roll, margin;
+
+	location = ch->in_room;
+	planet = ch->in_room->area->planet;
+	area = ch->in_room->area;
+
+	argument = one_argument( argument, arg );
+
+	if ( IS_NPC(ch) || !ch->pcdata )
+	   {
+	       send_to_char ( "huh?\n\r" , ch );
+	       return;
+	   }
+
+
+		if ( ch->position <= POS_SLEEPING )
+		{
+			send_to_char( "> you are hibernating\n\r" , ch );
+			return;
+		}
+
+		if ( ch->fighting )
+		{
+			send_to_char( "> checkout cannot be used in combat\n\r", ch );
+			return;
+		}
+
+		if ( IS_SET( ch->in_room->room_flags, ROOM_SAFE ) )
+		{
+			send_to_char( "> &Raudit cannot be used in safe nodes&w\n\r", ch );
+			return;
+		}
+
+
+		if ( arg[0] == '\0' )
+		{
+			send_to_char("> &Rsyntax: checkout [program]&w\n\r", ch);
+			send_to_char("> &Wgain resource from program&w\n\r", ch);
+			return;
+		}
+
+	    if ( ( victim = get_char_room( ch, arg ) ) == NULL )
+	    {
+		send_to_char( "> &Rthat program is not here&w\n\r", ch);
+		return;
+	    }
+
+	    if ( !IS_NPC(victim) )
+	    {
+		send_to_char( "> &Rnot on players&w\n\r", ch );
+		return;
+	    }
+
+	    if ( victim->pIndexData->vnum != 56 && victim->pIndexData->vnum != 57 && victim->pIndexData->vnum != 58
+	    		&& victim->pIndexData->vnum != 59)
+	    {
+		send_to_char( "> &Rthat is not a program&w\n\r", ch );
+		return;
+	    }
+
+		ch_snippet = FALSE;
+
+		for (obj = ch->last_carrying; obj; obj = obj->prev_content) {
+			if (obj->item_type == ITEM_SNIPPET && !strcmp(obj->name,
+					"checkout")) {
+				ch_snippet = TRUE;
+
+				obj->value[0] -= 1;
+
+				if (obj->value[0] < 1)
+				{
+				separate_obj(obj);
+				obj_from_char(obj);
+				extract_obj( obj );
+				send_to_char("> &Rcheckout application has expired&w\n\r", ch);
+				}
+
+			}
+
+		}
+
+	if (!ch_snippet) {
+		send_to_char("> &Rcheckout application needed&w\n\r", ch);
+		return;
+	}
+
+	WAIT_STATE( ch, skill_table[gsn_propaganda]->beats );
+
+    sprintf(buf,"> &y%s uses a checkout application", ch->name);
+    act(AT_WHITE,buf, ch, NULL, NULL, TO_ROOM);
+
+	chance = IS_NPC(ch) ? ch->top_level
+			: (int) (ch->pcdata->learned[gsn_spacecraft]);
+
+	if ( location->level != 0 )
+	chance -= ( location->level * 10 );
+
+	roll = number_percent();
+
+	if ( roll >= chance )
+	{
+		send_to_char("> &Ryou failed the checkout&w\n\r", ch);
+		return;
+	}
+
+	margin = chance - roll;
+
+	int nodelevel = location->level;
+
+	if (nodelevel == 0)
+		nodelevel = 1;
+
+	  sh_int decrease = victim->top_level / 20;
+
+	switch(victim->pIndexData->vnum) {
+
+	default:
+		break;
+
+	case 56:
+		ch->pcdata->rentertain += nodelevel;
+
+  	 victim->in_room->area->planet->entertain_count = victim->in_room->area->planet->entertain_count - decrease;
+  	 victim->in_room->area->planet->entertain_count = UMAX( victim->in_room->area->planet->entertain_count , 0 );
+		break;
+
+	case 57:
+		ch->pcdata->rmultimedia += nodelevel;
+  	 victim->in_room->area->planet->multimedia_count = victim->in_room->area->planet->multimedia_count - decrease;
+  	 victim->in_room->area->planet->multimedia_count = UMAX( victim->in_room->area->planet->multimedia_count , 0 );
+		break;
+
+	case 58:
+		ch->pcdata->rfinance += nodelevel;
+  	 victim->in_room->area->planet->finance_count = victim->in_room->area->planet->finance_count - decrease;
+  	 victim->in_room->area->planet->finance_count = UMAX( victim->in_room->area->planet->finance_count , 0 );
+		break;
+
+	case 59:
+		ch->pcdata->rproduct += nodelevel;
+  	 victim->in_room->area->planet->product_count = victim->in_room->area->planet->product_count - decrease;
+  	 victim->in_room->area->planet->product_count = UMAX( victim->in_room->area->planet->product_count , 0 );
+		break;
+	}
+
+	ch_printf( ch , "> &Gyou gain %d repos from %s&w\n\r", nodelevel, victim->short_descr);
+	act( AT_PLAIN, "> $n checks out a program", ch,
+			NULL, argument , TO_ROOM );
+
+	extract_char( victim, TRUE );
+
+    return;
+
+}

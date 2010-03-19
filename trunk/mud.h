@@ -2120,6 +2120,10 @@ struct	pc_data
     int			cyber;
     int			queststatus;
     int			qtaxnodes;
+    int			rentertain;
+    int			rmultimedia;
+    int			rfinance;
+    int			rproduct;
     char *		wm_name;
     int			wm_top_level;
     int			wm_hit;
@@ -3095,6 +3099,7 @@ DECLARE_DO_FUN(	do_sn_spun	);
 DECLARE_DO_FUN(	do_sn_dropline	);
 DECLARE_DO_FUN(	do_sn_uninstall	);
 DECLARE_DO_FUN(	do_sn_anchor	);
+DECLARE_DO_FUN(	do_sn_checkout	);
 DECLARE_DO_FUN(	do_sn_audit	);
 DECLARE_DO_FUN(	do_sn_shortcut	);
 
