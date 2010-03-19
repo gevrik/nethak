@@ -4,9 +4,11 @@ NOCRYPT =
 #Uncomment the next line if you want request support
 #DBUGFLG = -DREQUESTS
 OPT_FLAG = -DMCCP
+
 C_FLAGS = -g3 -Wall $(PROF) $(NOCRYPT) $(DBUGFLG)
 L_FLAGS = $(PROF) -lz
 
+MCCP = 1
 
 O_FILES = act_comm.o act_info.o act_move.o act_obj.o act_wiz.o boards.o \
 	  build.o clans.o comm.o const.o db.o fight.o \
@@ -27,6 +29,10 @@ C_FILES = act_comm.c act_info.c act_move.c act_obj.c act_wiz.c boards.c \
 	  alias.c ackmapper.c sudoku.c freelancing.c constructs.c
 
 H_FILES = mud.h bet.h gboard.h alias.h ackmapper.h
+
+ifdef MCCP
+   C_FLAGS := $(C_FLAGS) -DMCCP
+endif
 
 all:
 #	co $(H_FILES)

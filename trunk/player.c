@@ -15,7 +15,15 @@ extern char * const cargo_names[CARGO_MAX];
 void do_gold(CHAR_DATA * ch, char *argument)
 {
    set_char_color( AT_GOLD, ch );
-   ch_printf( ch,  "> you have %d credits\n\r", ch->gold );
+   ch_printf( ch,  "> credits: %-15d bank: %ld\n\r", ch->gold, ch->pcdata->bank );
+   return;
+}
+
+void do_resources(CHAR_DATA * ch, char *argument)
+{
+   set_char_color( AT_GOLD, ch );
+   ch_printf( ch, "&Wentertainment   :  &G%-15d &Wmultimedia      :  &G%d\n\r" , ch->pcdata->rentertain, ch->pcdata->rmultimedia  );
+   ch_printf( ch, "&Wfinance         :  &G%-15d &Wproductivity    :  &G%d\n\r" , ch->pcdata->rfinance, ch->pcdata->rproduct );
    return;
 }
 
@@ -49,14 +57,15 @@ void do_score(CHAR_DATA * ch, char *argument)
 	ch_printf( ch, "   &Wwillpower: &G%d\n\r", ch->mental_state );
 	ch_printf( ch, "&Warmor dam mod: &G%d\n\r", ch->armor / 10 );
 	ch_printf( ch, "&W--resources------------------------------------------\n\r" );
-    	ch_printf( ch, "&Wsnippets :  &G%d\n\r" , ch->snippets );
-    	ch_printf( ch, "&Wcredits  :  &G%ld\n\r" , ch->gold );
-    	ch_printf( ch, "&Wbank     :  &G%ld\n\r" , ch->pcdata->bank );
-    	ch_printf( ch, "&W--repos----------------------------------------------\n\r" );
-    	ch_printf( ch, "&Wentertainment   :  &G%d\n\r" , ch->pcdata->rentertain );
-    	ch_printf( ch, "&Wmultimedia      :  &G%d\n\r" , ch->pcdata->rmultimedia );
-    	ch_printf( ch, "&Wfinance         :  &G%d\n\r" , ch->pcdata->rfinance );
-    	ch_printf( ch, "&Wproductivity    :  &G%d\n\r" , ch->pcdata->rproduct );
+    	ch_printf( ch, "&Wsnippets :  &G%-12d &Wentertainment   :  &G%d\n\r" , ch->snippets, ch->pcdata->rentertain );
+    	ch_printf( ch, "&Wcredits  :  &G%-12d &Wmultimedia      :  &G%d\n\r" , ch->gold, ch->pcdata->rmultimedia );
+    	ch_printf( ch, "&Wbank     :  &G%-12ld &Wfinance         :  &G%d\n\r" , ch->pcdata->bank, ch->pcdata->rfinance );
+    	ch_printf( ch, "&Wnodes    :  &G%-12d &Wproductivity    :  &G%d\n\r" , ch->pcdata->qtaxnodes, ch->pcdata->rproduct );
+//    	ch_printf( ch, "&W--repos----------------------------------------------\n\r" );
+//    	ch_printf( ch, "&Wentertainment   :  &G%d\n\r" , ch->pcdata->rentertain );
+//    	ch_printf( ch, "&Wmultimedia      :  &G%d\n\r" , ch->pcdata->rmultimedia );
+//    	ch_printf( ch, "&Wfinance         :  &G%d\n\r" , ch->pcdata->rfinance );
+//    	ch_printf( ch, "&Wproductivity    :  &G%d\n\r" , ch->pcdata->rproduct );
 
     	send_to_char( "&W--arena----------------------------------------------\n\r", ch);
     	ch_printf(ch, "arena:   wins: %d   losses: %d\n\r",

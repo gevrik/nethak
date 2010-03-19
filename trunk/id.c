@@ -19,8 +19,10 @@
 #include "mud.h"
 
 extern int   maxdesc;
+/*
 extern int   write   args( ( int fd, char *buf, int nbyte ) );
 extern int   read    args( ( int fd, char *buf, int nbyte ) );
+*/
 extern int   close   args( ( int fd ) );
 void  nonblock     args( ( int s ) );
 void  start_auth   args( ( struct descriptor_data *d ) );

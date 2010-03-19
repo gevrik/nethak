@@ -778,7 +778,7 @@ void do_showplanet( CHAR_DATA *ch, char *argument )
 	return;
     }
 
-    if( !IS_IMMORTAL( ch ) && ( IS_SET( planet->flags, PLANET_HIDDEN ) || IS_SET( planet->flags, PLANET_EXPLORABLE) ) )
+    if( !IS_IMMORTAL( ch ) && ( IS_SET( planet->flags, PLANET_HIDDEN ) || IS_SET( planet->flags, PLANET_EXPLORABLE) || IS_SET( planet->flags, PLANET_NOCAP) ) )
     {
 	send_to_char( "> no such system\n\r", ch );
 	return;
@@ -834,10 +834,6 @@ void do_showplanet( CHAR_DATA *ch, char *argument )
     ch_printf( ch, "&Wprograms: &G%d&W/%d\n\r", planet->population , max_population( planet ) );
     ch_printf( ch, "&Wcpu: &G%.2f\n\r",
                    planet->pop_support );
-    ch_printf( ch, "&Wentertaimment: &G%d\n\r", planet->entertain_amount ) ;
-    ch_printf( ch, "&Wmultimedia: &G%d\n\r", planet->multimedia_amount ) ;
-    ch_printf( ch, "&Wfinance: &G%d\n\r", planet->finance_amount ) ;
-    ch_printf( ch, "&Wproduct: &G%d\n\r", planet->product_amount ) ;
     ch_printf( ch, "&Wmonthly revenue: &G%ld\n\r",
                    get_taxes( planet) );
 
@@ -1115,6 +1111,18 @@ void do_makeplanet( CHAR_DATA *ch, char *argument )
     {
 
          if ( starsystem == starsystem_from_name( NEWBIE_STARSYSTEM ) )
+         {
+        	ch_printf( ch, "> you cannot explore in that region\n\r", tp->governed_by->name );
+        	return;
+         }
+
+         if ( starsystem == starsystem_from_name( "orbitsville" ) )
+         {
+        	ch_printf( ch, "> you cannot explore in that region\n\r", tp->governed_by->name );
+        	return;
+         }
+
+         if ( starsystem == starsystem_from_name( "wilderspace" ) )
          {
         	ch_printf( ch, "> you cannot explore in that region\n\r", tp->governed_by->name );
         	return;

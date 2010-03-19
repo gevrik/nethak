@@ -1593,6 +1593,15 @@ void do_empower ( CHAR_DATA *ch , char *argument )
              ch->name );
       send_to_char( "> they can now empower others\n\r", ch );
     }
+    else if ( !str_cmp( arg2, "repos" ) )
+    {
+      sprintf( buf, "> %s %s", victim->pcdata->bestowments, arg2 );
+      DISPOSE( victim->pcdata->bestowments );
+      victim->pcdata->bestowments = str_dup( buf );
+      ch_printf( victim, "> %s has given you the ability to set repo options\n\r",
+             ch->name );
+      send_to_char( "> they can now set repo options\n\r", ch );
+    }
     else if ( !str_cmp( arg2, "build" ) )
     {
       sprintf( buf, "> %s %s", victim->pcdata->bestowments, arg2 );
@@ -1605,11 +1614,10 @@ void do_empower ( CHAR_DATA *ch , char *argument )
     else
     {
       send_to_char( "> possible arguments:\n\r", ch );
-      send_to_char( "\n\rorgdecks:     ability to operate org decks\n\r", ch );
       send_to_char(     "withdraw:     ability to withdraw clan funds\n\r", ch );
-      send_to_char(     "orgbuydeck:   ability to buy org decks\n\r", ch );
       send_to_char(     "induct:       ability to induct new members\n\r", ch );
-      send_to_char(     "build:         ability to create and edit nodes\n\r", ch );
+      send_to_char(     "build:        ability to create and edit nodes\n\r", ch );
+      send_to_char(     "repos:        ability to set repository options\n\r", ch );
       send_to_char(     "bestow:       ability to bestow other members (use with caution)\n\r", ch );
       send_to_char(     "none:         removes bestowed abilities\n\r", ch );
       send_to_char(     "list:         shows bestowed abilities\n\r", ch );

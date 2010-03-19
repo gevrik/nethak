@@ -144,6 +144,9 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_credits" ))		return do_credits;
 	if ( !str_cmp( name, "do_cset" ))		return do_cset;
 	if ( !str_cmp( name, "do_cyber" ))		return do_cyber;
+	if ( !str_cmp( name, "do_cy_rbuy" ))		return do_cy_rbuy;
+	if ( !str_cmp( name, "do_cy_rsell" ))		return do_cy_rsell;
+	if ( !str_cmp( name, "do_cy_resset" ))		return do_cy_resset;
 	break;
     case 'd':
     	if ( !str_cmp( name, "do_decompile" ))		return do_decompile;
@@ -414,6 +417,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_reset" ))		return do_reset;
 	if ( !str_cmp( name, "do_resetship" ))		return do_resetship;
 	if ( !str_cmp( name, "do_resign" ))		return do_resign;
+	if ( !str_cmp( name, "do_resources" ))		return do_resources;
 	if ( !str_cmp( name, "do_rest" ))		return do_rest;
 	if ( !str_cmp( name, "do_restore" ))		return do_restore;
 	if ( !str_cmp( name, "do_restoretime" ))	return do_restoretime;
@@ -456,6 +460,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_shove" ))		return do_shove;
 	if ( !str_cmp( name, "do_showclan" ))		return do_showclan;
 	if ( !str_cmp( name, "do_showplanet" ))		return do_showplanet;
+	if ( !str_cmp( name, "do_sresources" ))		return do_sresources;
 	if ( !str_cmp( name, "do_showprototype" ))	return do_showprototype;
 	if ( !str_cmp( name, "do_showship" ))           return do_showship;
 	if ( !str_cmp( name, "do_showstarsystem" ))     return do_showstarsystem;
@@ -580,6 +585,10 @@ char *spell_name( SPELL_FUN *spell )
 
 char *skill_name( DO_FUN *skill )
 {
+
+	if ( skill == do_cy_rsell)           return "do_cy_rsell";
+	if ( skill == do_cy_rbuy)           return "do_cy_rbuy";
+	if ( skill == do_cy_resset)           return "do_cy_resset";
 
     if ( skill == do_imports)           return "do_imports";
     if ( skill == do_load_cargo)        return "do_load_cargo";
@@ -955,6 +964,7 @@ char *skill_name( DO_FUN *skill )
     if ( skill == do_rescue )		return "do_rescue";
     if ( skill == do_reset )		return "do_reset";
     if ( skill == do_resetship )	return "do_resetship";
+    if ( skill == do_resources )	return "do_resources";
     if ( skill == do_rest )		return "do_rest";
     if ( skill == do_restore )		return "do_restore";
     if ( skill == do_restoretime )	return "do_restoretime";
@@ -990,6 +1000,7 @@ char *skill_name( DO_FUN *skill )
     if ( skill == do_shove )		return "do_shove";
     if ( skill == do_showclan )		return "do_showclan";
     if ( skill == do_showplanet )		return "do_showplanet";
+    if ( skill == do_sresources )		return "do_sresources";
     if ( skill == do_showship )         return "do_showship";
     if ( skill == do_showstarsystem )   return "do_showstarsystem";
     if ( skill == do_shutdow )		return "do_shutdow";
