@@ -2716,6 +2716,18 @@ void do_snipe( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
+    if ( get_age(victim) <= 20 && !IS_SET(ch->in_room->room_flags,ROOM_ARENA) )
+    {
+	send_to_char( "> that character is too new\n\r", ch );
+	return;
+    }
+
+    if ( get_age(ch) <= 20 && !IS_SET(ch->in_room->room_flags,ROOM_ARENA))
+    {
+	send_to_char( "> you are too new to murder\n\r", ch );
+	return;
+    }
+
 	if ( is_safe( ch, victim ) )
 		return;
 
@@ -3625,7 +3637,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 
 	if ( IS_SET( location->room_flags , ROOM_NOPEDIT ) )
 	{
-		send_to_char( "> you may not edit this node\n\r", ch );
+		send_to_char( "> &Ryou can not create nodes from this node&w\n\r", ch );
 		return;
 	}
 
@@ -3758,20 +3770,6 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 			if( IS_SET( xit->to_room->room_flags, ROOM_BARRACKS ) )
 			{
 				send_to_char("> &Ryou cannot put home nodes around firewalls&w\n\r", ch );
-				return;
-			}
-
-		for( xit = location->first_exit; xit; xit = xit->next )
-			if( IS_SET( xit->to_room->room_flags, ROOM_PUBLICIO ) )
-			{
-				send_to_char("> &Ryou cannot put home nodes around ionodes&w\n\r", ch );
-				return;
-			}
-
-		for( xit = location->first_exit; xit; xit = xit->next )
-			if( IS_SET( xit->to_room->room_flags, ROOM_CAN_LAND ) )
-			{
-				send_to_char("> &Ryou cannot put home nodes around ionodes&w\n\r", ch );
 				return;
 			}
 
@@ -4097,6 +4095,12 @@ void do_construction ( CHAR_DATA *ch , char *argument )
 	if ( ch->gold < 500 )
 	{
 		send_to_char( "> you do not have enough credits - it costs 500 credits\n\r", ch );
+		return;
+	}
+
+	if ( IS_SET( ch->in_room->room_flags , ROOM_EMPTY_HOME ) )
+	{
+		send_to_char( "> you may not edit this node\n\r", ch );
 		return;
 	}
 
@@ -4714,7 +4718,10 @@ void do_survey ( CHAR_DATA *ch , char *argument )
        	   ch_printf( ch, "&Y   Spacecraft can land here\n\r" );
 	 */
 	if ( IS_SET( room->room_flags , ROOM_EMPLOYMENT) )
-		ch_printf( ch, "&Y   you can find temporary employment here\n\r" );
+		ch_printf( ch, "&Y   you can get delivery missions here\n\r" );
+
+	if ( room->seccode != 0 )
+		ch_printf( ch, "&Y   this is a secured io node\n\r" );
 
 	if ( IS_SET( room->room_flags , ROOM_BANK) )
 		ch_printf( ch, "&Y   this node may be used as a bank\n\r" );
@@ -4722,20 +4729,11 @@ void do_survey ( CHAR_DATA *ch , char *argument )
 	if ( IS_SET( room->room_flags , ROOM_SAFE) )
 		ch_printf( ch, "&Y   combat cannot take place in this node\n\r" );
 
-	if ( IS_SET( room->room_flags , ROOM_HOTEL) )
-		ch_printf( ch, "&Y   users may logout from here\n\r" );
-
 	if ( IS_SET( room->room_flags , ROOM_EMPTY_HOME ) )
-		ch_printf( ch, "&Y   this node may be purchased for use as a home/storage\n\r" );
+		ch_printf( ch, "&Y   this node may be purchased with BUYHOME\n\r" );
 
 	if ( IS_SET( room->room_flags , ROOM_PLR_HOME ) )
 		ch_printf( ch, "&Y   this node is a user's private node\n\r" );
-
-	if ( IS_SET( room->room_flags , ROOM_MAIL ) )
-		ch_printf( ch, "&Y   this is a mail node\n\r" );
-
-	if ( IS_SET( room->room_flags , ROOM_INFO ) )
-		ch_printf( ch, "&Y   a message and information terminal may be installed here\n\r" );
 
 	if ( IS_SET( room->room_flags , ROOM_TRADE ) )
 		ch_printf( ch, "&Y   this node is used for resource trade\n\r" );
@@ -4744,23 +4742,11 @@ void do_survey ( CHAR_DATA *ch , char *argument )
 		ch_printf( ch, "&Y   this is a supply node\n\r" );
 
 	if ( IS_SET( room->room_flags , ROOM_PAWN ) )
-		ch_printf( ch, "&Y   you can buy and sell useful items here\n\r" );
-	/*
-       if ( IS_SET( room->room_flags , ROOM_RESTAURANT ) )
-       	   ch_printf( ch, "&Y   this node is a restaurant\n\r" );
-	 */
+		ch_printf( ch, "&Y   you can buy and sell useful modules here\n\r" );
+
 	if ( IS_SET( room->room_flags , ROOM_BARRACKS ) )
-		ch_printf( ch, "&Y   this is an ICE barrack\n\r" );
+		ch_printf( ch, "&Y   this firewall spawns ICE\n\r" );
 
-	if ( IS_SET( room->room_flags , ROOM_GARAGE ) )
-		ch_printf( ch, "&Y   boosters are built and sold here\n\r" );
-	/*
-       if ( IS_SET( room->room_flags , ROOM_CONTROL ) )
-       	   ch_printf( ch, "&Y   This is a control tower for patrol spacecraft\n\r" );
-
-       if ( IS_SET( room->room_flags , ROOM_BAR ) )
-       	   ch_printf( ch, "&Y   This is bar\n\r" );
-	 */
 	if ( IS_SET( room->room_flags , ROOM_NOPEDIT ) )
 		ch_printf( ch, "&Wthis node is NOT user editable\n\r" );
 	else

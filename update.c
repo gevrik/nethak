@@ -728,28 +728,28 @@ void update_repos( void )
 
 
     	if ( entertainmax > 0 ) {
-    		if ( (multimediaamount + multimediamax) > 0 ) {
+    		if ( (multimediaamount + multimediamax) >= 0 ) {
     			planet->entertain_amount = planet->entertain_amount + entertainmax;
     			planet->multimedia_amount = planet->multimedia_amount + multimediamax;
     		}
     	}
 
     	if ( multimediamax > 0 ) {
-    		if ( (entertainamount + entertainmax) > 0 ) {
+    		if ( (entertainamount + entertainmax) >= 0 ) {
     			planet->multimedia_amount = planet->multimedia_amount + multimediamax;
     			planet->entertain_amount = planet->entertain_amount + entertainmax;
     		}
     	}
 
     	if ( financemax > 0 ) {
-    		if ( (productamount + productmax) > 0 ) {
+    		if ( (productamount + productmax) >= 0 ) {
     			planet->finance_amount = planet->finance_amount + financemax;
     			planet->product_amount = planet->product_amount + productmax;
     		}
     	}
 
     	if ( productmax > 0 ) {
-    		if ( (financeamount + financemax) > 0 ) {
+    		if ( (financeamount + financemax) >= 0 ) {
     			planet->product_amount = planet->product_amount + productmax;
     			planet->finance_amount = planet->finance_amount + financemax;
     		}

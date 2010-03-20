@@ -1075,11 +1075,14 @@ void do_empty( CHAR_DATA *ch, char *argument )
 	if ( ms_find_obj(ch) )
 		return;
 
-	if ( (obj = get_obj_carry( ch, arg1 )) == NULL )
+	//if ( (obj = get_obj_carry( ch, arg1 )) == NULL )
+	if ( (obj = find_obj(ch, arg1, FALSE)) == NULL )
 	{
-		send_to_char( "> you are not carrying that\n\r", ch );
+		send_to_char( "> object not found\n\r", ch );
 		return;
 	}
+
+	//container fix
 	if ( obj->count > 1 )
 		separate_obj(obj);
 

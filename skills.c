@@ -1812,6 +1812,8 @@ void do_pick( CHAR_DATA *ch, char *argument )
 	OBJ_DATA *obj;
 	EXIT_DATA *pexit;
 	SHIP_DATA *ship;
+	CLAN_DATA * clan;
+	int nodelevel, skillmalus;
 
 	if ( IS_NPC(ch) && IS_AFFECTED( ch, AFF_CHARM ) )
 	{
@@ -1869,9 +1871,16 @@ void do_pick( CHAR_DATA *ch, char *argument )
 			return;
 		}
 
-		if ( !IS_NPC(ch) && number_percent( ) > ch->pcdata->learned[gsn_pick_lock] )
+		nodelevel = ch->in_room->level;
+
+		if ( nodelevel == 0 )
+			skillmalus = 0;
+		else
+			skillmalus = nodelevel * 10;
+
+		if ( !IS_NPC(ch) && number_percent( ) > ( ch->pcdata->learned[gsn_pick_lock] - skillmalus ) )
 		{
-			send_to_char( "> you failed\n\r", ch);
+			ch_printf( ch , "> &Ryou failed to hack the gate [malus: %d]&w\n\r", skillmalus);
 			learn_from_failure( ch, gsn_pick_lock );
 			return;
 		}
@@ -1879,7 +1888,23 @@ void do_pick( CHAR_DATA *ch, char *argument )
 		REMOVE_BIT(pexit->exit_info, EX_LOCKED);
 		send_to_char( "> success\n\r", ch );
 		act( AT_ACTION, "> $n picks the $d", ch, NULL, pexit->keyword, TO_ROOM );
-		learn_from_success( ch, gsn_pick_lock );
+
+		if ( ch->pcdata->clan_name[0] == '\0' ) {
+			if ( str_cmp(ch->in_room->area->planet->name, "straylight") )
+				if ( str_cmp(ch->in_room->area->planet->name, "chatsubo") ) {
+			if ( str_cmp(ch->in_room->owner, ch->name) )
+			learn_from_success( ch, gsn_pick_lock );
+				}
+		}
+		else {
+			clan = ch->in_room->area->planet->governed_by;
+			if ( clan != NULL )
+			if ( clan != ch->pcdata->clan )
+			{
+				if ( str_cmp(ch->in_room->owner, ch->name) )
+				learn_from_success( ch, gsn_pick_lock );
+			}
+		}
 		/* pick the other side */
 		if ( ( pexit_rev = pexit->rexit ) != NULL
 				&&   pexit_rev->to_room == ch->in_room )
@@ -1925,7 +1950,8 @@ void do_pick( CHAR_DATA *ch, char *argument )
 			ch->perm_dex = UMIN( ch->perm_dex , 25 );
 		}
 
-		learn_from_success( ch, gsn_pick_lock );
+			learn_from_success( ch, gsn_pick_lock );
+
 		return;
 	}
 

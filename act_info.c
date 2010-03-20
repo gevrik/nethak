@@ -498,7 +498,7 @@ void show_char_to_char_0( CHAR_DATA *victim, CHAR_DATA *ch )
 						}
 
     set_char_color( AT_PERSON, ch );
-    if ( victim->position == victim->defposition && victim->long_descr[0] != '\0' )
+    if ( victim->position == victim->defposition && victim->long_descr[0] != '\0' && victim->long_descr != NULL )
     {
 	strcat( buf, victim->long_descr );
 	send_to_char( buf, ch );
@@ -1216,7 +1216,9 @@ void show_condition( CHAR_DATA *ch, CHAR_DATA *victim )
     else                       strcat( buf, " is about to EXPLODE\n\r"              );
 	*/
 
-	ch_printf( ch , "> %s is at %d integrity\n\r", victim->name, percent);
+//	ch_printf( ch , "> %s is at %d integrity\n\r", victim->name, percent);
+
+	ch_printf( ch , "> %s is at [%d/%d] EEG\n\r", victim->name, victim->hit, victim->max_hit);
 
     }
     else
@@ -1241,7 +1243,10 @@ void show_condition( CHAR_DATA *ch, CHAR_DATA *victim )
 //	strcat( buf, percent );
 //	strcat( buf, "% integrity" );
 
-	ch_printf( ch , "> %s is at %d%% integrity\n\r", victim->name, percent);
+//	ch_printf( ch , "> %s is at %d%% integrity\n\r", victim->name, percent);
+
+	ch_printf( ch , "> %s is at [%d/%d] EEG\n\r", victim->name, victim->hit, victim->max_hit);
+
 
     }
     //buf[0] = UPPER(buf[0]);
