@@ -200,7 +200,7 @@ void do_homerecall( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
-	if ( get_age(ch) <= 20 )
+	if ( get_age(ch) > 20 )
 	{
 		if ( !IS_SET( ch->in_room->room_flags, ROOM_SAFE ) && !IS_SET( ch->in_room->room_flags, ROOM_NO_MOB )
 				&& !IS_SET( ch->in_room->room_flags, ROOM_BANK ) && !IS_SET( ch->in_room->room_flags, ROOM_HOTEL)
@@ -220,8 +220,8 @@ void do_homerecall( CHAR_DATA *ch, char *argument )
 
 	if( !ch->plr_home )
 	{
-		send_to_char( "> you connect to the straylight lobby\n\r", ch );
-		act(AT_GREEN, "> $n connects to straylight lobby", ch, NULL, NULL, TO_ROOM );
+		send_to_char( "> you connect to straylight\n\r", ch );
+		act(AT_GREEN, "> $n connects to straylight", ch, NULL, NULL, TO_ROOM );
 		char_from_room( ch );
 		char_to_room( ch, get_room_index( ROOM_VNUM_STRAY ) );
 		do_look( ch, "auto" );
@@ -232,6 +232,47 @@ void do_homerecall( CHAR_DATA *ch, char *argument )
 	act(AT_GREEN, "> $n connects to their home node", ch, NULL, NULL, TO_ROOM );
 	char_from_room( ch );    
 	char_to_room( ch, ch->plr_home );
+	do_look( ch, "auto" );
+
+	return;
+
+}
+
+void do_homehall( CHAR_DATA *ch, char *argument )
+{
+
+	if ( ch->fighting )
+	{
+		send_to_char( "> you to try flee from combat\n\r", ch );
+		do_flee( ch, "" );
+		return;
+	}
+
+	if ( IS_SET( ch->in_room->room_flags, ROOM_ARENA ) )
+	{
+		send_to_char( "> &Rfinish the current match first&w\n\r", ch );
+		return;
+	}
+
+	if ( ch->in_room->sector_type == SECT_RAINFOREST )
+	{
+		send_to_char( "> &Rfind a safehouse in the construct first&w\n\r", ch );
+		return;
+	}
+
+	if ( !IS_SET( ch->in_room->room_flags, ROOM_SAFE ) && !IS_SET( ch->in_room->room_flags, ROOM_NO_MOB )
+			&& !IS_SET( ch->in_room->room_flags, ROOM_BANK ) && !IS_SET( ch->in_room->room_flags, ROOM_HOTEL)
+			&& !IS_SET( ch->in_room->room_flags, ROOM_CAN_LAND ) && !IS_SET( ch->in_room->room_flags, ROOM_PUBLICIO)
+			&& !IS_SET( ch->in_room->room_flags, ROOM_EMPLOYMENT) )
+	{
+		send_to_char( "> &Rfind a safe node to connect to consumer review&w\n\r", ch );
+		return;
+	}
+
+	send_to_char( "> you connect to consumer review\n\r", ch );
+	act(AT_GREEN, "> $n connects to consumer review", ch, NULL, NULL, TO_ROOM );
+	char_from_room( ch );
+	char_to_room( ch, get_room_index( 11072 ) );
 	do_look( ch, "auto" );
 
 	return;
@@ -269,8 +310,8 @@ void do_homestray( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
-	send_to_char( "> you connect to the straylight lobby\n\r", ch );
-	act(AT_GREEN, "> $n connects to straylight lobby", ch, NULL, NULL, TO_ROOM );
+	send_to_char( "> you connect to straylight\n\r", ch );
+	act(AT_GREEN, "> $n connects to straylight", ch, NULL, NULL, TO_ROOM );
 	char_from_room( ch );
 	char_to_room( ch, get_room_index( ROOM_VNUM_STRAY ) );
 	do_look( ch, "auto" );
@@ -4081,6 +4122,11 @@ void do_cy_resset( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
+	if ( atoi(arg2) > 1000000){
+		send_to_char("> &Ramount must be smaller than that&w\n\r", ch);
+		return;
+	}
+
 	if ( !str_cmp( arg, "ente") )
 			restype = 1;
 	else if ( !str_cmp( arg, "mult") )
@@ -4216,6 +4262,7 @@ void do_cy_resset( CHAR_DATA *ch, char *argument )
 		break;
 	}
 
+	save_planet(location->area->planet);
 	send_to_char( "> &Goption set&w\n\r", ch );
 	return;
 

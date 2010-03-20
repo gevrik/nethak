@@ -2022,9 +2022,9 @@ void do_auction (CHAR_DATA *ch, char *argument)
  	       is higher up - changed to 10000 for our high economy
             */
 
-            if (newbet < (auction->bet + 500))
+            if (newbet < (auction->bet + 10))
             {
-                send_to_char ("> you must at least bid 500 credits over the current bid\n\r",ch);
+                send_to_char ("> you must at least bid 10 credits over the current bid\n\r",ch);
                 return;
             }
 
