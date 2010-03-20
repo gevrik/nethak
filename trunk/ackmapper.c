@@ -95,7 +95,7 @@ const struct map_info_type map_info[] =
 
     { SECT_INSIDE,       "^w&x", " ^x&w", "",   "inside" },
     { SECT_CITY,         "^O&x", " ^x&w", "",   "city" },
-    { SECT_FIELD,        "^z&g", "@^x&w", "",   "entertain" },
+    { SECT_FIELD,        "^x&g", "@^x&w", "",   "entertain" },
     { SECT_FOREST,       "^x&Y", "@^x&w", "",   "multimedia" },
     { SECT_HILLS,        "^x&r", "@^x&w", "",   "finance" },
     { SECT_MOUNTAIN,     "^g&x", " ^x&w", "",   "database" },
