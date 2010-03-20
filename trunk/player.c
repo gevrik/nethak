@@ -61,12 +61,9 @@ void do_score(CHAR_DATA * ch, char *argument)
     	ch_printf( ch, "&Wcredits  :  &G%-12d &Wmultimedia      :  &G%d\n\r" , ch->gold, ch->pcdata->rmultimedia );
     	ch_printf( ch, "&Wbank     :  &G%-12ld &Wfinance         :  &G%d\n\r" , ch->pcdata->bank, ch->pcdata->rfinance );
     	ch_printf( ch, "&Wnodes    :  &G%-12d &Wproductivity    :  &G%d\n\r" , ch->pcdata->qtaxnodes, ch->pcdata->rproduct );
-//    	ch_printf( ch, "&W--repos----------------------------------------------\n\r" );
-//    	ch_printf( ch, "&Wentertainment   :  &G%d\n\r" , ch->pcdata->rentertain );
-//    	ch_printf( ch, "&Wmultimedia      :  &G%d\n\r" , ch->pcdata->rmultimedia );
-//    	ch_printf( ch, "&Wfinance         :  &G%d\n\r" , ch->pcdata->rfinance );
-//    	ch_printf( ch, "&Wproductivity    :  &G%d\n\r" , ch->pcdata->rproduct );
-
+    	ch_printf( ch, "&W--storage memory-------------------------------------\n\r" );
+    	ch_printf( ch, "slots: (%d/%d)  size: (%d/%d)\n\r",
+    		ch->carry_number, can_carry_n(ch), ch->carry_weight, can_carry_w(ch) );
     	send_to_char( "&W--arena----------------------------------------------\n\r", ch);
     	ch_printf(ch, "arena:   wins: %d   losses: %d\n\r",
            ch->arenawin, ch->arenaloss );

@@ -953,7 +953,7 @@ void do_examineobject( CHAR_DATA *ch, char *argument )
 	if ( arg[0] != '\'' && arg[0] != '"' && strlen(argument) > strlen(arg) )
 		strcpy( arg, argument );
 
-	if ( (obj = find_obj(ch, argument, TRUE)) == NULL )
+	if ( (obj = find_obj(ch, arg, FALSE)) == NULL )
 	{
 
 		return;
@@ -997,7 +997,7 @@ void do_examineobject( CHAR_DATA *ch, char *argument )
 		sh_int defencebonus = (obj->value[0] * 3);
 
 		ch_printf( ch, "> &Gcond:&W %d/%d&w\n\r", obj->value[0], obj->value[1] );
-		ch_printf( ch, "> &Gdefence:&W %d&w\n\r", defencebonus );
+		ch_printf( ch, "> &Gdefense:&W %d&w\n\r", defencebonus );
 		ch_printf( ch, "> &Gcoder:&W %s&w\n\r", obj->description );
 		
 	}
@@ -1020,7 +1020,7 @@ void do_examineobject( CHAR_DATA *ch, char *argument )
 		if ( obj->item_type == ITEM_SNIPPET )
 	{
 
-			if ( !strcmp(obj->name, "anchor") || !strcmp(obj->name, "audit" ) || !strcmp(obj->name, "shortcut") ) {
+			if ( !strcmp(obj->name, "anchor") || !strcmp(obj->name, "audit" ) || !strcmp(obj->name, "shortcut") || !strcmp(obj->name, "checkout") ) {
 					ch_printf( ch, "> &Gcharges:&W %d&w\n\r", obj->value[0] );
 			}
 	}
@@ -3881,7 +3881,7 @@ void do_cy_rsell( CHAR_DATA *ch, char *argument )
 		location->area->planet->governed_by->funds -= (atoi(arg1) * product_buy);
 		location->area->planet->product_amount += atoi(arg1);
 
-		ch_printf( ch, "&W> you sold %d finance source for %d credits &w\n\r", atoi(arg1), atoi(arg1) * product_buy );
+		ch_printf( ch, "&W> you sold %d productivity source for %d credits &w\n\r", atoi(arg1), atoi(arg1) * product_buy );
 
 		break;
 	}

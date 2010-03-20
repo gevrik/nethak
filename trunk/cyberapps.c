@@ -978,12 +978,21 @@ void do_sn_checkout( CHAR_DATA *ch, char *argument )
 
 	margin = chance - roll;
 
-	int nodelevel = location->level;
+    sh_int decrease = victim->top_level / 20;
+	int chargain;
 
-	if (nodelevel == 0)
-		nodelevel = 1;
-
-	  sh_int decrease = victim->top_level / 20;
+	if ( decrease == 1 )
+		chargain = 1;
+	else if ( decrease == 2 )
+		chargain = 2;
+	else if ( decrease == 3 )
+		chargain = 4;
+	else if ( decrease == 4 )
+		chargain = 8;
+	else if ( decrease == 5 )
+		chargain = 16;
+	else
+		chargain = 1;
 
 	switch(victim->pIndexData->vnum) {
 
@@ -991,32 +1000,32 @@ void do_sn_checkout( CHAR_DATA *ch, char *argument )
 		break;
 
 	case 56:
-		ch->pcdata->rentertain += nodelevel;
+		ch->pcdata->rentertain += chargain;
 
   	 victim->in_room->area->planet->entertain_count = victim->in_room->area->planet->entertain_count - decrease;
   	 victim->in_room->area->planet->entertain_count = UMAX( victim->in_room->area->planet->entertain_count , 0 );
 		break;
 
 	case 57:
-		ch->pcdata->rmultimedia += nodelevel;
+		ch->pcdata->rmultimedia += chargain;
   	 victim->in_room->area->planet->multimedia_count = victim->in_room->area->planet->multimedia_count - decrease;
   	 victim->in_room->area->planet->multimedia_count = UMAX( victim->in_room->area->planet->multimedia_count , 0 );
 		break;
 
 	case 58:
-		ch->pcdata->rfinance += nodelevel;
+		ch->pcdata->rfinance += chargain;
   	 victim->in_room->area->planet->finance_count = victim->in_room->area->planet->finance_count - decrease;
   	 victim->in_room->area->planet->finance_count = UMAX( victim->in_room->area->planet->finance_count , 0 );
 		break;
 
 	case 59:
-		ch->pcdata->rproduct += nodelevel;
+		ch->pcdata->rproduct += chargain;
   	 victim->in_room->area->planet->product_count = victim->in_room->area->planet->product_count - decrease;
   	 victim->in_room->area->planet->product_count = UMAX( victim->in_room->area->planet->product_count , 0 );
 		break;
 	}
 
-	ch_printf( ch , "> &Gyou gain %d repos from %s&w\n\r", nodelevel, victim->short_descr);
+	ch_printf( ch , "> &Gyou gain %d repos from %s&w\n\r", chargain, victim->short_descr);
 	act( AT_PLAIN, "> $n checks out a program", ch,
 			NULL, argument , TO_ROOM );
 

@@ -2251,13 +2251,6 @@ void dam_message( CHAR_DATA *ch, CHAR_DATA *victim, int dam, int dt )
     else                      { vs = "&r*** ANNIHILATE ***&w";
 			        vp = "&r*** ANNIHILATES ***&w";		}
 
-//	 ch_printf( ch, "dam: %d \n\r", dam );
-//
-//	 if ( !IS_NPC(victim) )
-//	 {
-//		 ch_printf( victim, "&Cdam received: %d \n\r", dam );
-//	 }
-
     punct   = (dampc <= 30) ? '.' : '!';
 
     if ( dam == 0 && (!IS_NPC(ch) &&
@@ -2347,9 +2340,9 @@ void dam_message( CHAR_DATA *ch, CHAR_DATA *victim, int dam, int dt )
 	    attack  = attack_table[0];
 	}
 
-	sprintf( buf1, "> $n's %s %s $N%c",  attack, vp, punct );
-	sprintf( buf2, "> your %s %s $N%c",  attack, vp, punct );
-	sprintf( buf3, "> $n's %s %s you%c", attack, vp, punct );
+	sprintf( buf1, "> $n's %s %s $N%c [dam: %d]",  attack, vp, punct, dam );
+	sprintf( buf2, "> your %s %s $N%c [dam: %d]",  attack, vp, punct, dam );
+	sprintf( buf3, "> $n's %s %s you%c [dam: %d]", attack, vp, punct, dam );
     }
 
     act( AT_ACTION, buf1, ch, NULL, victim, TO_NOTVICT );
