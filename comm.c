@@ -2309,6 +2309,15 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 
 				if ( ch->plr_home != NULL )
 				{
+					if ( !IS_SET( ch->plr_home->room_flags, ROOM_PLR_HOME ) )
+					{
+						ch->plr_home = NULL;
+						send_to_char( "> &Rinvalid home - resetting&w\n\r", ch );
+					}
+				}
+
+				if ( ch->plr_home != NULL )
+				{
 					char filename[256];
 					FILE *fph;
 					ROOM_INDEX_DATA *storeroom = ch->plr_home;

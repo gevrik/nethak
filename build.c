@@ -5124,7 +5124,6 @@ void do_aset( CHAR_DATA *ch, char *argument )
     return;
 }
 
-
 void do_rlist( CHAR_DATA *ch, char *argument )
 {
     ROOM_INDEX_DATA	*room;
@@ -5151,6 +5150,70 @@ void do_rlist( CHAR_DATA *ch, char *argument )
     }
     send_to_char( "No such area exists... type zones for a list.\n\r", ch );
     return;
+
+}
+
+void do_roomfix( CHAR_DATA *ch, char *argument )
+{
+    ROOM_INDEX_DATA	*room;
+    AREA_DATA		*tarea;
+    char arg[MAX_INPUT_LENGTH];
+    EXIT_DATA *pexit;
+    int cnt, homeexits, constexits;
+    bool ishome;
+    bool isconst;
+
+    argument = one_argument( argument, arg );
+
+    for ( tarea = first_area; tarea; tarea = tarea->next )
+    {
+
+  	  isconst = TRUE;
+
+  	  if ( str_cmp(tarea->planet->name, "construct") )
+  		  isconst = FALSE;
+
+    	for ( room = tarea->first_room; room ; room = room->next_in_area ){
+        	  homeexits = 0;
+        	  constexits = 0;
+        	  ishome = FALSE;
+
+
+        	  if ( IS_SET( room->room_flags, ROOM_PLR_HOME ) )
+        		  ishome = TRUE;
+
+
+      	for ( cnt = 0, pexit = room->first_exit; pexit; pexit = pexit->next )
+      	{
+
+      		if ( str_cmp(pexit->to_room->area->name, room->area->name) )
+      	     	ch_printf( ch, "%ld has an exit that leads to another system\n\r", room->vnum );
+
+      		if ( pexit->to_room->vnum == pexit->rvnum )
+      		{
+      	     	ch_printf( ch, "%ld has exits that link to itself - fixing\n\r", room->vnum );
+      	     	extract_exit(room, pexit);
+      		}
+
+      		if (ishome)
+      			++homeexits;
+
+          	if ( homeexits == 2)
+          	{
+          		ch_printf( ch, "%ld is a home with more than one exit\n\r", room->vnum );
+          	}
+
+      		++cnt;
+      	}
+
+
+          }
+
+          SET_BIT( tarea->flags , AFLAG_MODIFIED );
+
+    }
+
+	  return;
 
 }
 

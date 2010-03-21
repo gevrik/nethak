@@ -36,13 +36,13 @@ endif
 
 all:
 #	co $(H_FILES)
-	make ../../neuro/bin/swr
+	make ../../nethak/bin/swr
 #	rm -f $(H_FILES)
 
-../../neuro/bin/swr: $(O_FILES)
-	rm -f ../../neuro/bin/swr
-	$(CC) $(L_FLAGS) -o ../../neuro/bin/swr $(O_FILES) -lm     -lcrypt
-	chmod g+w ../../neuro/bin/swr
+../../nethak/bin/swr: $(O_FILES)
+	rm -f ../../nethak/bin/swr
+	$(CC) $(L_FLAGS) -o ../../nethak/bin/swr $(O_FILES) -lm     -lcrypt
+	chmod g+w ../../nethak/bin/swr
 	chmod g+w $(O_FILES)
 
 .c.o: mud.h

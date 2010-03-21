@@ -532,7 +532,7 @@ void do_makeblade( CHAR_DATA *ch, char *argument )
 	bool checktool, checkdura, checkbatt, checkoven;
 	OBJ_DATA *obj;
 	OBJ_INDEX_DATA *pObjIndex;
-	int vnum;
+	int vnum, bonus;
 	AFFECT_DATA *paf;
 	AFFECT_DATA *paf2;
 
@@ -557,6 +557,10 @@ void do_makeblade( CHAR_DATA *ch, char *argument )
 		{
 			send_to_char( "> &Ryou need to be in a coding node&w\n\r", ch );
 			return;
+		}
+		else {
+				if ( ch->in_room->level != 0 )
+				bonus = ch->in_room->level * 10;
 		}
 
 		for ( obj = ch->last_carrying; obj; obj = obj->prev_content )
@@ -598,9 +602,17 @@ void do_makeblade( CHAR_DATA *ch, char *argument )
 
 		chance = IS_NPC(ch) ? ch->top_level
 				: (int) (ch->pcdata->learned[gsn_makeblade]);
+
+		if ( bonus > 0 )
+			chance += bonus;
+
 		if ( number_percent( ) < chance )
 		{
 			send_to_char( "&G> you begin coding a blade module\n\r", ch);
+
+			if ( bonus > 0 )
+			ch_printf( ch , "node bonus: %d\n\r\n\r", bonus);
+
 			act( AT_PLAIN, "> $n loads $s devkit and a compiler and begins to work on something", ch,
 					NULL, argument , TO_ROOM );
 			add_timer ( ch , TIMER_DO_FUN , 2 , do_makeblade , 1 );
@@ -621,7 +633,7 @@ void do_makeblade( CHAR_DATA *ch, char *argument )
 	case SUB_TIMER_DO_ABORT:
 		DISPOSE( ch->dest_buf );
 		ch->substate = SUB_NONE;
-		send_to_char("&R> you are interupted and fail to finish your work\n\r", ch);
+		send_to_char("&R> you are interrupted and fail to finish your work\n\r", ch);
 		return;
 	}
 
@@ -2716,17 +2728,14 @@ void do_snipe( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
+	if ( !IS_NPC(victim) )
+	{
     if ( get_age(victim) <= 20 && !IS_SET(ch->in_room->room_flags,ROOM_ARENA) )
     {
 	send_to_char( "> that character is too new\n\r", ch );
 	return;
     }
-
-    if ( get_age(ch) <= 20 && !IS_SET(ch->in_room->room_flags,ROOM_ARENA))
-    {
-	send_to_char( "> you are too new to murder\n\r", ch );
-	return;
-    }
+	}
 
 	if ( is_safe( ch, victim ) )
 		return;
@@ -3514,6 +3523,8 @@ void  clear_roomtype( ROOM_INDEX_DATA * location )
 			location->area->planet->finance_minus = location->area->planet->finance_minus - nodelevel;
 		}
 
+		if (location->seccode != 0)
+			location->seccode = 0;
 
 		if ( IS_SET( location->room_flags , ROOM_BARRACKS ) )
 			location->area->planet->barracks--;
@@ -4427,10 +4438,13 @@ void do_bridge ( CHAR_DATA *ch , char *argument )
 	int chance, ll;
 	char arg1[MAX_INPUT_LENGTH];
 	char arg2[MAX_INPUT_LENGTH];
+	char arg3[MAX_INPUT_LENGTH];
 	EXIT_DATA   *xit, *texit;
 	int   evnum, edir, ekey;
 	ROOM_INDEX_DATA *toroom;
 	ROOM_INDEX_DATA *location;
+	ROOM_INDEX_DATA *room;
+	ROOM_INDEX_DATA *current;
 	char buf[MAX_STRING_LENGTH];
 	PLANET_DATA *planet;
 
@@ -4492,6 +4506,7 @@ void do_bridge ( CHAR_DATA *ch , char *argument )
 		return;
 	}
 	argument = one_argument( argument , arg2 );
+	argument = one_argument( argument , arg3 );
 
 	chance = (int) (ch->pcdata->learned[gsn_bridge]);
 	if ( number_percent( ) > chance )
@@ -4518,7 +4533,7 @@ void do_bridge ( CHAR_DATA *ch , char *argument )
 			send_to_char( "> connection already exists\n\r", ch );
 			return;
 		}
-		evnum = atoi( argument );
+		evnum = atoi( arg3 );
 		if ( (toroom = get_room_index( evnum )) == NULL )
 		{
 			ch_printf( ch, "> non-existent room: %d\n\r", evnum );
@@ -4542,6 +4557,19 @@ void do_bridge ( CHAR_DATA *ch , char *argument )
 			ch_printf( ch, "> %d already has an entrance from that direction\n\r" , evnum );
 			return;
 		}
+
+		current = ch->in_room;
+		room = get_room_index( atoi( arg3 ) );
+
+		if ( current == room )
+		{
+			send_to_char( "> &Rinvalid connection&w\n\r", ch );
+			return;
+		}
+
+//		ch_printf( ch, "> current: %ld\n\r" , current->vnum );
+//		ch_printf( ch, "> destina: %ld\n\r" , arg3 );
+//		ch_printf( ch, "> destiva: %ld\n\r" , room->vnum );
 
 		xit = make_exit( ch->in_room, toroom, edir );
 		xit->keyword		= STRALLOC( "" );
@@ -4574,7 +4602,7 @@ void do_bridge ( CHAR_DATA *ch , char *argument )
 			return;
 		}
 
-		ekey = atoi( argument );
+		ekey = atoi( arg3 );
 
 		if ( ekey < 1 )
 		{

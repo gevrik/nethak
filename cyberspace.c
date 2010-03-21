@@ -151,7 +151,14 @@ void do_buyskill( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
-	if ( ch->pcdata->learned[sn] >= 20 )
+	if ( ch->pcdata->learned[sn] < 50 )
+	{
+		send_to_char( "> upgrading to level 50\n\r", ch );
+		ch->pcdata->learned[sn] = 50;
+		return;
+	}
+
+	if ( ch->pcdata->learned[sn] >= 50 )
 	{
 		send_to_char( "> you already know that skill\n\r", ch );
 		return;
@@ -642,6 +649,7 @@ void do_decompile( CHAR_DATA *ch, char *argument )
 				send_to_char( "> &Ryou need to be in a coding node\n\r", ch );
 				return;
 			}
+
 		}
 
 		checksew = FALSE;
@@ -727,7 +735,7 @@ void do_decompile( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
-	int afumble = number_range(1,5);
+	int afumble = number_range(1,10);
 
 	if ( afumble < 2 )
 	{
@@ -1269,6 +1277,7 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 {
 	char arg[MAX_INPUT_LENGTH];
 	char buf[MAX_STRING_LENGTH];
+	char buf1[MAX_STRING_LENGTH];
 	int level, chance;
 	bool checksew, checkfab;
 	OBJ_DATA *obj;
@@ -1526,6 +1535,9 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 			obj->value[1] = ch->in_room->vnum;
 			obj->value[0] = level / 10;
 		    planet = ch->in_room->area->planet;
+		    STRFREE( obj->name );
+		    sprintf( buf1 , "anchor %ld" , ch->in_room->vnum );
+		    obj->name = STRALLOC( buf1 );
 		    STRFREE( obj->short_descr );
 		    sprintf( buf , "anchor [%s] [%ld]" , planet->name, ch->in_room->vnum );
 		    obj->short_descr = STRALLOC( buf );
