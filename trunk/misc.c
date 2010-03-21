@@ -11,6 +11,7 @@ void do_buyhome( CHAR_DATA *ch, char *argument )
 	ROOM_INDEX_DATA *room;
 	AREA_DATA *pArea;
 	PLANET_DATA *planet;
+	ROOM_INDEX_DATA *rooma;
 	int cost = 0;
 
 	if ( !ch->in_room )
@@ -51,7 +52,7 @@ void do_buyhome( CHAR_DATA *ch, char *argument )
 		
 		cost = 10000;
 
-		ROOM_INDEX_DATA *rooma = ch->plr_home;
+		rooma = ch->plr_home;
 
 		STRFREE( rooma->name );
 		rooma->name = STRALLOC( "unusedhome" );
@@ -104,9 +105,9 @@ void do_buyhome( CHAR_DATA *ch, char *argument )
 	room->name = STRALLOC( argument );
 
 	STRFREE( room->description );
-	room->description = STRALLOC( "home, sweet home." ); //
+	room->description = STRALLOC( "home, sweet home." );
 
-	ch->gold -= 10000;
+	ch->gold -= cost;
 
 	REMOVE_BIT( room->room_flags , ROOM_EMPTY_HOME );
 	SET_BIT( room->room_flags , ROOM_PLR_HOME );

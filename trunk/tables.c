@@ -229,6 +229,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_hitall" ))		return do_hitall;
 	if ( !str_cmp( name, "do_hlist" ))		return do_hlist;
 	if ( !str_cmp( name, "do_holylight" ))		return do_holylight;
+	if ( !str_cmp( name, "do_homehall" ))		return do_homehall;
 	if ( !str_cmp( name, "do_homerecall" ))		return do_homerecall;
 	if ( !str_cmp( name, "do_homestray" ))		return do_homestray;
 	if ( !str_cmp( name, "do_homepage" ))		return do_homepage;
@@ -428,6 +429,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_reverseengineer" ))		return do_reverseengineer;
 	if ( !str_cmp( name, "do_revert" ))		return do_revert;
 	if ( !str_cmp( name, "do_rlist" ))		return do_rlist;
+	if ( !str_cmp( name, "do_roomfix" ))		return do_roomfix;
 	if ( !str_cmp( name, "do_rpedit" ))		return do_rpedit;
 	if ( !str_cmp( name, "do_rpstat" ))		return do_rpstat;
 	if ( !str_cmp( name, "do_rset" ))		return do_rset;
@@ -661,6 +663,7 @@ char *skill_name( DO_FUN *skill )
     if ( skill == do_makeplanet )     return "do_makeplanet";
     if ( skill == do_setplanet )     return "do_setplanet";
     if ( skill == do_hail )     return "do_hail";
+    if ( skill == do_homehall )     return "do_homehall";
     if ( skill == do_homerecall )     return "do_homerecall";
     if ( skill == do_homestray )     return "do_homestray";
     if ( skill == do_foundorg )     return "do_foundorg";
@@ -974,6 +977,7 @@ char *skill_name( DO_FUN *skill )
     if ( skill == do_return )		return "do_return";
     if ( skill == do_revert )		return "do_revert";
     if ( skill == do_rlist )		return "do_rlist";
+    if ( skill == do_roomfix )		return "do_roomfix";
     if ( skill == do_rpedit )		return "do_rpedit";
     if ( skill == do_rpstat )		return "do_rpstat";
     if ( skill == do_rset )		return "do_rset";
