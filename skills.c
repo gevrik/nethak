@@ -1847,6 +1847,11 @@ void do_pick( CHAR_DATA *ch, char *argument )
 		{
 			act( AT_PLAIN, "> $N is standing too close to the lock",
 					ch, NULL, gch, TO_CHAR );
+			if ( number_range(1, 100) < 11 )
+			{
+			ch->pcdata->threataction = 1;
+			send_to_char( "> &Rthreat status changed to traced&w\n\r",        ch );
+			}
 			return;
 		}
 	}
@@ -1881,6 +1886,15 @@ void do_pick( CHAR_DATA *ch, char *argument )
 		if ( !IS_NPC(ch) && number_percent( ) > ( ch->pcdata->learned[gsn_pick_lock] - skillmalus ) )
 		{
 			ch_printf( ch , "> &Ryou failed to hack the gate [malus: %d]&w\n\r", skillmalus);
+
+			if (ch->pcdata->threataction < 1)
+			send_to_char( "> &Wthreat status changed to: &Rtraced&w\n\r",        ch );
+
+			ch->pcdata->threatlevel += 1;
+			if ( ch->pcdata->threatlevel > 10 )
+				ch->pcdata->threatlevel = 10;
+
+			ch->pcdata->threataction += 1;
 			learn_from_failure( ch, gsn_pick_lock );
 			return;
 		}

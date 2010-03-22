@@ -151,7 +151,7 @@ void do_buyskill( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
-	if ( ch->pcdata->learned[sn] < 50 )
+	if ( ch->pcdata->learned[sn] < 50 && ch->pcdata->learned[sn] != 0 )
 	{
 		send_to_char( "> upgrading to level 50\n\r", ch );
 		ch->pcdata->learned[sn] = 50;

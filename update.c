@@ -31,6 +31,8 @@ void	web_html_update	args( ( CHAR_DATA *ch ) );
 void	mobile_update	args( ( void ) );
 //void	weather_update	args( ( void ) );
 void	update_taxes	args( ( void ) );
+void	update_taxnodes	args( ( void ) );
+void	update_threat	args( ( void ) );
 void	char_update	args( ( void ) );
 void    bank_update	args( ( void ) );
 void	obj_update	args( ( void ) );
@@ -703,6 +705,47 @@ void update_taxnodes( void )
 
         ch_printf( ch, "> %d credits received for nodes\n\r" ,
         paya );
+
+    }
+}
+
+void update_threat( void )
+{
+     DESCRIPTOR_DATA *d;
+     CHAR_DATA *ch;
+     CHAR_DATA *och;
+
+    for ( d = last_descriptor; d; d = d->prev )
+    {
+
+	if ( (d->connected != CON_PLAYING && d->connected != CON_EDITING)
+	|| d->original)
+	    continue;
+	ch    = d->character;
+	och   = d->original ? d->original : d->character;
+
+	if ( !och->pcdata )
+		continue;
+
+	if ( och->pcdata->threataction != 0 )
+	{
+
+//		if ( number_range(1, 10) <= och->pcdata->threatlevel ) {
+//			determine_tresult(ch);
+//			return;
+//		}
+
+		och->pcdata->threataction = 0;
+		send_to_char( "> &Wthreat status changed to: &Gsafe&w\n\r",        ch );
+	}
+	else
+	{
+		if ( och->pcdata->threatlevel > 0 )
+		{
+			och->pcdata->threatlevel -= 1;
+			send_to_char( "> &Wthreat level &Glowered&w\n\r",        ch );
+		}
+	}
 
     }
 }
@@ -1794,6 +1837,7 @@ void update_handler( void )
     static  int     pulse_space;
     static  int     pulse_ship;
     static  int     pulse_recharge;
+    static  int     pulse_threat = PULSE_THREAT;
     struct timeval stime;
     struct timeval etime;
 
@@ -1843,6 +1887,12 @@ void update_handler( void )
     {
          pulse_recharge = PULSE_SPACE/3;
          //recharge_ships ( );
+    }
+
+    if ( --pulse_threat <= 0 )
+    {
+         pulse_threat = PULSE_THREAT;
+         update_threat();
     }
 
     if ( --pulse_ship   <= 0 )
@@ -2396,6 +2446,17 @@ void bank_update()
     }
    }
 }
+
+//void determine_tresult( CHAR_DATA *ch, char *argument )
+//{
+//    CHAR_DATA *ch;
+//    int threatlevel;
+//    char buf[MAX_INPUT_LENGTH];
+//
+//
+//
+//
+//}
 
 void update_blackjack( )
 {
