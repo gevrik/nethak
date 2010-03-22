@@ -386,6 +386,16 @@ void do_oldscore( CHAR_DATA *ch, char *argument )
  */
 void do_level( CHAR_DATA *ch, char *argument )
 { 
+
+	ch_printf( ch, "> &Wthreat level: %d\n\r", ch->pcdata->threatlevel );
+
+	if (ch->pcdata->threataction != 0)
+		send_to_char( "> &Wthreat status: &Rtraced&w\n\r", ch );
+	else
+		send_to_char( "> &Wthreat status: &Gsafe&w\n\r", ch );
+
+	return;
+
 }
 
 

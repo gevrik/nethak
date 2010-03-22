@@ -218,6 +218,7 @@ typedef ch_ret	SPELL_FUN	args( ( int sn, int level, CHAR_DATA *ch, void *vo ) );
 
 #define PULSE_PER_SECOND	    4
 #define PULSE_MINUTE              ( 60 * PULSE_PER_SECOND)
+#define PULSE_THREAT              ( 60 * PULSE_PER_SECOND)
 #define PULSE_VIOLENCE		  (  5 * PULSE_PER_SECOND)
 #define PULSE_MOBILE		  (  10 * PULSE_PER_SECOND)
 #define PULSE_TICK		  ( 70 * PULSE_PER_SECOND)
@@ -2147,7 +2148,8 @@ struct	pc_data
     int			serverrevision;
     long   roomconstruct;
     sh_int   constructlevel;
-    sh_int   threatlevel;
+    int   threatlevel;
+    int	threataction;
     int         maxcargo;
     int         cargo;
     int         cargotype;

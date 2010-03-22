@@ -514,8 +514,50 @@ void reset_all() {
 			{
 
 				switch (pRoomIndex->sector_type) {
+
 				default:
 					continue;
+					break;
+
+				case SECT_RAINFOREST:
+				case SECT_GLACIAL:
+
+					anumber = number_range(0, 8);
+					if (anumber == 0)
+						vnum = 31;
+					else if (anumber == 1)
+						vnum = 34;
+					else if (anumber == 2)
+						vnum = 35;
+					else if (anumber == 3)
+						vnum = 57;
+					else if (anumber == 4)
+						vnum = 59;
+					else
+						vnum = number_range(75, 99);
+
+
+					if (!(pObjIndex = get_obj_index(vnum))) {
+						bug("Reset_all: Missing obj (%d)", vnum);
+						return;
+					}
+					obj = create_object(pObjIndex, 1);
+
+					if (vnum > 90 && vnum < 98) {
+						if (number_range(1, 2) == 1)
+							SET_BIT ( obj->extra_flags , ITEM_BURRIED );
+						else
+							SET_BIT ( obj->extra_flags , ITEM_HIDDEN );
+					}
+
+					if (vnum == OBJ_VNUM_GOLD) {
+						obj->value[0] = number_range(1, 10);
+						obj->value[1] = obj->value[0];
+						obj->cost = obj->value[0] * 10;
+					}
+
+					obj_to_room(obj, pRoomIndex);
+
 					break;
 
 				case SECT_FARMLAND:
@@ -658,47 +700,6 @@ void reset_all() {
 					obj_to_room(obj, pRoomIndex);
 
 					break;
-
-				case SECT_RAINFOREST:
-				case SECT_GLACIAL:
-
-					anumber = number_range(0, 8);
-					if (anumber == 0)
-						vnum = 31;
-					else if (anumber == 1)
-						vnum = 34;
-					else if (anumber == 2)
-						vnum = 35;
-					else if (anumber == 3)
-						vnum = 57;
-					else if (anumber == 4)
-						vnum = 59;
-					else
-						vnum = number_range(75, 99);
-
-					break;
-
-				if (!(pObjIndex = get_obj_index(vnum))) {
-					bug("Reset_all: Missing obj (%d)", vnum);
-					return;
-				}
-				obj = create_object(pObjIndex, 1);
-
-				if (vnum > 90 && vnum < 98) {
-					if (number_range(1, 2) == 1)
-						SET_BIT ( obj->extra_flags , ITEM_BURRIED );
-					else
-						SET_BIT ( obj->extra_flags , ITEM_HIDDEN );
-				}
-
-				if (vnum == OBJ_VNUM_GOLD) {
-					obj->value[0] = number_range(1, 10);
-					obj->value[1] = obj->value[0];
-					obj->cost = obj->value[0] * 10;
-				}
-
-				if ( pRoomIndex->sector_type != SECT_FARMLAND )
-				obj_to_room(obj, pRoomIndex);
 
 			}
 			}
@@ -927,7 +928,7 @@ void reset_all() {
 					mob->name	= STRALLOC( "gravedigger worm" );
 					STRFREE( mob->short_descr );
 					mob->short_descr	= STRALLOC( "gravedigger worm" );
-					mob->gold = number_range(10, 20);
+					mob->gold = number_range(20, 40);
 
 					continue;
 					}
@@ -1128,7 +1129,7 @@ void reset_all() {
 					mob->name	= STRALLOC( "necromancer aivatar" );
 					STRFREE( mob->short_descr );
 					mob->short_descr	= STRALLOC( "necromancer aivatar" );
-					mob->gold = number_range(10, 20);
+					mob->gold = number_range(40, 80);
 
 					continue;
 					}
@@ -1165,7 +1166,7 @@ void reset_all() {
 						mob->short_descr	= STRALLOC( "gravedigger worm" );
 						STRFREE( mob->long_descr );
 						mob->long_descr	= STRALLOC( "gravedigger [worm]\n\r" );
-						mob->gold = number_range(10, 20);
+						mob->gold = number_range(20, 40);
 						continue;
 					}
 					else if ( randmob == 3)
@@ -1201,7 +1202,7 @@ void reset_all() {
 						mob->short_descr	= STRALLOC( "banshee worm" );
 						STRFREE( mob->long_descr );
 						mob->long_descr	= STRALLOC( "banshee [worm]\n\r" );
-						mob->gold = number_range(10, 20);
+						mob->gold = number_range(20, 40);
 						continue;
 					}
 					else if ( randmob >= 4)
@@ -1229,7 +1230,7 @@ void reset_all() {
 						mob->short_descr	= STRALLOC( "gargoyle worm" );
 						STRFREE( mob->long_descr );
 						mob->long_descr	= STRALLOC( "gargoyle [worm]\n\r" );
-						mob->gold = number_range(10, 20);
+						mob->gold = number_range(20, 40);
 						continue;
 					}
 					else if ( randmob >= 8)
@@ -1257,7 +1258,7 @@ void reset_all() {
 						mob->short_descr	= STRALLOC( "spirit worm" );
 						STRFREE( mob->long_descr );
 						mob->long_descr	= STRALLOC( "spirit [worm]\n\r" );
-						mob->gold = number_range(10, 20);
+						mob->gold = number_range(20, 40);
 						continue;
 					}
 					else if ( randmob == 13)
@@ -1498,7 +1499,7 @@ void reset_all() {
 						mob->name	= STRALLOC( "necromancer aivatar" );
 						STRFREE( mob->short_descr );
 						mob->short_descr	= STRALLOC( "necromancer aivatar" );
-						mob->gold = number_range(10, 20);
+						mob->gold = number_range(40, 80);
 						continue;
 					}
 					else if ( randmob == 3)
@@ -1534,7 +1535,7 @@ void reset_all() {
 						mob->name	= STRALLOC( "vampire aivatar" );
 						STRFREE( mob->short_descr );
 						mob->short_descr	= STRALLOC( "vampire aivatar" );
-						mob->gold = number_range(10, 20);
+						mob->gold = number_range(40, 80);
 						continue;
 					}
 					else if ( randmob >= 4)
@@ -1562,7 +1563,7 @@ void reset_all() {
 						mob->name	= STRALLOC( "wraith aivatar" );
 						STRFREE( mob->short_descr );
 						mob->short_descr	= STRALLOC( "wraith aivatar" );
-						mob->gold = number_range(10, 20);
+						mob->gold = number_range(40, 80);
 						continue;
 					}
 					else if ( randmob >= 8)
@@ -1626,7 +1627,7 @@ void reset_all() {
 						mob->short_descr	= STRALLOC( "gravedigger worm" );
 						STRFREE( mob->long_descr );
 						mob->long_descr	= STRALLOC( "gravedigger [worm]\n\r" );
-						mob->gold = number_range(10, 20);
+						mob->gold = number_range(20, 40);
 						continue;					}
 					else if ( randmob == 14)
 					{
@@ -1661,7 +1662,7 @@ void reset_all() {
 						mob->short_descr	= STRALLOC( "banshee worm" );
 						STRFREE( mob->long_descr );
 						mob->long_descr	= STRALLOC( "banshee [worm]\n\r" );
-						mob->gold = number_range(10, 20);
+						mob->gold = number_range(20, 40);
 						continue;						}
 					else if ( randmob == 15)
 					{
@@ -1688,7 +1689,7 @@ void reset_all() {
 						mob->short_descr	= STRALLOC( "gargoyle worm" );
 						STRFREE( mob->long_descr );
 						mob->long_descr	= STRALLOC( "gargoyle [worm]\n\r" );
-						mob->gold = number_range(10, 20);
+						mob->gold = number_range(20, 40);
 						continue;						}
 					else if ( randmob == 16)
 					{
@@ -1715,7 +1716,7 @@ void reset_all() {
 						mob->short_descr	= STRALLOC( "spirit worm" );
 						STRFREE( mob->long_descr );
 						mob->long_descr	= STRALLOC( "spirit [worm]\n\r" );
-						mob->gold = number_range(10, 20);
+						mob->gold = number_range(20, 40);
 						continue;
 					}
 			}

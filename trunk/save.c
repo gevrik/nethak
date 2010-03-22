@@ -481,6 +481,14 @@ void fwrite_char( CHAR_DATA *ch, FILE *fp )
 	  fprintf( fp, ""
 			  "Qtaxnodes      %d\n",	ch->pcdata->qtaxnodes	);
 
+	if ( ch->pcdata->threatlevel )
+	  fprintf( fp, ""
+			  "Threatlevel      %d\n",	ch->pcdata->threatlevel	);
+
+	if ( ch->pcdata->threataction )
+	  fprintf( fp, ""
+			  "Threataction      %d\n",	ch->pcdata->threataction	);
+
 	if ( ch->pcdata->rentertain )
 	  fprintf( fp, ""
 			  "Rentertain      %d\n",	ch->pcdata->rentertain	);
@@ -1523,7 +1531,9 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload )
 	    break;
 
 	case 'T':
+		KEY( "Threataction",	ch->pcdata->threataction,		fread_number( fp ) );
 	    KEY( "Toplevel",	ch->top_level,		fread_number( fp ) );
+	    KEY( "Threatlevel",	ch->pcdata->threatlevel,		fread_number( fp ) );
 	    KEY( "Trust", ch->trust, fread_number( fp ) );
             /* Let no character be trusted higher than one below maxlevel -- Narn */
 	    ch->trust = UMIN( ch->trust, MAX_LEVEL - 1 );

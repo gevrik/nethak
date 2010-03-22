@@ -754,7 +754,7 @@ void do_makeblaster( CHAR_DATA *ch, char *argument )
 	bool checktool, checkdura, checkbatt, checkoven, checkcond, checkcirc, checkammo;
 	OBJ_DATA *obj;
 	OBJ_INDEX_DATA *pObjIndex;
-	int vnum, power, scope, ammo;
+	int vnum, power, scope, ammo, bonus;
 	AFFECT_DATA *paf;
 	AFFECT_DATA *paf2;
 
@@ -780,6 +780,10 @@ void do_makeblaster( CHAR_DATA *ch, char *argument )
 		{
 			send_to_char( "> &Ryou need to be in a coding node&w\n\r", ch );
 			return;
+		}
+		else {
+				if ( ch->in_room->level != 0 )
+				bonus = ch->in_room->level * 10;
 		}
 
 		for ( obj = ch->last_carrying; obj; obj = obj->prev_content )
@@ -839,6 +843,9 @@ void do_makeblaster( CHAR_DATA *ch, char *argument )
 		if ( number_percent( ) < chance )
 		{
 			send_to_char( "&G> you begin the long process of making a blaster\n\r", ch);
+			if ( bonus > 0 )
+			ch_printf( ch , "node bonus: %d\n\r\n\r", bonus);
+
 			act( AT_PLAIN, "> $n takes $s tools and a small oven and begins to work on something", ch,
 					NULL, argument , TO_ROOM );
 			add_timer ( ch , TIMER_DO_FUN , 2 , do_makeblaster , 1 );
@@ -1325,7 +1332,7 @@ void do_makejewelry( CHAR_DATA *ch, char *argument )
 	bool checktool, checkoven, checkmetal;
 	OBJ_DATA *obj;
 	OBJ_DATA *metal;
-	int value, cost;
+	int value, cost, bonus;
 
 	argument = one_argument( argument, arg );
 	strcpy ( arg2, argument);
@@ -1361,6 +1368,10 @@ void do_makejewelry( CHAR_DATA *ch, char *argument )
 			send_to_char( "> &Ryou need to be in a coding node&w\n\r", ch );
 			return;
 		}
+		else {
+				if ( ch->in_room->level != 0 )
+				bonus = ch->in_room->level * 10;
+		}
 
 		for ( obj = ch->last_carrying; obj; obj = obj->prev_content )
 		{
@@ -1395,6 +1406,9 @@ void do_makejewelry( CHAR_DATA *ch, char *argument )
 		if ( number_percent( ) < chance )
 		{
 			send_to_char( "&G> you begin the long process of coding some utility\n\r", ch);
+			if ( bonus > 0 )
+			ch_printf( ch , "node bonus: %d\n\r\n\r", bonus);
+
 			act( AT_PLAIN, "> $n takes $s devkit, some code bits and begins to work", ch,
 					NULL, argument , TO_ROOM );
 			add_timer ( ch , TIMER_DO_FUN , 2 , do_makejewelry , 1 );
@@ -1518,7 +1532,7 @@ void do_makearmor( CHAR_DATA *ch, char *argument )
 	bool checksew, checkfab;
 	OBJ_DATA *obj;
 	OBJ_DATA *material = NULL;
-	int value;
+	int value, bonus;
 
 	argument = one_argument( argument, arg );
 	strcpy ( arg2, argument);
@@ -1556,6 +1570,10 @@ void do_makearmor( CHAR_DATA *ch, char *argument )
 			send_to_char( "> &Ryou need to be in a coding node&w\n\r", ch );
 			return;
 		}
+		else {
+				if ( ch->in_room->level != 0 )
+				bonus = ch->in_room->level * 10;
+		}
 
 		for ( obj = ch->last_carrying; obj; obj = obj->prev_content )
 		{
@@ -1582,6 +1600,8 @@ void do_makearmor( CHAR_DATA *ch, char *argument )
 		if ( number_percent( ) < chance )
 		{
 			send_to_char( "&G> you begin the long process of coding a defensive module\n\r", ch);
+			if ( bonus > 0 )
+			ch_printf( ch , "node bonus: %d\n\r\n\r", bonus);
 			act( AT_PLAIN, "> $n takes $s parser, some code fragments and begins to work", ch,
 					NULL, argument , TO_ROOM );
 			add_timer ( ch , TIMER_DO_FUN , 2 , do_makearmor , 1 ); // 10 to 2
@@ -1693,7 +1713,7 @@ void do_makeshield( CHAR_DATA *ch, char *argument )
 	bool checktool, checkbatt, checkcond, checkcirc, checkgems;
 	OBJ_DATA *obj;
 	OBJ_INDEX_DATA *pObjIndex;
-	int vnum, level, charge, gemtype = 0;
+	int bonus, vnum, level, charge, gemtype = 0;
 
 	strcpy( arg, argument );
 
@@ -1715,6 +1735,10 @@ void do_makeshield( CHAR_DATA *ch, char *argument )
 		{
 			send_to_char( "> &Ryou need to be in a coding node&w\n\r", ch );
 			return;
+		}
+		else {
+				if ( ch->in_room->level != 0 )
+				bonus = ch->in_room->level * 10;
 		}
 
 		for ( obj = ch->last_carrying; obj; obj = obj->prev_content )
@@ -1766,6 +1790,8 @@ void do_makeshield( CHAR_DATA *ch, char *argument )
 		if ( number_percent( ) < chance )
 		{
 			send_to_char( "&G> you begin the long process of coding a shield module\n\r", ch);
+			if ( bonus > 0 )
+			ch_printf( ch , "node bonus: %d\n\r\n\r", bonus);
 			act( AT_PLAIN, "> $n takes $s devkit and begins to work on something", ch,
 					NULL, argument , TO_ROOM );
 			add_timer ( ch , TIMER_DO_FUN , 2 , do_makeshield , 1 );
@@ -1908,7 +1934,7 @@ void do_makecontainer( CHAR_DATA *ch, char *argument )
 	bool checksew, checkfab;
 	OBJ_DATA *obj;
 	OBJ_DATA *material;
-	int value;
+	int value, bonus;
 
 	argument = one_argument( argument, arg );
 	strcpy( arg2 , argument );
@@ -1943,6 +1969,10 @@ void do_makecontainer( CHAR_DATA *ch, char *argument )
 			send_to_char( "> &Ryou need to be in a coding node&w\n\r", ch );
 			return;
 		}
+		else {
+				if ( ch->in_room->level != 0 )
+				bonus = ch->in_room->level * 10;
+		}
 
 		for ( obj = ch->last_carrying; obj; obj = obj->prev_content )
 		{
@@ -1969,6 +1999,8 @@ void do_makecontainer( CHAR_DATA *ch, char *argument )
 		if ( number_percent( ) < chance )
 		{
 			send_to_char( "&G> you begin the long process of coding a container module\n\r", ch);
+			if ( bonus > 0 )
+			ch_printf( ch , "node bonus: %d\n\r\n\r", bonus);
 			act( AT_PLAIN, "> $n takes $s parser and some code and begins to work", ch,
 					NULL, argument , TO_ROOM );
 			add_timer ( ch , TIMER_DO_FUN , 2 , do_makecontainer , 1 );
@@ -3391,6 +3423,16 @@ void do_propaganda ( CHAR_DATA *ch , char *argument )
 				if ( number_percent( ) > chance )
 				{
 					send_to_char( "> &Ryou fail to affect the program&w\n\r", ch);
+
+					if (ch->pcdata->threataction < 1)
+					send_to_char( "> &Wthreat status changed to: &Rtraced&w\n\r",        ch );
+
+					ch->pcdata->threatlevel += 1;
+					if ( ch->pcdata->threatlevel > 10 )
+						ch->pcdata->threatlevel = 10;
+
+					ch->pcdata->threataction += 1;
+
 					return;
 				}
 
@@ -3441,6 +3483,18 @@ void do_propaganda ( CHAR_DATA *ch , char *argument )
 		}
 
 		send_to_char( "> &Ryou fail to use propaganda&w\n\r", ch );
+
+		if ( planet->governed_by != clan )
+		{
+			if (ch->pcdata->threataction < 1)
+		send_to_char( "> &Wthreat status changed to: &Rtraced&w\n\r",        ch );
+
+		ch->pcdata->threatlevel += 1;
+		if ( ch->pcdata->threatlevel > 10 )
+			ch->pcdata->threatlevel = 10;
+
+		ch->pcdata->threataction += 1;
+		}
 		return;
 	}
 
