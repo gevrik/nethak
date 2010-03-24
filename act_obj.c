@@ -339,8 +339,8 @@ void do_get( CHAR_DATA *ch, char *argument )
                   || ch->carry_number >= can_carry_n( ch )
                   || ch->carry_weight >= can_carry_w( ch ) || ( number && cnt >= number ) )
               {
-                 if( container->item_type == ITEM_CORPSE_PC )
-                    write_corpses( NULL, container->short_descr + 14 );
+//                 if( container->item_type == ITEM_CORPSE_PC )
+//                    write_corpses( NULL, container->short_descr + 14 );
                  if( found && IS_SET( sysdata.save_flags, SV_GET ) )
                     save_char_obj( ch );
                  return;

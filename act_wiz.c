@@ -441,6 +441,39 @@ void echo_to_all( sh_int AT_COLOR, char *argument, sh_int tar )
     return;
 }
 
+void echo_to_clan( sh_int AT_COLOR, char *argument, sh_int tar, CLAN_DATA *clan )
+{
+    DESCRIPTOR_DATA *d;
+
+    if ( !argument || argument[0] == '\0' )
+	return;
+
+    for ( d = first_descriptor; d; d = d->next )
+    {
+        /* Added showing echoes to players who are editing, so they won't
+           miss out on important info like upcoming reboots. --Narn */
+	if ( d->connected == CON_PLAYING || d->connected == CON_EDITING )
+	{
+	    /* This one is kinda useless except for switched.. */
+	    if ( tar == ECHOTAR_PC && IS_NPC(d->character) )
+	      continue;
+	    else if ( tar == ECHOTAR_IMM && !IS_IMMORTAL(d->character) )
+	      continue;
+
+	    if ( d->character->pcdata->clan != NULL ){
+	    if ( !str_cmp(d->character->pcdata->clan_name, clan->name) ){
+	    set_char_color( AT_COLOR, d->character );
+	    send_to_char( argument, d->character );
+	    send_to_char( "\n\r",   d->character );
+	    }
+	    }
+
+
+	}
+    }
+    return;
+}
+
 void echo_to_area( AREA_DATA *area , sh_int AT_COLOR, char *argument, sh_int tar )
 {
     DESCRIPTOR_DATA *d;

@@ -56,20 +56,20 @@ CHAR_DATA *	timechar;
 
 char * corpse_descs[] =
    {
-     "flatine of %s",
-     "flatine of %s",
-     "flatine of %s",
-     "flatine of %s",
-     "flatine of %s"
+     "flatline of %s",
+     "flatline of %s",
+     "flatline of %s",
+     "flatline of %s",
+     "flatline of %s"
    };
 
 char * d_corpse_descs[] =
    {
-     "flatine of %s",
-     "flatine of %s",
-     "flatine of %s",
-     "flatine of %s",
-     "flatine of %s"
+     "flatline of %s",
+     "flatline of %s",
+     "flatline of %s",
+     "flatline of %s",
+     "flatline of %s"
    };
 
 extern int      top_exit;

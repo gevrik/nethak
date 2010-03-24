@@ -14,6 +14,7 @@ void do_sn_jackhammer(CHAR_DATA *ch, char *argument) {
 	int edir;
 	ROOM_INDEX_DATA *location;
 	char buf[MAX_STRING_LENGTH];
+	char bufa[MAX_STRING_LENGTH];
 	PLANET_DATA *planet;
 	bool ch_snippet;
 
@@ -67,25 +68,9 @@ void do_sn_jackhammer(CHAR_DATA *ch, char *argument) {
 				ch->name, dir_name[edir]);
 		echo_to_room(AT_RED, ch->in_room, buf);
 
-		//found = FALSE;
-
-//		   for( d = first_descriptor; d; d = d->next )
-//		   {
-//		      if( !d->character )
-//		         continue;
-//		      if( d->connected != CON_PLAYING )
-//		         continue;
-//		      if( IS_IMMORTAL( d->character ) )
-//		         continue;
-//
-//		      if( d->character->pcdata->clan == location->area->planet->governed_by )
-//		      {
-//
-//			      send_to_char( "> &R[&YALERT&R]&W enemy activity! jackhammer used!\n\r", d->character );
-//			      ch_printf( d->character, "> &R[&YALERT&R]&W in system: %s&w\n\r", ch->in_room->area->planet->name );
-//
-//		      }
-//		   }
+		sprintf(bufa, "> %s used JACKHAMMER in %s ",
+				ch->name, ch->in_room->area->planet->name);
+		echo_to_clan(AT_RED, bufa, ECHOTAR_ALL, ch->in_room->area->planet->governed_by);
 
 		REMOVE_BIT( xit->exit_info , EX_ISDOOR );
 		REMOVE_BIT( xit->exit_info , EX_LOCKED );
@@ -112,6 +97,7 @@ void do_sn_krash(CHAR_DATA *ch, char *argument) {
 	OBJ_DATA *obj;
 	ROOM_INDEX_DATA *location;
 	char buf[MAX_STRING_LENGTH];
+	char bufa[MAX_STRING_LENGTH];
 	PLANET_DATA *planet;
 	bool ch_snippet;
 
@@ -201,7 +187,11 @@ void do_sn_krash(CHAR_DATA *ch, char *argument) {
 
 		sprintf(buf, "> %s's krash slows down the cpu of the system.",
 				ch->name);
-		echo_to_room(AT_RED, ch->in_room, buf);
+		echo_to_room(AT_YELLOW, ch->in_room, buf);
+
+		sprintf(bufa, "> %s used KRASH in %s ",
+				ch->name, ch->in_room->area->planet->name);
+		echo_to_clan(AT_RED, bufa, ECHOTAR_ALL, ch->in_room->area->planet->governed_by);
 
 		//found = FALSE;
 
@@ -537,8 +527,7 @@ void do_sn_anchor( CHAR_DATA *ch, char *argument )
 		ch_snippet = FALSE;
 
 		for (obj = ch->last_carrying; obj; obj = obj->prev_content) {
-			if (obj->item_type == ITEM_SNIPPET && !strcmp(obj->name,
-					"anchor")) {
+			if ( obj->item_type == ITEM_SNIPPET && nifty_is_name("anchor", obj->name) ) {
 				ch_snippet = TRUE;
 				targetnode = obj->value[1];
 
@@ -553,11 +542,11 @@ void do_sn_anchor( CHAR_DATA *ch, char *argument )
 					return;
 				}
 
+				separate_obj(obj);
 				obj->value[0] -= 1;
 
 				if (obj->value[0] < 1)
 				{
-				separate_obj(obj);
 				obj_from_char(obj);
 				extract_obj( obj );
 				send_to_char("> &Ranchor application has expired&w\n\r", ch);
@@ -900,7 +889,7 @@ void do_sn_checkout( CHAR_DATA *ch, char *argument )
 
 		if ( IS_SET( ch->in_room->room_flags, ROOM_SAFE ) )
 		{
-			send_to_char( "> &Raudit cannot be used in safe nodes&w\n\r", ch );
+			send_to_char( "> &Rcheckout cannot be used in safe nodes&w\n\r", ch );
 			return;
 		}
 

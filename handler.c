@@ -1065,8 +1065,8 @@ void obj_from_room( OBJ_DATA *obj )
     obj->carried_by   = NULL;
     obj->in_obj	      = NULL;
     obj->in_room      = NULL;
-    if ( obj->pIndexData->vnum == OBJ_VNUM_CORPSE_PC && falling == 0 )
-      write_corpses( NULL, obj->short_descr+14 );
+//    if ( obj->pIndexData->vnum == OBJ_VNUM_CORPSE_PC && falling == 0 )
+//      write_corpses( NULL, obj->short_descr+14 );
     return;
 }
 
@@ -1090,8 +1090,8 @@ OBJ_DATA *obj_to_room( OBJ_DATA *obj, ROOM_INDEX_DATA *pRoomIndex )
     falling++;
     obj_fall( obj, FALSE );
     falling--;
-    if ( obj->pIndexData->vnum == OBJ_VNUM_CORPSE_PC && falling == 0 )
-      write_corpses( NULL, obj->short_descr+14 );
+//    if ( obj->pIndexData->vnum == OBJ_VNUM_CORPSE_PC && falling == 0 )
+//      write_corpses( NULL, obj->short_descr+14 );
     return obj;
 }
 

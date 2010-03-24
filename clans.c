@@ -1395,7 +1395,7 @@ void do_appoint ( CHAR_DATA *ch , char *argument )
 
     name[0] = UPPER(name[0]);
 
-    sprintf( fname, "> %s%c/%s", PLAYER_DIR, tolower(name[0]),
+    sprintf( fname, "%s%c/%s", PLAYER_DIR, tolower(name[0]),
 			name );
 
     if ( stat( fname, &fst ) == -1 )

@@ -2628,9 +2628,9 @@ void do_first_aid( CHAR_DATA *ch, char *argument )
 
 	if ( number_percent() == 23 )
 	{
-		send_to_char( "> you feel more intelligent than before\n\r", ch );
-		ch->perm_cha++;
-		ch->perm_cha = UMIN( ch->perm_cha , 25 );
+		send_to_char( "> you feel wiser than before\n\r", ch );
+		ch->perm_wis++;
+		ch->perm_wis = UMIN( ch->perm_wis , 25 );
 	}
 
 	learn_from_success( ch , gsn_first_aid );
@@ -3278,6 +3278,7 @@ void do_hijack( CHAR_DATA *ch, char *argument )
 void do_propaganda ( CHAR_DATA *ch , char *argument )
 {
 	char buf  [MAX_STRING_LENGTH];
+	char bufa  [MAX_STRING_LENGTH];
 	char arg1 [MAX_INPUT_LENGTH];
 	CHAR_DATA *victim;
 	PLANET_DATA *planet;
@@ -3424,6 +3425,10 @@ void do_propaganda ( CHAR_DATA *ch , char *argument )
 				{
 					send_to_char( "> &Ryou fail to affect the program&w\n\r", ch);
 
+					sprintf(bufa, "> %s used JACKHAMMER in %s ",
+							ch->name, ch->in_room->area->planet->name);
+					echo_to_clan(AT_RED, bufa, ECHOTAR_ALL, ch->in_room->area->planet->governed_by);
+
 					if (ch->pcdata->threataction < 1)
 					send_to_char( "> &Wthreat status changed to: &Rtraced&w\n\r",        ch );
 
@@ -3494,6 +3499,11 @@ void do_propaganda ( CHAR_DATA *ch , char *argument )
 			ch->pcdata->threatlevel = 10;
 
 		ch->pcdata->threataction += 1;
+
+		sprintf(bufa, "> %s used PROPAGANDA in %s ",
+				ch->name, ch->in_room->area->planet->name);
+		echo_to_clan(AT_RED, bufa, ECHOTAR_ALL, ch->in_room->area->planet->governed_by);
+
 		}
 		return;
 	}
