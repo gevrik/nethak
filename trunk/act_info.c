@@ -516,17 +516,17 @@ void show_char_to_char_0( CHAR_DATA *victim, CHAR_DATA *ch )
     {
     	//strcat( buf, "> " );
 //    	if(victim->pcdata->title != NULL){
-    		strcat( buf, victim->pcdata->title );
+//    		strcat( buf, victim->pcdata->title );
 //    	}
 //    	else
 //    	{
-//    	strcat( buf, victim->name );
+    	strcat( buf, victim->name );
 //    	}
-//    }
-//    else
-//	{
+    }
+    else
+	{
 //	strcat( buf, "> " );
-//        strcat( buf, PERS( victim, ch ) );
+        strcat( buf, PERS( victim, ch ) );
 	}
 
     switch ( victim->position )
@@ -2197,13 +2197,13 @@ void do_who( CHAR_DATA *ch, char *argument )
 
     if ( !ch )
     {
-	fprintf( whoout, "> %d player%s\n\r", nMatch, nMatch == 1 ? "" : "s" );
+	fprintf( whoout, "%d player%s\n\r", nMatch, nMatch == 1 ? "" : "s" );
 	fclose( whoout );
 	return;
     }
 
     set_char_color( AT_YELLOW, ch );
-    ch_printf( ch, "\n\r> %d player%s\n\r", nMatch, nMatch == 1 ? "" : "s" );
+    ch_printf( ch, "\n\r%d player%s\n\r", nMatch, nMatch == 1 ? "" : "s" );
     return;
 }
 

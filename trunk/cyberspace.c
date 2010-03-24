@@ -1028,7 +1028,7 @@ void do_examineobject( CHAR_DATA *ch, char *argument )
 		if ( obj->item_type == ITEM_SNIPPET )
 	{
 
-			if ( !strcmp(obj->name, "anchor") || !strcmp(obj->name, "audit" ) || !strcmp(obj->name, "shortcut") || !strcmp(obj->name, "checkout") ) {
+			if ( nifty_is_name("anchor", obj->name) || !strcmp(obj->name, "audit" ) || !strcmp(obj->name, "shortcut") || !strcmp(obj->name, "checkout") ) {
 					ch_printf( ch, "> &Gcharges:&W %d&w\n\r", obj->value[0] );
 			}
 	}
@@ -3482,15 +3482,15 @@ void do_nodeupgrade( CHAR_DATA *ch, char *argument )
 		break;
 
 	case SECT_DESERT:
-			location->area->planet->citysize++; //++;// += 2;
+			location->area->planet->citysize += 2;
 	break;
 
 	case SECT_FARMLAND:
-			location->area->planet->farmland++; //++;// += 2;
+			location->area->planet->farmland += 2;
 	break;
 
 	case SECT_GLACIAL:
-			location->area->planet->wilderness++; //++;// += 2;
+			location->area->planet->wilderness += 2;
 	break;
 
 	case SECT_FIELD:
@@ -3526,15 +3526,15 @@ void do_nodeupgrade( CHAR_DATA *ch, char *argument )
 		break;
 
 	case SECT_DESERT:
-			location->area->planet->citysize++; // += 4;
+			location->area->planet->citysize += 4;
 	break;
 
 	case SECT_FARMLAND:
-			location->area->planet->farmland++; // += 4;
+			location->area->planet->farmland += 4;
 	break;
 
 	case SECT_GLACIAL:
-			location->area->planet->wilderness++; // += 4;
+			location->area->planet->wilderness += 4;
 	break;
 
 	case SECT_FIELD:
@@ -3570,15 +3570,15 @@ void do_nodeupgrade( CHAR_DATA *ch, char *argument )
 		break;
 
 	case SECT_DESERT:
-			location->area->planet->citysize++; // += 8;
+			location->area->planet->citysize += 8;
 	break;
 
 	case SECT_FARMLAND:
-			location->area->planet->farmland++; // += 8;
+			location->area->planet->farmland += 8;
 	break;
 
 	case SECT_GLACIAL:
-			location->area->planet->wilderness++; // += 8;
+			location->area->planet->wilderness += 8;
 	break;
 
 	case SECT_FIELD:
@@ -3615,15 +3615,15 @@ void do_nodeupgrade( CHAR_DATA *ch, char *argument )
 		break;
 
 	case SECT_DESERT:
-			location->area->planet->citysize++; // += 16;
+			location->area->planet->citysize += 16;
 	break;
 
 	case SECT_FARMLAND:
-			location->area->planet->farmland++; // += 16;
+			location->area->planet->farmland += 16;
 	break;
 
 	case SECT_GLACIAL:
-			location->area->planet->wilderness++; // += 16;
+			location->area->planet->wilderness += 16;
 	break;
 
 	case SECT_FIELD:

@@ -1618,7 +1618,7 @@ ch_ret damage( CHAR_DATA *ch, CHAR_DATA *victim, int dam, int dt )
 	    do_flee( victim, "" );
 	    do_flee( victim, "" );
 	    do_flee( victim, "" );
-	    do_hail( victim, "" );
+	    //do_hail( victim, "" );
 	    do_quit( victim, "" );
 	    return rNONE;
 	}
@@ -2107,7 +2107,8 @@ else
 
   */
 
-    extract_char( victim, FALSE );
+    // extract_char( victim, FALSE );
+    char_from_room( victim );
     if ( !victim )
     {
       bug( "oops! raw_kill: extract_char destroyed pc char", 0 );

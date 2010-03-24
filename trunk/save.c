@@ -182,7 +182,7 @@ void save_char_obj( CHAR_DATA *ch )
 
     re_equip_char( ch );
 
-    write_corpses(ch, NULL);
+    //write_corpses(ch, NULL);
     quitting_char = NULL;
     saving_char   = NULL;
     return;
@@ -236,7 +236,7 @@ void save_clone( CHAR_DATA *ch )
 
     re_equip_char( ch );
 
-    write_corpses(ch, NULL);
+    //write_corpses(ch, NULL);
     quitting_char = NULL;
     saving_char   = NULL;
     return;

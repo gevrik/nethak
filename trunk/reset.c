@@ -410,7 +410,7 @@ void reset_all() {
 
 			case SECT_FIELD:
 
-				if ( pRoomIndex->area->planet->entertain_count + nodelevel > entertainmax )
+				if ( pRoomIndex->area->planet->entertain_count + baselevel > entertainmax )
 					continue;
 
 				vnum = 56;
@@ -424,12 +424,12 @@ void reset_all() {
 				if (numguards >= 1)
 					continue;
 
-				pRoomIndex->area->planet->entertain_count += nodelevel;
+				pRoomIndex->area->planet->entertain_count += baselevel;
 			break;
 
 			case SECT_FOREST:
 
-				if ( pRoomIndex->area->planet->multimedia_count + nodelevel > multimediamax )
+				if ( pRoomIndex->area->planet->multimedia_count + baselevel > multimediamax )
 					continue;
 
 				vnum = 57;
@@ -443,11 +443,11 @@ void reset_all() {
 				if (numguards >= 1)
 					continue;
 
-				pRoomIndex->area->planet->multimedia_count += nodelevel;
+				pRoomIndex->area->planet->multimedia_count += baselevel;
 			break;
 			case SECT_HILLS:
 
-				if ( pRoomIndex->area->planet->finance_count + nodelevel > financemax )
+				if ( pRoomIndex->area->planet->finance_count + baselevel > financemax )
 					continue;
 
 				vnum = 58;
@@ -461,11 +461,11 @@ void reset_all() {
 				if (numguards >= 1)
 					continue;
 
-				pRoomIndex->area->planet->finance_count += nodelevel;
+				pRoomIndex->area->planet->finance_count += baselevel;
 			break;
 			case SECT_SCRUB:
 
-				if ( pRoomIndex->area->planet->product_count + nodelevel > productmax )
+				if ( pRoomIndex->area->planet->product_count + baselevel > productmax )
 					continue;
 
 				vnum = 59;
@@ -478,7 +478,7 @@ void reset_all() {
 
 				if (numguards >= 1)
 					continue;
-				pRoomIndex->area->planet->product_count += nodelevel;
+				pRoomIndex->area->planet->product_count += baselevel;
 			break;
 			}
 

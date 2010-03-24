@@ -3809,6 +3809,8 @@ RID *	find_location	args( ( CHAR_DATA *ch, char *arg ) );
 void    echo_to_room    args( ( sh_int AT_COLOR, ROOM_INDEX_DATA *room, char *argument ) );
 void	echo_to_all	args( ( sh_int AT_COLOR, char *argument,
 				sh_int tar ) );
+void	echo_to_clan	args( ( sh_int AT_COLOR, char *argument,
+				sh_int tar, CLAN_DATA *clan ) );
 void	echo_to_area	args( ( AREA_DATA * area , sh_int AT_COLOR, char *argument,
 				sh_int tar ) );
 void   	get_reboot_string args( ( void ) );

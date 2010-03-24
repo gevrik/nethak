@@ -1481,6 +1481,15 @@ void do_backstab( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
+	if ( !IS_NPC(victim) )
+	{
+    if ( get_age(victim) <= 20 && !IS_SET(ch->in_room->room_flags,ROOM_ARENA) )
+    {
+	send_to_char( "> that character is too new\n\r", ch );
+	return;
+    }
+	}
+
 	/* Can backstab a char even if it's hurt as long as it's sleeping. -Narn */
 	if ( victim->hit < victim->max_hit && IS_AWAKE( victim ) )
 	{

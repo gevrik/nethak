@@ -714,7 +714,7 @@ void do_showplanet( CHAR_DATA *ch, char *argument )
        pf = tempf / planet->size *  100;
     }
 
-    sysnodes = planet->size - planet->citysize - planet->wilderness - planet->farmland;
+    //sysnodes = planet->size - planet->citysize - planet->wilderness - planet->farmland;
 
 	entertainmax = planet->entertain_plus - planet->entertain_minus;
 	multimediamax = planet->multimedia_plus - planet->multimedia_minus;
@@ -734,7 +734,7 @@ void do_showplanet( CHAR_DATA *ch, char *argument )
     ch_printf( ch, "&Wterminals: &G%d\n\r", planet->citysize ) ;
     ch_printf( ch, "&Wdatabase: &G%d\n\r", planet->wilderness ) ;
     ch_printf( ch, "&Wsubservers: &G%d\n\r", planet->farmland ) ;
-    ch_printf( ch, "&Wsystem: &G%d\n\r", sysnodes ) ;
+    //ch_printf( ch, "&Wsystem: &G%d\n\r", sysnodes ) ;
     ch_printf( ch, "&Wfirewalls: &G%d\n\r", planet->barracks );
     //ch_printf( ch, "&Wtowers: &G%d\n\r", planet->controls );
     ch_printf( ch, "&Wblack ICE: &G%d&W/%d\n\r", num_guards , planet->barracks*5 );
