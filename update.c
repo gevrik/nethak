@@ -714,6 +714,7 @@ void update_threat( void )
      DESCRIPTOR_DATA *d;
      CHAR_DATA *ch;
      CHAR_DATA *och;
+     int threatlevel, chance;
 
     for ( d = last_descriptor; d; d = d->prev )
     {
@@ -729,6 +730,24 @@ void update_threat( void )
 
 	if ( och->pcdata->threataction != 0 )
 	{
+
+
+//	switch (och->pcdata->threataction) {
+//
+//		default:
+//			break;
+//
+//			case 1: // fines
+//
+//				threatlevel = och->pcdata->threatlevel;
+//
+//				chance = IS_NPC(ch) ? ch->top_level : (int) (ch->pcdata->learned[gsn_spacecraft]);
+//
+//
+//
+//				break;
+//
+//		}
 
 //		if ( number_range(1, 10) <= och->pcdata->threatlevel ) {
 //			determine_tresult(ch);

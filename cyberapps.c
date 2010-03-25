@@ -68,8 +68,10 @@ void do_sn_jackhammer(CHAR_DATA *ch, char *argument) {
 				ch->name, dir_name[edir]);
 		echo_to_room(AT_RED, ch->in_room, buf);
 
+
 		sprintf(bufa, "> %s used JACKHAMMER in %s ",
 				ch->name, ch->in_room->area->planet->name);
+
 		echo_to_clan(AT_RED, bufa, ECHOTAR_ALL, ch->in_room->area->planet->governed_by);
 
 		REMOVE_BIT( xit->exit_info , EX_ISDOOR );
