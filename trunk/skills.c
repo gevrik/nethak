@@ -1155,7 +1155,7 @@ void do_gouge( CHAR_DATA *ch, char *argument )
 
 	if ( !IS_NPC(ch) && !ch->pcdata->learned[gsn_gouge] )
 	{
-		send_to_char("> you do not yet know of this skill\n\r", ch );
+		send_to_char("> you do not know the gouge skillsoft\n\r", ch );
 		return;
 	}
 
@@ -1171,11 +1171,19 @@ void do_gouge( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
-	percent = number_percent( ) - (get_curr_lck(ch) - 13);
+	percent = number_percent( ) - ( ch->mod_dex * 5 ) + ( victim->mod_dex * 5 );
 
 	if ( IS_NPC(ch) || percent < ch->pcdata->learned[gsn_gouge] )
 	{
-		dam = number_range( 1, ch->pcdata->learned[gsn_gouge] / 10 );
+		//dam = number_range( 1, ch->pcdata->learned[gsn_gouge] / 10 );
+		dam = ch->mod_str - victim->mod_con;
+		
+		if ( dam <= 0 )
+			{
+						send_to_char( "> you gouge, but fail to do any damage\n\r", ch );
+						return;
+			}
+		
 		global_retcode = damage( ch, victim, dam, gsn_gouge );
 		if ( global_retcode == rNONE )
 		{
@@ -1184,10 +1192,10 @@ void do_gouge( CHAR_DATA *ch, char *argument )
 				af.type      = gsn_blindness;
 				af.location  = APPLY_HITROLL;
 				af.modifier  = -6;
-				af.duration  = 3 + IS_NPC(ch) ? ch->top_level : ch->pcdata->learned[gsn_gouge] / 20;
+				af.duration  = IS_NPC(ch) ? ch->top_level : ch->pcdata->learned[gsn_gouge] / 20; //3 + IS_NPC(ch) ? ch->top_level : ch->pcdata->learned[gsn_gouge] / 20;
 				af.bitvector = AFF_BLIND;
 				affect_to_char( victim, &af );
-				act( AT_SKILL, "> you cannot see a thing", victim, NULL, NULL, TO_CHAR );
+				act( AT_SKILL, "> &ryou lose your senses&w", victim, NULL, NULL, TO_CHAR );
 			}
 			WAIT_STATE( ch,     PULSE_VIOLENCE );
 			WAIT_STATE( victim, PULSE_VIOLENCE );
@@ -1199,7 +1207,7 @@ void do_gouge( CHAR_DATA *ch, char *argument )
 		else
 			if ( global_retcode == rVICT_DIED )
 			{
-				act( AT_BLOOD, "> your fingers plunge into your victim's brain causing immediate death",
+				act( AT_BLOOD, "> &Gyour gouge flatlines your victim immediately&w",
 						ch, NULL, NULL, TO_CHAR );
 			}
 		if ( global_retcode != rCHAR_DIED && global_retcode != rBOTH_DIED )
@@ -1235,6 +1243,13 @@ void do_steal( CHAR_DATA *ch, char *argument )
 
 	argument = one_argument( argument, arg1 );
 	argument = one_argument( argument, arg2 );
+
+			if ( !IS_NPC(ch)
+			&&   ch->pcdata->learned[gsn_steal] <= 0  )
+	{
+		send_to_char( "> you do not know how to steal\n\r", ch );
+		return;
+	}
 
 	if ( ch->mount )
 	{
@@ -1432,6 +1447,14 @@ void do_backstab( CHAR_DATA *ch, char *argument )
 	OBJ_DATA *obj;
 	int percent;
 
+
+		if ( !IS_NPC(ch)
+			&&   ch->pcdata->learned[gsn_backstab] <= 0  )
+	{
+		send_to_char( "> &Yyou do not know how to backstab opponents&w\n\r", ch );
+		return;
+	}
+
 	if ( IS_NPC(ch) && IS_AFFECTED( ch, AFF_CHARM ) )
 	{
 		send_to_char( "> you cannot do that right now\n\r", ch );
@@ -1448,19 +1471,19 @@ void do_backstab( CHAR_DATA *ch, char *argument )
 
 	if ( arg[0] == '\0' )
 	{
-		send_to_char( "> backstab whom\n\r", ch );
+		send_to_char( "> &Ybackstab whom&w\n\r", ch );
 		return;
 	}
 
 	if ( ( victim = get_char_room( ch, arg ) ) == NULL )
 	{
-		send_to_char( "> entity not found\n\r", ch );
+		send_to_char( "> &Rentity not found&w\n\r", ch );
 		return;
 	}
 
 	if ( victim == ch )
 	{
-		send_to_char( "> how can you sneak up on yourself\n\r", ch );
+		send_to_char( "> &Rhow can you sneak up on yourself?&w\n\r", ch );
 		return;
 	}
 
@@ -1471,13 +1494,13 @@ void do_backstab( CHAR_DATA *ch, char *argument )
 	if ( ( obj = get_eq_char( ch, WEAR_WIELD ) ) == NULL
 			||   ( obj->value[3] != WEAPON_VIBRO_BLADE ) )
 	{
-		send_to_char( "> you need to wield a blade module\n\r", ch );
+		send_to_char( "> &Ryou need to wield a blade module&w\n\r", ch );
 		return;
 	}
 
 	if ( victim->fighting )
 	{
-		send_to_char( "> you cannot backstab someone who is in combat\n\r", ch );
+		send_to_char( "> &Ryou cannot backstab someone who is already in combat&w\n\r", ch );
 		return;
 	}
 
@@ -1485,7 +1508,7 @@ void do_backstab( CHAR_DATA *ch, char *argument )
 	{
     if ( get_age(victim) <= 20 && !IS_SET(ch->in_room->room_flags,ROOM_ARENA) )
     {
-	send_to_char( "> that character is too new\n\r", ch );
+	send_to_char( "> &Rthat character is too new&w\n\r", ch );
 	return;
     }
 	}
@@ -1493,13 +1516,13 @@ void do_backstab( CHAR_DATA *ch, char *argument )
 	/* Can backstab a char even if it's hurt as long as it's sleeping. -Narn */
 	if ( victim->hit < victim->max_hit && IS_AWAKE( victim ) )
 	{
-		act( AT_PLAIN, "> $N is hurt and suspicious - you cannot sneak up",
+		act( AT_PLAIN, "> &R$N is hurt and suspicious - you cannot sneak up&w",
 				ch, NULL, victim, TO_CHAR );
 		return;
 	}
 
-	percent = number_percent( ) - (get_curr_lck(ch) - 14)
-	    		  + (get_curr_lck(victim) - 13);
+	//percent = number_percent( ) - (get_curr_lck(ch) - 14) + (get_curr_lck(victim) - 13);
+	percent = number_percent( ) - ( get_curr_dex(ch) * 5 ) + ( get_curr_wis(victim) * 5 );
 
 	WAIT_STATE( ch, skill_table[gsn_backstab]->beats );
 	if ( !IS_AWAKE(victim)
@@ -1535,6 +1558,12 @@ void do_rescue( CHAR_DATA *ch, char *argument )
 	if ( IS_NPC(ch) && IS_AFFECTED( ch, AFF_CHARM ) )
 	{
 		send_to_char( "> you cannot concentrate enough for that\n\r", ch );
+		return;
+	}
+	
+		if ( !IS_NPC(ch) && !ch->pcdata->learned[gsn_rescue] )
+	{
+		send_to_char("> you do not know how to rescue someone\n\r", ch );
 		return;
 	}
 
@@ -1628,6 +1657,14 @@ void do_rescue( CHAR_DATA *ch, char *argument )
 void do_kick( CHAR_DATA *ch, char *argument )
 {
 	CHAR_DATA *victim;
+	int chance;
+	
+		if ( !IS_NPC(ch)
+			&&   ch->pcdata->learned[gsn_kick] <= 0  )
+	{
+		send_to_char( "> you do not know how to kick opponents\n\r", ch );
+		return;
+	}
 
 	if ( IS_NPC(ch) && IS_AFFECTED( ch, AFF_CHARM ) )
 	{
@@ -1641,8 +1678,10 @@ void do_kick( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
+	chance = ( ch->mod_str * 5 ) - ( victim->mod_dex * 5 );
+	
 	WAIT_STATE( ch, skill_table[gsn_kick]->beats );
-	if ( IS_NPC(ch) || number_percent( ) < ch->pcdata->learned[gsn_kick] )
+	if ( IS_NPC(ch) || number_percent( ) - chance < ch->pcdata->learned[gsn_kick] )
 	{
 
 		if ( number_percent() == 23 )
@@ -1672,6 +1711,7 @@ void do_kick( CHAR_DATA *ch, char *argument )
 void disarm( CHAR_DATA *ch, CHAR_DATA *victim )
 {
 	OBJ_DATA *obj, *tmpobj;
+	int chance;
 
 	if ( ( obj = get_eq_char( victim, WEAR_WIELD ) ) == NULL )
 		return;
@@ -1781,6 +1821,7 @@ void do_disarm( CHAR_DATA *ch, char *argument )
  */
 void trip( CHAR_DATA *ch, CHAR_DATA *victim )
 {
+	
 	if ( IS_AFFECTED( victim, AFF_FLYING )
 			||   IS_AFFECTED( victim, AFF_FLOATING ) )
 		return;
@@ -1823,6 +1864,12 @@ void do_pick( CHAR_DATA *ch, char *argument )
 	SHIP_DATA *ship;
 	CLAN_DATA * clan;
 	int nodelevel, skillmalus;
+	
+		if ( !IS_NPC(ch) && !ch->pcdata->learned[gsn_pick_lock] )
+	{
+		send_to_char("> you do not know the picklock skillsoft\n\r", ch );
+		return;
+	}
 
 	if ( IS_NPC(ch) && IS_AFFECTED( ch, AFF_CHARM ) )
 	{
@@ -2039,6 +2086,12 @@ void do_sneak( CHAR_DATA *ch, char *argument )
 		send_to_char( "> you cannot concentrate enough for that\n\r", ch );
 		return;
 	}
+	
+		if ( !IS_NPC(ch) && !ch->pcdata->learned[gsn_sneak] )
+	{
+		send_to_char("> you do not know how to sneak\n\r", ch );
+		return;
+	}
 
 	if ( ch->mount )
 	{
@@ -2086,13 +2139,17 @@ void do_hide( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
+	if ( !IS_NPC(ch) && !ch->pcdata->learned[gsn_hide] )
+	{
+		send_to_char("> you do not know the hide skillsoft\n\r", ch );
+		return;
+	}
+
 	if ( ch->mount )
 	{
 		send_to_char( "> you cannot do that while mounted\n\r", ch );
 		return;
 	}
-
-	send_to_char( "> you attempt to hide\n\r", ch );
 
 	if ( IS_AFFECTED(ch, AFF_HIDE) )
 		REMOVE_BIT(ch->affected_by, AFF_HIDE);
@@ -2107,11 +2164,14 @@ void do_hide( CHAR_DATA *ch, char *argument )
 			ch->perm_dex++;
 			ch->perm_dex = UMIN( ch->perm_dex , 25 );
 		}
-
+		send_to_char( "> &Gyou activate hide mode&w\n\r", ch );
 		learn_from_success( ch, gsn_hide );
 	}
 	else
+		{
 		learn_from_failure( ch, gsn_hide );
+		send_to_char( "> &Ryou fail to activate hide mode&w\n\r", ch );
+	}
 	return;
 }
 
@@ -2128,7 +2188,7 @@ void do_visible( CHAR_DATA *ch, char *argument )
 	REMOVE_BIT   ( ch->affected_by, AFF_HIDE		);
 	REMOVE_BIT   ( ch->affected_by, AFF_INVISIBLE	);
 	REMOVE_BIT   ( ch->affected_by, AFF_SNEAK		);
-	send_to_char( "> ok\n\r", ch );
+	send_to_char( "> &Gyou are visible again now&w\n\r", ch );
 	return;
 }
 
@@ -2202,6 +2262,12 @@ void do_aid( CHAR_DATA *ch, char *argument )
 		send_to_char( "> you cannot concentrate enough for that\n\r", ch );
 		return;
 	}
+	
+		if ( !IS_NPC(ch) && !ch->pcdata->learned[gsn_aid] )
+	{
+		send_to_char("> you do not know the hide skillsoft\n\r", ch );
+		return;
+	}
 
 	one_argument( argument, arg );
 	if ( arg[0] == '\0' )
@@ -2249,7 +2315,7 @@ void do_aid( CHAR_DATA *ch, char *argument )
 	WAIT_STATE( ch, skill_table[gsn_aid]->beats );
 	if ( !IS_NPC(ch) && percent > ch->pcdata->learned[gsn_aid] )
 	{
-		send_to_char( "> you fail\n\r", ch );
+		send_to_char( "> &Ryou fail to aid your target&w\n\r", ch );
 		learn_from_failure( ch, gsn_aid );
 		return;
 	}
@@ -2497,7 +2563,7 @@ void do_poison_weapon( CHAR_DATA *ch, char *argument )
 	if ( !IS_NPC( ch )
 			&&  ch->pcdata->learned[gsn_poison_weapon] <= 0  )
 	{
-		send_to_char( "> invalid command\n\r", ch );
+		send_to_char( "> you do not know that skillsoft yet\n\r", ch );
 		return;
 	}
 
@@ -2573,10 +2639,10 @@ void do_poison_weapon( CHAR_DATA *ch, char *argument )
 			&& percent > ch->pcdata->learned[gsn_poison_weapon] )
 	{
 		set_char_color( AT_RED, ch );
-		send_to_char( "> you failed and spill some on yourself\n\r", ch );
+		send_to_char( "> you failed and infect yourself with the virus\n\r", ch );
 		set_char_color( AT_GREY, ch );
 		damage( ch, ch, IS_NPC(ch) ? ch->top_level : ch->pcdata->learned[gsn_poison_weapon] , gsn_poison_weapon );
-		act(AT_RED, "> $n spills the poison all over", ch, NULL, NULL, TO_ROOM );
+		act(AT_RED, "> $n infects themselves with a virus", ch, NULL, NULL, TO_ROOM );
 		extract_obj( pobj );
 		//extract_obj( wobj );
 		learn_from_failure( ch, gsn_poison_weapon );
@@ -2659,6 +2725,12 @@ void do_circle( CHAR_DATA *ch, char *argument )
 		send_to_char( "> you cannot concentrate enough for that\n\r", ch );
 		return;
 	}
+	
+		if ( !IS_NPC(ch) && !ch->pcdata->learned[gsn_circle] )
+	{
+		send_to_char("> you do not know the circle skillsoft\n\r", ch );
+		return;
+	}
 
 	one_argument( argument, arg );
 
@@ -2670,19 +2742,19 @@ void do_circle( CHAR_DATA *ch, char *argument )
 
 	if ( arg[0] == '\0' )
 	{
-		send_to_char( "Circle around whom\n\r", ch );
+		send_to_char( "> &Ycircle around whom&w\n\r", ch );
 		return;
 	}
 
 	if ( ( victim = get_char_room( ch, arg ) ) == NULL )
 	{
-		send_to_char( "> entity not found\n\r", ch );
+		send_to_char( "> &Rentity not found&w\n\r", ch );
 		return;
 	}
 
 	if ( victim == ch )
 	{
-		send_to_char( "How can you sneak up on yourself\n\r", ch );
+		send_to_char( "> &Rhow can you sneak up on yourself&w\n\r", ch );
 		return;
 	}
 
@@ -2715,8 +2787,8 @@ void do_circle( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
-	percent = number_percent( ) - (get_curr_lck(ch) - 16)
-	    		  + (get_curr_lck(victim) - 13);
+	//percent = number_percent( ) - (get_curr_lck(ch) - 16) + (get_curr_lck(victim) - 13);
+percent = number_percent( ) - (get_curr_dex(ch) * 5) + (get_curr_wis(victim) * 5);
 
 	WAIT_STATE( ch, skill_table[gsn_circle]->beats );
 	if ( percent < (IS_NPC(ch) ? ch->top_level  * 1.5 : ch->pcdata->learned[gsn_circle]) )
@@ -2778,7 +2850,7 @@ void do_berserk( CHAR_DATA *ch, char *argument )
 	af.modifier = 1;
 	af.bitvector = AFF_BERSERK;
 	affect_to_char(ch, &af);
-	send_to_char( "> you start to lose control.\n\r", ch );
+	send_to_char( "> you start to lose control\n\r", ch );
 
 	if ( number_percent() == 23 )
 	{
@@ -2793,6 +2865,7 @@ void do_berserk( CHAR_DATA *ch, char *argument )
 
 /* External from fight.c */
 ch_ret one_hit	args( ( CHAR_DATA *ch, CHAR_DATA *victim, int dt ) );
+
 void do_hitall( CHAR_DATA *ch, char *argument )
 {
 	CHAR_DATA *vch;

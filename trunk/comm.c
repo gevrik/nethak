@@ -1330,29 +1330,47 @@ void read_from_buffer( DESCRIPTOR_DATA *d )
 		}
 
 		#ifdef MCCP
-		        if ( d->inbuf[i] == (signed char)IAC )
-		            iac=1;
-		        else if ( iac==1 && (d->inbuf[i] == (signed char)DO || d->inbuf[i] == (signed char)DONT) )
-		            iac=2;
-		        else if ( iac==2 )
-		        {
-		            iac = 0;
-		            if ( d->inbuf[i] == (signed char)TELOPT_COMPRESS )
-		            {
-		                if ( d->inbuf[i-1] == (signed char)DO )
-		                    compressStart(d, TELOPT_COMPRESS);
-		                else if ( d->inbuf[i-1] == (signed char)DONT )
-		                    compressEnd(d);
-		            }
-		            else if ( d->inbuf[i] == (signed char)TELOPT_COMPRESS2 )
-		            {
-		                if ( d->inbuf[i-1] == (signed char)DO )
-		                    compressStart(d, TELOPT_COMPRESS2);
-		                else if ( d->inbuf[i-1] == (signed char)DONT )
-		                    compressEnd(d);
-		            }
-		        }
-		        else
+//		        if ( d->inbuf[i] == (signed char)IAC )
+//		            iac=1;
+//		        else if ( iac==1 && (d->inbuf[i] == (signed char)DO || d->inbuf[i] == (signed char)DONT) )
+//		            iac=2;
+//		        else if ( iac==2 )
+//		        {
+//		            iac = 0;
+//		            if ( d->inbuf[i] == (signed char)TELOPT_COMPRESS )
+//		            {
+//		                if ( d->inbuf[i-1] == (signed char)DO )
+//		                    compressStart(d, TELOPT_COMPRESS);
+//		                else if ( d->inbuf[i-1] == (signed char)DONT )
+//		                    compressEnd(d);
+//		            }
+//		            else if ( d->inbuf[i] == (signed char)TELOPT_COMPRESS2 )
+//		            {
+//		                if ( d->inbuf[i-1] == (signed char)DO )
+//		                    compressStart(d, TELOPT_COMPRESS2);
+//		                else if ( d->inbuf[i-1] == (signed char)DONT )
+//		                    compressEnd(d);
+//		            }
+//		        }
+//		        else
+	      if( d->inbuf[i] == ( signed char )IAC )
+	         iac = 1;
+	      else if( iac == 1
+	               && ( d->inbuf[i] == ( signed char )DO || d->inbuf[i] == ( signed char )DONT
+	                    || d->inbuf[i] == ( signed char )WILL ) )
+	         iac = 2;
+	      else if( iac == 2 )
+	      {
+	         iac = 0;
+	         if( d->inbuf[i] == ( signed char )TELOPT_COMPRESS2 )
+	         {
+	            if( d->inbuf[i - 1] == ( signed char )DO )
+	               compressStart( d, TELOPT_COMPRESS2 );
+	            else if( d->inbuf[i - 1] == ( signed char )DONT )
+	               compressEnd( d );
+	         }
+	      }
+	      else
 		#endif
 
 		if ( d->inbuf[i] == '\b' && k > 0 )

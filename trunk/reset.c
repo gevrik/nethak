@@ -85,7 +85,7 @@ void reset_all() {
 							char_to_room(mob, pRoomIndex);
 							mob->hit = 100;
 							mob->max_hit = 100;
-							if (room_is_dark(pRoomIndex))
+							//if (room_is_dark(pRoomIndex))
 								SET_BIT(mob->affected_by, AFF_INFRARED);
 							if ((pObjIndex = get_obj_index(OBJ_VNUM_BLASTER))
 									!= NULL) {
@@ -152,7 +152,7 @@ void reset_all() {
 
 					mob = create_mobile(pMobIndex);
 					SET_BIT ( mob->act , ACT_CITIZEN );
-					if (room_is_dark(pRoomIndex))
+					//if (room_is_dark(pRoomIndex))
 						SET_BIT(mob->affected_by, AFF_INFRARED);
 					char_to_room(mob, pRoomIndex);
 					if (pRoomIndex->area && pRoomIndex->area->planet)
@@ -315,7 +315,7 @@ void reset_all() {
 				guard->mob = mob;
 				guard->reset_loc = pRoomIndex;
 				mob->guard_data = guard;
-				if (room_is_dark(pRoomIndex))
+				//if (room_is_dark(pRoomIndex))
 					SET_BIT(mob->affected_by, AFF_INFRARED);
 				if (pRoomIndex->area->planet->governed_by) {
 					sprintf(tmpbuf, "ICE [%s] patrols the area\n\r",
@@ -357,7 +357,7 @@ void reset_all() {
 				mob->damroll = 0;
 				mob->hitroll = 20;
 
-				if (room_is_dark(pRoomIndex))
+				//if (room_is_dark(pRoomIndex))
 					SET_BIT(mob->affected_by, AFF_INFRARED);
 				if (pRoomIndex->area->planet->governed_by) {
 					sprintf(tmpbuf, "guard ICE [%s]\n\r",
@@ -488,7 +488,7 @@ void reset_all() {
 			}
 
 				mob = create_mobile(pMobIndex);
-				if (room_is_dark(pRoomIndex))
+				//if (room_is_dark(pRoomIndex))
 					SET_BIT(mob->affected_by, AFF_INFRARED);
 				char_to_room(mob, pRoomIndex);
 				mob->top_level = 20 * baselevel;
@@ -904,7 +904,7 @@ void reset_all() {
 						return;
 					}
 					mob = create_mobile(pMobIndex);
-					if (room_is_dark(pRoomIndex))
+					//if (room_is_dark(pRoomIndex))
 						SET_BIT(mob->affected_by, AFF_INFRARED);
 					char_to_room(mob, pRoomIndex);
 					mob->top_level = 20;
@@ -939,7 +939,7 @@ void reset_all() {
 							return;
 						}
 						mob = create_mobile(pMobIndex);
-						if (room_is_dark(pRoomIndex))
+						//if (room_is_dark(pRoomIndex))
 							SET_BIT(mob->affected_by, AFF_INFRARED);
 						char_to_room(mob, pRoomIndex);
 						mob->top_level = 10;
@@ -974,7 +974,7 @@ void reset_all() {
 							return;
 						}
 						mob = create_mobile(pMobIndex);
-						if (room_is_dark(pRoomIndex))
+						//if (room_is_dark(pRoomIndex))
 							SET_BIT(mob->affected_by, AFF_INFRARED);
 						char_to_room(mob, pRoomIndex);
 						mob->top_level = 10;
@@ -1009,7 +1009,7 @@ void reset_all() {
 							return;
 						}
 						mob = create_mobile(pMobIndex);
-						if (room_is_dark(pRoomIndex))
+						//if (room_is_dark(pRoomIndex))
 							SET_BIT(mob->affected_by, AFF_INFRARED);
 						char_to_room(mob, pRoomIndex);
 						mob->top_level = 10;
@@ -1037,7 +1037,7 @@ void reset_all() {
 							return;
 						}
 						mob = create_mobile(pMobIndex);
-						if (room_is_dark(pRoomIndex))
+						//if (room_is_dark(pRoomIndex))
 							SET_BIT(mob->affected_by, AFF_INFRARED);
 						char_to_room(mob, pRoomIndex);
 						mob->top_level = 10;
@@ -1105,7 +1105,7 @@ void reset_all() {
 						return;
 					}
 					mob = create_mobile(pMobIndex);
-					if (room_is_dark(pRoomIndex))
+					//if (room_is_dark(pRoomIndex))
 						SET_BIT(mob->affected_by, AFF_INFRARED);
 					char_to_room(mob, pRoomIndex);
 					mob->top_level = 40;
@@ -1142,7 +1142,7 @@ void reset_all() {
 							return;
 						}
 						mob = create_mobile(pMobIndex);
-						if (room_is_dark(pRoomIndex))
+						//if (room_is_dark(pRoomIndex))
 							SET_BIT(mob->affected_by, AFF_INFRARED);
 						char_to_room(mob, pRoomIndex);
 						mob->top_level = 20;
@@ -1178,7 +1178,7 @@ void reset_all() {
 							return;
 						}
 						mob = create_mobile(pMobIndex);
-						if (room_is_dark(pRoomIndex))
+						//if (room_is_dark(pRoomIndex))
 							SET_BIT(mob->affected_by, AFF_INFRARED);
 						char_to_room(mob, pRoomIndex);
 						mob->top_level = 20;
@@ -1214,7 +1214,7 @@ void reset_all() {
 							return;
 						}
 						mob = create_mobile(pMobIndex);
-						if (room_is_dark(pRoomIndex))
+						//if (room_is_dark(pRoomIndex))
 							SET_BIT(mob->affected_by, AFF_INFRARED);
 						char_to_room(mob, pRoomIndex);
 						mob->top_level = 20;
@@ -1242,7 +1242,7 @@ void reset_all() {
 							return;
 						}
 						mob = create_mobile(pMobIndex);
-						if (room_is_dark(pRoomIndex))
+						//if (room_is_dark(pRoomIndex))
 							SET_BIT(mob->affected_by, AFF_INFRARED);
 						char_to_room(mob, pRoomIndex);
 						mob->top_level = 20;
@@ -1270,7 +1270,7 @@ void reset_all() {
 							return;
 						}
 						mob = create_mobile(pMobIndex);
-						if (room_is_dark(pRoomIndex))
+						//if (room_is_dark(pRoomIndex))
 							SET_BIT(mob->affected_by, AFF_INFRARED);
 						char_to_room(mob, pRoomIndex);
 						mob->top_level = 10;
@@ -1307,7 +1307,7 @@ void reset_all() {
 							return;
 						}
 						mob = create_mobile(pMobIndex);
-						if (room_is_dark(pRoomIndex))
+						//if (room_is_dark(pRoomIndex))
 							SET_BIT(mob->affected_by, AFF_INFRARED);
 						char_to_room(mob, pRoomIndex);
 						mob->top_level = 10;
@@ -1343,7 +1343,7 @@ void reset_all() {
 							return;
 						}
 						mob = create_mobile(pMobIndex);
-						if (room_is_dark(pRoomIndex))
+						//if (room_is_dark(pRoomIndex))
 							SET_BIT(mob->affected_by, AFF_INFRARED);
 						char_to_room(mob, pRoomIndex);
 						mob->top_level = 10;
@@ -1371,7 +1371,7 @@ void reset_all() {
 							return;
 						}
 						mob = create_mobile(pMobIndex);
-						if (room_is_dark(pRoomIndex))
+						//if (room_is_dark(pRoomIndex))
 							SET_BIT(mob->affected_by, AFF_INFRARED);
 						char_to_room(mob, pRoomIndex);
 						mob->top_level = 10;
@@ -1438,7 +1438,7 @@ void reset_all() {
 						return;
 					}
 					mob = create_mobile(pMobIndex);
-					if (room_is_dark(pRoomIndex))
+					//if (room_is_dark(pRoomIndex))
 						SET_BIT(mob->affected_by, AFF_INFRARED);
 					char_to_room(mob, pRoomIndex);
 					mob->top_level = 80;
@@ -1475,7 +1475,7 @@ void reset_all() {
 							return;
 						}
 						mob = create_mobile(pMobIndex);
-						if (room_is_dark(pRoomIndex))
+						//if (room_is_dark(pRoomIndex))
 							SET_BIT(mob->affected_by, AFF_INFRARED);
 						char_to_room(mob, pRoomIndex);
 						mob->top_level = 40;
@@ -1511,7 +1511,7 @@ void reset_all() {
 							return;
 						}
 						mob = create_mobile(pMobIndex);
-						if (room_is_dark(pRoomIndex))
+						//if (room_is_dark(pRoomIndex))
 							SET_BIT(mob->affected_by, AFF_INFRARED);
 						char_to_room(mob, pRoomIndex);
 						mob->top_level = 40;
@@ -1547,7 +1547,7 @@ void reset_all() {
 							return;
 						}
 						mob = create_mobile(pMobIndex);
-						if (room_is_dark(pRoomIndex))
+						//if (room_is_dark(pRoomIndex))
 							SET_BIT(mob->affected_by, AFF_INFRARED);
 						char_to_room(mob, pRoomIndex);
 						mob->top_level = 40;
@@ -1575,7 +1575,7 @@ void reset_all() {
 							return;
 						}
 						mob = create_mobile(pMobIndex);
-						if (room_is_dark(pRoomIndex))
+						//if (room_is_dark(pRoomIndex))
 							SET_BIT(mob->affected_by, AFF_INFRARED);
 						char_to_room(mob, pRoomIndex);
 						mob->top_level = 40;
@@ -1603,7 +1603,7 @@ void reset_all() {
 							return;
 						}
 						mob = create_mobile(pMobIndex);
-						if (room_is_dark(pRoomIndex))
+						//if (room_is_dark(pRoomIndex))
 							SET_BIT(mob->affected_by, AFF_INFRARED);
 						char_to_room(mob, pRoomIndex);
 						mob->top_level = 20;
@@ -1638,7 +1638,7 @@ void reset_all() {
 							return;
 						}
 						mob = create_mobile(pMobIndex);
-						if (room_is_dark(pRoomIndex))
+						//if (room_is_dark(pRoomIndex))
 							SET_BIT(mob->affected_by, AFF_INFRARED);
 						char_to_room(mob, pRoomIndex);
 						mob->top_level = 20;
@@ -1673,7 +1673,7 @@ void reset_all() {
 							return;
 						}
 						mob = create_mobile(pMobIndex);
-						if (room_is_dark(pRoomIndex))
+						//if (room_is_dark(pRoomIndex))
 							SET_BIT(mob->affected_by, AFF_INFRARED);
 						char_to_room(mob, pRoomIndex);
 						mob->top_level = 20;
@@ -1700,7 +1700,7 @@ void reset_all() {
 							return;
 						}
 						mob = create_mobile(pMobIndex);
-						if (room_is_dark(pRoomIndex))
+						//if (room_is_dark(pRoomIndex))
 							SET_BIT(mob->affected_by, AFF_INFRARED);
 						char_to_room(mob, pRoomIndex);
 						mob->top_level = 20;
@@ -1731,7 +1731,7 @@ void reset_all() {
 
 			mob = create_mobile(pMobIndex);
 			REMOVE_BIT ( mob->act , ACT_CITIZEN );
-			if (room_is_dark(pRoomIndex))
+			//if (room_is_dark(pRoomIndex))
 				SET_BIT(mob->affected_by, AFF_INFRARED);
 			char_to_room(mob, pRoomIndex);
 			pRoomIndex->area->planet->wildlife++;

@@ -536,6 +536,12 @@ void do_makeblade( CHAR_DATA *ch, char *argument )
 	AFFECT_DATA *paf;
 	AFFECT_DATA *paf2;
 
+	if ( !IS_NPC(ch) && !ch->pcdata->learned[gsn_makeblade] )
+	{
+		send_to_char("> you do not know the codeblade skillsoft\n\r", ch );
+		return;
+	}
+
 	strcpy( arg , argument );
 
 	switch( ch->substate )
@@ -757,6 +763,12 @@ void do_makeblaster( CHAR_DATA *ch, char *argument )
 	int vnum, power, scope, ammo, bonus;
 	AFFECT_DATA *paf;
 	AFFECT_DATA *paf2;
+
+	if ( !IS_NPC(ch) && !ch->pcdata->learned[gsn_makeblaster] )
+	{
+		send_to_char("> you do not know the codeblaster skillsoft\n\r", ch );
+		return;
+	}
 
 	strcpy( arg , argument );
 
@@ -1333,6 +1345,13 @@ void do_makejewelry( CHAR_DATA *ch, char *argument )
 	OBJ_DATA *obj;
 	OBJ_DATA *metal;
 	int value, cost, bonus;
+	
+	
+		if ( !IS_NPC(ch) && !ch->pcdata->learned[gsn_makejewelry] )
+	{
+		send_to_char("> you do not know the codeutil skillsoft\n\r", ch );
+		return;
+	}
 
 	argument = one_argument( argument, arg );
 	strcpy ( arg2, argument);
@@ -1533,6 +1552,12 @@ void do_makearmor( CHAR_DATA *ch, char *argument )
 	OBJ_DATA *obj;
 	OBJ_DATA *material = NULL;
 	int value, bonus;
+	
+		if ( !IS_NPC(ch) && !ch->pcdata->learned[gsn_makearmor] )
+	{
+		send_to_char("> you do not know the codedef skillsoft\n\r", ch );
+		return;
+	}
 
 	argument = one_argument( argument, arg );
 	strcpy ( arg2, argument);
@@ -1714,6 +1739,12 @@ void do_makeshield( CHAR_DATA *ch, char *argument )
 	OBJ_DATA *obj;
 	OBJ_INDEX_DATA *pObjIndex;
 	int bonus, vnum, level, charge, gemtype = 0;
+	
+		if ( !IS_NPC(ch) && !ch->pcdata->learned[gsn_makeshield] )
+	{
+		send_to_char("> you do not know the codeshield skillsoft\n\r", ch );
+		return;
+	}
 
 	strcpy( arg, argument );
 
@@ -1935,6 +1966,12 @@ void do_makecontainer( CHAR_DATA *ch, char *argument )
 	OBJ_DATA *obj;
 	OBJ_DATA *material;
 	int value, bonus;
+	
+		if ( !IS_NPC(ch) && !ch->pcdata->learned[gsn_makecontainer] )
+	{
+		send_to_char("> you do not know the codecontainer skillsoft\n\r", ch );
+		return;
+	}
 
 	argument = one_argument( argument, arg );
 	strcpy( arg2 , argument );
@@ -2110,6 +2147,12 @@ void do_reinforcements( CHAR_DATA *ch, char *argument )
 	char arg[MAX_INPUT_LENGTH];
 	int chance, credits, count;
 
+	if ( !IS_NPC(ch) && !ch->pcdata->learned[gsn_reinforcements] )
+	{
+		send_to_char("> you do not know the reinforcements skillsoft\n\r", ch );
+		return;
+	}
+
 	if ( IS_NPC( ch ) || !ch->pcdata )
 		return;
 
@@ -2205,6 +2248,12 @@ void do_postguard( CHAR_DATA *ch, char *argument )
 {
 	char arg[MAX_INPUT_LENGTH];
 	int chance, credits;
+	
+		if ( !IS_NPC(ch) && !ch->pcdata->learned[gsn_postguard] )
+	{
+		send_to_char("> you do not know the postguard skillsoft\n\r", ch );
+		return;
+	}
 
 	if ( IS_NPC( ch ) || !ch->pcdata )
 		return;
@@ -2509,6 +2558,12 @@ void do_disguise( CHAR_DATA *ch, char *argument )
 {
 	int chance;
 
+	if ( !IS_NPC(ch) && !ch->pcdata->learned[gsn_disguise] )
+	{
+		send_to_char("> you do not know the disguise skillsoft\n\r", ch );
+		return;
+	}
+
 	if ( IS_NPC(ch) )
 		return;
 
@@ -2531,11 +2586,14 @@ void do_disguise( CHAR_DATA *ch, char *argument )
 	}
 
 	//if ( !str_cmp( argument, "Wintermute" ) || !str_cmp( argument, "Wintermute " ) )
+	
+	if (!IS_IMMORTAL(ch)){
 	if ( nifty_is_name( "Wintermute", argument) )
 	{
 		ch_printf( ch, "> They would not like that\n\r", argument );
 		return;
 	}
+}
 
 	chance = (int) (ch->pcdata->learned[gsn_disguise]);
 
@@ -2561,6 +2619,12 @@ void do_first_aid( CHAR_DATA *ch, char *argument )
 	CHAR_DATA  *victim;
 	int         heal;
 	char        buf[MAX_STRING_LENGTH];
+	
+		if ( !IS_NPC(ch) && !ch->pcdata->learned[gsn_first_aid] )
+	{
+		send_to_char("> you do not know the firstaid skillsoft\n\r", ch );
+		return;
+	}
 
 	if ( ch->position == POS_FIGHTING )
 	{
@@ -2869,6 +2933,11 @@ void do_throw( CHAR_DATA *ch, char *argument )
 	CHAR_DATA       * victim;
 	char              buf[MAX_STRING_LENGTH];
 
+		if ( !IS_NPC(ch) && !ch->pcdata->learned[gsn_throw] )
+	{
+		send_to_char("> you do not know the throw skillsoft\n\r", ch );
+		return;
+	}
 
 	argument = one_argument( argument, arg );
 	argument = one_argument( argument, arg2 );
@@ -3287,6 +3356,12 @@ void do_propaganda ( CHAR_DATA *ch , char *argument )
 	int percent, chance;
 	bool ch_snippet, ch_complete;
 
+		if ( !IS_NPC(ch) && !ch->pcdata->learned[gsn_propaganda] )
+	{
+		send_to_char("> you do not know the propaganda skillsoft\n\r", ch );
+		return;
+	}
+
 	//if ( IS_NPC(ch) || !ch->pcdata || !ch->pcdata->clan || !ch->in_room->area || !ch->in_room->area->planet )
 	if ( IS_NPC(ch) || !ch->pcdata || !ch->in_room->area || !ch->in_room->area->planet )
 	{
@@ -3632,6 +3707,12 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 	char buf[MAX_STRING_LENGTH];
 	char bufa[MAX_STRING_LENGTH];
 	PLANET_DATA *planet;
+	
+			if ( !IS_NPC(ch) && !ch->pcdata->learned[gsn_landscape] )
+	{
+		send_to_char("> you do not know the modify skillsoft\n\r", ch );
+		return;
+	}
 
 	if ( IS_NPC(ch) || !ch->pcdata )
 		return;
@@ -4074,6 +4155,12 @@ void do_construction ( CHAR_DATA *ch , char *argument )
 	char buf[MAX_STRING_LENGTH];
 	//PLANET_DATA * dPlanet = NULL;
 	PLANET_DATA *planet;
+	
+			if ( !IS_NPC(ch) && !ch->pcdata->learned[gsn_construction] )
+	{
+		send_to_char("> you do not know the construct skillsoft\n\r", ch );
+		return;
+	}
 
 	if ( IS_NPC(ch) || !ch->pcdata || !ch->in_room )
 		return;
@@ -4130,7 +4217,7 @@ void do_construction ( CHAR_DATA *ch , char *argument )
 			}
 
 			if( !IS_IMMORTAL(ch) )
-				if ( ch->in_room->area->planet->size >= 800 )
+				if ( ch->in_room->area->planet->size >= 800 && str_cmp(ch->in_room->area->planet->name, "straylight") )
 				{
 					send_to_char( "> this system is too big - go construct somewhere else\n\r", ch );
 					return;
@@ -4245,257 +4332,6 @@ void do_construction ( CHAR_DATA *ch , char *argument )
 
 }
 
-/*
-void do_bridge ( CHAR_DATA *ch , char *argument )
-{
-    CLAN_DATA * clan;
-    int chance, ll;
-    char arg1[MAX_INPUT_LENGTH];
-    char arg2[MAX_INPUT_LENGTH];
-    EXIT_DATA   *xit, *texit;
-    int   evnum, edir, ekey;
-    ROOM_INDEX_DATA *toroom;
-    char buf[MAX_STRING_LENGTH];
-
-    if ( IS_NPC(ch) || !ch->pcdata || !ch->in_room )
-    	return;
-
-    clan = ch->pcdata->clan;
-
-    if ( !clan )
-    {
-	send_to_char( "> you need to be part of an organization before you can do that\n\r", ch );
-	return;         
-    }
-
-    if ( (ch->pcdata && ch->pcdata->bestowments
-    &&    is_name("build", ch->pcdata->bestowments))
-    || nifty_is_name( ch->name, clan->leaders  ) )
-	;
-    else
-    {
-	send_to_char( "> your organization has not given you permission to construct in their systems\n\r", ch );
-	return;
-    }
-
-   if ( !ch->in_room->area || !ch->in_room->area->planet ||
-   clan != ch->in_room->area->planet->governed_by      )
-   {
-	send_to_char( "> you may only construct in systems that your organization controls\n\r", ch );
-	return;   
-   }
-
-   if ( IS_SET( ch->in_room->room_flags , ROOM_NOPEDIT ) )
-   {
-	   send_to_char( "> you may not edit this room\n\r", ch );
-	   return;   
-    }
-
-   if ( ch->gold < 500 )
-   {
-	send_to_char( "> you do not have enough credits - it costs 500 credits\n\r", ch );
-	return;   
-   }
-
-   argument = one_argument( argument , arg1 );
-   if ( argument[0] == '\0' )
-   {
-	send_to_char( "> syntax: bridge <direction> <action> <argument>\n\r", ch );
-	send_to_char( "> action being one of the following:\n\r", ch );
-	send_to_char( "> connect, door, keycode\n\r", ch );
-	return;      
-   }
-   argument = one_argument( argument , arg2 );
-
-   chance = (int) (ch->pcdata->learned[gsn_bridge]);
-   if ( number_percent( ) > chance )
-   {
-	send_to_char( "> you cannot quite get the desired effect\n\r", ch );
-        ch->gold -= 10;
-	return;   
-   }
-
-   edir = get_dir(arg1);
-   xit = get_exit(ch->in_room, edir);
-
-   if ( !str_cmp( arg2 , "connect" ) )
-   {
-       if ( xit )
-       {
- 	  send_to_char( "> there is already an exit in that direction\n\r", ch );
-	  return;      
-       }            
-       evnum = atoi( argument );
-       if ( (toroom = get_room_index( evnum )) == NULL )
-       {
-            ch_printf( ch, "> non-existant node: %d\n\r", evnum );
-            return;
-       }
-       if ( ch->in_room->area != toroom->area )
-       {
-            ch_printf( ch, "> node %d is not in this system\n\r" , evnum );
-            return;
-       }
-       if ( IS_SET(toroom->room_flags, ROOM_NOPEDIT ) )
-       {
-            ch_printf( ch, "> node %d is not editable by players\n\r" , evnum );
-            return;
-       }
-       texit = get_exit( toroom, rev_dir[edir] );
-       if ( texit )
-       {
-            ch_printf( ch, "> node %d already has an entrance from that direction\n\r" , evnum );
-            return;
-       }
-
-      xit = make_exit( ch->in_room, toroom, edir );
-      xit->keyword		= STRALLOC( "" );
-      xit->description	= STRALLOC( "" );
-      xit->key		= -1;
-      xit->exit_info	= 0;
-      texit = make_exit( toroom , ch->in_room  , rev_dir[edir] );
-      texit->keyword		= STRALLOC( "" );
-      texit->description	= STRALLOC( "" );
-      texit->key		= -1;
-      texit->exit_info	= 0;
-
-      sprintf( buf , "> construction code opens up a passage to the %s" , dir_name[edir] );
-      echo_to_room( AT_WHITE, ch->in_room, buf );
-      sprintf( buf , "> construction code opens up a passage from the %s" , dir_name[rev_dir[edir]] );
-      echo_to_room( AT_WHITE, toroom , buf );                                                       
-   }
-   else if ( !str_cmp( arg2 , "keycode" ) )
-   {
-       if ( !xit )
-       {
- 	  send_to_char( "> there is no exit in that direction\n\r", ch );
-	  return;      
-       }            
-
-       if ( !IS_SET( xit->exit_info , EX_ISDOOR ) )
-       {
- 	  send_to_char( "> there is no door in that direction\n\r", ch );
-	  return;      
-       }
-
-       if( IS_SET( ch->in_room->room_flags, ROOM_SAFE ) || IS_SET( xit->to_room->room_flags, ROOM_SAFE ) )
-       {
-	  send_to_char( "> you cannot place locked doors around safe nodes\n\r", ch );
-	  return;
-       }
-
-	texit = get_exit_to( xit->to_room, rev_dir[edir], ch->in_room->vnum );
-
-	if (!texit)
-       {
-	  send_to_char( "> there is no exit on the other side\n\r", ch );
-	  return;
-       }
-
-       if ( !IS_SET( texit->exit_info , EX_ISDOOR ) )
-       {
- 	  send_to_char( "> there is no door on the other side\n\r", ch );
-	  return;      
-       }
-
-       ekey = atoi( argument );
-       ch_printf( ch , "> the lock code is now: %d" , ekey );
-       xit->key = ekey;
-
-       //texit = get_exit_to( xit->to_room, rev_dir[edir], ch->in_room->vnum );
-       if( texit )
-	  texit->key = ekey;
-
-   }
-   else if ( !str_cmp( arg2 , "door" ) )
-   {
-       if ( !xit )
-       {
- 	  send_to_char( "> there is no exit in that direction\n\r", ch );
-	  return;      
-       }            
-
-       if ( !IS_SET( xit->exit_info , EX_ISDOOR ) )
-       {
-          sprintf( buf , "> construction code builds a door to the %s" , dir_name[edir] );
-          echo_to_room( AT_WHITE, ch->in_room, buf );
-          SET_BIT(  xit->exit_info , EX_ISDOOR );       
-          texit = get_exit_to( xit->to_room, rev_dir[edir], ch->in_room->vnum );
-          if ( texit )
-          {
-             sprintf( buf , "> construction code builds a door to the %s" , dir_name[rev_dir[edir]] );
-             echo_to_room( AT_WHITE, xit->to_room, buf );
-             SET_BIT(  texit->exit_info , EX_ISDOOR );
-          }
-       }
-       else
-       {
-          sprintf( buf , "> construction code removes the door to the %s" , dir_name[edir] );
-
-
-          echo_to_room( AT_WHITE, ch->in_room, buf );
-          REMOVE_BIT(  xit->exit_info , EX_ISDOOR );
-          texit = get_exit_to( xit->to_room, rev_dir[edir], ch->in_room->vnum );
-          if ( texit )
-          {
-             sprintf( buf , "> construction code removes the door to the %s" , dir_name[rev_dir[edir]] );
-             echo_to_room( AT_WHITE, xit->to_room, buf );
-             REMOVE_BIT(  texit->exit_info , EX_ISDOOR );
-          }
-       }
-
-   }
-
-else if ( !str_cmp( arg2 , "delete" ) )
-   {
-       if ( !xit )
-       {
- 	  send_to_char( "> there is no exit in that direction\n\r", ch );
-	  return;
-       }
-
-       if ( IS_SET( xit->exit_info , EX_ISDOOR ) )
-       {
-          sprintf( buf , "> construction code removes the door to the %s" , dir_name[edir] );
-
-
-
-
-          echo_to_room( AT_WHITE, ch->in_room, buf );
-          REMOVE_BIT(  xit->exit_info , EX_ISDOOR );       
-          texit = get_exit_to( xit->to_room, rev_dir[edir], ch->in_room->vnum );
-          if ( texit )
-          {
-             sprintf( buf , "> construction code removes the door to the %s" , dir_name[rev_dir[edir]] );
-             echo_to_room( AT_WHITE, xit->to_room, buf );
-             REMOVE_BIT(  texit->exit_info , EX_ISDOOR );
-          }
-       }
-       else
-       {
-	send_to_char( "> something went wrong here\n\r", ch );
-       }
-
-   }
-
-
-   else
-   {
-        do_bridge( ch , "" );
-        return;
-   }
-
-   ch->gold -= 500;
-
-   for ( ll = 1 ; ll <= 20 ; ll++ )
-       learn_from_success( ch , gsn_bridge );
-
-   SET_BIT( ch->in_room->area->flags , AFLAG_MODIFIED );
-
-}
-
- */
-
 void do_bridge ( CHAR_DATA *ch , char *argument )
 {
 	CLAN_DATA * clan;
@@ -4514,6 +4350,11 @@ void do_bridge ( CHAR_DATA *ch , char *argument )
 
 	planet = ch->in_room->area->planet;
 
+			if ( !IS_NPC(ch) && !ch->pcdata->learned[gsn_bridge] )
+	{
+		send_to_char("> you do not know the bridge skillsoft\n\r", ch );
+		return;
+	}
 
 	if ( IS_NPC(ch) || !ch->pcdata || !ch->in_room )
 		return;
@@ -4760,6 +4601,12 @@ void do_survey ( CHAR_DATA *ch , char *argument )
 {
 	ROOM_INDEX_DATA * room;
 	int chance;
+	
+				if ( !IS_NPC(ch) && !ch->pcdata->learned[gsn_survey] )
+	{
+		send_to_char("> you do not know the analyze skillsoft\n\r", ch );
+		return;
+	}
 
 	if ( IS_NPC(ch) || !ch->pcdata || !ch->in_room )
 		return;
@@ -4861,6 +4708,12 @@ void do_quicktalk ( CHAR_DATA *ch , char *argument )
 {
 	CHAR_DATA *rch;
 	int chance;
+	
+				if ( !IS_NPC(ch) && !ch->pcdata->learned[gsn_quicktalk] )
+	{
+		send_to_char("> you do not know the quicktalk skillsoft\n\r", ch );
+		return;
+	}
 
 	if ( ch->position != POS_FIGHTING )
 	{
@@ -4909,10 +4762,10 @@ void do_codemed( CHAR_DATA *ch, char *argument )
     bool checkchem = FALSE, checktool = FALSE;
     int chance, level, wearbit = get_wflag("hold");
 
-    if( !IS_NPC(ch) && ch->pcdata->learned[gsn_codemed] == 0 )
-    {
-	 send_to_char("Huh?\n\r",ch);
-	 return;
+			if ( !IS_NPC(ch) && !ch->pcdata->learned[gsn_codemed] )
+	{
+		send_to_char("> you do not know the codemed skillsoft\n\r", ch );
+		return;
 	}
 
 
@@ -4957,7 +4810,7 @@ void do_codemed( CHAR_DATA *ch, char *argument )
     send_to_char("> you begin making a med module\n\r",ch);
     act( AT_PLAIN, "> $n begins making a med module.", ch, NULL, NULL, TO_ROOM );
     ch->dest_buf = str_dup(argument);
-    add_timer( ch, TIMER_DO_FUN, 5, do_codemed, 1 );
+    add_timer( ch, TIMER_DO_FUN, 2, do_codemed, 1 );
     return;
  }
  send_to_char("> &Ryou fail creating a mod module - try again&w\n\r",ch);
