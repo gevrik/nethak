@@ -460,7 +460,7 @@ void echo_to_clan( sh_int AT_COLOR, char *argument, sh_int tar, CLAN_DATA *clan 
 	    else if ( tar == ECHOTAR_IMM && !IS_IMMORTAL(d->character) )
 	      continue;
 
-	    if ( d->character->pcdata->clan != NULL ){
+	    if ( d->character->pcdata->clan != NULL && clan != NULL ){
 	    if ( !str_cmp(d->character->pcdata->clan_name, clan->name) ){
 	    set_char_color( AT_COLOR, d->character );
 	    send_to_char( argument, d->character );

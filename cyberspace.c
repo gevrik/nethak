@@ -133,7 +133,7 @@ void do_buyskill( CHAR_DATA *ch, char *argument )
 		send_to_char( "> cost: 5,000c\n\r",	ch );
 		send_to_char( "> skills: aid, backstab, blades, blasters, circle, codeapp, codeblade, codeblaster, codecontainer, codedef, codemed, codeshield, codeutil,"
 				" damboost, disarm, disguise, dodge, dualwield, firstaid, gouge, hide, kick, parry, peek, picklock, poisonmod, postguard, propaganda, quicktalk,"
-				" reinforcements, rescue, second attack, sneak, steal, throw, trace, trip\n\r",	ch );
+				" reinforcements, rescue, second attack, sneak, steal, throw, trace\n\r",	ch );
 		return;
 	}
 

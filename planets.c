@@ -821,7 +821,7 @@ void do_makeplanet( CHAR_DATA *ch, char *argument )
 	     STRFREE( location->name );
 	     STRFREE( location->owner );
 
-	     location->owner = STRALLOC( "government" );
+	     location->owner = STRALLOC( ch->name );
 
          if ( rnum == 12 )
 	     {

@@ -4466,6 +4466,18 @@ void do_bridge ( CHAR_DATA *ch , char *argument )
 		current = ch->in_room;
 		room = get_room_index( atoi( arg3 ) );
 
+		if ( IS_SET( current->room_flags, ROOM_SAFE ) )
+		{
+			send_to_char( "> &Rcan not bridge in safe nodes&w\n\r", ch );
+			return;
+		}
+
+		if ( IS_SET( room->room_flags, ROOM_SAFE ) )
+		{
+			send_to_char( "> &Rcan not bridge into safe nodes&w\n\r", ch );
+			return;
+		}
+
 		if ( current == room )
 		{
 			send_to_char( "> &Rinvalid connection&w\n\r", ch );
@@ -4509,20 +4521,38 @@ void do_bridge ( CHAR_DATA *ch , char *argument )
 
 		ekey = atoi( arg3 );
 
-		if ( ekey < 1 )
+		if ( ekey == 0 )
 		{
-			send_to_char( "> invalid code [must be a positive number]\n\r", ch );
+
+			REMOVE_BIT( xit->exit_info , EX_LOCKED );
+			xit->key = -1;
+
+			texit = get_exit_to( xit->to_room, rev_dir[edir], ch->in_room->vnum );
+
+			if ( texit )
+			{
+				REMOVE_BIT( texit->exit_info , EX_LOCKED );
+				texit->key = -1;
+			}
+
+			send_to_char( "> keycode removed\n\r", ch );
 			return;
 		}
+		else if ( ekey < 0 ) {
+			send_to_char( "> invalid code [use 0 to remove code]\n\r", ch );
+			return;
+		}
+		else {
 
-		ch_printf( ch , "> code is now: %d\n\r" , ekey );
-		xit->key = ekey;
+			ch_printf( ch , "> code is now: %d\n\r" , ekey );
+			xit->key = ekey;
 
-		texit = get_exit_to( xit->to_room, rev_dir[edir], ch->in_room->vnum );
+			texit = get_exit_to( xit->to_room, rev_dir[edir], ch->in_room->vnum );
 
-		if ( texit )
-		{
-			texit->key = ekey;
+			if ( texit )
+			{
+				texit->key = ekey;
+			}
 		}
 
 	}
