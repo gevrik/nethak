@@ -3692,6 +3692,7 @@ void  clear_roomtype( ROOM_INDEX_DATA * location )
 	REMOVE_BIT( location->room_flags , ROOM_BANK );
 	REMOVE_BIT( location->room_flags , ROOM_EMPLOYMENT );
 	REMOVE_BIT( location->room_flags , ROOM_PUBLICIO );
+	REMOVE_BIT( location->room_flags2 , ROOM_INTRUSION );
 
 }
 
@@ -3822,6 +3823,8 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 		send_to_char( "product      - productivity repo\n\r", ch );
 		send_to_char( "finance      - finance repo\n\r", ch );
 		send_to_char( "multimedia   - multimedia repo\n\r", ch );
+		send_to_char( "intrusion    - intrusion node\n\r", ch );
+		//send_to_char( "monitoring   - monitoring node\n\r", ch );
 		return;
 	}
 
@@ -3850,7 +3853,16 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 		strcpy( buf , ch->name );
 		strcat( buf , "&Y.&Centertainment" );
 		strcpy( bufa , "an entertainment repository node\n\r" );
-		ch->pcdata->qtaxnodes = ch->pcdata->qtaxnodes + 1;
+		//ch->pcdata->qtaxnodes = ch->pcdata->qtaxnodes + 1;
+	}
+	else if ( !str_cmp( argument, "intrusion" ) )
+	{
+		location->sector_type = SECT_INSIDE;
+		strcpy( buf , ch->name );
+		strcat( buf , "&Y.&Cintrusion" );
+		strcpy( bufa , "an intrusion node\n\r" );
+		SET_BIT( location->room_flags2 , ROOM_INTRUSION );
+
 	}
 	else if ( !str_cmp( argument, "multimedia" ) )
 	{
@@ -3860,7 +3872,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 		strcpy( buf , ch->name );
 		strcat( buf , "&Y.&Cmultimedia" );
 		strcpy( bufa , "a multimedia repository node\n\r" );
-		ch->pcdata->qtaxnodes = ch->pcdata->qtaxnodes + 1;
+		//ch->pcdata->qtaxnodes = ch->pcdata->qtaxnodes + 1;
 	}
 	else if ( !str_cmp( argument, "finance" ) )
 	{
@@ -3870,7 +3882,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 		strcpy( buf , ch->name );
 		strcat( buf , "&Y.&Cfinance" );
 		strcpy( bufa , "a finance repository node\n\r" );
-		ch->pcdata->qtaxnodes = ch->pcdata->qtaxnodes + 1;
+		//ch->pcdata->qtaxnodes = ch->pcdata->qtaxnodes + 1;
 	}
 	else if ( !str_cmp( argument, "product" ) )
 	{
@@ -3880,7 +3892,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 		strcpy( buf , ch->name );
 		strcat( buf , "&Y.&Cproductivity" );
 		strcpy( bufa , "a productivity repository node\n\r" );
-		ch->pcdata->qtaxnodes = ch->pcdata->qtaxnodes + 1;
+		//ch->pcdata->qtaxnodes = ch->pcdata->qtaxnodes + 1;
 	}
 	else if ( !str_cmp( argument, "terminal" ) )
 	{
@@ -3889,7 +3901,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 		strcpy( buf , ch->name );
 		strcat( buf , "&Y.&Cterminal" );
 		strcpy( bufa , "a terminal node.\n\r" );
-		ch->pcdata->qtaxnodes = ch->pcdata->qtaxnodes + 1;
+		//ch->pcdata->qtaxnodes = ch->pcdata->qtaxnodes + 1;
 	}
 	else if ( !str_cmp( argument, "database" ) )
 	{
@@ -3898,7 +3910,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 		strcpy( buf , ch->name );
 		strcat( buf , "&Y.&Cdatabase" );
 		strcpy( bufa , "a database node.\n\r" );
-		ch->pcdata->qtaxnodes = ch->pcdata->qtaxnodes + 1;
+		//ch->pcdata->qtaxnodes = ch->pcdata->qtaxnodes + 1;
 	}
 	else if ( !str_cmp( argument, "subserver" ) )
 	{
@@ -3907,7 +3919,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 		strcpy( buf , ch->name );
 		strcat( buf , "&Y.&Csubserver" );
 		strcpy( bufa , "a subserver node.\n\r" );
-		ch->pcdata->qtaxnodes = ch->pcdata->qtaxnodes + 1;
+		//ch->pcdata->qtaxnodes = ch->pcdata->qtaxnodes + 1;
 	}
 	else if ( !str_cmp( argument, "home" ) )
 	{
@@ -4321,10 +4333,12 @@ void do_construction ( CHAR_DATA *ch , char *argument )
 
 	SET_BIT( ch->in_room->area->flags , AFLAG_MODIFIED );
 
-	if ( IS_SET( planet->flags, PLANET_NOCAP ) )
-	{
-		ch->pcdata->qtaxnodes = ch->pcdata->qtaxnodes + 1;
-	}
+//	if ( IS_SET( planet->flags, PLANET_NOCAP ) )
+//	{
+//		ch->pcdata->qtaxnodes = ch->pcdata->qtaxnodes + 1;
+//	}
+
+	ch->pcdata->qtaxnodes = ch->pcdata->qtaxnodes + 1;
 
 	sprintf( buf , "> a new node appears in this dir: %s" , dir_name[edir] );
 	send_to_char( "> cost: 500 credits\n\r", ch );

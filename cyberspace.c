@@ -133,7 +133,7 @@ void do_buyskill( CHAR_DATA *ch, char *argument )
 		send_to_char( "> cost: 5,000c\n\r",	ch );
 		send_to_char( "> skills: aid, backstab, blades, blasters, circle, codeapp, codeblade, codeblaster, codecontainer, codedef, codemed, codeshield, codeutil,"
 				" damboost, disarm, disguise, dodge, dualwield, firstaid, gouge, hide, kick, parry, peek, picklock, poisonmod, postguard, propaganda, quicktalk,"
-				" reinforcements, rescue, second attack, sneak, steal, throw, trace\n\r",	ch );
+				" reinforcements, rescue, second attack, sneak, steal, throw, trace, inquire, slicebank\n\r",	ch );
 		return;
 	}
 
@@ -178,7 +178,7 @@ void do_buyskill( CHAR_DATA *ch, char *argument )
 
 	ch->gold     -= cost;
 	ch->pcdata->num_skills++;	
-	ch->pcdata->learned[sn] = 20;
+	ch->pcdata->learned[sn] = 50;
 
 	send_to_char( "> skillsoft learned\n\r", ch );
 
@@ -796,8 +796,8 @@ void do_decompile( CHAR_DATA *ch, char *argument )
 	}
 	else if ( !str_cmp( arg, "snippet" ) )
 	{
-		int randomamount = number_range(2, 8);
-		int amountsnips = cost * randomamount;
+		//int randomamount = number_range(1, 2);
+		int amountsnips = cost;
 		ch->snippets = ch->snippets + amountsnips;
 		ch_printf( ch, "%d snippets\n\r", amountsnips );
 		send_to_char( "> &Gyou finish decompiling&w\n\r", ch);
@@ -3027,26 +3027,29 @@ void do_inquire( CHAR_DATA * ch, char *argument )
 
          if( ( checkdata == FALSE ) )
          {
-            send_to_char( "You need a devkit module to slice into the banking computer system.\n\r", ch );
+            send_to_char( "> &Ryou need a devkit module to slice into the banking computer system&w\n\r", ch );
             return;
          }
-         if( !IS_SET( ch->in_room->room_flags, ROOM_BANK ) )
+         if( !IS_SET( ch->in_room->room_flags2, ROOM_INTRUSION ) )
          {
-            send_to_char( "You must be in a bank node.\n\r", ch );
+            send_to_char( "> &Ryou must be in an intrusion node&w\n\r", ch );
             return;
          }
+
          schance = IS_NPC( ch ) ? ch->top_level : ( int )( ch->pcdata->learned[gsn_inquire] );
+         //schance = schance + ( ( ch->in_room->seccode + 1 ) * 10 );
+
          if( number_percent(  ) < schance )
          {
 
-            send_to_char( "&GYou begin the long process of trying to slice into the banking computer system.\n\r", ch );
+            send_to_char( "> &Gyou begin the long process of trying to slice into the banking computer system\n\r", ch );
             sprintf( buf, "$n takes $s browser and slots into a data port." );
             act( AT_PLAIN, buf, ch, NULL, argument, TO_ROOM );
             add_timer( ch, TIMER_DO_FUN, 10, do_inquire, 1 );
             return;
 
          }
-         send_to_char( "&RYou are unable to find the banking computer system.\n\r", ch );
+         send_to_char( "> &Ryou are unable to find the banking computer system\n\r", ch );
          learn_from_failure( ch, gsn_inquire );
          return;
 
@@ -3054,7 +3057,7 @@ void do_inquire( CHAR_DATA * ch, char *argument )
          break;
       case SUB_TIMER_DO_ABORT:
          ch->substate = SUB_NONE;
-         send_to_char( "&RYou are interrupted and fail to finish slicing into the banking computer system.\n\r", ch );
+         send_to_char( "> &Ryou are interrupted and fail to finish slicing into the banking computer system\n\r", ch );
          return;
    }
 
@@ -3064,36 +3067,41 @@ void do_inquire( CHAR_DATA * ch, char *argument )
 
    x = number_percent(  );
 
-   if( number_percent(  ) > schance * 2 )
+   if( number_percent(  ) > schance )
    {
-      ch_printf( ch, "&z|+---------------------------------------------------------------------+|&w\n\r" );
-      ch_printf( ch, "&z|^g                                                                       ^x&z|\n\r" );
-      ch_printf( ch, "&z|^g&x Welcome to the Bank Database. Unauthorized entry prohibited.          ^x&z|\n\r" );
-      ch_printf( ch, "&z|^g                                                                       ^x|\n\r" );
-      ch_printf( ch, "&z|^g&x Login: %d                                                          ^x&z|\n\r",
+      ch_printf( ch, "&z|+---------------------------------------+|&w\n\r" );
+      ch_printf( ch, "&z|^g&x Welcome to the Bank Database.           ^x&z|\n\r" );
+      ch_printf( ch, "&z|^g                                         ^x|\n\r" );
+      ch_printf( ch, "&z|^g&x Login: %d                            ^x&z|\n\r",
                  number_range( 11111, 99999 ) );
-      ch_printf( ch, "&z|^g&x Passcode: *********                                                   ^x&z|\n\r" );
-      ch_printf( ch, "&z|^g                                                                       ^x|\n\r" );
-      ch_printf( ch, "&z|^g                                                                       ^x|\n\r" );
-      ch_printf( ch, "&z|^g&x Invalid passcode.                                                     ^x&z|\n\r" );
-      ch_printf( ch, "&z|^g                                                                       ^x&z|\n\r" );
-      ch_printf( ch, "&z|+---------------------------------------------------------------------+|&w\n\r" );
+      ch_printf( ch, "&z|^g&x Passcode: *********                     ^x&z|\n\r" );
+      ch_printf( ch, "&z|^g                                         ^x|\n\r" );
+      ch_printf( ch, "&z|^g&x Invalid passcode.                       ^x&z|\n\r" );
+      ch_printf( ch, "&z|+---------------------------------------+|&w\n\r" );
       learn_from_failure( ch, gsn_inquire );
+
+		if (ch->pcdata->threataction < 1)
+		send_to_char( "> &Wthreat status changed to: &Rtraced&w\n\r",        ch );
+
+		ch->pcdata->threatlevel += 1;
+		if ( ch->pcdata->threatlevel > 10 )
+			ch->pcdata->threatlevel = 10;
+
+		ch->pcdata->threataction += 1;
+
       return;
    }
 
-   ch_printf( ch, "&z|+---------------------------------------------------------------------+|&w\n\r" );
-   ch_printf( ch, "&z|^g                                                                       ^x&z|\n\r" );
-   ch_printf( ch, "&z|^g&x Welcome to the Bank Database. Unauthorized entry prohibited.          ^x&z|\n\r" );
-   ch_printf( ch, "&z|^g                                                                       ^x|\n\r" );
-   ch_printf( ch, "&z|^g&x Login: %d                                                          ^x&z|\n\r",
+	  ch_printf( ch, "&z|+---------------------------------------+|&w\n\r" );
+   ch_printf( ch, "&z|^g&x Welcome to the Bank Database.           ^x&z|\n\r" );
+	  ch_printf( ch, "&z|^g                                         ^x|\n\r" );
+   ch_printf( ch, "&z|^g&x Login: %d                            ^x&z|\n\r",
               number_range( 11111, 99999 ) );
-   ch_printf( ch, "&z|^g&x Passcode: *********                                                   ^x&z|\n\r" );
-   ch_printf( ch, "&z|^g                                                                       ^x|\n\r" );
-   ch_printf( ch, "&z|^g                                                                       ^x|\n\r" );
-   ch_printf( ch, "&z|^g&x Login accepted...retrieving account data, stand by.                   ^x&z|\n\r" );
-   ch_printf( ch, "&z|^g                                                                       ^x&z|\n\r" );
-   ch_printf( ch, "&z|^g&x _______  Account  _____________________________________ Savings _____ &z^x|\n\r" );
+   ch_printf( ch, "&z|^g&x Passcode: *********                     ^x&z|\n\r" );
+   ch_printf( ch, "&z|^g                                         ^x|\n\r" );
+   ch_printf( ch, "&z|^g&x Login accepted...retrieving account     ^x&z|\n\r" );
+   ch_printf( ch, "&z|^g                                         ^x&z|\n\r" );
+   ch_printf( ch, "&z|^g&x _______  Account  _______ Savings _____ &z^x|\n\r" );
    for( d = first_descriptor; d; d = d->next )
    {
       if( !d->character )
@@ -3102,16 +3110,11 @@ void do_inquire( CHAR_DATA * ch, char *argument )
          continue;
       if( IS_IMMORTAL( d->character ) )
          continue;
-      ch_printf( ch, "&z|^g&x     # %s                                  %-9.9d      ^x&z|\n\r", ch->name,
+      ch_printf( ch, "&z|^g&x         # %s             %-9.9d     ^x&z|\n\r", d->character->name,
                  d->character->pcdata->bank );
    }
-   ch_printf( ch, "&z|^g                                                                       ^x&z|\n\r" );
-   ch_printf( ch, "&z|+---------------------------------------------------------------------+|&w\n\r" );
+   ch_printf( ch, "&z|+---------------------------------------+|&w\n\r" );
 
-   /* xpgain = 3000;
-   gain_exp( ch, xpgain, SLICER_ABILITY );
-   ch_printf( ch, " You gain %d experience points for being a Slicer.\n\r", xpgain );
-   */
    learn_from_success( ch, gsn_inquire );
    return;
 
@@ -3128,9 +3131,19 @@ void do_slicebank( CHAR_DATA * ch, char *argument )
    char arg2[MAX_INPUT_LENGTH];
    char buf[MAX_INPUT_LENGTH];
    long steal;
-   int schance;
+   int schance, x;
    bool found;
 
+	if ( !IS_NPC(ch) && !ch->pcdata->learned[gsn_slicebank] )
+	{
+		send_to_char("> you do not know the slicebank skillsoft\n\r", ch );
+		return;
+	}
+
+   if ( IS_AFFECTED(ch, AFF_HIDE) ){
+       send_to_char( "> &Ryou can not slice bank account when hidden&w\n\r", ch );
+       return;
+   }
 
    argument = one_argument( argument, arg2 );
    strcpy( arg, argument );
@@ -3140,20 +3153,20 @@ void do_slicebank( CHAR_DATA * ch, char *argument )
       default:
          if( arg[0] == '\0' || arg2[0] == '\0' )
          {
-            send_to_char( "Syntax: slicebank <account> <amount>\n\r", ch );
+            send_to_char( "> &Wsyntax: slicebank <account> <amount>&w\n\r", ch );
             return;
          }
 
          if( ch->fighting )
          {
-            send_to_char( "You're a little preoccupied...\n\r", ch );
+            send_to_char( "> &Ryou are fighting&w\n\r", ch );
             return;
          }
 
 
-         if( !IS_SET( ch->in_room->room_flags, ROOM_BANK ) )
+         if( !IS_SET( ch->in_room->room_flags2, ROOM_INTRUSION ) )
          {
-            send_to_char( "You must be in a bank node to slice someones account.\n\r", ch );
+            send_to_char( "> &Ryou must be in an intrusion node to slice someone's account&w\n\r", ch );
             return;
          }
 
@@ -3164,25 +3177,25 @@ void do_slicebank( CHAR_DATA * ch, char *argument )
          }
          if( ( checkdata == FALSE ) )
          {
-            send_to_char( "You need a devkit module to slice into the banking computer system.\n\r", ch );
+            send_to_char( "> &Ryou need a devkit module to slice into the banking computer system&w\n\r", ch );
             return;
          }
          if( !str_cmp( arg2, ch->name ) )
          {
-            send_to_char( "That's your account. Insurance fraud is not possible.\n\r", ch );
+            send_to_char( "> &Rthat's your account - insurance fraud is not possible\n\r", ch );
             return;
          }
 
          if( atoi( arg ) < 0 )
          {
-            send_to_char( "Why don't you just GIVE them the money?\n\r", ch );
+            send_to_char( "> &Rwhy don't you just GIVE them the money?&w\n\r", ch );
             return;
          }
 
          ch->dest_buf = str_dup( arg );
          ch->dest_buf_2 = str_dup( arg2 );
-         send_to_char( "&GYou begin the long process of trying to slice into the banking computer system.\n\r", ch );
-         sprintf( buf, "$n takes $s browser and hooks it into a data port." );
+         send_to_char( "> &GYou begin the long process of trying to slice into the banking computer system&w\n\r", ch );
+         sprintf( buf, "> $n takes $s browser and hooks it into a data port" );
          act( AT_PLAIN, buf, ch, NULL, argument, TO_ROOM );
          add_timer( ch, TIMER_DO_FUN, 10, do_slicebank, 1 );
          return;
@@ -3203,7 +3216,7 @@ void do_slicebank( CHAR_DATA * ch, char *argument )
          DISPOSE( ch->dest_buf );
          DISPOSE( ch->dest_buf_2 );
          ch->substate = SUB_NONE;
-         send_to_char( "&RYou are interrupted and fail to finish slicing into the banking computer system.\n\r", ch );
+         send_to_char( "> &Ryou are interrupted and fail to finish slicing into the banking computer system&w\n\r", ch );
          return;
    }
 
@@ -3214,8 +3227,10 @@ void do_slicebank( CHAR_DATA * ch, char *argument )
       if( obj->item_type == ITEM_TOOLKIT )
          checkdata = TRUE;
    }
+
    schance = IS_NPC( ch ) ? ch->top_level : ( int )( ch->pcdata->learned[gsn_slicebank] );
-   schance = UMIN( schance, 70 );
+   //schance = schance - ch->in_room->seccode;
+      schance = UMIN( schance, 70 );
    found = FALSE;
 
    for( d = first_descriptor; d; d = d->next )
@@ -3227,119 +3242,391 @@ void do_slicebank( CHAR_DATA * ch, char *argument )
       if( IS_IMMORTAL( d->character ) )
          continue;
 
-      if( !str_cmp( arg2, ch->name ) )
+      if( !str_cmp( arg2, d->character->name ) )
       {
          found = TRUE;
          break;
       }
    }
-   if( number_percent(  ) > schance )
-   {
-      ch_printf( ch, "&z|+---------------------------------------------------------------------+|&w\n\r" );
-      ch_printf( ch, "&z|^g                                                                       ^x&z|\n\r" );
-      ch_printf( ch, "&z|^g&x Welcome to the Bank Database. Unauthorized entry prohibited.          ^x&z|\n\r" );
-      ch_printf( ch, "&z|^g                                                                       ^x|\n\r" );
-      ch_printf( ch, "&z|^g&x Login: %d                                                          ^x&z|\n\r",
-                 number_range( 11111, 99999 ) );
-      ch_printf( ch, "&z|^g&x Passcode: *********                                                   ^x&z|\n\r" );
-      ch_printf( ch, "&z|^g                                                                       ^x|\n\r" );
-      ch_printf( ch, "&z|^g                                                                       ^x|\n\r" );
-      ch_printf( ch, "&z|^g&x Invalid passcode.                                                     ^x&z|\n\r" );
-      ch_printf( ch, "&z|^g                                                                       ^x&z|\n\r" );
-      ch_printf( ch, "&z|+---------------------------------------------------------------------+|&w\n\r" );
-      learn_from_failure( ch, gsn_slicebank );
-      return;
-   }
-   if( number_percent(  ) > schance * 2 && found )
-   {
-      ch_printf( ch, "&z|+---------------------------------------------------------------------+|&w\n\r" );
-      ch_printf( ch, "&z|^g                                                                       ^x&z|\n\r" );
-      ch_printf( ch, "&z|^g&x Welcome to the Bank Database. Unauthorized entry prohibited.          ^x&z|\n\r" );
-      ch_printf( ch, "&z|^g                                                                       ^x|\n\r" );
-      ch_printf( ch, "&z|^g&x Login: %d                                                          ^x&z|\n\r",
-                 number_range( 11111, 99999 ) );
-      ch_printf( ch, "&z|^g&x Passcode: *********                                                   ^x&z|\n\r" );
-      ch_printf( ch, "&z|^g                                                                       ^x|\n\r" );
-      ch_printf( ch, "&z|^g                                                                       ^x|\n\r" );
-      ch_printf( ch, "&z|^g&x Login accepted...retrieving account information, stand by.            ^x&z|\n\r" );
-      ch_printf( ch, "&z|^g&x Processing request, stand by.                                         ^x&z|\n\r" );
-      ch_printf( ch, "&z|^g                                                                       ^x&z|\n\r" );
-      ch_printf( ch, "&z|^g&x Request DENIED. Account owner has been notified.                      ^x&z|\n\r" );
-      ch_printf( ch, "&z|^g                                                                       ^x&z|\n\r" );
-      ch_printf( ch, "&z|+---------------------------------------------------------------------+|&w\n\r" );
 
+   x = number_percent(  );
+
+   if( x > schance )
+   {
+      ch_printf( ch, "&z|+---------------------------------------+|&w\n\r" );
+      ch_printf( ch, "&z|^g&x Welcome to the Bank Database.           ^x&z|\n\r" );
+      ch_printf( ch, "&z|^g                                         ^x|\n\r" );
+      ch_printf( ch, "&z|^g&x Login: %d                            ^x&z|\n\r",
+                 number_range( 11111, 99999 ) );
+      ch_printf( ch, "&z|^g&x Passcode: *********                     ^x&z|\n\r" );
+      ch_printf( ch, "&z|^g                                         ^x|\n\r" );
+      ch_printf( ch, "&z|^g&x Invalid passcode.                       ^x&z|\n\r" );
+      ch_printf( ch, "&z|+---------------------------------------+|&w\n\r" );
       learn_from_failure( ch, gsn_slicebank );
-      send_to_char( "&R[&YBank: &WALERT&R] &WA hack attempt was made on your bank account.\n\r", d->character );
-      ch_printf( d->character, "&R[&YBank: &WALERT&R] &WFrom Complex: %s.\n\r", ch->in_room->area->planet->name );
+
+      if (found) {
+          send_to_char( "> &R[&YBank: &WALERT&R] &WA hack attempt was made on your bank account\n\r", d->character );
+          ch_printf( d->character, "> &R[&YBank: &WALERT&R] &WFrom Complex: %s - node: %ld\n\r", ch->in_room->area->planet->name, ch->in_room->vnum );
+      }
+
+		if (ch->pcdata->threataction < 1)
+		send_to_char( "> &Wthreat status changed to: &Rtraced&w\n\r",        ch );
+
+		ch->pcdata->threatlevel += 1;
+		if ( ch->pcdata->threatlevel > 10 )
+			ch->pcdata->threatlevel = 10;
+
+		ch->pcdata->threataction += 1;
+
       return;
    }
+
    if( !found )
    {
-      ch_printf( ch, "&z|+---------------------------------------------------------------------+|&w\n\r" );
-      ch_printf( ch, "&z|^g                                                                       ^x&z|\n\r" );
-      ch_printf( ch, "&z|^g&x Welcome to the Bank Database. Unauthorized entry prohibited.          ^x&z|\n\r" );
-      ch_printf( ch, "&z|^g                                                                       ^x|\n\r" );
-      ch_printf( ch, "&z|^g&x Login: %d                                                          ^x&z|\n\r",
+      ch_printf( ch, "&z|+---------------------------------------+|&w\n\r" );
+      ch_printf( ch, "&z|^g&x Welcome to the Bank Database.           ^x&z|\n\r" );
+      ch_printf( ch, "&z|^g                                         ^x|\n\r" );
+      ch_printf( ch, "&z|^g&x Login: %d                            ^x&z|\n\r",
                  number_range( 11111, 99999 ) );
-      ch_printf( ch, "&z|^g&x Passcode: *********                                                   ^x&z|\n\r" );
-      ch_printf( ch, "&z|^g                                                                       ^x|\n\r" );
-      ch_printf( ch, "&z|^g                                                                       ^x|\n\r" );
-      ch_printf( ch, "&z|^g&x Login accepted...retrieving account information, stand by.            ^x&z|\n\r" );
-      ch_printf( ch, "&z|^g                                                                       ^x&z|\n\r" );
-      ch_printf( ch, "&z|^g&x Account %-15.15s is not active.                                ^x&z|\n\r", arg2 );
-      ch_printf( ch, "&z|^g                                                                       ^x&z|\n\r" );
-      ch_printf( ch, "&z|+---------------------------------------------------------------------+|&w\n\r" );
+      ch_printf( ch, "&z|^g&x Passcode: *********                     ^x&z|\n\r" );
+      ch_printf( ch, "&z|^g                                         ^x|\n\r" );
+      ch_printf( ch, "&z|^g&x Login accepted...retrieving account     ^x&z|\n\r" );
+      ch_printf( ch, "&z|^g                                         ^x&z|\n\r" );
+      ch_printf( ch, "&z|^g&x Account %-15.15s is not active.  ^x&z|\n\r", arg2 );
+      ch_printf( ch, "&z|+---------------------------------------+|&w\n\r" );
       return;
    }
 
    steal = atoi( arg );
-   if( steal > d->character->pcdata->bank / 20 )
+
+   if( steal == 1 && d->character->pcdata->bank > 0 )
    {
-      ch_printf( ch, "&z|+---------------------------------------------------------------------+|&w\n\r" );
-      ch_printf( ch, "&z|^g                                                                       ^x&z|\n\r" );
-      ch_printf( ch, "&z|^g&x Welcome to the Bank Database. Unauthorized entry prohibited.          ^x&z|\n\r" );
-      ch_printf( ch, "&z|^g                                                                       ^x|\n\r" );
-      ch_printf( ch, "&z|^g&x Login: %d                                                          ^x&z|\n\r",
+      ch_printf( ch, "&z|+---------------------------------------+|&w\n\r" );
+      ch_printf( ch, "&z|^g&x Welcome to the Bank Database.           ^x&z|\n\r" );
+      ch_printf( ch, "&z|^g                                         ^x|\n\r" );
+      ch_printf( ch, "&z|^g&x Login: %d                            ^x&z|\n\r",
                  number_range( 11111, 99999 ) );
-      ch_printf( ch, "&z|^g&x Passcode: *********                                                   ^x&z|\n\r" );
-      ch_printf( ch, "&z|^g                                                                       ^x|\n\r" );
-      ch_printf( ch, "&z|^g                                                                       ^x|\n\r" );
-      ch_printf( ch, "&z|^g&x Login accepted...retrieving account information, stand by.            ^x&z|\n\r" );
-      ch_printf( ch, "&z|^g&x Processing request, stand by.                                         ^x&z|\n\r" );
-      ch_printf( ch, "&z|^g                                                                       ^x&z|\n\r" );
-      ch_printf( ch, "&z|^g&x Request DENIED, transfer too high. Account owner has been notified.   ^x&z|\n\r" );
-      ch_printf( ch, "&z|^g                                                                       ^x&z|\n\r" );
-      ch_printf( ch, "&z|+---------------------------------------------------------------------+|&w\n\r" );
-      learn_from_failure( ch, gsn_slicebank );
-	  send_to_char( "&R[&YBank: &WALERT&R] &WA hack attempt was made on your bank account.\n\r", d->character );
-      ch_printf( d->character, "&R[&YBank: &WALERT&R] &WFrom Complex: %s.\n\r", ch->in_room->area->planet->name );
+      ch_printf( ch, "&z|^g&x Passcode: *********                     ^x&z|\n\r" );
+      ch_printf( ch, "&z|^g                                         ^x|\n\r" );
+      ch_printf( ch, "&z|^g&x Login accepted...retrieving account     ^x&z|\n\r" );
+      ch_printf( ch, "&z|^g&x Processing request, stand by.           ^x&z|\n\r" );
+      ch_printf( ch, "&z|^g                                         ^x&z|\n\r" );
+      ch_printf( ch, "&z|^g&x Request ACCEPTED.                   ^x&z|\n\r" );
+      ch_printf( ch, "&z|+---------------------------------------+|&w\n\r" );
+
+      ch->gold += steal;
+      d->character->pcdata->bank -= steal;
+      if (number_range(1, 10) == 1)
+      learn_from_success( ch, gsn_slicebank );
       return;
    }
 
-   ch_printf( ch, "&z|+---------------------------------------------------------------------+|&w\n\r" );
-   ch_printf( ch, "&z|^g                                                                       ^x&z|\n\r" );
-   ch_printf( ch, "&z|^g&x Welcome to the Bank Database. Unauthorized entry prohibited.          ^x&z|\n\r" );
-   ch_printf( ch, "&z|^g                                                                       ^x|\n\r" );
-   ch_printf( ch, "&z|^g&x Login: %d                                                          ^x&z|\n\r",
-              number_range( 11111, 99999 ) );
-   ch_printf( ch, "&z|^g&x Passcode: *********                                                   ^x&z|\n\r" );
-   ch_printf( ch, "&z|^g                                                                       ^x|\n\r" );
-   ch_printf( ch, "&z|^g                                                                       ^x|\n\r" );
-   ch_printf( ch, "&z|^g&x Login accepted...retrieving account information, stand by.            ^x&z|\n\r" );
-   ch_printf( ch, "&z|^g&x Processing request, stand by.                                         ^x&z|\n\r" );
-   ch_printf( ch, "&z|^g                                                                       ^x&z|\n\r" );
-   ch_printf( ch, "&z|^g&x Request accepted. Credits transferred.                                ^x&z|\n\r" );
-   ch_printf( ch, "&z|^g                                                                       ^x&z|\n\r" );
-   ch_printf( ch, "&z|+---------------------------------------------------------------------+|&w\n\r" );
+   if( steal > d->character->pcdata->bank / 1000 )
+   {
+      ch_printf( ch, "&z|+---------------------------------------+|&w\n\r" );
+      ch_printf( ch, "&z|^g&x Welcome to the Bank Database.           ^x&z|\n\r" );
+      ch_printf( ch, "&z|^g                                         ^x|\n\r" );
+      ch_printf( ch, "&z|^g&x Login: %d                            ^x&z|\n\r",
+                 number_range( 11111, 99999 ) );
+      ch_printf( ch, "&z|^g&x Passcode: *********                     ^x&z|\n\r" );
+      ch_printf( ch, "&z|^g                                         ^x|\n\r" );
+      ch_printf( ch, "&z|^g&x Login accepted...retrieving account     ^x&z|\n\r" );
+      ch_printf( ch, "&z|^g&x Processing request, stand by.           ^x&z|\n\r" );
+      ch_printf( ch, "&z|^g                                         ^x&z|\n\r" );
+      ch_printf( ch, "&z|^g&x Request DENIED, transfer too high.   ^x&z|\n\r" );
+      ch_printf( ch, "&z|+---------------------------------------+|&w\n\r" );
+      learn_from_failure( ch, gsn_slicebank );
 
-   ch->pcdata->bank += steal;
+      if (found) {
+	  send_to_char( "> &R[&YBank: &WALERT&R] &WA hack attempt was made on your bank account.\n\r", d->character );
+      ch_printf( d->character, "> &R[&YBank: &WALERT&R] &WFrom Complex: %s - node: %ld\n\r", ch->in_room->area->planet->name,  ch->in_room->vnum );
+      }
+
+		if (ch->pcdata->threataction < 1)
+		send_to_char( "> &Wthreat status changed to: &Rtraced&w\n\r",        ch );
+
+		ch->pcdata->threatlevel += 1;
+		if ( ch->pcdata->threatlevel > 10 )
+			ch->pcdata->threatlevel = 10;
+
+		ch->pcdata->threataction += 1;
+
+      return;
+   }
+
+   ch_printf( ch, "&z|+---------------------------------------+|&w\n\r" );
+   ch_printf( ch, "&z|^g&x Welcome to the Bank Database.           ^x&z|\n\r" );
+   ch_printf( ch, "&z|^g                                         ^x|\n\r" );
+   ch_printf( ch, "&z|^g&x Login: %d                            ^x&z|\n\r",
+              number_range( 11111, 99999 ) );
+   ch_printf( ch, "&z|^g&x Passcode: *********                     ^x&z|\n\r" );
+   ch_printf( ch, "&z|^g                                         ^x|\n\r" );
+   ch_printf( ch, "&z|^g&x Login accepted...retrieving account     ^x&z|\n\r" );
+   ch_printf( ch, "&z|^g&x Processing request, stand by.           ^x&z|\n\r" );
+   ch_printf( ch, "&z|^g                                         ^x&z|\n\r" );
+   ch_printf( ch, "&z|^g&x Request accepted. Credits transferred   ^x&z|\n\r" );
+   ch_printf( ch, "&z|+---------------------------------------+|&w\n\r" );
+
+   ch->gold += steal;
    d->character->pcdata->bank -= steal;
-   //xpgain = UMIN( obj->cost*10 ,( exp_level(ch->skill_level[SLICER_ABILITY]+1) - exp_level(ch->skill_level[SLICER_ABILITY]) ) );
-/*   xpgain = 3000;
-   gain_exp( ch, xpgain, SLICER_ABILITY );
-   ch_printf( ch, " You gain %d experience points for being a Slicer.\n\r", xpgain );
-*/
    learn_from_success( ch, gsn_slicebank );
+   return;
+
+}
+
+void do_slicefund( CHAR_DATA * ch, char *argument )
+{
+  // DESCRIPTOR_DATA *d;
+   bool checkdata;
+   OBJ_DATA *obj;
+   CLAN_DATA *clan;
+//   long xpgain;
+//   char opfer, ort;
+   char arg[MAX_INPUT_LENGTH];
+   char arg2[MAX_INPUT_LENGTH];
+   char buf[MAX_INPUT_LENGTH];
+   char bufa[MAX_STRING_LENGTH];
+   long steal;
+   int schance, x;
+   bool found;
+
+	if ( !IS_NPC(ch) && !ch->pcdata->learned[gsn_slicefund] )
+	{
+		send_to_char("> you do not know the slicefund skillsoft\n\r", ch );
+		return;
+	}
+
+   if ( IS_AFFECTED(ch, AFF_HIDE) ){
+       send_to_char( "> &Ryou can not slice organization funds when hidden&w\n\r", ch );
+       return;
+   }
+
+   argument = one_argument( argument, arg2 );
+   strcpy( arg, argument );
+   checkdata = FALSE;
+   switch ( ch->substate )
+   {
+      default:
+         if( arg[0] == '\0' || arg2[0] == '\0' )
+         {
+            send_to_char( "> &Wsyntax: slicefund <organization> <amount>&w\n\r", ch );
+            return;
+         }
+
+         if( ch->fighting )
+         {
+            send_to_char( "> &Ryou are fighting&w\n\r", ch );
+            return;
+         }
+
+
+         if( !IS_SET( ch->in_room->room_flags2, ROOM_INTRUSION ) )
+         {
+            send_to_char( "> &Ryou must be in an intrusion node to slice organization funds&w\n\r", ch );
+            return;
+         }
+
+         for( obj = ch->last_carrying; obj; obj = obj->prev_content )
+         {
+            if( obj->item_type == ITEM_TOOLKIT )
+               checkdata = TRUE;
+         }
+         if( ( checkdata == FALSE ) )
+         {
+            send_to_char( "> &Ryou need a devkit module to slice into the banking computer system&w\n\r", ch );
+            return;
+         }
+
+         if( !str_cmp( arg2, ch->pcdata->clan_name ) )
+         {
+            send_to_char( "> &Rthat's your organization - insurance fraud is not possible\n\r", ch );
+            return;
+         }
+
+         clan = get_clan( arg2 );
+         if ( !clan )
+         {
+     	send_to_char( "> &Rno such organization&w\n\r", ch );
+     	return;
+         }
+
+         if( atoi( arg ) < 0 )
+         {
+            send_to_char( "> &Rwhy don't you just GIVE them the money?&w\n\r", ch );
+            return;
+         }
+
+         ch->dest_buf = str_dup( arg );
+         ch->dest_buf_2 = str_dup( arg2 );
+         send_to_char( "> &GYou begin the long process of trying to slice into the banking computer system&w\n\r", ch );
+         sprintf( buf, "> $n takes $s browser and hooks it into a data port" );
+         act( AT_PLAIN, buf, ch, NULL, argument, TO_ROOM );
+         add_timer( ch, TIMER_DO_FUN, 10, do_slicefund, 1 );
+         return;
+
+      case 1:
+         if( !ch->dest_buf )
+            return;
+         if( !ch->dest_buf_2 )
+            return;
+
+         strcpy( arg, ch->dest_buf );
+         strcpy( arg2, ch->dest_buf_2 );
+         DISPOSE( ch->dest_buf );
+         DISPOSE( ch->dest_buf_2 );
+         break;
+
+      case SUB_TIMER_DO_ABORT:
+         DISPOSE( ch->dest_buf );
+         DISPOSE( ch->dest_buf_2 );
+         ch->substate = SUB_NONE;
+         send_to_char( "> &Ryou are interrupted and fail to finish slicing into the banking computer system&w\n\r", ch );
+         return;
+   }
+
+   ch->substate = SUB_NONE;
+
+   for( obj = ch->last_carrying; obj; obj = obj->prev_content )
+   {
+      if( obj->item_type == ITEM_TOOLKIT )
+         checkdata = TRUE;
+   }
+
+   schance = IS_NPC( ch ) ? ch->top_level : ( int )( ch->pcdata->learned[gsn_slicefund] );
+   //schance = schance - ch->in_room->seccode;
+      schance = UMIN( schance, 70 );
+   found = FALSE;
+
+   clan = get_clan( arg2 );
+   if ( !clan )
+   {
+	send_to_char( "> &Rno such organization&w\n\r", ch );
+	return;
+   }
+
+   x = number_percent(  );
+
+   if( x > schance )
+   {
+      ch_printf( ch, "&z|+---------------------------------------+|&w\n\r" );
+      ch_printf( ch, "&z|^g&x Welcome to the Bank Database.           ^x&z|\n\r" );
+      ch_printf( ch, "&z|^g                                         ^x|\n\r" );
+      ch_printf( ch, "&z|^g&x Login: %d                            ^x&z|\n\r",
+                 number_range( 11111, 99999 ) );
+      ch_printf( ch, "&z|^g&x Passcode: *********                     ^x&z|\n\r" );
+      ch_printf( ch, "&z|^g                                         ^x|\n\r" );
+      ch_printf( ch, "&z|^g&x Invalid passcode.                       ^x&z|\n\r" );
+      ch_printf( ch, "&z|+---------------------------------------+|&w\n\r" );
+      learn_from_failure( ch, gsn_slicefund );
+
+		sprintf(bufa, "> &R[&YBank: &WALERT&R] &WORG fund intrusion from: %s - node: %ld",
+				ch->in_room->area->planet->name, ch->in_room->vnum);
+
+		echo_to_clan(AT_RED, bufa, ECHOTAR_ALL, clan);
+
+		if (ch->pcdata->threataction < 1)
+		send_to_char( "> &Wthreat status changed to: &Rtraced&w\n\r",        ch );
+
+		ch->pcdata->threatlevel += 1;
+		if ( ch->pcdata->threatlevel > 10 )
+			ch->pcdata->threatlevel = 10;
+
+		ch->pcdata->threataction += 1;
+
+      return;
+   }
+
+   if( !clan )
+   {
+      ch_printf( ch, "&z|+---------------------------------------+|&w\n\r" );
+      ch_printf( ch, "&z|^g&x Welcome to the Bank Database.           ^x&z|\n\r" );
+      ch_printf( ch, "&z|^g                                         ^x|\n\r" );
+      ch_printf( ch, "&z|^g&x Login: %d                            ^x&z|\n\r",
+                 number_range( 11111, 99999 ) );
+      ch_printf( ch, "&z|^g&x Passcode: *********                     ^x&z|\n\r" );
+      ch_printf( ch, "&z|^g                                         ^x|\n\r" );
+      ch_printf( ch, "&z|^g&x Login accepted...retrieving account     ^x&z|\n\r" );
+      ch_printf( ch, "&z|^g                                         ^x&z|\n\r" );
+      ch_printf( ch, "&z|^g&x Account %-15.15s is not active.  ^x&z|\n\r", arg2 );
+      ch_printf( ch, "&z|+---------------------------------------+|&w\n\r" );
+      return;
+   }
+
+   steal = atoi( arg );
+
+   if( steal == 1 && clan->funds > 0 )
+   {
+      ch_printf( ch, "&z|+---------------------------------------+|&w\n\r" );
+      ch_printf( ch, "&z|^g&x Welcome to the Bank Database.           ^x&z|\n\r" );
+      ch_printf( ch, "&z|^g                                         ^x|\n\r" );
+      ch_printf( ch, "&z|^g&x Login: %d                            ^x&z|\n\r",
+                 number_range( 11111, 99999 ) );
+      ch_printf( ch, "&z|^g&x Passcode: *********                     ^x&z|\n\r" );
+      ch_printf( ch, "&z|^g                                         ^x|\n\r" );
+      ch_printf( ch, "&z|^g&x Login accepted...retrieving account     ^x&z|\n\r" );
+      ch_printf( ch, "&z|^g&x Processing request, stand by.           ^x&z|\n\r" );
+      ch_printf( ch, "&z|^g                                         ^x&z|\n\r" );
+      ch_printf( ch, "&z|^g&x Request ACCEPTED.                    ^x&z|\n\r" );
+      ch_printf( ch, "&z|+---------------------------------------+|&w\n\r" );
+
+      ch->gold += steal;
+      clan->funds -= steal;
+
+     if (number_range(1, 10) == 1)
+      learn_from_success( ch, gsn_slicefund );
+
+      return;
+   }
+
+   if( steal > clan->funds / 1000 )
+   {
+      ch_printf( ch, "&z|+---------------------------------------+|&w\n\r" );
+      ch_printf( ch, "&z|^g&x Welcome to the Bank Database.           ^x&z|\n\r" );
+      ch_printf( ch, "&z|^g                                         ^x|\n\r" );
+      ch_printf( ch, "&z|^g&x Login: %d                            ^x&z|\n\r",
+                 number_range( 11111, 99999 ) );
+      ch_printf( ch, "&z|^g&x Passcode: *********                     ^x&z|\n\r" );
+      ch_printf( ch, "&z|^g                                         ^x|\n\r" );
+      ch_printf( ch, "&z|^g&x Login accepted...retrieving account     ^x&z|\n\r" );
+      ch_printf( ch, "&z|^g&x Processing request, stand by.           ^x&z|\n\r" );
+      ch_printf( ch, "&z|^g                                         ^x&z|\n\r" );
+      ch_printf( ch, "&z|^g&x Request DENIED, transfer too high.   ^x&z|\n\r" );
+      ch_printf( ch, "&z|+---------------------------------------+|&w\n\r" );
+      learn_from_failure( ch, gsn_slicefund );
+
+		sprintf(bufa, "> &R[&YBank: &WALERT&R] &WORG fund intrusion from: %s - node: %ld",
+				ch->in_room->area->planet->name, ch->in_room->vnum);
+
+		echo_to_clan(AT_RED, bufa, ECHOTAR_ALL, clan);
+
+		if (ch->pcdata->threataction < 1)
+		send_to_char( "> &Wthreat status changed to: &Rtraced&w\n\r",        ch );
+
+		ch->pcdata->threatlevel += 1;
+		if ( ch->pcdata->threatlevel > 10 )
+			ch->pcdata->threatlevel = 10;
+
+		ch->pcdata->threataction += 1;
+
+      return;
+   }
+
+   ch_printf( ch, "&z|+---------------------------------------+|&w\n\r" );
+   ch_printf( ch, "&z|^g&x Welcome to the Bank Database.           ^x&z|\n\r" );
+   ch_printf( ch, "&z|^g                                         ^x|\n\r" );
+   ch_printf( ch, "&z|^g&x Login: %d                            ^x&z|\n\r",
+              number_range( 11111, 99999 ) );
+   ch_printf( ch, "&z|^g&x Passcode: *********                     ^x&z|\n\r" );
+   ch_printf( ch, "&z|^g                                         ^x|\n\r" );
+   ch_printf( ch, "&z|^g&x Login accepted...retrieving account     ^x&z|\n\r" );
+   ch_printf( ch, "&z|^g&x Processing request, stand by.           ^x&z|\n\r" );
+   ch_printf( ch, "&z|^g                                         ^x&z|\n\r" );
+   ch_printf( ch, "&z|^g&x Request accepted. Credits transferred   ^x&z|\n\r" );
+   ch_printf( ch, "&z|+---------------------------------------+|&w\n\r" );
+
+   ch->gold += steal;
+   clan->funds -= steal;
+   learn_from_success( ch, gsn_slicefund );
    return;
 
 }

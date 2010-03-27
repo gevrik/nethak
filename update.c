@@ -714,7 +714,7 @@ void update_threat( void )
      DESCRIPTOR_DATA *d;
      CHAR_DATA *ch;
      CHAR_DATA *och;
-     int threatlevel, chance;
+     int threatlevel, fine;
 
     for ( d = last_descriptor; d; d = d->prev )
     {
@@ -732,38 +732,59 @@ void update_threat( void )
 	{
 
 
-//	switch (och->pcdata->threataction) {
-//
-//		default:
-//			break;
-//
-//			case 1: // fines
-//
-//				threatlevel = och->pcdata->threatlevel;
-//
-//				chance = IS_NPC(ch) ? ch->top_level : (int) (ch->pcdata->learned[gsn_spacecraft]);
-//
-//
-//
-//				break;
-//
-//		}
+	switch (och->pcdata->threataction) {
 
-//		if ( number_range(1, 10) <= och->pcdata->threatlevel ) {
-//			determine_tresult(ch);
-//			return;
-//		}
+		default:
+			break;
 
-		och->pcdata->threataction = 0;
-		send_to_char( "> &Wthreat status changed to: &Gsafe&w\n\r",        ch );
-	}
-	else
-	{
-		if ( och->pcdata->threatlevel > 0 )
-		{
-			och->pcdata->threatlevel -= 1;
-			send_to_char( "> &Wthreat level &Glowered&w\n\r",        ch );
+			case 1: // fines
+
+					threatlevel = och->pcdata->threatlevel;
+
+					if ( number_range(1, 10) <= threatlevel ) {
+
+						fine = threatlevel * 10;
+
+						if ( och->gold < fine ) {
+							send_to_char( "> &Ryou can not afford the fine&w\n\r", ch );
+							och->pcdata->threataction = 2;
+						}
+						else {
+							ch_printf( och, "&R[&bNetWatch&R]&W fines you for %d credits\n\r", fine );
+							och->pcdata->threataction = 0;
+							send_to_char( "> &Wthreat status changed to: &Gsafe&w\n\r", och );
+						}
+
+					}
+
+				break;
+
+			case 2: // kick
+
+				if( !och->plr_home )
+				{
+					send_to_char( "> &Ryou have been kicked from the system by NetWatch&w\n\r", och );
+					act(AT_GREEN, "> $n has been kicked by NetWatch", och, NULL, NULL, TO_ROOM );
+					och->pcdata->threataction = 0;
+					send_to_char( "> &Wthreat status changed to: &Gsafe&w\n\r", och );
+					char_from_room( och );
+					char_to_room( och, get_room_index( ROOM_VNUM_STRAY ) );
+					do_look( och, "auto" );
+				}
+				else {
+					send_to_char( "> &Ryou have been kicked from the system by NetWatch&w\n\r", och );
+					act(AT_GREEN, "> $n has been kicked by NetWatch", och, NULL, NULL, TO_ROOM );
+					och->pcdata->threataction = 0;
+					send_to_char( "> &Wthreat status changed to: &Gsafe&w\n\r", och );
+					char_from_room( och );
+					char_to_room( och, ch->plr_home );
+					do_look( och, "auto" );
+				}
+				break;
+
 		}
+
+
 	}
 
     }
