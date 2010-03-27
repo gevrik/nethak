@@ -3080,14 +3080,14 @@ void do_inquire( CHAR_DATA * ch, char *argument )
       ch_printf( ch, "&z|+---------------------------------------+|&w\n\r" );
       learn_from_failure( ch, gsn_inquire );
 
-		if (ch->pcdata->threataction < 1)
-		send_to_char( "> &Wthreat status changed to: &Rtraced&w\n\r",        ch );
+		if (ch->pcdata->threataction < 1) {
+		send_to_char( "> &Wthreat status changed to: &btraced&w\n\r",        ch );
+		ch->pcdata->threataction = 1;
+		}
 
 		ch->pcdata->threatlevel += 1;
 		if ( ch->pcdata->threatlevel > 10 )
 			ch->pcdata->threatlevel = 10;
-
-		ch->pcdata->threataction += 1;
 
       return;
    }
@@ -3269,14 +3269,14 @@ void do_slicebank( CHAR_DATA * ch, char *argument )
           ch_printf( d->character, "> &R[&YBank: &WALERT&R] &WFrom Complex: %s - node: %ld\n\r", ch->in_room->area->planet->name, ch->in_room->vnum );
       }
 
-		if (ch->pcdata->threataction < 1)
-		send_to_char( "> &Wthreat status changed to: &Rtraced&w\n\r",        ch );
+		if (ch->pcdata->threataction < 1) {
+		send_to_char( "> &Wthreat status changed to: &btraced&w\n\r",        ch );
+		ch->pcdata->threataction = 1;
+		}
 
 		ch->pcdata->threatlevel += 1;
 		if ( ch->pcdata->threatlevel > 10 )
 			ch->pcdata->threatlevel = 10;
-
-		ch->pcdata->threataction += 1;
 
       return;
    }
@@ -3342,14 +3342,14 @@ void do_slicebank( CHAR_DATA * ch, char *argument )
       ch_printf( d->character, "> &R[&YBank: &WALERT&R] &WFrom Complex: %s - node: %ld\n\r", ch->in_room->area->planet->name,  ch->in_room->vnum );
       }
 
-		if (ch->pcdata->threataction < 1)
-		send_to_char( "> &Wthreat status changed to: &Rtraced&w\n\r",        ch );
+		if (ch->pcdata->threataction < 1) {
+		send_to_char( "> &Wthreat status changed to: &btraced&w\n\r",        ch );
+		ch->pcdata->threataction = 1;
+		}
 
 		ch->pcdata->threatlevel += 1;
 		if ( ch->pcdata->threatlevel > 10 )
 			ch->pcdata->threatlevel = 10;
-
-		ch->pcdata->threataction += 1;
 
       return;
    }
@@ -3524,14 +3524,14 @@ void do_slicefund( CHAR_DATA * ch, char *argument )
 
 		echo_to_clan(AT_RED, bufa, ECHOTAR_ALL, clan);
 
-		if (ch->pcdata->threataction < 1)
-		send_to_char( "> &Wthreat status changed to: &Rtraced&w\n\r",        ch );
+		if (ch->pcdata->threataction < 1) {
+		send_to_char( "> &Wthreat status changed to: &btraced&w\n\r",        ch );
+		ch->pcdata->threataction = 1;
+		}
 
 		ch->pcdata->threatlevel += 1;
 		if ( ch->pcdata->threatlevel > 10 )
 			ch->pcdata->threatlevel = 10;
-
-		ch->pcdata->threataction += 1;
 
       return;
    }
@@ -3599,14 +3599,14 @@ void do_slicefund( CHAR_DATA * ch, char *argument )
 
 		echo_to_clan(AT_RED, bufa, ECHOTAR_ALL, clan);
 
-		if (ch->pcdata->threataction < 1)
-		send_to_char( "> &Wthreat status changed to: &Rtraced&w\n\r",        ch );
+		if (ch->pcdata->threataction < 1) {
+		send_to_char( "> &Wthreat status changed to: &btraced&w\n\r",        ch );
+		ch->pcdata->threataction = 1;
+		}
 
 		ch->pcdata->threatlevel += 1;
 		if ( ch->pcdata->threatlevel > 10 )
 			ch->pcdata->threatlevel = 10;
-
-		ch->pcdata->threataction += 1;
 
       return;
    }

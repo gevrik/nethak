@@ -3504,14 +3504,14 @@ void do_propaganda ( CHAR_DATA *ch , char *argument )
 							ch->name, ch->in_room->area->planet->name);
 					echo_to_clan(AT_RED, bufa, ECHOTAR_ALL, ch->in_room->area->planet->governed_by);
 
-					if (ch->pcdata->threataction < 1)
-					send_to_char( "> &Wthreat status changed to: &Rtraced&w\n\r",        ch );
+					if (ch->pcdata->threataction < 1) {
+					send_to_char( "> &Wthreat status changed to: &btraced&w\n\r",        ch );
+					ch->pcdata->threataction = 1;
+					}
 
 					ch->pcdata->threatlevel += 1;
 					if ( ch->pcdata->threatlevel > 10 )
 						ch->pcdata->threatlevel = 10;
-
-					ch->pcdata->threataction += 1;
 
 					return;
 				}
@@ -3566,14 +3566,14 @@ void do_propaganda ( CHAR_DATA *ch , char *argument )
 
 		if ( planet->governed_by != clan )
 		{
-			if (ch->pcdata->threataction < 1)
-		send_to_char( "> &Wthreat status changed to: &Rtraced&w\n\r",        ch );
+			if (ch->pcdata->threataction < 1) {
+			send_to_char( "> &Wthreat status changed to: &btraced&w\n\r",        ch );
+			ch->pcdata->threataction = 1;
+			}
 
-		ch->pcdata->threatlevel += 1;
-		if ( ch->pcdata->threatlevel > 10 )
-			ch->pcdata->threatlevel = 10;
-
-		ch->pcdata->threataction += 1;
+			ch->pcdata->threatlevel += 1;
+			if ( ch->pcdata->threatlevel > 10 )
+				ch->pcdata->threatlevel = 10;
 
 		sprintf(bufa, "> %s used PROPAGANDA in %s ",
 				ch->name, ch->in_room->area->planet->name);
