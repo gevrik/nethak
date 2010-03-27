@@ -1551,6 +1551,11 @@ typedef enum
 #define ROOM_VNUM_JAIL		      19
 #define ROOM_VNUM_STRAY		      34
 
+/* room flags 2 */
+
+#define ROOM_INTRUSION	BV00
+#define ROOM_MONITORING BV01
+
 /*
  * Room flags.           Holy cow!  Talked about stripped away..
  * Used in #ROOMS.       Those merc guys know how to strip code down.
@@ -2549,6 +2554,7 @@ extern	sh_int	gsn_third_attack;
 extern	sh_int	gsn_dual_wield;
 
 extern	sh_int	gsn_slicebank;
+extern	sh_int	gsn_slicefund;
 extern  sh_int  gsn_inquire;
 
 extern	sh_int	gsn_aid;
@@ -3178,6 +3184,7 @@ DECLARE_DO_FUN( do_propaganda );
 DECLARE_DO_FUN( do_autopilot  );
 DECLARE_DO_FUN( do_allspeeders  );
 DECLARE_DO_FUN( do_slicebank  );
+DECLARE_DO_FUN( do_slicefund  );
 DECLARE_DO_FUN( do_inquire  );
 DECLARE_DO_FUN( do_nodeupgrade  );
 DECLARE_DO_FUN( do_speeders  );

@@ -74,6 +74,15 @@ void do_sn_jackhammer(CHAR_DATA *ch, char *argument) {
 
 		echo_to_clan(AT_RED, bufa, ECHOTAR_ALL, ch->in_room->area->planet->governed_by);
 
+		if (ch->pcdata->threataction < 1)
+		send_to_char( "> &Wthreat status changed to: &btraced&w\n\r",        ch );
+
+		ch->pcdata->threatlevel += 1;
+		if ( ch->pcdata->threatlevel > 10 )
+			ch->pcdata->threatlevel = 10;
+
+		ch->pcdata->threataction += 1;
+
 		REMOVE_BIT( xit->exit_info , EX_ISDOOR );
 		REMOVE_BIT( xit->exit_info , EX_LOCKED );
 		REMOVE_BIT( xit->exit_info , EX_CLOSED );
@@ -195,25 +204,14 @@ void do_sn_krash(CHAR_DATA *ch, char *argument) {
 				ch->name, ch->in_room->area->planet->name);
 		echo_to_clan(AT_RED, bufa, ECHOTAR_ALL, ch->in_room->area->planet->governed_by);
 
-		//found = FALSE;
+		if (ch->pcdata->threataction < 1)
+		send_to_char( "> &Wthreat status changed to: &Rtraced&w\n\r",        ch );
 
-//		   for( d = first_descriptor; d; d = d->next )
-//		   {
-//		      if( !d->character )
-//		         continue;
-//		      if( d->connected != CON_PLAYING )
-//		         continue;
-//		      if( IS_IMMORTAL( d->character ) )
-//		         continue;
-//
-//		      if( d->character->pcdata->clan == location->area->planet->governed_by )
-//		      {
-//
-//			      send_to_char( "> &R[&YALERT&R]&W enemy activity! krash used!\n\r", d->character );
-//			      ch_printf( d->character, "> &R[&YALERT&R]&W in system: %s&w\n\r", ch->in_room->area->planet->name );
-//
-//		      }
-//		   }
+		ch->pcdata->threatlevel += 1;
+		if ( ch->pcdata->threatlevel > 10 )
+			ch->pcdata->threatlevel = 10;
+
+		ch->pcdata->threataction += 1;
 
 		   planet->pop_support -= 1;
 
@@ -672,6 +670,16 @@ void do_sn_audit( CHAR_DATA *ch, char *argument )
 	if ( roll >= chance )
 	{
 		send_to_char("> &Ryou failed the audit&w\n\r", ch);
+
+		if (ch->pcdata->threataction < 1)
+		send_to_char( "> &Wthreat status changed to: &Rtraced&w\n\r",        ch );
+
+		ch->pcdata->threatlevel += 1;
+		if ( ch->pcdata->threatlevel > 10 )
+			ch->pcdata->threatlevel = 10;
+
+		ch->pcdata->threataction += 1;
+
 		return;
 	}
 
@@ -763,7 +771,7 @@ void do_sn_shortcut( CHAR_DATA *ch, char *argument )
 		{
 			send_to_char("> &Rsyntax: shortcut [type] [nodeid]&w\n\r", ch);
 			send_to_char("> &Wconnect to specified node&w\n\r", ch);
-			send_to_char("> &Woptions: fw (firewall)&w\n\r", ch);
+			send_to_char("> &Woptions: fw (firewall), in (intrusion)&w\n\r", ch);
 			return;
 		}
 
@@ -843,6 +851,37 @@ void do_sn_shortcut( CHAR_DATA *ch, char *argument )
 	    	send_to_char( "> &Gyou connect to the destination node&w\n\r", ch );
 			char_from_room( ch );
 			char_to_room( ch, get_room_index( destinationid ) );
+			act( AT_ACTION, "> $n has entered the node", ch, NULL, NULL, TO_ROOM );
+			do_look( ch, "auto" );
+	    }
+
+	}
+
+	if ( !str_cmp( arg, "in" ) )
+	{
+		for ( location = planet->area->first_room ; location ; location = location->next_in_area )
+		{
+			if ( IS_SET( location->room_flags, ROOM_INTRUSION ) )
+			{
+
+				destinationid = atoi(arg1);
+				if ( location->vnum == destinationid )
+				count++;
+
+			}
+		}
+
+	    if ( !count )
+	    {
+		set_char_color( AT_BLOOD, ch);
+	        send_to_char( "> &Rdestination not found&w\n\r", ch );
+	    }
+	    else
+	    {
+	    	send_to_char( "> &Gyou connect to the destination node&w\n\r", ch );
+			char_from_room( ch );
+			char_to_room( ch, get_room_index( destinationid ) );
+			act( AT_ACTION, "> $n has entered the node", ch, NULL, NULL, TO_ROOM );
 			do_look( ch, "auto" );
 	    }
 

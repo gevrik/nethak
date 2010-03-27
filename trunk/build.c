@@ -53,7 +53,7 @@ char *	const	r_flags	[] =
 
 char * const r_flags2 [] =
 {
-"r00", "r01", "r02", "r03", "r04", "r05",
+"intrusion", "monitoring", "r02", "r03", "r04", "r05",
 "r06", "r07", "r08", "r09", "r10", "r11",
 "r12", "r13", "r14", "r15", "r16", "r17", "r18", "r19", "r20", "r21", "r22", "r23",
 "r24", "r25", "r26", "r27", "r28", "r29", "r30", "r31"
@@ -1232,6 +1232,14 @@ void do_mset( CHAR_DATA *ch, char *argument )
 	if ( !can_mmodify( ch, victim ) )
 	  return;
 	victim->pcdata->bank = value;
+	return;
+    }
+
+    if ( !str_cmp( arg2, "taxnodes" ) )
+    {
+	if ( !can_mmodify( ch, victim ) )
+	  return;
+	victim->pcdata->qtaxnodes = value;
 	return;
     }
 
