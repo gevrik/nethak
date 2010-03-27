@@ -1905,8 +1905,16 @@ void do_pick( CHAR_DATA *ch, char *argument )
 					ch, NULL, gch, TO_CHAR );
 			if ( number_range(1, 100) < 11 )
 			{
-			ch->pcdata->threataction = 1;
-			send_to_char( "> &Rthreat status changed to traced&w\n\r",        ch );
+
+				if (ch->pcdata->threataction < 1) {
+				send_to_char( "> &Wthreat status changed to: &btraced&w\n\r",        ch );
+				ch->pcdata->threataction = 1;
+				}
+
+				ch->pcdata->threatlevel += 1;
+				if ( ch->pcdata->threatlevel > 10 )
+					ch->pcdata->threatlevel = 10;
+
 			}
 			return;
 		}
