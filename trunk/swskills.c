@@ -3836,6 +3836,19 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 		return;
 	}
 
+	if ( IS_SET( location->room_flags2 , ROOM_INTRUSION ) ){
+
+		if ( ch->gold < 500 ) {
+			send_to_char( "> &Rit costs 500c to modify an intrusion node&w\n\r", ch );
+			return;
+		}
+		else {
+			ch->gold -= 500;
+			send_to_char( "> &G500c spent to modify intrusion node&w\n\r", ch );
+		}
+
+	}
+
 	clear_roomtype( location );
 
 	if ( IS_SET( location->room_flags , ROOM_PLR_HOME ))

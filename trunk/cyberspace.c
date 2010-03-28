@@ -1307,12 +1307,13 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 				&& str_cmp( arg, "anchor" )
 				&& str_cmp( arg, "audit" )
 				&& str_cmp( arg, "shortcut" )
-				&& str_cmp( arg, "checkout" ))
+				&& str_cmp( arg, "checkout" )
+				&& str_cmp( arg, "emp") )
 		{
 			send_to_char( "> &Ryou cannot code that app, try:\n\r&w", ch);
 			send_to_char( "> jackhammer, krash, spun, reconstruct\n\r", ch);
 			send_to_char( "> dropline, uninstall, anchor, audit\n\r", ch);
-			send_to_char( "> shortcut, checkout\n\r", ch);
+			send_to_char( "> shortcut, checkout, emp\n\r", ch);
 			return;
 		}
 
@@ -1344,6 +1345,10 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 		{
 			cost = 10;
 		}
+		else if ( !str_cmp( arg, "emp" ) )
+		{
+			cost = 100;
+		}
 		else if ( !str_cmp( arg, "anchor" ) )
 		{
 			cost = 75;
@@ -1361,14 +1366,14 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 		}
 		else if ( !str_cmp( arg, "shortcut" ) )
 		{
-			cost = 500;
+			cost = 100;
 		}
 		else
 		{
 			send_to_char( "> &Ryou cannot code that app, try:\n\r&w", ch);
 			send_to_char( "> jackhammer, krash, spun, reconstruct\n\r", ch);
 			send_to_char( "> dropline, uninstall, anchor, audit\n\r", ch);
-			send_to_char( "> shortcut, checkout\n\r", ch);
+			send_to_char( "> shortcut, checkout, emp\n\r", ch);
 			return;
 		}
 
@@ -1490,6 +1495,10 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 		cost = 1000;
 	}
 	else if ( !str_cmp( arg, "audit" ) )
+	{
+		cost = 100;
+	}
+	else if ( !str_cmp( arg, "emp" ) )
 	{
 		cost = 100;
 	}

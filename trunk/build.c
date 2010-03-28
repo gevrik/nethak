@@ -1243,6 +1243,22 @@ void do_mset( CHAR_DATA *ch, char *argument )
 	return;
     }
 
+    if ( !str_cmp( arg2, "threatlevel" ) )
+    {
+	if ( !can_mmodify( ch, victim ) )
+	  return;
+	victim->pcdata->threatlevel = value;
+	return;
+    }
+
+    if ( !str_cmp( arg2, "threataction" ) )
+    {
+	if ( !can_mmodify( ch, victim ) )
+	  return;
+	victim->pcdata->threataction = value;
+	return;
+    }
+
     if ( !str_cmp( arg2, "snippets" ) )
     {
 	if ( !can_mmodify( ch, victim ) )

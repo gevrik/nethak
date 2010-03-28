@@ -56,10 +56,10 @@ Michael Seifert, and Sebastian Hammer.
 #include <time.h>
 #include "mud.h"
 
-#define PREP_START  51   /* vnum of first prep room */
-#define PREP_END    54   /* vnum of last prep room */
-#define ARENA_START number_range( 47, 50)    /* vnum of first real arena room*/
-#define ARENA_END   50   /* vnum of last real arena room*/
+#define PREP_START  14148   /* vnum of first prep room */
+#define PREP_END    14148   /* vnum of last prep room */
+#define ARENA_START number_range( 14148, 14153)    /* vnum of first real arena room*/
+#define ARENA_END   14153   /* vnum of last real arena room*/
 #define HALL_FAME_FILE  SYSTEM_DIR "halloffame.lst"
 
 CHAR_DATA *get_char_world_ooc( CHAR_DATA *ch, char *argument );
