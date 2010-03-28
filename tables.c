@@ -483,6 +483,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_sn_audit" )) 		return do_sn_audit;
 	if ( !str_cmp( name, "do_sn_checkout" )) 		return do_sn_checkout;
 	if ( !str_cmp( name, "do_sn_dropline" )) 		return do_sn_dropline;
+	if ( !str_cmp( name, "do_sn_emp" )) 		return do_sn_emp;
 	if ( !str_cmp( name, "do_sn_jackhammer" )) 		return do_sn_jackhammer;
 	if ( !str_cmp( name, "do_sn_krash" )) 		return do_sn_krash;
 	if ( !str_cmp( name, "do_sn_randomizer" )) 		return do_sn_randomizer;
@@ -611,6 +612,7 @@ char *skill_name( DO_FUN *skill )
 	if ( skill == do_sn_anchor )           return "do_sn_anchor";
 	if ( skill == do_sn_audit )           return "do_sn_audit";
 	if ( skill == do_sn_checkout )           return "do_sn_checkout";
+	if ( skill == do_sn_emp )           return "do_sn_emp";
 	if ( skill == do_sn_shortcut )           return "do_sn_shortcut";
 	if ( skill == do_reverseengineer )           return "do_reverseengineer";
     if ( skill == do_aaccept )           return "do_aaccept";

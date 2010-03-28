@@ -714,6 +714,10 @@ void update_threat( void )
 	DESCRIPTOR_DATA *d;
 	CHAR_DATA *ch;
 	CHAR_DATA *och;
+	CHAR_DATA * mob = NULL;
+	MOB_INDEX_DATA *pMobIndex = NULL;
+	OBJ_INDEX_DATA *pObjIndex = NULL;
+	OBJ_DATA * obj = NULL;
 	int threatlevel, fine;
 
 	for ( d = last_descriptor; d; d = d->prev )
@@ -767,6 +771,10 @@ void update_threat( void )
 
 			case 2: // kick
 
+				threatlevel = och->pcdata->threatlevel;
+
+				if ( number_range(1, 10) <= threatlevel ) {
+
 				if( !och->plr_home )
 				{
 					send_to_char( "> &Ryou have been kicked from the system by NetWatch&w\n\r", och );
@@ -786,11 +794,75 @@ void update_threat( void )
 					char_to_room( och, ch->plr_home );
 					do_look( och, "auto" );
 				}
+				}
+				else {
+						och->pcdata->threatlevel -= 1;
+						if ( och->pcdata->threatlevel > 2 ){
+						och->pcdata->threataction = 3;
+						send_to_char( "> &Wthreat status changed to: &Ragent dispatched&w\n\r", och );
+						}
+						else {
+							och->pcdata->threataction = 0;
+							send_to_char( "> &Wthreat status changed to: &Gsafe&w\n\r", och );
+						}
+				}
+				break;
+
+			case 3: // agent
+
+				threatlevel = och->pcdata->threatlevel;
+
+				if ( number_range(1, 10) <= threatlevel ) {
+
+					if ((pMobIndex = get_mob_index(MOB_VNUM_ALIEN))) {
+
+							mob = create_mobile(pMobIndex);
+							char_to_room(mob, och->in_room);
+							mob->hit = 250;
+							mob->max_hit = 250;
+
+							STRFREE( mob->long_descr );
+							mob->long_descr	= STRALLOC( "agent [netWatch]\n\r" );
+							STRFREE( mob->name );
+							mob->name	= STRALLOC( "agent netwatch" );
+							STRFREE( mob->short_descr );
+							mob->short_descr	= STRALLOC( "agent [netWatch]" );
+
+								SET_BIT(mob->affected_by, AFF_TRUESIGHT);
+							if ((pObjIndex = get_obj_index(OBJ_VNUM_BLASTER))
+									!= NULL) {
+								obj = create_object(pObjIndex, mob->top_level);
+								obj_to_char(obj, mob);
+								equip_char(mob, obj, WEAR_WIELD);
+							}
+							do_setblaster(mob, "full");
+
+							och->pcdata->threataction = 0;
+							send_to_char( "> &Wthreat status changed to: &Gsafe&w\n\r", och );
+
+							start_hating( mob , och );
+							start_hunting( mob, och );
+
+					}
+
+				}
+				else {
+
+					och->pcdata->threatlevel -= 1;
+					if ( och->pcdata->threatlevel > 4 ){
+					och->pcdata->threataction = 0;
+					send_to_char( "> &Wthreat status changed to: &Gsafe&w\n\r", och );
+					}
+					else {
+						och->pcdata->threataction = 0;
+						send_to_char( "> &Wthreat status changed to: &Gsafe&w\n\r", och );
+					}
+
+				}
+
 				break;
 
 			}
-
-
 		}
 		else {
 

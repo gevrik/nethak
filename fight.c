@@ -1292,7 +1292,10 @@ ch_ret damage( CHAR_DATA *ch, CHAR_DATA *victim, int dam, int dt )
 
 	/* Take away Hide */
 	if ( IS_AFFECTED(ch, AFF_HIDE) )
+	{
+		affect_strip ( ch, gsn_hide			);
 	     REMOVE_BIT(ch->affected_by, AFF_HIDE);
+	}
 	/*
 	 * Damage modifiers.
 	 */

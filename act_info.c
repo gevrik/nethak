@@ -877,11 +877,6 @@ void do_look
 	if ( !IS_NPC(ch) && IS_SET(ch->act, PLR_AUTOEXIT) )
 	        do_exits( ch, "" );
 
-	//display_map (ch);
-	//do_room_map();
-
-	//show_ships_to_char( ch->in_room->first_ship, ch );
-    	//strcpy( buf, fAuto ? "&Y>&c connections:&w" : "&Y>&c connections:&w\n\r" );
 	send_to_char( "\n\r&Y>&c objects:&w\n\r", ch );
 	show_list_to_char( ch->in_room->first_content, ch, FALSE, FALSE, eItemGet );
 	send_to_char( "\n\r&Y>&c entities:&w\n\r", ch );

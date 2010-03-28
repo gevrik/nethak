@@ -8,7 +8,6 @@
 
 void do_sn_jackhammer(CHAR_DATA *ch, char *argument) {
 
-	DESCRIPTOR_DATA *d;
 	OBJ_DATA *obj;
 	EXIT_DATA *xit, *texit;
 	int edir;
@@ -104,9 +103,7 @@ void do_sn_jackhammer(CHAR_DATA *ch, char *argument) {
 void do_sn_krash(CHAR_DATA *ch, char *argument) {
 
 	CLAN_DATA *clan;
-	DESCRIPTOR_DATA *d;
 	OBJ_DATA *obj;
-	ROOM_INDEX_DATA *location;
 	char buf[MAX_STRING_LENGTH];
 	char bufa[MAX_STRING_LENGTH];
 	PLANET_DATA *planet;
@@ -624,7 +621,7 @@ void do_sn_audit( CHAR_DATA *ch, char *argument )
 		{
 			send_to_char("> &Rsyntax: audit [option]&w\n\r", ch);
 			send_to_char("> &Wgain information about specified node&w\n\r", ch);
-			send_to_char("> &Woptions: fw (firewall)&w\n\r", ch);
+			send_to_char("> &Woptions: fw (firewall), rn (runner)&w\n\r", ch);
 			return;
 		}
 
@@ -710,6 +707,9 @@ void do_sn_audit( CHAR_DATA *ch, char *argument )
 	    }
 
 	}
+	else
+		do_sn_audit( ch, "");
+
 
     return;
 
@@ -1063,4 +1063,179 @@ void do_sn_checkout( CHAR_DATA *ch, char *argument )
 
     return;
 
+}
+
+void do_sn_emp(CHAR_DATA *ch, char *argument) {
+
+	OBJ_DATA *obj;
+	CHAR_DATA *rch;
+	int energyplus;
+	char buf[MAX_STRING_LENGTH];
+	bool ch_snippet;
+
+	if ( IS_NPC(ch) || !ch->pcdata )
+	   {
+	       send_to_char ( "huh?\n\r" , ch );
+	       return;
+	   }
+
+
+		if ( ch->position <= POS_SLEEPING )
+		{
+			send_to_char( "> you are hibernating\n\r" , ch );
+			return;
+		}
+
+		ch_snippet = FALSE;
+
+		for (obj = ch->last_carrying; obj; obj = obj->prev_content) {
+			if (obj->item_type == ITEM_SNIPPET && !strcmp(obj->name,
+					"emp")) {
+				ch_snippet = TRUE;
+				energyplus = obj->value[0];
+				separate_obj(obj);
+				obj_from_char(obj);
+				extract_obj( obj );
+			}
+		}
+
+		if (!ch_snippet) {
+			send_to_char("> &Remp application needed&w\n\r", ch);
+			return;
+		}
+
+		WAIT_STATE( ch, skill_table[gsn_propaganda]->beats );
+
+		sprintf(buf, "> %s uses an emp application",
+				ch->name);
+		echo_to_room(AT_RED, ch->in_room, buf);
+
+	    for ( rch = ch->in_room->first_person; rch; rch = rch->next_in_room )
+	    {
+
+	    	if ( IS_AFFECTED(rch, AFF_HIDE) && !IS_NPC(rch) ){
+	    		affect_strip ( ch, gsn_hide			);
+	    		REMOVE_BIT(rch->affected_by, AFF_HIDE);
+	    		send_to_char("> &Ryou are no longer hidden&w\n\r", rch);
+	    	}
+
+	    	if ( IS_AFFECTED(rch, AFF_SNEAK) && !IS_NPC(rch) ){
+	    		affect_strip ( ch, gsn_sneak			);
+	    		REMOVE_BIT(rch->affected_by, AFF_SNEAK);
+	    		send_to_char("> &Ryou are no longer sneaking&w\n\r", rch);
+	    	}
+
+
+	    }
+
+	    return;
+
+}
+
+void do_sn_bounce( CHAR_DATA *ch, char *argument )
+{
+    char arg[MAX_INPUT_LENGTH];
+    char arg2[MAX_INPUT_LENGTH];
+    int exit_dir;
+    EXIT_DATA *pexit;
+    CHAR_DATA *victim;
+    bool nogo;
+    ROOM_INDEX_DATA *to_room;
+    int chance;
+
+    argument = one_argument( argument, arg );
+    argument = one_argument( argument, arg2 );
+
+
+    if ( arg[0] == '\0' )
+    {
+	send_to_char( "> bounce whom\n\r", ch);
+	return;
+    }
+
+    if ( ( victim = get_char_room( ch, arg ) ) == NULL )
+    {
+	send_to_char( "> user not found\n\r", ch);
+	return;
+    }
+
+    if (victim == ch)
+    {
+	send_to_char("> you bounce around\n\r", ch);
+	return;
+    }
+
+    if( get_age( ch ) < 20 )
+    {
+	send_to_char("> wait until you get older before bouncing people around\n\r", ch );
+	return;
+    }
+
+    if ( arg2[0] == '\0' )
+    {
+	send_to_char( "> bounce them in which direction\n\r", ch);
+	return;
+    }
+
+    exit_dir = get_dir( arg2 );
+    if ( IS_SET(victim->in_room->room_flags, ROOM_SAFE)
+    &&  get_timer(victim, TIMER_SHOVEDRAG) <= 0)
+    {
+	send_to_char("> that character cannot be bounced right now\n\r", ch);
+	return;
+    }
+    victim->position = POS_SHOVE;
+    nogo = FALSE;
+    if ((pexit = get_exit(ch->in_room, exit_dir)) == NULL )
+      nogo = TRUE;
+    else
+    if ( IS_SET(pexit->exit_info, EX_CLOSED)
+    && (!IS_AFFECTED(victim, AFF_PASS_DOOR)
+    ||   IS_SET(pexit->exit_info, EX_NOPASSDOOR)) )
+      nogo = TRUE;
+    if ( nogo )
+    {
+	send_to_char( "> there is no exit in that direction\n\r", ch );
+        victim->position = POS_STANDING;
+	return;
+    }
+    to_room = pexit->to_room;
+
+    if ( IS_NPC(victim) )
+    {
+	send_to_char("> you can only shove player characters\n\r", ch);
+	return;
+    }
+
+chance = 50;
+
+/* Add 3 points to chance for every str point above 15, subtract for
+below 15 */
+
+chance += ((get_curr_str(ch) - 15) * 3);
+
+chance += (ch->top_level - victim->top_level);
+
+/* Debugging purposes - show percentage for testing */
+
+/* sprintf(buf, "Shove percentage of %s = %d", ch->name, chance);
+act( AT_ACTION, buf, ch, NULL, NULL, TO_ROOM );
+*/
+
+if (chance < number_percent( ))
+{
+  send_to_char("> you failed\n\r", ch);
+  victim->position = POS_STANDING;
+  return;
+}
+    act( AT_ACTION, "> you shove $M", ch, NULL, victim, TO_CHAR );
+    act( AT_ACTION, "> $n shoves you", ch, NULL, victim, TO_VICT );
+    move_char( victim, get_exit(ch->in_room,exit_dir), 0);
+    if ( !char_died(victim) )
+      victim->position = POS_STANDING;
+    WAIT_STATE(ch, 12);
+    /* Remove protection from shove/drag if char shoves -- Blodkai */
+    if ( IS_SET(ch->in_room->room_flags, ROOM_SAFE)
+    &&   get_timer(ch, TIMER_SHOVEDRAG) <= 0 )
+      add_timer( ch, TIMER_SHOVEDRAG, 10, NULL, 0 );
 }

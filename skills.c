@@ -1469,6 +1469,11 @@ void do_backstab( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
+	if ( !IS_AFFECTED(ch, AFF_HIDE) ) {
+		send_to_char( "> &Yyou must be hiding to backstab&w\n\r", ch );
+		return;
+	}
+
 	if ( arg[0] == '\0' )
 	{
 		send_to_char( "> &Ybackstab whom&w\n\r", ch );
@@ -2141,6 +2146,9 @@ void do_sneak( CHAR_DATA *ch, char *argument )
 
 void do_hide( CHAR_DATA *ch, char *argument )
 {
+
+	AFFECT_DATA af;
+
 	if ( IS_NPC(ch) && IS_AFFECTED( ch, AFF_CHARM ) )
 	{
 		send_to_char( "> you cannot concentrate enough for that\n\r", ch );
@@ -2160,11 +2168,23 @@ void do_hide( CHAR_DATA *ch, char *argument )
 	}
 
 	if ( IS_AFFECTED(ch, AFF_HIDE) )
+	{
+		affect_strip ( ch, gsn_hide			);
 		REMOVE_BIT(ch->affected_by, AFF_HIDE);
+	}
+
 
 	if ( IS_NPC(ch) || number_percent( ) < ch->pcdata->learned[gsn_hide] )
 	{
-		SET_BIT(ch->affected_by, AFF_HIDE);
+//		SET_BIT(ch->affected_by, AFF_HIDE);
+
+		af.type      = gsn_hide;
+		af.duration  = IS_NPC(ch) ? ch->top_level : ch->pcdata->learned[gsn_hide]  * DUR_CONV;
+		af.location  = APPLY_NONE;
+		af.modifier  = 0;
+		af.bitvector = AFF_HIDE;
+		affect_to_char( ch, &af );
+
 
 		if ( number_percent() == 23 )
 		{
@@ -2193,6 +2213,7 @@ void do_visible( CHAR_DATA *ch, char *argument )
 	affect_strip ( ch, gsn_invis			);
 	affect_strip ( ch, gsn_mass_invis			);
 	affect_strip ( ch, gsn_sneak			);
+	affect_strip ( ch, gsn_hide			);
 	REMOVE_BIT   ( ch->affected_by, AFF_HIDE		);
 	REMOVE_BIT   ( ch->affected_by, AFF_INVISIBLE	);
 	REMOVE_BIT   ( ch->affected_by, AFF_SNEAK		);

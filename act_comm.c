@@ -1205,8 +1205,11 @@ void do_quit( CHAR_DATA *ch, char *argument )
 	    {
 	        if (on_notify(vch, ch) == TRUE  && temp->name == ch->name )
 		{
+    			if ( str_cmp(temp->name, "Wintermute") )
+    			{
 		 set_char_color(AT_NOTIFY,vch);
 		 ch_printf(vch,"> %s has left cyberspace\n\r",temp->name);
+    			}
 		 break;
 		}
 	    }
