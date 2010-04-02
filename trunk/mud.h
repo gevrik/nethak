@@ -2555,6 +2555,7 @@ extern	sh_int	gsn_dual_wield;
 
 extern	sh_int	gsn_slicebank;
 extern	sh_int	gsn_slicefund;
+extern	sh_int	gsn_slicesnippets;
 extern  sh_int  gsn_inquire;
 
 extern	sh_int	gsn_aid;
@@ -3186,6 +3187,7 @@ DECLARE_DO_FUN( do_autopilot  );
 DECLARE_DO_FUN( do_allspeeders  );
 DECLARE_DO_FUN( do_slicebank  );
 DECLARE_DO_FUN( do_slicefund  );
+DECLARE_DO_FUN( do_slicesnippets  );
 DECLARE_DO_FUN( do_inquire  );
 DECLARE_DO_FUN( do_nodeupgrade  );
 DECLARE_DO_FUN( do_speeders  );

@@ -1019,19 +1019,24 @@ void do_makeplanet( CHAR_DATA *ch, char *argument )
 
          if ( starsystem == starsystem_from_name( NEWBIE_STARSYSTEM ) )
          {
-        	ch_printf( ch, "> you cannot explore in that region\n\r", tp->governed_by->name );
+        	send_to_char("> you cannot explore in that region\n\r", ch );
         	return;
          }
 
          if ( starsystem == starsystem_from_name( "orbitsville" ) )
          {
-        	ch_printf( ch, "> you cannot explore in that region\n\r", tp->governed_by->name );
-        	return;
+         	send_to_char("> you cannot explore in that region\n\r", ch );
+         	return;
          }
 
          if ( starsystem == starsystem_from_name( "wilderspace" ) )
          {
-        	ch_printf( ch, "> you cannot explore in that region\n\r", tp->governed_by->name );
+         	send_to_char("> you cannot explore in that region\n\r", ch );
+        	return;
+         }
+         if ( starsystem == starsystem_from_name( "netwatch" ) )
+         {
+         	send_to_char("> you cannot explore in that region\n\r", ch );
         	return;
          }
 

@@ -476,6 +476,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_sleep" ))		return do_sleep;
 	if ( !str_cmp( name, "do_slicebank" ))		return do_slicebank;
 	if ( !str_cmp( name, "do_slicefund" ))		return do_slicefund;
+	if ( !str_cmp( name, "do_slicesnippets" ))		return do_slicesnippets;
 	if ( !str_cmp( name, "do_slice" ))		return do_slice;
 	if ( !str_cmp( name, "do_slist" ))		return do_slist;
 	if ( !str_cmp( name, "do_slookup" ))		return do_slookup;
@@ -625,6 +626,7 @@ char *skill_name( DO_FUN *skill )
     if ( skill == do_adecline )          return "do_adecline";
     if ( skill == do_slicebank )     return "do_slicebank";
     if ( skill == do_slicefund )     return "do_slicefund";
+    if ( skill == do_slicesnippets )     return "do_slicesnippets";
     if ( skill == do_nodeupgrade )     return "do_nodeupgrade";
     if ( skill == do_inquire )     return "do_inquire";
     if ( skill == do_arrest )     return "do_arrest";

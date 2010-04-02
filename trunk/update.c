@@ -814,7 +814,7 @@ void update_threat( void )
 
 				if ( number_range(1, 10) <= threatlevel ) {
 
-					if ((pMobIndex = get_mob_index(MOB_VNUM_ALIEN))) {
+					if ((pMobIndex = get_mob_index(80))) {
 
 							mob = create_mobile(pMobIndex);
 							char_to_room(mob, och->in_room);
@@ -832,6 +832,8 @@ void update_threat( void )
 							if ((pObjIndex = get_obj_index(OBJ_VNUM_BLASTER))
 									!= NULL) {
 								obj = create_object(pObjIndex, mob->top_level);
+								obj->value[1] = (int) (mob->top_level/10+15);      /* min dmg  */
+								obj->value[2] = (int) (mob->top_level/5+25);      /* max dmg  */
 								obj_to_char(obj, mob);
 								equip_char(mob, obj, WEAR_WIELD);
 							}
