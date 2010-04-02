@@ -4575,3 +4575,204 @@ void do_cy_resset( CHAR_DATA *ch, char *argument )
 	return;
 
 }
+
+void do_slicesnippets( CHAR_DATA * ch, char *argument )
+{
+   DESCRIPTOR_DATA *d;
+   bool checkdata;
+   OBJ_DATA *obj;
+//   long xpgain;
+//   char opfer, ort;
+   char arg[MAX_INPUT_LENGTH];
+   char arg2[MAX_INPUT_LENGTH];
+   char buf[MAX_INPUT_LENGTH];
+   long steal;
+   int schance, x;
+   bool found;
+
+	if ( !IS_NPC(ch) && !ch->pcdata->learned[gsn_slicesnippets] )
+	{
+		send_to_char("> you do not know the slicesnippets skillsoft\n\r", ch );
+		return;
+	}
+
+   if ( IS_AFFECTED(ch, AFF_HIDE) ){
+       send_to_char( "> &Ryou can not slice snippets when hidden&w\n\r", ch );
+       return;
+   }
+
+   argument = one_argument( argument, arg2 );
+   strcpy( arg, argument );
+   checkdata = FALSE;
+   switch ( ch->substate )
+   {
+      default:
+         if( arg[0] == '\0' || arg2[0] == '\0' )
+         {
+            send_to_char( "> &Wsyntax: slicesnippets <player> <amount>&w\n\r", ch );
+            return;
+         }
+
+         if( ch->fighting )
+         {
+            send_to_char( "> &Ryou are fighting&w\n\r", ch );
+            return;
+         }
+
+
+         if( !IS_SET( ch->in_room->room_flags2, ROOM_INTRUSION ) )
+         {
+            send_to_char( "> &Ryou must be in an intrusion node to slice someone&w\n\r", ch );
+            return;
+         }
+
+         for( obj = ch->last_carrying; obj; obj = obj->prev_content )
+         {
+            if( obj->item_type == ITEM_TOOLKIT )
+               checkdata = TRUE;
+         }
+         if( ( checkdata == FALSE ) )
+         {
+            send_to_char( "> &Ryou need a devkit module to slice someone&w\n\r", ch );
+            return;
+         }
+         if( !str_cmp( arg2, ch->name ) )
+         {
+            send_to_char( "> &Rthat's you - nice try\n\r", ch );
+            return;
+         }
+
+         if( atoi( arg ) < 0 )
+         {
+            send_to_char( "> &Ramount must be a positive number&w\n\r", ch );
+            return;
+         }
+
+         ch->dest_buf = str_dup( arg );
+         ch->dest_buf_2 = str_dup( arg2 );
+         send_to_char( "> &GYou begin the long process of trying to slice someone&w\n\r", ch );
+         sprintf( buf, "> $n takes $s browser and hooks it into a data port" );
+         act( AT_PLAIN, buf, ch, NULL, argument, TO_ROOM );
+         add_timer( ch, TIMER_DO_FUN, 10, do_slicesnippets, 1 );
+         return;
+
+      case 1:
+         if( !ch->dest_buf )
+            return;
+         if( !ch->dest_buf_2 )
+            return;
+
+         strcpy( arg, ch->dest_buf );
+         strcpy( arg2, ch->dest_buf_2 );
+         DISPOSE( ch->dest_buf );
+         DISPOSE( ch->dest_buf_2 );
+         break;
+
+      case SUB_TIMER_DO_ABORT:
+         DISPOSE( ch->dest_buf );
+         DISPOSE( ch->dest_buf_2 );
+         ch->substate = SUB_NONE;
+         send_to_char( "> &Ryou are interrupted and fail to finish slicing&w\n\r", ch );
+         return;
+   }
+
+   ch->substate = SUB_NONE;
+
+   for( obj = ch->last_carrying; obj; obj = obj->prev_content )
+   {
+      if( obj->item_type == ITEM_TOOLKIT )
+         checkdata = TRUE;
+   }
+
+   schance = IS_NPC( ch ) ? ch->top_level : ( int )( ch->pcdata->learned[gsn_slicesnippets] );
+   //schance = schance - ch->in_room->seccode;
+      schance = UMIN( schance, 70 );
+   found = FALSE;
+
+   for( d = first_descriptor; d; d = d->next )
+   {
+      if( !d->character )
+         continue;
+      if( d->connected != CON_PLAYING )
+         continue;
+      if( IS_IMMORTAL( d->character ) )
+         continue;
+
+      if( !str_cmp( arg2, d->character->name ) )
+      {
+         found = TRUE;
+         break;
+      }
+   }
+
+   x = number_percent(  );
+
+   if( x > schance )
+   {
+      ch_printf( ch, "> &Ryou fail to slice your victim&w\n\r" );
+
+      if (found) {
+          send_to_char( "> &R[&YALERT&R] &Wa hack attempt was made on you&w\n\r", d->character );
+          ch_printf( d->character, "> &R[&YALERT&R] &WFrom Complex: %s - node: %ld\n\r", ch->in_room->area->planet->name, ch->in_room->vnum );
+      }
+
+		if (ch->pcdata->threataction < 1) {
+		send_to_char( "> &Wthreat status changed to: &btraced&w\n\r",        ch );
+		ch->pcdata->threataction = 1;
+		}
+
+		ch->pcdata->threatlevel += 1;
+		if ( ch->pcdata->threatlevel > 10 )
+			ch->pcdata->threatlevel = 10;
+
+      return;
+   }
+
+   if( !found )
+   {
+      ch_printf( ch, "> &Raccount %s is not active\n\r", arg2 );
+      return;
+   }
+
+   steal = atoi( arg );
+
+   if( steal == 1 && d->character->snippets > 0 )
+   {
+      ch_printf( ch, "> &Grequest ACCEPTED&w\n\r" );
+
+      ch->snippets += steal;
+      d->character->snippets -= steal;
+      if (number_range(1, 10) == 1)
+      learn_from_success( ch, gsn_slicesnippets );
+      return;
+   }
+
+   if( steal > d->character->snippets / 1000 )
+   {
+      ch_printf( ch, "> &Rrequest DENIED - amount too high&w\n\r" );
+
+      if (found) {
+	  send_to_char( "> &R[&YALERT&R] &WA hack attempt was made on you&w\n\r", d->character );
+      ch_printf( d->character, "> &R[&YALERT&R] &Wfrom complex: %s - node: %ld\n\r", ch->in_room->area->planet->name,  ch->in_room->vnum );
+      }
+
+		if (ch->pcdata->threataction < 1) {
+		send_to_char( "> &Wthreat status changed to: &btraced&w\n\r",        ch );
+		ch->pcdata->threataction = 1;
+		}
+
+		ch->pcdata->threatlevel += 1;
+		if ( ch->pcdata->threatlevel > 10 )
+			ch->pcdata->threatlevel = 10;
+
+      return;
+   }
+
+   ch_printf( ch, "> &Grequest accepted - snippets transferred&w\n\r" );
+
+   ch->snippets += steal;
+   d->character->snippets -= steal;
+   learn_from_success( ch, gsn_slicesnippets );
+   return;
+
+}
