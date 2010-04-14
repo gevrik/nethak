@@ -576,8 +576,6 @@ sh_int off_shld_lvl( CHAR_DATA *ch, CHAR_DATA *victim )
 ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
 {
     OBJ_DATA *wield;
-    int victim_ac;
-    int thac0;
     int att_bonus;
     int def_bonus;
     int diceresult;
@@ -2277,9 +2275,9 @@ void dam_message( CHAR_DATA *ch, CHAR_DATA *victim, int dam, int dt )
 
     if ( dt == TYPE_HIT || dam==0 )
     {
-	sprintf( buf1, "> $n %s $N%c",  vp, punct );
-	sprintf( buf2, "> you %s $N%c", vs, punct );
-	sprintf( buf3, "> $n %s you%c", vp, punct );
+	sprintf( buf1, "> $n %s $N%c [dam: %d]",  vp, punct, dam );
+	sprintf( buf2, "> you %s $N%c [dam: %d]", vs, punct, dam );
+	sprintf( buf3, "> $n %s you%c [dam: %d]", vp, punct, dam );
     }
     else
     if ( dt > TYPE_HIT && is_wielding_poisoned( ch ) )

@@ -1150,6 +1150,7 @@ void close_socket( DESCRIPTOR_DATA *dclose, bool force )
 	if ( dclose->character )
 	{
 		sprintf( log_buf, "> closing link to %s", ch->name );
+		ch->pcdata->logouttime = time(NULL);
 		log_string_plus( log_buf, LOG_COMM );
 		if ( (dclose->connected == CON_PLAYING
 				|| dclose->connected == CON_EDITING)

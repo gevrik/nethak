@@ -720,6 +720,30 @@ void update_threat( void )
 	OBJ_DATA * obj = NULL;
 	int threatlevel, fine;
 
+	CHAR_DATA *fch;
+
+	for ( fch = first_char; fch; fch = fch->next )
+	{
+		if(IS_NPC(fch))
+			continue;
+
+		if(!fch->desc){
+			do_quit(fch, "");
+			continue;
+		}
+
+		if(IS_SET(fch->in_room->room_flags, ROOM_PLR_HOME))
+		{
+			if ( fch->hit < fch->max_hit || fch->move < fch->max_move )
+			{
+				ch_printf( fch, "> &Gyou recover from your damage&w\n\r" );
+				fch->hit = fch->max_hit;
+				fch->move = fch->max_move;
+			}
+		}
+
+	}
+
 	for ( d = last_descriptor; d; d = d->prev )
 	{
 
