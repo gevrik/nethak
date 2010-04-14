@@ -2128,6 +2128,7 @@ struct	pc_data
     int			cyber;
     int			queststatus;
     int			qtaxnodes;
+    long		logouttime;
     int			rentertain;
     int			rmultimedia;
     int			rfinance;

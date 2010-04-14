@@ -1191,6 +1191,9 @@ void do_quit( CHAR_DATA *ch, char *argument )
 
     sprintf( log_buf, "> %s has quit", ch->name );
 
+	if ( ch->desc )
+    ch->pcdata->logouttime = time(NULL);
+
     for ( d = first_descriptor; d; d = d->next )
     {
         CHAR_DATA *vch;
@@ -1629,7 +1632,7 @@ void do_group( CHAR_DATA *ch, char *argument )
 	  send_to_char( "> no eligible group members\n\r", ch );
 	else
 	{
-     	   act( AT_ACTION, "> $n groups $s followers", ch, NULL, victim, TO_ROOM );
+        act( AT_ACTION, "> $n groups $s followers", ch, NULL, victim, TO_ROOM );
 	   send_to_char( "> grouping followers\n\r", ch );
 	}
     return;

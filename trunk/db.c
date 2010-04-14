@@ -453,7 +453,7 @@ void boot_db( void )
         ASSIGN_GSN( gsn_postguard   , "postguard" );
     	ASSIGN_GSN( gsn_slicebank   , "slicebank" );
     	ASSIGN_GSN( gsn_slicefund   , "slicefund" );
-    	ASSIGN_GSN( gsn_slicefund   , "slicesnippets" );
+    	ASSIGN_GSN( gsn_slicesnippets   , "slicesnippets" );
     	ASSIGN_GSN( gsn_inquire   , "inquire" );
         ASSIGN_GSN( gsn_torture   , "torture" );
         ASSIGN_GSN( gsn_throw   , "throw" );

@@ -298,6 +298,7 @@ void fwrite_char( CHAR_DATA *ch, FILE *fp )
     }
 
     fprintf( fp, "Bank         %ld\n",	ch->pcdata->bank		);
+    fprintf( fp, "Logouttime   %ld\n",	ch->pcdata->logouttime		);
     if ( ch->act )
       fprintf( fp, "Act          %d\n", ch->act			);
     if ( ch->affected_by )
@@ -1257,6 +1258,7 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload )
 	      break;
 	    }
 	    KEY( "LongDescr",	ch->long_descr,		fread_string( fp ) );
+	    KEY( "Logouttime",	ch->pcdata->logouttime,		fread_number( fp ) );
 	    break;
 
 	case 'M':
@@ -1417,6 +1419,15 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload )
 		{
 		  sprintf( buf, "> last connection from: %s\n\r", fread_word( fp ) );
 		  send_to_char( buf, ch );
+
+		  long meantime = (time(NULL) - ch->pcdata->logouttime) / 3600;
+		  if (meantime > 0) {
+		  sprintf( buf, "> hours since last session: %ld\n\r", meantime );
+		  send_to_char( buf, ch );
+		  }
+		  else {
+			  ch_printf(ch, "> you logged in less than an hour ago");
+		  }
 		}
 		else
 		  fread_to_eol( fp );
