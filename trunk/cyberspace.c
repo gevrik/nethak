@@ -188,6 +188,12 @@ void do_buyskill( CHAR_DATA *ch, char *argument )
 void do_homerecall( CHAR_DATA *ch, char *argument )
 {
 
+	if ( ch->position <= POS_SLEEPING )
+	{
+		send_to_char( "> you are hibernating\n\r" , ch );
+		return;
+	}
+
 	if ( ch->fighting )
 	{
 		send_to_char( "> you to try flee from combat\n\r", ch );
@@ -248,6 +254,12 @@ void do_homerecall( CHAR_DATA *ch, char *argument )
 void do_homehall( CHAR_DATA *ch, char *argument )
 {
 
+	if ( ch->position <= POS_SLEEPING )
+	{
+		send_to_char( "> you are hibernating\n\r" , ch );
+		return;
+	}
+
 	if ( ch->fighting )
 	{
 		send_to_char( "> you to try flee from combat\n\r", ch );
@@ -289,6 +301,12 @@ void do_homehall( CHAR_DATA *ch, char *argument )
 void do_homestray( CHAR_DATA *ch, char *argument )
 {
 
+	if ( ch->position <= POS_SLEEPING )
+	{
+		send_to_char( "> you are hibernating\n\r" , ch );
+		return;
+	}
+
 	if ( ch->fighting )
 	{
 		send_to_char( "> you to try flee from combat\n\r", ch );
@@ -329,6 +347,12 @@ void do_homestray( CHAR_DATA *ch, char *argument )
 
 void do_constructportal( CHAR_DATA *ch, char *argument )
 {
+
+	if ( ch->position <= POS_SLEEPING )
+	{
+		send_to_char( "> you are hibernating\n\r" , ch );
+		return;
+	}
 
 	if ( ch->fighting )
 	{
@@ -1594,6 +1618,7 @@ void do_workmate( CHAR_DATA *ch, char *argument )
 	char arg[MAX_INPUT_LENGTH];
 	char arg1[MAX_INPUT_LENGTH];
 	CHAR_DATA *och;
+    CHAR_DATA *och_next;
 	int chance, count;
 	
 	argument = one_argument( argument , arg );
@@ -1623,32 +1648,135 @@ void do_workmate( CHAR_DATA *ch, char *argument )
 			return;
 		}
 
-		ch->pcdata->wm_name = arg1;
+		if ( !str_cmp(arg1, ch->name ) )
+		{
+			send_to_char( "> &Rinvalid Workmate name&w\n\r", ch );
+			return;
+		}
+
+		STRFREE( ch->pcdata->wm_name );
+		ch->pcdata->wm_name	= STRALLOC( arg1 );
+
+		if (ch->pcdata->wm_top_level == 0)
+		{
+			ch->pcdata->wm_top_level = 1;
+			ch->pcdata->wm_str = 3;
+			ch->pcdata->wm_dex = 3;
+			ch->pcdata->wm_con = 3;
+			ch->pcdata->wm_int = 3;
+			ch->pcdata->wm_wis = 3;
+			ch->pcdata->wm_cha = 3;
+
+			ch->pcdata->wm_command = 0;
+			ch->pcdata->wm_top_level = 1;
+
+			save_char_obj( ch );
+			send_to_char( "> &GWorkmate created&w\n\r", ch );
+
+		}
+		else
 		send_to_char( "> &GWorkmate named&w\n\r", ch );
+
 	}
 	else if ( !str_cmp( arg, "update") )
 	{
+
+		for ( och = ch->in_room->first_person; och; och = och_next )
+		{
+			och_next = och->next_in_room;
+
+			if ( IS_AFFECTED(och, AFF_CHARM)
+					&&   och->master == ch ){
+				send_to_char( "> &Yyour workmate was dismissed&w\n\r", ch );
+				extract_char( och, FALSE );
+				return;
+			}
+
+		}
+
 			send_to_char( "> &Rspecify which Workmate stat you want to upgrade&w\n\r", ch );
+	}
+	else if ( !str_cmp( arg, "command") )
+	{
+
+		if ( arg1[0] == '\0' )
+		{
+			send_to_char("> &Wplease specify the command - options:&w\n\r", ch );
+			send_to_char("&W  idle, search, credits, snippets&w\n\r", ch );
+			return;
+		}
+		else if ( !str_cmp(arg1, "search" ) )
+		{
+			send_to_char("&W  search&w\n\r", ch );
+			ch->pcdata->wm_command = 1;
+		}
+		else if ( !str_cmp(arg1, "credits" ) )
+		{
+			send_to_char("&W  credits&w\n\r", ch );
+			ch->pcdata->wm_command = 2;
+		}
+		else if ( !str_cmp(arg1, "snippets" ) )
+		{
+			send_to_char("&W  snippets&w\n\r", ch );
+			ch->pcdata->wm_command = 3;
+		}
+		else if ( !str_cmp(arg1, "idle" ) )
+		{
+			send_to_char("&W  idle&w\n\r", ch );
+			ch->pcdata->wm_command = 0;
+		}
+		else
+		{
+			send_to_char("> &Wplease specify the command - options:&w\n\r", ch );
+			send_to_char("&W  idle, search, credits, snippets&w\n\r", ch );
+			return;
+		}
+
+
+		send_to_char( "> &Gcommand set&w\n\r", ch );
+		save_char_obj( ch );
+
+
+
+	}
+	else if ( !str_cmp( arg, "status") )
+	{
+		ch_printf( ch, "name: %s - level: %d\n\r", ch->pcdata->wm_name, ch->pcdata->wm_top_level);
+		ch_printf( ch, "str: %d - dex: %d - con: %d\n\r", ch->pcdata->wm_str, ch->pcdata->wm_dex, ch->pcdata->wm_con );
+		ch_printf( ch, "int: %d - wis: %d - cha: %d\n\r", ch->pcdata->wm_int, ch->pcdata->wm_wis, ch->pcdata->wm_cha );
+
+		if (ch->pcdata->wm_command == 1) {
+			ch_printf( ch, "command: search" );
+		}
+		else if (ch->pcdata->wm_command == 2) {
+			ch_printf( ch, "command: credits" );
+		}
+		else if (ch->pcdata->wm_command == 3) {
+			ch_printf( ch, "command: snippets" );
+		}
+		else{
+			ch_printf( ch, "command: idle" );
+		}
+
 	}
 	else if ( !str_cmp( arg, "dismiss") )
 	{
 
-		count = 0;
-		for ( och = ch->in_room->first_person; och; och = och->next_in_room )
+		for ( och = ch->in_room->first_person; och; och = och_next )
 		{
-			if ( IS_AFFECTED(och, AFF_CHARM)
-					&&   och->master == ch )
-				count++;
-		}
-		if( count < 1 )
-		{
-			send_to_char("> no pet program loaded\n\r", ch );
-			return;
-		}
+			och_next = och->next_in_room;
 
-			send_to_char( "> &Yyour workmate is unloaded&w\n\r", ch );
-			extract_char( och, TRUE );
-			return;
+			if ( IS_AFFECTED(och, AFF_CHARM)
+					&&   och->master == ch ){
+				send_to_char( "> &Yyour workmate was dismissed&w\n\r", ch );
+				extract_char( och, FALSE );
+				return;
+			}
+
+		}
+		send_to_char( "> &Yworkmate not loaded&w\n\r", ch );
+		return;
+
 	}
 	else
 	{
@@ -1661,7 +1789,7 @@ void do_workmate( CHAR_DATA *ch, char *argument )
 	}
 	if( count >= 1 )
 	{
-		send_to_char("> you already have a pet program loaded\n\r", ch );
+		send_to_char("> &Ryou already loaded your workmate&w\n\r", ch );
 		return;
 	}
 
@@ -1723,7 +1851,7 @@ void do_workmate( CHAR_DATA *ch, char *argument )
 	return;
 	}
 	
-
+return;
 		
 }
 
@@ -2765,14 +2893,7 @@ void do_reverseengineer( CHAR_DATA * ch, char *argument )
   	else if ( obj->item_type == ITEM_ARMOR )
   	{
 
-  		int objnum = obj->pIndexData->vnum;
-
-  		if ( number_range(1, 100) < level )
-  		{
-  			pObjIndex = get_obj_index( objnum );
-  			obj = create_object(pObjIndex, 1);
-  			SET_BIT(obj->extra_flags, ITEM_INVENTORY);
-  			obj = obj_to_char(obj, ch);
+  		//int objnum = obj->pIndexData->vnum;
 
   	  		if ( number_range(1, 100) < level )
   	  		{
@@ -2781,19 +2902,6 @@ void do_reverseengineer( CHAR_DATA * ch, char *argument )
   				SET_BIT(obj->extra_flags, ITEM_INVENTORY);
   				obj = obj_to_char(obj, ch);
   	  		}
-
-  		}
-  		else
-  		{
-  			send_to_char( "> class failed\r\n", ch );
-  	  		if ( number_range(1, 100) < level )
-  	  		{
-  				pObjIndex = get_obj_index( 55 );
-  				obj = create_object(pObjIndex, 1);
-  				SET_BIT(obj->extra_flags, ITEM_INVENTORY);
-  				obj = obj_to_char(obj, ch);
-  	  		}
-  		}
 
   	}
 

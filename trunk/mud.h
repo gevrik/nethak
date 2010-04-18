@@ -1555,6 +1555,12 @@ typedef enum
 
 #define ROOM_INTRUSION	BV00
 #define ROOM_MONITORING BV01
+#define ROOM_CYBORG 	BV02
+#define ROOM_MUTANT		BV03
+#define ROOM_FOUNTAIN	BV04
+#define ROOM_SHOPPING	BV05
+#define ROOM_FOOD		BV06
+#define ROOM_DEADEND	BV07
 
 /*
  * Room flags.           Holy cow!  Talked about stripped away..
@@ -1674,6 +1680,10 @@ typedef enum
   SECT_DUNNO, SECT_OCEANFLOOR, SECT_UNDERGROUND, SECT_SCRUB, SECT_ROCKY,
   SECT_SAVANNA, SECT_TUNDRA, SECT_GLACIAL, SECT_RAINFOREST, SECT_JUNGLE,
   SECT_SWAMP, SECT_WETLANDS, SECT_BRUSH, SECT_STEPPE, SECT_FARMLAND, SECT_VOLCANIC,
+  SECT_BREEDING, SECT_BRIDGE, SECT_HALL, SECT_CAMP, SECT_STAIRWAY,
+  SECT_ELEVATOR, SECT_TUNNEL, SECT_RAMP, SECT_CORRIDOR,
+  SECT_RUINS, SECT_SETTLEMENT, SECT_PLATFORM, SECT_CHASM, SECT_TOWER,
+  SECT_SHELTER, SECT_PRISON, SECT_FACTORY, SECT_FARM, SECT_UNKNOWN,
   SECT_MAX
 } sector_types;
 
@@ -2128,13 +2138,22 @@ struct	pc_data
     int			cyber;
     int			queststatus;
     int			qtaxnodes;
+    int			qexplored;
     long		logouttime;
     int			rentertain;
     int			rmultimedia;
     int			rfinance;
     int			rproduct;
     char *		wm_name;
+    int			wm_str;
+    int			wm_dex;
+    int			wm_con;
+    int			wm_int;
+    int			wm_wis;
+    int			wm_cha;
     int			wm_top_level;
+    int			wm_exp;
+    int			wm_command;
     int			wm_hit;
     int			wm_max_hit;
     int			wm_armor;
@@ -3187,6 +3206,7 @@ DECLARE_DO_FUN( do_propaganda );
 DECLARE_DO_FUN( do_autopilot  );
 DECLARE_DO_FUN( do_allspeeders  );
 DECLARE_DO_FUN( do_slicebank  );
+DECLARE_DO_FUN( do_probe  );
 DECLARE_DO_FUN( do_slicefund  );
 DECLARE_DO_FUN( do_slicesnippets  );
 DECLARE_DO_FUN( do_inquire  );

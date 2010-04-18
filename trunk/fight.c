@@ -902,7 +902,7 @@ ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
 	  	   af.type      = gsn_stun;
 	  	   af.location  = APPLY_AC;
 	  	   af.modifier  = 100;
-	  	   af.duration  = 7;
+	  	   af.duration  = 1;
 	  	   af.bitvector = AFF_PARALYSIS;
 	  	   affect_to_char( victim, &af );
 	  	   update_pos( victim );
@@ -1391,7 +1391,7 @@ ch_ret damage( CHAR_DATA *ch, CHAR_DATA *victim, int dam, int dt )
 	AFFECT_DATA af;
 
 	af.type      = gsn_poison;
-	af.duration  = 20;
+	af.duration  = 10;
 	af.location  = APPLY_STR;
 	af.modifier  = -2;
 	af.bitvector = AFF_POISON;

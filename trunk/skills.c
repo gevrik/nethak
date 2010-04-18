@@ -1192,7 +1192,7 @@ void do_gouge( CHAR_DATA *ch, char *argument )
 				af.type      = gsn_blindness;
 				af.location  = APPLY_HITROLL;
 				af.modifier  = -6;
-				af.duration  = IS_NPC(ch) ? ch->top_level : ch->pcdata->learned[gsn_gouge] / 20; //3 + IS_NPC(ch) ? ch->top_level : ch->pcdata->learned[gsn_gouge] / 20;
+				af.duration  = 1;
 				af.bitvector = AFF_BLIND;
 				affect_to_char( victim, &af );
 				act( AT_SKILL, "> &ryou lose your senses&w", victim, NULL, NULL, TO_CHAR );
@@ -1716,7 +1716,6 @@ void do_kick( CHAR_DATA *ch, char *argument )
 void disarm( CHAR_DATA *ch, CHAR_DATA *victim )
 {
 	OBJ_DATA *obj, *tmpobj;
-	int chance;
 
 	if ( ( obj = get_eq_char( victim, WEAR_WIELD ) ) == NULL )
 		return;

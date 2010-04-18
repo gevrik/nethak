@@ -22,22 +22,13 @@ extern int top_r_vnum;
 
 const	char *	sector_name	[SECT_MAX]	=
 {
-		"system", "terminal", "entertainment", "multimedia", "finance", "unknown", "unknown", "unkown",
-		"unknown", "unkown", "database", "unknown", "unknown", "unknown",
-		"producivity", "unknown", "shopping", "unknown", "database", "graveyard", "unknown",
-		"firewall", "unknown", "unknown", "unknown", "subserver", "unknown"
+		"system", "terminal", "entertainment", "multimedia", "finance", "unknown", "unknown", "unknown",
+		"unknown", "unknown", "database", "unknown", "unknown", "unknown",
+		"productivity", "unknown", "shopping", "unknown", "database", "graveyard", "unknown",
+		"firewall", "unknown", "unknown", "unknown", "subserver", "unknown", "breeding", "bridge",
+		"hall", "camp", "stairway", "elevator", "tunnel", "ramp", "corridor", "ruins", "settlement",
+		"platform", "chasm", "tower", "shelter", "prison", "factory", "farm", "unknown"
 };
-
-/*
-const	char *	sector_name	[SECT_MAX]	=
-{
-    "inside", "city", "field", "forest", "hills", "mountain", "water swim", "water noswim", 
-    "underwater", "air", "desert", "unknown", "ocean floor", "underground",
-    "scrub", "rocky", "savanna", "tundra", "glacial", "rainforest", "jungle", 
-    "swamp", "wetlands", "brush", "steppe", "farmland", "volcanic"
-};
-
- */
 
 char *acctname( CHAR_DATA * ch )
 {
@@ -2345,7 +2336,7 @@ void add_reinforcements( CHAR_DATA *ch )
 	MOB_INDEX_DATA  * pMobIndex;
 	OBJ_DATA        * blaster;
 	OBJ_INDEX_DATA  * pObjIndex;
-
+	char buf[MAX_STRING_LENGTH];
 
 	if ( !ch->in_room )
 		return;
@@ -2397,14 +2388,42 @@ void add_reinforcements( CHAR_DATA *ch )
 			mob = create_mobile( pMobIndex );
 			if ( !mob )
 				return;
+
+			// name it
+
+			strcpy( buf , ch->pcdata->wm_name );
+
+			STRFREE( mob->name );
+			mob->name	= STRALLOC( buf );
+
+			strcat( buf ," [wm]" );
+
+			STRFREE( mob->long_descr );
+			mob->long_descr	= STRALLOC( buf );
+
+			STRFREE( mob->short_descr );
+			mob->short_descr	= STRALLOC( buf );
+
 			char_to_room( mob, ch->in_room );
 			act( AT_IMMORT, "> $N has loaded", ch, NULL, mob, TO_ROOM );
-			mob->top_level = 10;
-			mob->hit = 50;
-			mob->max_hit = 50;
-			mob->armor = 50;
-			mob->damroll = 0;
-			mob->hitroll = 1;
+			mob->top_level = 10 * ch->pcdata->wm_top_level;
+			mob->hit = 10 * ch->pcdata->wm_top_level;
+			mob->max_hit = 10 * ch->pcdata->wm_top_level;
+			mob->damroll = ch->pcdata->wm_top_level;
+			mob->hitroll = ch->pcdata->wm_top_level;
+
+			mob->perm_str = ch->pcdata->wm_str;
+			mob->mod_str = ch->pcdata->wm_str;
+			mob->perm_dex = ch->pcdata->wm_dex;
+			mob->mod_dex = ch->pcdata->wm_dex;
+			mob->perm_con = ch->pcdata->wm_con;
+			mob->mod_con = ch->pcdata->wm_con;
+			mob->perm_int = ch->pcdata->wm_int;
+			mob->mod_int = ch->pcdata->wm_int;
+			mob->perm_wis = ch->pcdata->wm_wis;
+			mob->mod_wis = ch->pcdata->wm_wis;
+			mob->perm_cha = ch->pcdata->wm_cha;
+			mob->mod_cha = ch->pcdata->wm_cha;
 
 			if ( mob->master )
 				stop_follower( mob );
@@ -3067,6 +3086,20 @@ void do_throw( CHAR_DATA *ch, char *argument )
 				return;
 			}
 
+			if ( IS_SET( victim->in_room->room_flags, ROOM_SAFE ) )
+			{
+				set_char_color( AT_MAGIC, ch );
+				send_to_char( "> you cannot shoot them there\n\r", ch );
+				return;
+			}
+
+			if ( IS_SET( victim->in_room->room_flags, ROOM_PLR_HOME ) )
+			{
+				set_char_color( AT_MAGIC, ch );
+				send_to_char( "> you cannot shoot them there\n\r", ch );
+				return;
+			}
+
 			char_from_room( ch );
 			char_to_room( ch, was_in_room );
 
@@ -3368,6 +3401,12 @@ void do_propaganda ( CHAR_DATA *ch , char *argument )
 		send_to_char( "> what would be the point of that\n\r", ch );
 		return;
 	}
+
+    if ( get_age(ch) <= 20 )
+    {
+	send_to_char( "> your uptime is not high enough\n\r", ch );
+	return;
+    }
 
 	argument = one_argument( argument, arg1 );
 	planet = ch->in_room->area->planet;

@@ -380,6 +380,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_pnet" ))		return do_pnet;
 	if ( !str_cmp( name, "do_poison_weapon" ))	return do_poison_weapon;
 	if ( !str_cmp( name, "do_postguard" ))		return do_postguard;
+	if ( !str_cmp( name, "do_probe" ))		return do_probe;
 	if ( !str_cmp( name, "do_prompt" ))		return do_prompt;
 	if ( !str_cmp( name, "do_propaganda" ))		return do_propaganda;
 	if ( !str_cmp( name, "do_prototypes" ))		return do_prototypes;
@@ -625,6 +626,7 @@ char *skill_name( DO_FUN *skill )
     if ( skill == do_chaos )            return "do_chaos";
     if ( skill == do_adecline )          return "do_adecline";
     if ( skill == do_slicebank )     return "do_slicebank";
+    if ( skill == do_probe )     return "do_probe";
     if ( skill == do_slicefund )     return "do_slicefund";
     if ( skill == do_slicesnippets )     return "do_slicesnippets";
     if ( skill == do_nodeupgrade )     return "do_nodeupgrade";

@@ -318,6 +318,15 @@ void fwrite_char( CHAR_DATA *ch, FILE *fp )
     fprintf( fp, "ArenaWin     %d\n",   ch->arenawin            );
     fprintf( fp, "ArenaLoss    %d\n",   ch->arenaloss           );
     fprintf( fp, "Snippets     %d\n",   ch->snippets           );
+    fprintf( fp, "Wmcommand    %d\n",   ch->pcdata->wm_command );
+    fprintf( fp, "Wmstr    %d\n",   ch->pcdata->wm_str );
+    fprintf( fp, "Wmdex    %d\n",   ch->pcdata->wm_dex );
+    fprintf( fp, "Wmcon    %d\n",   ch->pcdata->wm_con );
+    fprintf( fp, "Wmint    %d\n",   ch->pcdata->wm_int );
+    fprintf( fp, "Wmwis    %d\n",   ch->pcdata->wm_wis );
+    fprintf( fp, "Wmcha    %d\n",   ch->pcdata->wm_cha );
+    fprintf( fp, "Wmtoplevel    %d\n",   ch->pcdata->wm_top_level );
+    fprintf( fp, "Wmexp    %d\n",   ch->pcdata->wm_exp );
     fprintf( fp, "Hitroll      %d\n",	ch->hitroll		);
     fprintf( fp, "Damroll      %d\n",	ch->damroll		);
     fprintf( fp, "Armor        %d\n",	ch->armor		);
@@ -371,6 +380,9 @@ void fwrite_char( CHAR_DATA *ch, FILE *fp )
 	  fprintf( fp, "Prompt       %s~\n",	ch->pcdata->prompt	);
 	if ( ch->pcdata->pagerlen != 24 )
 	  fprintf( fp, "Pagerlen     %d\n",	ch->pcdata->pagerlen	);
+
+	if ( ch->pcdata->wm_name && ch->pcdata->wm_name[0] != '\0' )
+	  fprintf( fp, "Wmname       %s~\n",	ch->pcdata->wm_name	);
 
 	fprintf (fp, "Boards %d ", MAX_BOARD);
      for (i = 0; i < MAX_BOARD; i++)
@@ -481,6 +493,10 @@ void fwrite_char( CHAR_DATA *ch, FILE *fp )
 	if ( ch->pcdata->qtaxnodes )
 	  fprintf( fp, ""
 			  "Qtaxnodes      %d\n",	ch->pcdata->qtaxnodes	);
+
+	if ( ch->pcdata->qexplored )
+	  fprintf( fp, ""
+			  "Qexplored      %d\n",	ch->pcdata->qexplored	);
 
 	if ( ch->pcdata->threatlevel )
 	  fprintf( fp, ""
@@ -1362,6 +1378,7 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload )
 
 	case 'Q':
 		KEY( "Qtaxnodes", ch->pcdata->qtaxnodes, fread_number( fp ) );
+		KEY( "Qexplored", ch->pcdata->qexplored, fread_number( fp ) );
 		KEY( "Quest", ch->pcdata->queststatus, fread_number( fp ) );
 	    break;
 
@@ -1420,14 +1437,6 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload )
 		  sprintf( buf, "> last connection from: %s\n\r", fread_word( fp ) );
 		  send_to_char( buf, ch );
 
-		  long meantime = (time(NULL) - ch->pcdata->logouttime) / 3600;
-		  if (meantime > 0) {
-		  sprintf( buf, "> hours since last session: %ld\n\r", meantime );
-		  send_to_char( buf, ch );
-		  }
-		  else {
-			  ch_printf(ch, "> you logged in less than an hour ago");
-		  }
 		}
 		else
 		  fread_to_eol( fp );
@@ -1600,8 +1609,26 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload )
 		}
 		break;
 	    }
+
+		if ( !str_cmp( word, "Wmname" ) )
+	    {
+		ch->pcdata->wm_name = fread_string( fp );
+
+		fMatch = TRUE;
+		break;
+	    }
+
 	    KEY( "Wimpy",	ch->wimpy,		fread_number( fp ) );
 	    KEY( "WizInvis",	ch->pcdata->wizinvis,	fread_number( fp ) );
+	    KEY( "Wmcommand",	ch->pcdata->wm_command,		fread_number( fp ) );
+	    KEY( "Wmstr",	ch->pcdata->wm_str,		fread_number( fp ) );
+	    KEY( "Wmdex",	ch->pcdata->wm_dex,		fread_number( fp ) );
+	    KEY( "Wmcon",	ch->pcdata->wm_con,		fread_number( fp ) );
+	    KEY( "Wmint",	ch->pcdata->wm_int,		fread_number( fp ) );
+	    KEY( "Wmwis",	ch->pcdata->wm_wis,		fread_number( fp ) );
+	    KEY( "Wmcha",	ch->pcdata->wm_cha,		fread_number( fp ) );
+	    KEY( "Wmtoplevel",	ch->pcdata->wm_top_level,		fread_number( fp ) );
+	    KEY( "Wmexp",	ch->pcdata->wm_exp,		fread_number( fp ) );
 	    break;
 	}
 

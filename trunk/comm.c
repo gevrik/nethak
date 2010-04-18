@@ -2412,14 +2412,55 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 					}
 				}
 
-				//char bufText[MAX_STRING_LENGTH];
 				act( AT_ACTION, "> $n has entered the node", ch, NULL, NULL, TO_ROOM );
-				//sprintf( bufText , "> %s has logged in" , ch->name );
-				//echo_to_all( AT_LBLUE , bufText , ECHOTAR_ALL );
-				//do_global_boards( ch, "" );
-				do_look( ch, "auto" );
+
 				ch->pcdata->board = &boards[DEFAULT_BOARD];
-				mail_count(ch);
+
+				  long meantime = (time(NULL) - ch->pcdata->logouttime) / 360;
+				  if (meantime > 0 && meantime != 0) {
+				  sprintf( buf, "> hours since last session: %ld\n\r\n\r", meantime );
+				  send_to_char( buf, ch );
+
+				  if (meantime > 12)
+					  meantime = 12;
+
+					  while (meantime > 0) {
+
+						  if ( number_range(1, 10) <= ch->pcdata->wm_top_level )
+						  {
+
+							  if (ch->pcdata->wm_command == 0)
+							  {
+							  ch_printf(ch,"> workmate was idle\n\r");
+							  }
+							  else if (ch->pcdata->wm_command == 1)
+							  {
+								  ch_printf(ch,"> workmate has gathered resources\n\r");
+							  }
+							  else if (ch->pcdata->wm_command == 2)
+							  {
+								  int credplus = number_range(1, 10) * ch->pcdata->wm_top_level;
+								  ch->pcdata->bank += credplus;
+								  ch_printf(ch,"> workmate has gathered %d credits\n\r", credplus);
+							  }
+							  else if (ch->pcdata->wm_command == 3)
+							  {
+								  int credplus = number_range(1, 10) * ch->pcdata->wm_top_level;
+								  ch->snippets += credplus;
+								  ch_printf(ch,"> workmate has gathered %d snippets\n\r", credplus);
+							  }
+
+						  }
+
+						  meantime -= 1;
+
+					  }
+
+				  }
+
+					do_look( ch, "auto" );
+
+				//mail_count(ch);
 				break;
 
 			case CON_NOTE_TO:

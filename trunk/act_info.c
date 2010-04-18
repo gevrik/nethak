@@ -434,12 +434,12 @@ void show_visible_affects_to_char( CHAR_DATA *victim, CHAR_DATA *ch )
         ch_printf( ch, "> %s is ensphered by shards of glistening ice\n\r",
 	    IS_NPC( victim ) ? victim->short_descr : (victim->name) );
     }
-    if ( IS_AFFECTED(victim, AFF_CHARM)       )
-    {
-	set_char_color( AT_MAGIC, ch );
-	ch_printf( ch, "> %s looks ahead free of expression\n\r",
-	    IS_NPC( victim ) ? victim->short_descr : (victim->name) );
-    }
+//    if ( IS_AFFECTED(victim, AFF_CHARM)       )
+//    {
+//	set_char_color( AT_MAGIC, ch );
+//	ch_printf( ch, "> %s looks ahead free of expression\n\r",
+//	    IS_NPC( victim ) ? victim->short_descr : (victim->name) );
+//    }
     if ( !IS_NPC(victim) && !victim->desc
     &&    victim->switched && IS_AFFECTED(victim->switched, AFF_POSSESS) )
     {
@@ -2511,7 +2511,7 @@ void do_teach( CHAR_DATA *ch, char *argument )
 	    return;
 	}
 
-	if ( ( sn == gsn_lightsaber_crafting || sn == gsn_parry || sn == gsn_lightsabers ) && ( get_curr_frc(victim) <= 0 || victim->max_mana  <= 0 ) )
+	if ( ( sn == gsn_lightsaber_crafting || sn == gsn_lightsabers ) && ( get_curr_frc(victim) <= 0 || victim->max_mana  <= 0 ) )
 	{
 	    act( AT_TELL, "> $n is not experienced enough", victim, NULL, ch, TO_VICT );
 	    return;
