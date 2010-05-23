@@ -711,6 +711,7 @@ void game_loop( )
 				{
 					write_to_descriptor( d->descriptor,
 							"> idle timeout - disconnecting\n\r", 0 );
+					d->character->pcdata->logouttime = time(NULL);
 					d->outtop	= 0;
 					close_socket( d, TRUE );
 					continue;
@@ -1149,8 +1150,8 @@ void close_socket( DESCRIPTOR_DATA *dclose, bool force )
 
 	if ( dclose->character )
 	{
+	    ch->pcdata->logouttime = time(NULL);
 		sprintf( log_buf, "> closing link to %s", ch->name );
-		ch->pcdata->logouttime = time(NULL);
 		log_string_plus( log_buf, LOG_COMM );
 		if ( (dclose->connected == CON_PLAYING
 				|| dclose->connected == CON_EDITING)
@@ -2604,45 +2605,44 @@ bool check_reconnect( DESCRIPTOR_DATA *d, char *name, bool fConn )
 
 bool check_multi( DESCRIPTOR_DATA *d , char *name )
 {
-	DESCRIPTOR_DATA *dold;
+        DESCRIPTOR_DATA *dold;
 
-	for ( dold = first_descriptor; dold; dold = dold->next )
+    for ( dold = first_descriptor; dold; dold = dold->next )
+    {
+	if ( dold != d
+	&& (  dold->character || dold->original )
+	&&   str_cmp( name, dold->original
+		 ? dold->original->name : dold->character->name )
+        && !str_cmp(dold->host , d->host ) )
 	{
-		if ( dold != d
-				&& (  dold->character || dold->original )
-				&&   str_cmp( name, dold->original
-						? dold->original->name : dold->character->name )
-						&& !str_cmp(dold->host , d->host ) )
-		{
-			const char *ok = "86.9.160.241";
-			const char *ok2 = "86.9.160.241";
-			int iloop;
+	        const char *ok = "86.26.9.7";
+	        const char *ok2 = "212.13.195.184";
+	        int iloop;
 
-			for ( iloop = 0 ; iloop < 11 ; iloop++ )
-			{
-				if ( ok[iloop] != d->host[iloop] )
-					break;
-			}
-			if ( iloop >= 10 )
-				return FALSE;
-			for ( iloop = 0 ; iloop < 11 ; iloop++ )
-			{
-				if ( ok2[iloop] != d->host[iloop] )
-					break;
-			}
-			if ( iloop >= 10 )
-				return FALSE;
-			return FALSE;
-			write_to_buffer( d, "> sorry multi-playing is not allowed ... have you other character quit first\n\r", 0 );
-			sprintf( log_buf, "%s attempting to multiplay with %s", dold->original ? dold->original->name : dold->character->name , d->character->name );
-			log_string_plus( log_buf, LOG_COMM );
-			d->character = NULL;
-			free_char( d->character );
-			return TRUE;
-		}
+		for ( iloop = 0 ; iloop < 11 ; iloop++ )
+	        {
+	            if ( ok[iloop] != d->host[iloop] )
+	              break;
+	        }
+	        if ( iloop >= 10 )
+	           return FALSE;
+		for ( iloop = 0 ; iloop < 11 ; iloop++ )
+	        {
+	            if ( ok2[iloop] != d->host[iloop] )
+	              break;
+	        }
+	        if ( iloop >= 10 )
+	           return FALSE;
+		write_to_buffer( d, "> multi-playing is not allowed ... have you other character quit first\n\r", 0 );
+		sprintf( log_buf, "%s attempting to multiplay with %s.", dold->original ? dold->original->name : dold->character->name , d->character->name );
+		log_string_plus( log_buf, LOG_COMM );
+	        d->character = NULL;
+	        free_char( d->character );
+	        return TRUE;
 	}
+    }
 
-	return FALSE;
+    return FALSE;
 
 }
 

@@ -974,9 +974,9 @@ void do_makeplanet( CHAR_DATA *ch, char *argument )
 	return;
     }
 
-    if ( ch->gold < 50000 )
+    if ( ch->gold < 500000 )
     {
-    	send_to_char( "> it costs 50,000 credits to start system creation code\n\r", ch );
+    	send_to_char( "> it costs 500,000 credits to start system creation code\n\r", ch );
 	return;
     }
 
@@ -1127,9 +1127,9 @@ void do_makeplanet( CHAR_DATA *ch, char *argument )
     }
 
 
-    ch->gold -= 50000;
+    ch->gold -= 500000;
 
-    send_to_char( "> you spend 50,000 credits to start a system creation\n\r", ch );
+    send_to_char( "> you spend 500,000 credits to start a system creation\n\r", ch );
     echo_to_room( AT_WHITE , ch->in_room, "> a new system is created" );
 
 //    if (  number_percent() < 20 )

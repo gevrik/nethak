@@ -1069,18 +1069,18 @@ void do_foundorg( CHAR_DATA *ch, char *argument )
 	char filename[256];
 	CLAN_DATA *clan;
 	bool found;
-	int cost = 50000;
+	int cost = 1000000;
 
 	if ( !argument || argument[0] == '\0' )
 	{
 		send_to_char( "> &Ysyntax: foundorg <org name>&w\n\r", ch );
-		send_to_char( "> note: you need 50.000 credits\n\r", ch );
+		send_to_char( "> note: you need 1.000.000 credits\n\r", ch );
 		return;
 	}
 
 	if ( ch->gold < cost )
 	{
-		send_to_char( "> &Rinsufficient funds [50.000c needed]&w\n\r", ch );
+		send_to_char( "> &Rinsufficient funds [1.000.000c needed]&w\n\r", ch );
 		return;
 	}
 
@@ -1617,6 +1617,7 @@ void do_workmate( CHAR_DATA *ch, char *argument )
 {
 	char arg[MAX_INPUT_LENGTH];
 	char arg1[MAX_INPUT_LENGTH];
+	char buf[MAX_STRING_LENGTH];
 	CHAR_DATA *och;
     CHAR_DATA *och_next;
 	int chance, count;
@@ -1634,48 +1635,40 @@ void do_workmate( CHAR_DATA *ch, char *argument )
 		return;
 	}
 	
-	if ( ( ch->pcdata->wm_name == '\0' ) && str_cmp( arg, "name" ) )
+	if ( ( ch->pcdata->wm_name == '\0' ) && str_cmp( arg, "install" ) )
 	{
-		send_to_char("> please set the name of your workmate with 'workmate name <your desired name>'\n\r", ch );
+		send_to_char("> &Yplease install your workmate with 'workmate install'&w\n\r", ch );
 		return;
 	}
 
-	if ( !str_cmp( arg, "name") )
+	if ( !str_cmp( arg, "install") )
 	{
-		if ( !check_parse_name( arg1 ) )
-		{
-			send_to_char( "> &Rinvalid Workmate name&w\n\r", ch );
-			return;
-		}
 
-		if ( !str_cmp(arg1, ch->name ) )
-		{
-			send_to_char( "> &Rinvalid Workmate name&w\n\r", ch );
-			return;
-		}
-
-		STRFREE( ch->pcdata->wm_name );
-		ch->pcdata->wm_name	= STRALLOC( arg1 );
 
 		if (ch->pcdata->wm_top_level == 0)
 		{
-			ch->pcdata->wm_top_level = 1;
+
+			strcpy( buf, "wm");
+			strcat( buf, ch->name );
+			strcat( buf, " wm" );
+			STRFREE( ch->pcdata->wm_name );
+			ch->pcdata->wm_name	= STRALLOC( buf );
+
 			ch->pcdata->wm_str = 3;
 			ch->pcdata->wm_dex = 3;
 			ch->pcdata->wm_con = 3;
 			ch->pcdata->wm_int = 3;
 			ch->pcdata->wm_wis = 3;
 			ch->pcdata->wm_cha = 3;
-
 			ch->pcdata->wm_command = 0;
 			ch->pcdata->wm_top_level = 1;
 
 			save_char_obj( ch );
-			send_to_char( "> &GWorkmate created&w\n\r", ch );
+			send_to_char( "> &GWorkmate installed&w\n\r", ch );
 
 		}
 		else
-		send_to_char( "> &GWorkmate named&w\n\r", ch );
+		send_to_char( "> &RWorkmate already installed&w\n\r", ch );
 
 	}
 	else if ( !str_cmp( arg, "update") )
@@ -1687,14 +1680,20 @@ void do_workmate( CHAR_DATA *ch, char *argument )
 
 			if ( IS_AFFECTED(och, AFF_CHARM)
 					&&   och->master == ch ){
-				send_to_char( "> &Yyour workmate was dismissed&w\n\r", ch );
+				send_to_char( "> &Yyour Workmate was dismissed for the update&w\n\r", ch );
 				extract_char( och, FALSE );
-				return;
 			}
 
 		}
 
+
+		if ( arg1[0] == '\0' )
+		{
 			send_to_char( "> &Rspecify which Workmate stat you want to upgrade&w\n\r", ch );
+			return;
+		}
+
+
 	}
 	else if ( !str_cmp( arg, "command") )
 	{
