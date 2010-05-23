@@ -1668,7 +1668,14 @@ bool is_safe( CHAR_DATA *ch, CHAR_DATA *victim )
     if ( IS_SET( victim->in_room->room_flags, ROOM_SAFE ) )
     {
 	set_char_color( AT_MAGIC, ch );
-	send_to_char( "> you will have to do that elswhere\n\r", ch );
+	send_to_char( "> you will have to do that elsewhere\n\r", ch );
+	return TRUE;
+    }
+
+    if ( IS_SET( victim->in_room->room_flags, ROOM_PLR_HOME ) )
+    {
+	set_char_color( AT_MAGIC, ch );
+	send_to_char( "> you will have to do that elsewhere\n\r", ch );
 	return TRUE;
     }
 
@@ -2380,6 +2387,12 @@ void do_kill( CHAR_DATA *ch, char *argument )
 	    return;
     }
 
+    if ( IS_NPC(victim) && IS_SET( victim->act, ACT_IMMORTAL )  )
+    {
+	    send_to_char( "> this program cannot be flatlined\n\r", ch );
+	    return;
+    }
+
    /*
     *
     else
@@ -2454,6 +2467,12 @@ void do_murder( CHAR_DATA *ch, char *argument )
     {
 	send_to_char( "> you cannot murder yourself in cyberspace\n\r", ch );
 	return;
+    }
+
+    if ( IS_NPC(victim) && IS_SET( victim->act, ACT_IMMORTAL )  )
+    {
+	    send_to_char( "> this program cannot be flatlined\n\r", ch );
+	    return;
     }
 
     if ( is_safe( ch, victim ) )
