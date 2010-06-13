@@ -808,6 +808,12 @@ void do_give( CHAR_DATA *ch, char *argument )
 	    return;
 	}
 
+    if ( get_age(ch) <= 20 )
+    {
+	send_to_char( "> you are too new to give credits\n\r", ch );
+	return;
+    }
+
 	ch->gold     -= amount;
 	victim->gold += amount;
         strcpy(buf, "> $n gives you ");

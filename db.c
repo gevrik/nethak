@@ -116,6 +116,7 @@ sh_int	 gsn_slicebank;
 sh_int	 gsn_slicefund;
 sh_int	 gsn_slicesnippets;
 sh_int	 gsn_inquire;
+sh_int	 gsn_portscan;
 
 sh_int   gsn_codemed;
 sh_int   gsn_codeapp;
@@ -455,6 +456,7 @@ void boot_db( void )
     	ASSIGN_GSN( gsn_slicefund   , "slicefund" );
     	ASSIGN_GSN( gsn_slicesnippets   , "slicesnippets" );
     	ASSIGN_GSN( gsn_inquire   , "inquire" );
+    	ASSIGN_GSN( gsn_portscan   , "portscan" );
         ASSIGN_GSN( gsn_torture   , "torture" );
         ASSIGN_GSN( gsn_throw   , "throw" );
         ASSIGN_GSN( gsn_disguise   , "disguise" );

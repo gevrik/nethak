@@ -61,6 +61,7 @@ void do_score(CHAR_DATA * ch, char *argument)
     	ch_printf( ch, "&Wcredits  :  &G%-12d &Wmultimedia      :  &G%d\n\r" , ch->gold, ch->pcdata->rmultimedia );
     	ch_printf( ch, "&Wbank     :  &G%-12ld &Wfinance         :  &G%d\n\r" , ch->pcdata->bank, ch->pcdata->rfinance );
     	ch_printf( ch, "&Wnodes    :  &G%-12d &Wproductivity    :  &G%d\n\r" , ch->pcdata->qtaxnodes, ch->pcdata->rproduct );
+    	ch_printf( ch, "&Whomesize :  &G%-12d &Wmetropolis      :  &G%d\n\r" , ch->pcdata->homesyssize, ch->pcdata->homesmetro);
     	ch_printf( ch, "&W--storage memory-------------------------------------\n\r" );
     	ch_printf( ch, "slots: (%d/%d)  size: (%d/%d)\n\r",
     		ch->carry_number, can_carry_n(ch), ch->carry_weight, can_carry_w(ch) );

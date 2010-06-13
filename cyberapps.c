@@ -217,6 +217,8 @@ void do_sn_krash(CHAR_DATA *ch, char *argument) {
 			if ( planet->pop_support < -100 )
 				planet->pop_support = -100;
 
+			return;
+
 }
 
 void do_sn_spun(CHAR_DATA *ch, char *argument) {
@@ -278,6 +280,8 @@ void do_sn_spun(CHAR_DATA *ch, char *argument) {
 				ch->move = ch->move + energyplus;
 		}
 
+		return;
+
 }
 
 void do_sn_reconstruct(CHAR_DATA *ch, char *argument) {
@@ -338,6 +342,8 @@ void do_sn_reconstruct(CHAR_DATA *ch, char *argument) {
 			else
 				ch->hit = ch->hit + energyplus;
 		}
+
+		return;
 
 }
 
@@ -479,6 +485,8 @@ void do_sn_uninstall(CHAR_DATA *ch, char *argument) {
 	    ch->pcdata->learned[sn] = 0;
 	    ch->pcdata->num_skills--;
 	    save_char_obj(ch);
+
+	    return;
 
 }
 
@@ -1238,4 +1246,133 @@ if (chance < number_percent( ))
     if ( IS_SET(ch->in_room->room_flags, ROOM_SAFE)
     &&   get_timer(ch, TIMER_SHOVEDRAG) <= 0 )
       add_timer( ch, TIMER_SHOVEDRAG, 10, NULL, 0 );
+
+    return;
+
+}
+
+void do_sn_annex(CHAR_DATA *ch, char *argument) {
+
+	CLAN_DATA *clan;
+	OBJ_DATA *obj;
+	char buf[MAX_STRING_LENGTH];
+	PLANET_DATA *planet;
+	bool ch_snippet;
+	int chance;
+
+
+	planet = ch->in_room->area->planet;
+
+	if (IS_NPC(ch) || !ch->pcdata || !ch->in_room)
+		return;
+
+	if ( IS_NPC(ch) || !ch->pcdata )
+	   {
+	       send_to_char ( "huh?\n\r" , ch );
+	       return;
+	   }
+
+	   clan = ch->pcdata->clan;
+
+	   if ( ( planet = ch->in_room->area->planet ) == NULL )
+	   {
+	       send_to_char ( "> &Ryou cannot do that here&w\n\r" , ch );
+	       return;
+	   }
+
+	   if ( IS_SET( planet->flags, PLANET_NOCAP ) )
+	   {
+	       send_to_char( "> &Ryou cannot do that here&w\n\r", ch );
+	       return;
+	   }
+
+	   if ( IS_SET( planet->flags, PLANET_HIDDEN ) )
+	   {
+	       send_to_char( "> &Ryou cannot do that here&w\n\r", ch );
+	       return;
+	   }
+
+	   if ( IS_SET( planet->flags, PLANET_SHUT ) )
+	   {
+	       send_to_char( "> &Ryou cannot do that here&w\n\r", ch );
+	       return;
+	   }
+
+		if ( IS_SET( ch->in_room->room_flags, ROOM_NOPEDIT ) )
+		{
+			send_to_char( "> &Ryou can not create nodes from this node&w\n\r", ch );
+			return;
+		}
+
+		if ( ch->position == POS_FIGHTING )
+		{
+			send_to_char( "> cannot annex in combat\n\r" , ch );
+			return;
+		}
+
+		if ( ch->position <= POS_SLEEPING )
+		{
+			send_to_char( "> you are sleeping\n\r" , ch );
+			return;
+		}
+
+	   if ( clan != planet->governed_by )
+	   {
+	       send_to_char ( "> &Ryour organization does not controls this system&w\n\r" , ch );
+	       return;
+	   }
+
+	   if ( !str_cmp(ch->in_room->owner, ch->name) )
+	   {
+	       send_to_char ( "> &Ryou already own this node&w\n\r" , ch );
+	       return;
+	   }
+
+		ch_snippet = FALSE;
+
+		for (obj = ch->last_carrying; obj; obj = obj->prev_content) {
+			if (obj->item_type == ITEM_SNIPPET && !strcmp(obj->name,
+					"annex")) {
+				ch_snippet = TRUE;
+				separate_obj(obj);
+				obj_from_char(obj);
+				extract_obj( obj );
+			}
+		}
+
+		if (!ch_snippet) {
+			send_to_char("> &Rannex application needed&w\n\r", ch);
+			return;
+		}
+
+		WAIT_STATE( ch, skill_table[gsn_propaganda]->beats );
+
+		chance = (int) ((ch->pcdata->learned[gsn_spacecraft]) - (ch->in_room->level * 10));
+
+		//ch_printf( ch, "> &GCHANCE: %d&w\n\r", chance );
+
+		if ( number_percent( ) > chance )
+		{
+			send_to_char( "> &Ryou fail to annex. try again!&w\n\r", ch );
+			return;
+		}
+
+		sprintf(buf, "> %s annexes this node.",
+				ch->name);
+		echo_to_room(AT_YELLOW, ch->in_room, buf);
+
+		STRFREE( ch->in_room->owner );
+		ch->in_room->owner = STRALLOC( ch->name );
+
+		if (ch->pcdata->threataction < 1) {
+		send_to_char( "> &Wthreat status changed to: &btraced&w\n\r",        ch );
+		ch->pcdata->threataction = 1;
+		}
+
+		ch->pcdata->threatlevel += 1;
+		if ( ch->pcdata->threatlevel > 10 )
+			ch->pcdata->threatlevel = 10;
+
+		return;
+
 }

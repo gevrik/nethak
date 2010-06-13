@@ -1833,7 +1833,8 @@ ch_ret spell_poison( int sn, int level, CHAR_DATA *ch, void *vo )
     if ( IS_AFFECTED( victim, AFF_POISON ) )
 	first = FALSE;
     af.type      = sn;
-    af.duration  = level * DUR_CONV;
+    //af.duration  = level * DUR_CONV;
+    af.duration  = 10;
     af.location  = APPLY_STR;
     af.modifier  = -2;
     af.bitvector = AFF_POISON;

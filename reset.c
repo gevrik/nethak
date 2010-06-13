@@ -276,6 +276,7 @@ void reset_all() {
 			if (IS_SET( pRoomIndex->room_flags, ROOM_BARRACKS )
 					&& pRoomIndex->area && pRoomIndex->area->planet) {
 				int guard_count = 0;
+				int guardlevel = pRoomIndex->level + 1;
 				OBJ_DATA * blaster;
 				GUARD_DATA * guard;
 				char tmpbuf[MAX_STRING_LENGTH];
@@ -294,9 +295,9 @@ void reset_all() {
 
 				mob = create_mobile(pMobIndex);
 				char_to_room(mob, pRoomIndex);
-				mob->top_level = 10;
-				mob->hit = 100;
-				mob->max_hit = 100;
+				mob->top_level = 10 * guardlevel;
+				mob->hit = 50 * guardlevel;
+				mob->max_hit = 50 * guardlevel;
 				mob->armor = 50;
 				mob->damroll = 0;
 				mob->hitroll = 20;
@@ -330,6 +331,10 @@ void reset_all() {
 
 			if (IS_SET( pRoomIndex->room_flags, ROOM_CAN_LAND )
 					&& pRoomIndex->area && pRoomIndex->area->planet) {
+
+				 if (!IS_SET( pRoomIndex->room_flags2, ROOM_HOMESYSIO ) )
+				    {
+
 				char tmpbuf[MAX_STRING_LENGTH];
 				CHAR_DATA * rch;
 				numguards = 0;
@@ -366,6 +371,8 @@ void reset_all() {
 					mob->long_descr = STRALLOC( tmpbuf );
 					mob->mob_clan = pRoomIndex->area->planet->governed_by;
 				}
+
+			}
 
 			}
 
@@ -510,7 +517,11 @@ void reset_all() {
 
 			if ( ( pRoomIndex->sector_type == SECT_FARMLAND && !pRoomIndex->last_content && number_bits(3) == 0 )
 			|| ( pRoomIndex->sector_type == SECT_RAINFOREST && !pRoomIndex->last_content && number_bits(3) == 0 )
-			|| ( pRoomIndex->sector_type == SECT_GLACIAL && !pRoomIndex->last_content && number_bits(3) == 0 ) )
+			|| ( pRoomIndex->sector_type == SECT_GLACIAL && !pRoomIndex->last_content && number_bits(3) == 0 )
+			|| ( pRoomIndex->sector_type == SECT_TUNNEL && !pRoomIndex->last_content && number_bits(3) == 0 )
+			|| ( pRoomIndex->sector_type == SECT_CORRIDOR && !pRoomIndex->last_content && number_bits(3) == 0 )
+			|| ( pRoomIndex->sector_type == SECT_FARM && !pRoomIndex->last_content && number_bits(3) == 0 )
+			|| ( pRoomIndex->sector_type == SECT_FACTORY && !pRoomIndex->last_content && number_bits(3) == 0 ))
 			{
 
 				switch (pRoomIndex->sector_type) {
@@ -521,6 +532,9 @@ void reset_all() {
 
 				case SECT_RAINFOREST:
 				case SECT_GLACIAL:
+				case SECT_TUNNEL:
+				case SECT_CORRIDOR:
+
 
 					anumber = number_range(0, 8);
 					if (anumber == 0)
@@ -561,6 +575,8 @@ void reset_all() {
 					break;
 
 				case SECT_FARMLAND:
+				case SECT_FARM:
+				case SECT_FACTORY:
 
 					nodelevel = pRoomIndex->level;
 
@@ -849,6 +865,151 @@ void reset_all() {
 				continue;
 				break;
 
+			case SECT_BREEDING:
+			case SECT_HALL:
+			case SECT_TUNNEL:
+			case SECT_CORRIDOR:
+			case SECT_RUINS:
+			case SECT_SETTLEMENT:
+			case SECT_FACTORY:
+			case SECT_PRISON:
+			case SECT_FARM:
+
+			{
+				CHAR_DATA * rch;
+				numguards = 0;
+				for (rch = pRoomIndex->first_person; rch; rch
+						= rch->next_in_room)
+					if (IS_NPC(rch) && rch->pIndexData && rch->pIndexData->vnum
+							== 50)
+						numguards++;
+
+				if (numguards >= 2)
+					continue;
+
+				CHAR_DATA * sch;
+				int numhench = 0;
+				for (sch = pRoomIndex->first_person; sch; sch
+						= sch->next_in_room)
+					if (IS_NPC(sch) && sch->pIndexData && sch->pIndexData->vnum
+							== 51)
+						numhench++;
+
+				if (numhench >= 1)
+					continue;
+
+				vnum = 50;
+				int randmob = number_range(1, 3);
+				if ( randmob == 1)
+				{
+
+				vnum = 51;
+
+				if (!(pMobIndex = get_mob_index(vnum))) {
+					bug("Reset_all: Missing mob (%d)", vnum);
+					return;
+				}
+				mob = create_mobile(pMobIndex);
+				SET_BIT(mob->affected_by, AFF_INFRARED);
+				char_to_room(mob, pRoomIndex);
+				mob->top_level = 15 * (pRoomIndex->level + 1);
+				mob->hit = 50 * (pRoomIndex->level + 1);
+				mob->max_hit = 50 * (pRoomIndex->level + 1);
+				mob->armor = 0 - ((pRoomIndex->level + 1) * 20);
+				mob->damroll = 5 * (pRoomIndex->level + 1);
+				mob->hitroll = 5 * (pRoomIndex->level + 1);
+
+				if ((pObjIndex = get_obj_index(OBJ_VNUM_SCHOOL_DAGGER))
+						!= NULL) {
+					obj = create_object(pObjIndex, mob->top_level);
+					obj_to_char(obj, mob);
+					equip_char(mob, obj, WEAR_WIELD);
+				}
+				//do_setblaster(mob, "full");
+
+				STRFREE( mob->long_descr );
+				mob->long_descr	= STRALLOC( "rogue hacker\n\r" );
+				STRFREE( mob->name );
+				mob->name	= STRALLOC( "rogue hacker" );
+				STRFREE( mob->short_descr );
+				mob->short_descr	= STRALLOC( "rogue hacker" );
+				mob->gold = number_range(20, 40);
+
+				continue;
+				}
+				else if ( randmob == 2)
+				{
+					if (!(pMobIndex = get_mob_index(vnum))) {
+						bug("Reset_all: Missing mob (%d)", vnum);
+						return;
+					}
+					mob = create_mobile(pMobIndex);
+					//if (room_is_dark(pRoomIndex))
+					SET_BIT(mob->affected_by, AFF_INFRARED);
+					char_to_room(mob, pRoomIndex);
+					mob->top_level = 15 * (pRoomIndex->level + 1);
+					mob->hit = 50 * (pRoomIndex->level + 1);
+					mob->max_hit = 50 * (pRoomIndex->level + 1);
+					mob->armor = 0 - ((pRoomIndex->level + 1) * 20);
+					mob->damroll = 5 * (pRoomIndex->level + 1);
+					mob->hitroll = 5 * (pRoomIndex->level + 1);
+
+					if ((pObjIndex = get_obj_index(OBJ_VNUM_SCHOOL_DAGGER))
+							!= NULL) {
+						obj = create_object(pObjIndex, mob->top_level);
+						obj_to_char(obj, mob);
+						equip_char(mob, obj, WEAR_WIELD);
+					}
+					//do_setblaster(mob, "full");
+
+					STRFREE( mob->name );
+					mob->name	= STRALLOC( "netWatch scout" );
+					STRFREE( mob->short_descr );
+					mob->short_descr	= STRALLOC( "netWatch scout" );
+					STRFREE( mob->long_descr );
+					mob->long_descr	= STRALLOC( "netWatch scout\n\r" );
+					mob->gold = number_range(10, 20);
+
+					continue;
+				}
+				else if ( randmob == 3)
+				{
+					if (!(pMobIndex = get_mob_index(vnum))) {
+						bug("Reset_all: Missing mob (%d)", vnum);
+						return;
+					}
+					mob = create_mobile(pMobIndex);
+					//if (room_is_dark(pRoomIndex))
+						SET_BIT(mob->affected_by, AFF_INFRARED);
+					char_to_room(mob, pRoomIndex);
+					mob->top_level = 15 * (pRoomIndex->level + 1);
+					mob->hit = 50 * (pRoomIndex->level + 1);
+					mob->max_hit = 50 * (pRoomIndex->level + 1);
+					mob->armor = 0 - ((pRoomIndex->level + 1) * 20);
+					mob->damroll = 5 * (pRoomIndex->level + 1);
+					mob->hitroll = 5 * (pRoomIndex->level + 1);
+
+					STRFREE( mob->name );
+					mob->name	= STRALLOC( "metropolis virus" );
+					STRFREE( mob->short_descr );
+					mob->short_descr	= STRALLOC( "metropolis virus" );
+					STRFREE( mob->long_descr );
+					mob->long_descr	= STRALLOC( "metropolis virus\n\r" );
+					mob->gold = number_range(10, 20);
+
+					if ((pObjIndex = get_obj_index(OBJ_VNUM_BLASTER))
+							!= NULL) {
+						obj = create_object(pObjIndex, mob->top_level);
+						obj_to_char(obj, mob);
+						equip_char(mob, obj, WEAR_WIELD);
+					}
+					do_setblaster(mob, "full");
+
+					continue;
+				}
+			}
+
+				break;
 
 			case SECT_GLACIAL:
 				anumber = number_range(0, 5);

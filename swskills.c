@@ -4080,6 +4080,8 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 	if ( !IS_SET( planet->flags, PLANET_NOCAP ) )
 	{
 
+		if ( str_cmp(ch->in_room->area->planet->name, "users") ) {
+
 		if ( !clan )
 		{
 			send_to_char( "> you need to be part of an organization before you can do that\n\r", ch );
@@ -4101,6 +4103,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 		{
 			send_to_char( "> you may only modify nodes in systems that your organization controls\n\r", ch );
 			return;
+		}
 		}
 
 	}
@@ -4322,8 +4325,10 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 	{
 		if ( IS_SET( planet->flags, PLANET_NOCAP ) )
 		{
+			if ( str_cmp(ch->in_room->area->planet->name, "users") ) {
 			send_to_char("> &Ryou cannot build protected io nodes here&w\n\r", ch );
 			return;
+			}
 		}
 
 		for( xit = location->first_exit; xit; xit = xit->next )
@@ -4532,6 +4537,11 @@ void do_construction ( CHAR_DATA *ch , char *argument )
 	if ( !IS_IMMORTAL(ch) )
 	{
 
+		if( IS_SET(planet->flags, PLANET_SHUT ) )
+		{
+			send_to_char("> &Ryou can not construct here\n\r", ch );
+			return;
+		}
 		if ( !IS_SET( planet->flags, PLANET_NOCAP ) )
 		{
 
@@ -4569,6 +4579,8 @@ void do_construction ( CHAR_DATA *ch , char *argument )
 		}
 		else {
 
+			if ( !str_cmp(ch->in_room->area->planet->name, "straylight") ) {
+
 			if ( ch->pcdata->qtaxnodes > 99 )
 			{
 				send_to_char( "> you may not build any more nodes as a freelancer\n\r", ch );
@@ -4577,8 +4589,19 @@ void do_construction ( CHAR_DATA *ch , char *argument )
 
 			if ( clan )
 			{
+
 				send_to_char( "> you cannot construct in this system\n\r", ch );
 				return;
+			}
+			}
+			else if ( !str_cmp(ch->in_room->area->planet->name, "users") ) {
+
+				if ( ch->pcdata->homesyssize > 99 )
+				{
+					send_to_char( "> you may not build any more nodes in your home system\n\r", ch );
+					return;
+				}
+
 			}
 
 		}
@@ -4586,8 +4609,12 @@ void do_construction ( CHAR_DATA *ch , char *argument )
 		if( !IS_IMMORTAL(ch) )
 			if ( IS_SET( ch->in_room->room_flags , ROOM_NOPEDIT ) )
 			{
-				send_to_char( "> you may not edit this node\n\r", ch );
-				return;
+		         if( !IS_SET( ch->in_room->room_flags2, ROOM_HOMESYSIO ) )
+		         {
+						send_to_char( "> you may not edit this node\n\r", ch );
+						return;
+		         }
+
 			}
 	}
 
@@ -4634,6 +4661,7 @@ void do_construction ( CHAR_DATA *ch , char *argument )
 	STRFREE( nRoom->description );
 	nRoom->name = STRALLOC( "raw" );
 	nRoom->description = STRALLOC ( "use MODIFY command to customize node\n\r" );
+	//STRFREE( nRoom->owner );
 	nRoom->owner = STRALLOC( ch->name );
 	nRoom->sector_type = SECT_DUNNO;
 	SET_BIT( nRoom->room_flags , ROOM_NO_MOB );
@@ -4669,7 +4697,10 @@ void do_construction ( CHAR_DATA *ch , char *argument )
 //		ch->pcdata->qtaxnodes = ch->pcdata->qtaxnodes + 1;
 //	}
 
-	ch->pcdata->qtaxnodes = ch->pcdata->qtaxnodes + 1;
+	if ( str_cmp(ch->in_room->area->planet->name, "users") )
+		ch->pcdata->qtaxnodes = ch->pcdata->qtaxnodes + 1;
+	else
+		ch->pcdata->homesyssize = ch->pcdata->homesyssize + 1;
 
 	sprintf( buf , "> a new node appears in this dir: %s" , dir_name[edir] );
 	send_to_char( "> cost: 500 credits\n\r", ch );
