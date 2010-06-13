@@ -282,6 +282,12 @@ void fwrite_char( CHAR_DATA *ch, FILE *fp )
        fprintf( fp, "RoomConst      %ld\n",          ch->pcdata->roomconstruct );
     if ( ch->pcdata->constructlevel != NULL )
        fprintf( fp, "ConstLevel      %d\n",          ch->pcdata->constructlevel );
+    if ( ch->pcdata->homesystemio != NULL )
+           fprintf( fp, "Homesystemio      %d\n",          ch->pcdata->homesystemio );
+    if ( ch->pcdata->homesyssize != NULL )
+           fprintf( fp, "Homesyssize      %d\n",          ch->pcdata->homesyssize );
+    if ( ch->pcdata->homesmetro != NULL )
+           fprintf( fp, "Homesmetro      %d\n",          ch->pcdata->homesmetro );
     fprintf( fp, "HpManaMove   %d %d 0 0 %d %d\n",
 	ch->hit, ch->max_hit, ch->move, ch->max_move );
     fprintf( fp, "Force        %d %d %d %d\n", ch->perm_frc, ch->mod_frc, ch->mana, ch->max_mana );
@@ -1220,6 +1226,9 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload )
 
 	    KEY( "Hitroll",	ch->hitroll,		fread_number( fp ) );
 	    KEY( "Homepage",	ch->pcdata->homepage,	fread_string_nohash( fp ) );
+	    KEY( "Homesystemio",	ch->pcdata->homesystemio, fread_number( fp ) );
+	    KEY( "Homesyssize",	ch->pcdata->homesyssize, fread_number( fp ) );
+	    KEY( "Homesmetro",	ch->pcdata->homesmetro, fread_number( fp ) );
 
 	    if ( !str_cmp( word, "HpManaMove" ) )
 	    {

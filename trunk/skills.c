@@ -1972,11 +1972,10 @@ void do_pick( CHAR_DATA *ch, char *argument )
 		act( AT_ACTION, "> $n picks the $d", ch, NULL, pexit->keyword, TO_ROOM );
 
 		if ( ch->pcdata->clan_name[0] == '\0' ) {
-			if ( str_cmp(ch->in_room->area->planet->name, "straylight") )
-				if ( str_cmp(ch->in_room->area->planet->name, "chatsubo") ) {
+			if ( str_cmp(ch->in_room->area->planet->name, "straylight") ) {
 			if ( str_cmp(ch->in_room->owner, ch->name) )
 			learn_from_success( ch, gsn_pick_lock );
-				}
+			}
 		}
 		else {
 			clan = ch->in_room->area->planet->governed_by;

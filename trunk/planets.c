@@ -231,7 +231,7 @@ void fread_planet( PLANET_DATA *planet, FILE *fp )
 
 	             planet->size = 0;
 
-	             if ( !str_cmp(planet->name, "straylight") || !str_cmp(planet->name, "chatsubo") )
+	             if ( !str_cmp(planet->name, "straylight") )
 	             planet->citysize = 800;
 	             else
 	             planet->citysize = 0;
@@ -274,11 +274,11 @@ void fread_planet( PLANET_DATA *planet, FILE *fp )
                        	  planet->size++;
 
                           if ( room->sector_type == SECT_DESERT )
-                             planet->citysize = planet->citysize++; // + nodelevel;
+                             planet->citysize = planet->citysize + (nodelevel + 1);
                           else if ( room->sector_type == SECT_FARMLAND )
-                             planet->farmland = planet->farmland++; // + nodelevel;
+                             planet->farmland = planet->farmland + (nodelevel + 1);
                           else if ( room->sector_type == SECT_GLACIAL )
-                             planet->wilderness = planet->wilderness++;// + nodelevel;
+                             planet->wilderness = planet->wilderness + (nodelevel + 1);
                           else if ( room->sector_type == SECT_FIELD )
                           {
                              planet->entertain_plus = planet->entertain_plus + nodelevel;
@@ -304,7 +304,7 @@ void fread_planet( PLANET_DATA *planet, FILE *fp )
                           if ( IS_SET( room->room_flags , ROOM_CONTROL ))
                              planet->controls++;
                           if ( IS_SET( room->room_flags , ROOM_BARRACKS ))
-                             planet->barracks++;
+                        	  planet->barracks++;
                      }
 	          }
                 fMatch = TRUE;

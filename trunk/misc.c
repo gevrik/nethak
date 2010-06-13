@@ -1478,6 +1478,12 @@ void do_bank( CHAR_DATA *ch, char *argument )
 	else if ( !str_prefix( arg1, "transfer" ) )
 	{
 
+	    if ( get_age(ch) <= 20 )
+	    {
+		send_to_char( "> you are too new to transfer credits\n\r", ch );
+		return;
+	    }
+
 		if ( amount <= 0 )
 		{
 			ch_printf( ch, "> you may only transfer ammounts greater than 0\n\r");

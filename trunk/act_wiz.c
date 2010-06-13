@@ -2159,6 +2159,23 @@ void do_balzhur( CHAR_DATA *ch, char *argument )
         return;
 }
 
+void do_aiannounce( CHAR_DATA *ch, char *argument )
+{
+    char arg[MAX_INPUT_LENGTH];
+    char buf[MAX_STRING_LENGTH];
+
+    if ( argument[0] == '\0' )
+    {
+	send_to_char( "> what do you want to broadcast?\n\r", ch );
+	return;
+    }
+
+	sprintf( buf, "SYSTEM: %s", argument );
+	echo_to_all( AT_YELLOW, buf, ECHOTAR_ALL );
+    return;
+
+}
+
 void do_advance( CHAR_DATA *ch, char *argument )
 {
 }

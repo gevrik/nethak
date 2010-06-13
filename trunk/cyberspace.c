@@ -10,6 +10,191 @@ bool	check_parse_name	args( ( char *name ) );
 void	write_clan_list	args( ( void ) );
 
 extern char * const cargo_names[CARGO_MAX];
+extern int top_r_vnum;
+
+void do_adduser( CHAR_DATA *ch, char *argument )
+{
+
+	ROOM_INDEX_DATA *nRoom;
+	char buf[MAX_STRING_LENGTH];
+
+    if ( IS_NPC(ch) || !ch->pcdata )
+       return;
+
+	if (ch->pcdata->homesystemio != 0)
+	{
+		send_to_char("> &Ryou already have a home system&w\n\r", ch);
+		return;
+	}
+
+
+    if (!ch->in_room || !IS_SET( ch->in_room->room_flags, ROOM_SHIPYARD ) )
+    {
+    	send_to_char( "> go to the straylight io node\n\r", ch );
+	return;
+    }
+
+    if ( ch->gold < 5000 )
+    {
+    	send_to_char( "> it costs 5,000 credits to start home system creation code\n\r", ch );
+	return;
+    }
+
+	if ( argument[0] == '\0' )
+	{
+		send_to_char("> &Wsyntax: adduser [PIN]&w\n\r", ch);
+		send_to_char("> &Wplease specify a PIN for your home systems IO node&w\n\r", ch);
+		return;
+	}
+
+	if ( strlen(argument) > ( ( ch->pcdata->learned[gsn_spacecraft] / 10 ) - 1 ) )
+	{
+		send_to_char( "> &RPIN too long.\n\r", ch );
+		return;
+	}
+
+	if ( atoi(argument) <= 0){
+		send_to_char("> &Rplease enter the PIN as a positive number&w\n\r", ch);
+		return;
+	}
+	act(AT_GREEN, "> $n created their home system", ch, NULL, NULL, TO_ROOM );
+
+	char_from_room( ch );
+	char_to_room( ch, get_room_index( 14235 ) );
+
+	ch->gold -= 5000;
+
+	nRoom = make_room( ++top_r_vnum );
+	nRoom->area = ch->in_room->area;
+	LINK( nRoom , ch->in_room->area->first_room , ch->in_room->area->last_room , next_in_area , prev_in_area );
+	STRFREE( nRoom->name );
+
+	strcpy( buf , ch->name );
+	strcat( buf , "&Y.&Cio" );
+
+	STRFREE( nRoom->description );
+	nRoom->name = STRALLOC( buf );
+	nRoom->description = STRALLOC ( "a private IO node\n\r" );
+	nRoom->owner = STRALLOC( ch->name );
+	nRoom->sector_type = SECT_DUNNO;
+	nRoom->sector_type = SECT_CITY;
+	SET_BIT( nRoom->room_flags , ROOM_CAN_LAND );
+	SET_BIT( nRoom->room_flags , ROOM_NOPEDIT );
+	nRoom->seccode = atoi(argument);
+	STRFREE( nRoom->owner );
+	nRoom->owner = STRALLOC( ch->name );
+
+	SET_BIT( nRoom->room_flags2 , ROOM_HOMESYSIO );
+
+	char_from_room( ch );
+	char_to_room( ch, nRoom );
+
+	ch->pcdata->homesystemio = nRoom->vnum;
+	ch->pcdata->homesyssize += 1;
+
+	send_to_char("> &Wuser added&w\n\r", ch);
+	do_look( ch, "auto" );
+	SET_BIT( nRoom->area->flags , AFLAG_MODIFIED );
+	save_char_obj( ch );
+	return;
+
+}
+
+void do_portscan( CHAR_DATA *ch, char *argument )
+{
+
+	ROOM_INDEX_DATA	*location;
+	char arg[MAX_INPUT_LENGTH];
+	char arg1[MAX_INPUT_LENGTH];
+	char bufa[MAX_STRING_LENGTH];
+	int chance;
+
+	argument = one_argument( argument , arg );
+	argument = one_argument( argument , arg1 );
+
+	if ( arg[0] == '\0' )
+	{
+		send_to_char("> &Wsyntax: portscan [targetnodeid] [guessedpin]&w\n\r", ch);
+		send_to_char("> &Wplease specify a target node you want to scan&w\n\r", ch);
+		return;
+	}
+
+	if ( arg1[0] == '\0' )
+	{
+		send_to_char("> &Wsyntax: portscan [targetnodeid] [guessedpin]&w\n\r", ch);
+		send_to_char("> &Wplease supply a guess for the PIN&w\n\r", ch);
+		return;
+	}
+
+	if ( atoi(arg) <= 0){
+		send_to_char("> &Rplease enter the ID of the target node as a positive number&w\n\r", ch);
+		return;
+	}
+
+	if ( atoi(arg1) <= 0){
+		send_to_char("> &Rplease enter your guess for the PIN as a positive number&w\n\r", ch);
+		return;
+	}
+
+	if ( ( location = find_location( ch, arg ) ) == NULL )
+	{
+	    send_to_char( "> &Rno such secured io node&w\n\r", ch );
+	    return;
+	}
+
+	if ( !IS_SET( location->room_flags, ROOM_CAN_LAND ) )
+	{
+		send_to_char( "> &Rtarget needs to be an io node&w\n\r", ch );
+		return;
+	}
+
+	   if ( !str_cmp(location->owner, ch->name) )
+	   {
+	       send_to_char ( "> &Rthat is your io node&w\n\r" , ch );
+	       return;
+	   }
+
+	int securitycode = location->seccode;
+	int guess = atoi(arg1);
+
+	chance = (int) ((ch->pcdata->learned[gsn_portscan]) - (location->level * 10));
+
+	ch_printf( ch, "> &GCHANCE: %d&w\n\r", chance );
+
+	if ( number_percent( ) > chance )
+	{
+		send_to_char( "> &Ryou fail to portscan. try again!&w\n\r", ch );
+		return;
+	}
+
+	if (securitycode == guess){
+		send_to_char( "> &Gyou have discovered the PIN!&w\n\r", ch );
+	}
+	else if (securitycode > guess) {
+		send_to_char( "> &Rguess was too low&w\n\r", ch );
+	}
+	else{
+		send_to_char( "> &Rguess was too high&w\n\r", ch );
+	}
+
+	sprintf(bufa, "> %s is PORTSCANNING an IO node on %s ",
+			ch->name, location->area->planet->name);
+
+	echo_to_clan(AT_RED, bufa, ECHOTAR_ALL, location->area->planet->governed_by);
+
+	if (ch->pcdata->threataction < 1) {
+	send_to_char( "> &Wthreat status changed to: &btraced&w\n\r",        ch );
+	ch->pcdata->threataction = 1;
+	}
+
+	ch->pcdata->threatlevel += 1;
+	if ( ch->pcdata->threatlevel > 10 )
+		ch->pcdata->threatlevel = 10;
+
+
+	return;
+
+}
 
 void do_layout( CHAR_DATA *ch, char *argument )
 {
@@ -133,7 +318,7 @@ void do_buyskill( CHAR_DATA *ch, char *argument )
 		send_to_char( "> cost: 5,000c\n\r",	ch );
 		send_to_char( "> skills: aid, backstab, blades, blasters, circle, codeapp, codeblade, codeblaster, codecontainer, codedef, codemed, codeshield, codeutil,"
 				" damboost, disarm, disguise, dodge, dualwield, firstaid, gouge, hide, kick, parry, peek, picklock, poisonmod, postguard, propaganda, quicktalk,"
-				" reinforcements, rescue, second attack, sneak, steal, throw, trace, inquire, slicebank\n\r",	ch );
+				" reinforcements, rescue, second attack, sneak, steal, throw, trace, inquire, slicebank, slicefund, slicesnippets, portscan\n\r",	ch );
 		return;
 	}
 
@@ -284,14 +469,14 @@ void do_homehall( CHAR_DATA *ch, char *argument )
 			&& !IS_SET( ch->in_room->room_flags, ROOM_CAN_LAND ) && !IS_SET( ch->in_room->room_flags, ROOM_PUBLICIO)
 			&& !IS_SET( ch->in_room->room_flags, ROOM_EMPLOYMENT) )
 	{
-		send_to_char( "> &Rfind a safe node to connect to consumer review&w\n\r", ch );
+		send_to_char( "> &Rfind a safe node to connect to Metropolis&w\n\r", ch );
 		return;
 	}
 
-	send_to_char( "> you connect to consumer review\n\r", ch );
-	act(AT_GREEN, "> $n connects to consumer review", ch, NULL, NULL, TO_ROOM );
+	send_to_char( "> you connect to Metropolis\n\r", ch );
+	act(AT_GREEN, "> $n connects to Metropolis", ch, NULL, NULL, TO_ROOM );
 	char_from_room( ch );
-	char_to_room( ch, get_room_index( 11072 ) );
+	char_to_room( ch, get_room_index( 11498 ) );
 	do_look( ch, "auto" );
 
 	return;
@@ -339,6 +524,60 @@ void do_homestray( CHAR_DATA *ch, char *argument )
 	act(AT_GREEN, "> $n connects to straylight", ch, NULL, NULL, TO_ROOM );
 	char_from_room( ch );
 	char_to_room( ch, get_room_index( ROOM_VNUM_STRAY ) );
+	do_look( ch, "auto" );
+
+	return;
+
+}
+
+void do_homesys( CHAR_DATA *ch, char *argument )
+{
+
+	if ( ch->position <= POS_SLEEPING )
+	{
+		send_to_char( "> you are hibernating\n\r" , ch );
+		return;
+	}
+
+	if ( ch->fighting )
+	{
+		send_to_char( "> you to try flee from combat\n\r", ch );
+		do_flee( ch, "" );
+		return;
+	}
+
+	if ( IS_SET( ch->in_room->room_flags, ROOM_ARENA ) )
+	{
+		send_to_char( "> &Rfinish the current match first&w\n\r", ch );
+		return;
+	}
+
+	if ( ch->in_room->sector_type == SECT_RAINFOREST )
+	{
+		send_to_char( "> &Rfind a safehouse in the construct first&w\n\r", ch );
+		return;
+	}
+
+	if ( !IS_SET( ch->in_room->room_flags, ROOM_SAFE ) && !IS_SET( ch->in_room->room_flags, ROOM_NO_MOB )
+			&& !IS_SET( ch->in_room->room_flags, ROOM_BANK ) && !IS_SET( ch->in_room->room_flags, ROOM_HOTEL)
+			&& !IS_SET( ch->in_room->room_flags, ROOM_CAN_LAND ) && !IS_SET( ch->in_room->room_flags, ROOM_PUBLICIO)
+			&& !IS_SET( ch->in_room->room_flags, ROOM_EMPLOYMENT) )
+	{
+		send_to_char( "> &Rfind a safe node to connect to your home system&w\n\r", ch );
+		return;
+	}
+
+	if ( ch->pcdata->homesystemio == 0 )
+	{
+		send_to_char( "> &Ryou do not have a home system yet&w\n\r", ch );
+		send_to_char( "> &Rcreate one for 5,000c with ADDUSER&w\n\r", ch );
+		return;
+	}
+
+	send_to_char( "> you connect to their home system\n\r", ch );
+	act(AT_GREEN, "> $n connects to their home system", ch, NULL, NULL, TO_ROOM );
+	char_from_room( ch );
+	char_to_room( ch, get_room_index( ch->pcdata->homesystemio ) );
 	do_look( ch, "auto" );
 
 	return;
@@ -864,8 +1103,15 @@ void do_renamenode( CHAR_DATA *ch, char *argument )
 {
 	ROOM_INDEX_DATA	*location;
 	int cost = 100;
+	char buf[MAX_STRING_LENGTH];
 
 	location = ch->in_room;
+
+	if ( IS_SET( location->room_flags , ROOM_NOPEDIT ) )
+	{
+		send_to_char( "> &Ryou can not rename this node&w\n\r", ch );
+		return;
+	}
 
 	if( strcmp(location->owner, ch->name) )
 	{
@@ -896,7 +1142,18 @@ void do_renamenode( CHAR_DATA *ch, char *argument )
 	ch->gold     -= cost;
 
 	STRFREE( location->name );
+
+
+	if ( !str_cmp(ch->in_room->area->planet->name, "users") ) {
+	strcpy( buf , ch->name );
+	strcat( buf , "&Y.&C" );
+	strcat( buf , argument );
+	location->name = STRALLOC( buf );
+	}
+	else{
 	location->name = STRALLOC( argument );
+	}
+
 	send_to_char( "> &Gnode name set&w [100c spent]\n\r", ch);
 	SET_BIT( ch->in_room->area->flags , AFLAG_MODIFIED );
 	return;
@@ -917,6 +1174,17 @@ void do_securenode( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
+	if ( strlen(argument) > ( ( ch->pcdata->learned[gsn_spacecraft] / 10 ) - 1 ) )
+	{
+		send_to_char( "> &RPIN too long.\n\r", ch );
+		return;
+	}
+
+	if ( atoi(argument) <= 0){
+		send_to_char("> &Rplease enter the PIN for this node as a positive number&w\n\r", ch);
+		return;
+	}
+
 	if( !IS_IMMORTAL(ch) )
 	{
 		if ( IS_SET( ch->in_room->room_flags , ROOM_NOPEDIT ) )
@@ -934,7 +1202,7 @@ void do_securenode( CHAR_DATA *ch, char *argument )
 
 	if ( ch->gold < 1000 )
 	{
-		send_to_char( "> &Rinsufficient funds [1000 needed]&w\n\r", ch );
+		send_to_char( "> &Rinsufficient funds [1,000 needed]&w\n\r", ch );
 		return;
 	}
 
@@ -960,7 +1228,7 @@ void do_securenode( CHAR_DATA *ch, char *argument )
 	ch->gold -= 1000;
 
 	location->seccode = atoi(argument);
-	send_to_char( "> &Gcode set. 1000c spent.&w\n\r", ch );
+	send_to_char( "> &Gcode set. 1,000c spent.&w\n\r", ch );
 
 	SET_BIT( ch->in_room->area->flags , AFLAG_MODIFIED );
 
@@ -1332,12 +1600,13 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 				&& str_cmp( arg, "audit" )
 				&& str_cmp( arg, "shortcut" )
 				&& str_cmp( arg, "checkout" )
-				&& str_cmp( arg, "emp") )
+				&& str_cmp( arg, "emp")
+				&& str_cmp( arg, "annex"))
 		{
 			send_to_char( "> &Ryou cannot code that app, try:\n\r&w", ch);
 			send_to_char( "> jackhammer, krash, spun, reconstruct\n\r", ch);
 			send_to_char( "> dropline, uninstall, anchor, audit\n\r", ch);
-			send_to_char( "> shortcut, checkout, emp\n\r", ch);
+			send_to_char( "> shortcut, checkout, emp, annex\n\r", ch);
 			return;
 		}
 
@@ -1373,6 +1642,10 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 		{
 			cost = 100;
 		}
+		else if ( !str_cmp( arg, "annex" ) )
+		{
+			cost = 250;
+		}
 		else if ( !str_cmp( arg, "anchor" ) )
 		{
 			cost = 75;
@@ -1397,7 +1670,7 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 			send_to_char( "> &Ryou cannot code that app, try:\n\r&w", ch);
 			send_to_char( "> jackhammer, krash, spun, reconstruct\n\r", ch);
 			send_to_char( "> dropline, uninstall, anchor, audit\n\r", ch);
-			send_to_char( "> shortcut, checkout, emp\n\r", ch);
+			send_to_char( "> shortcut, checkout, emp, annex\n\r", ch);
 			return;
 		}
 
@@ -1525,6 +1798,10 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 	else if ( !str_cmp( arg, "emp" ) )
 	{
 		cost = 100;
+	}
+	else if ( !str_cmp( arg, "annex" ) )
+	{
+		cost = 250;
 	}
 	else if ( !str_cmp( arg, "anchor" ) )
 	{

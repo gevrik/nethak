@@ -54,10 +54,12 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_adecline" ))		return do_adecline;
 	if ( !str_cmp( name, "do_aassign" ))		return do_aassign;
 	if ( !str_cmp( name, "do_addpilot" ))  		return do_addpilot;
+	if ( !str_cmp( name, "do_adduser" ))  		return do_adduser;
 	if ( !str_cmp( name, "do_accelerate" ))         return do_accelerate;
 	if ( !str_cmp( name, "do_advance" ))		return do_advance;
 	if ( !str_cmp( name, "do_affected" ))		return do_affected;
 	if ( !str_cmp( name, "do_afk" ))		return do_afk;
+	if ( !str_cmp( name, "do_aiannounce" ))		return do_aiannounce;
 	if ( !str_cmp( name, "do_aid" ))		return do_aid;
 	if ( !str_cmp( name, "do_allow" ))		return do_allow;
 	if ( !str_cmp( name, "do_allsave" ))		return do_allsave;
@@ -232,6 +234,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_homehall" ))		return do_homehall;
 	if ( !str_cmp( name, "do_homerecall" ))		return do_homerecall;
 	if ( !str_cmp( name, "do_homestray" ))		return do_homestray;
+	if ( !str_cmp( name, "do_homesys" ))		return do_homesys;
 	if ( !str_cmp( name, "do_homepage" ))		return do_homepage;
 	if ( !str_cmp( name, "do_hset" ))		return do_hset;
 	if ( !str_cmp( name, "do_hyperspace" ))         return do_hyperspace;
@@ -379,6 +382,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_planets" ))		return do_planets;
 	if ( !str_cmp( name, "do_pnet" ))		return do_pnet;
 	if ( !str_cmp( name, "do_poison_weapon" ))	return do_poison_weapon;
+	if ( !str_cmp( name, "do_portscan" ))		return do_portscan;
 	if ( !str_cmp( name, "do_postguard" ))		return do_postguard;
 	if ( !str_cmp( name, "do_probe" ))		return do_probe;
 	if ( !str_cmp( name, "do_prompt" ))		return do_prompt;
@@ -482,6 +486,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_slist" ))		return do_slist;
 	if ( !str_cmp( name, "do_slookup" ))		return do_slookup;
 	if ( !str_cmp( name, "do_sn_anchor" )) 		return do_sn_anchor;
+	if ( !str_cmp( name, "do_sn_annex" )) 		return do_sn_annex;
 	if ( !str_cmp( name, "do_sn_audit" )) 		return do_sn_audit;
 	if ( !str_cmp( name, "do_sn_checkout" )) 		return do_sn_checkout;
 	if ( !str_cmp( name, "do_sn_dropline" )) 		return do_sn_dropline;
@@ -602,6 +607,7 @@ char *skill_name( DO_FUN *skill )
 
 	//if ( skill == do_alia )           return "do_alia";
 	if ( skill == do_alias )           return "do_alias";
+	if ( skill == do_aiannounce )           return "do_aiannounce";
 	//if ( skill == do_unalias )           return "do_unalias";
 	if ( skill == do_contractpropaganda )           return "do_contractpropaganda";
 	if ( skill == do_sn_jackhammer )           return "do_sn_jackhammer";
@@ -612,6 +618,7 @@ char *skill_name( DO_FUN *skill )
 	if ( skill == do_sn_spun )           return "do_sn_spun";
 	if ( skill == do_sn_uninstall )           return "do_sn_uninstall";
 	if ( skill == do_sn_anchor )           return "do_sn_anchor";
+	if ( skill == do_sn_annex )           return "do_sn_annex";
 	if ( skill == do_sn_audit )           return "do_sn_audit";
 	if ( skill == do_sn_checkout )           return "do_sn_checkout";
 	if ( skill == do_sn_emp )           return "do_sn_emp";
@@ -633,6 +640,8 @@ char *skill_name( DO_FUN *skill )
     if ( skill == do_inquire )     return "do_inquire";
     if ( skill == do_arrest )     return "do_arrest";
     if ( skill == do_buyskill )     return "do_buyskill";
+    if ( skill == do_portscan )     return "do_portscan";
+    if ( skill == do_adduser )     return "do_adduser";
     if ( skill == do_war )     return "do_war";
     if ( skill == do_setenlist )     return "do_setenlist";
     if ( skill == do_connect )     return "do_connect";
@@ -674,6 +683,7 @@ char *skill_name( DO_FUN *skill )
     if ( skill == do_homehall )     return "do_homehall";
     if ( skill == do_homerecall )     return "do_homerecall";
     if ( skill == do_homestray )     return "do_homestray";
+    if ( skill == do_homesys )     return "do_homesys";
     if ( skill == do_foundorg )     return "do_foundorg";
     if ( skill == do_appoint )     return "do_appoint";
     if ( skill == do_demote )     return "do_demote";

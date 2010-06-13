@@ -711,7 +711,7 @@ void game_loop( )
 				{
 					write_to_descriptor( d->descriptor,
 							"> idle timeout - disconnecting\n\r", 0 );
-					d->character->pcdata->logouttime = time(NULL);
+					//d->character->pcdata->logouttime = time(NULL);
 					d->outtop	= 0;
 					close_socket( d, TRUE );
 					continue;

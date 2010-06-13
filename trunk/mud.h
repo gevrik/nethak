@@ -1561,6 +1561,7 @@ typedef enum
 #define ROOM_SHOPPING	BV05
 #define ROOM_FOOD		BV06
 #define ROOM_DEADEND	BV07
+#define ROOM_HOMESYSIO 	BV08
 
 /*
  * Room flags.           Holy cow!  Talked about stripped away..
@@ -2178,6 +2179,9 @@ struct	pc_data
     int         maxcargo;
     int         cargo;
     int         cargotype;
+    int         homesystemio;
+    sh_int         homesyssize;
+    int         homesmetro;
 };
 
 
@@ -2577,6 +2581,8 @@ extern	sh_int	gsn_slicebank;
 extern	sh_int	gsn_slicefund;
 extern	sh_int	gsn_slicesnippets;
 extern  sh_int  gsn_inquire;
+
+extern  sh_int  gsn_portscan;
 
 extern	sh_int	gsn_aid;
 
@@ -3120,6 +3126,8 @@ DECLARE_DO_FUN( do_load_cargo );
 DECLARE_DO_FUN( do_unload_cargo );
 DECLARE_DO_FUN( do_imports );
 
+DECLARE_DO_FUN( do_aiannounce );
+
 // snippets
 
 DECLARE_DO_FUN(	do_sn_randomizer	);
@@ -3134,6 +3142,7 @@ DECLARE_DO_FUN(	do_sn_checkout	);
 DECLARE_DO_FUN(	do_sn_emp	);
 DECLARE_DO_FUN(	do_sn_audit	);
 DECLARE_DO_FUN(	do_sn_shortcut	);
+DECLARE_DO_FUN(	do_sn_annex	);
 
 // cyberspace
 
@@ -3160,6 +3169,8 @@ DECLARE_DO_FUN( do_workmate );
 DECLARE_DO_FUN( do_email );
 DECLARE_DO_FUN( do_arrest );
 DECLARE_DO_FUN( do_buyskill );
+DECLARE_DO_FUN( do_portscan );
+DECLARE_DO_FUN( do_adduser );
 DECLARE_DO_FUN( do_setenlist );
 DECLARE_DO_FUN( do_setwages );
 DECLARE_DO_FUN( do_layout );
@@ -3222,6 +3233,7 @@ DECLARE_DO_FUN( do_constructportal );
 DECLARE_DO_FUN( do_homerecall );
 DECLARE_DO_FUN( do_homehall );
 DECLARE_DO_FUN( do_homestray );
+DECLARE_DO_FUN( do_homesys );
 DECLARE_DO_FUN( do_foundorg );
 DECLARE_DO_FUN( do_allships );
 DECLARE_DO_FUN( do_appoint );

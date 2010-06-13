@@ -36,6 +36,12 @@ void do_probe ( CHAR_DATA *ch , char *argument )
 		return;
 	}
 
+	if ( str_cmp(ch->in_room->area->planet->name, "metropolis") )
+	{
+		send_to_char( "> &Ryou can not probe in this system&w\n\r", ch );
+		return;
+	}
+
 	cost = ( ch->in_room->level + 1 ) * 10;
 
 	if (ch->gold < cost)
@@ -90,7 +96,7 @@ void do_probe ( CHAR_DATA *ch , char *argument )
 	xit = get_exit(ch->in_room, edir);
 	if ( xit )
 	{
-		send_to_char( "> &Rthere is already an area in that direction&w\n\r", ch );
+		send_to_char( "> &Rthere is already a node in that direction&w\n\r", ch );
 		return;
 	}
 
@@ -954,7 +960,7 @@ void do_probe ( CHAR_DATA *ch , char *argument )
 
 	if (roommaterial == 1)
 	{
-		strcat( bufrdesc, "node made out of cracked stone.");
+		strcat( bufrdesc, "area made out of cracked stone.");
 	}
 	else if (roommaterial == 2)
 	{
@@ -1084,7 +1090,7 @@ void do_probe ( CHAR_DATA *ch , char *argument )
 		roomheight = number_range(1, 3);
 
 		if (roomheight == 1)
-			strcat( bufrdesc, " the open sky is far, far above you. ");
+			strcat( bufrdesc, " you can not see a ceiling above you. ");
 		else if (roomheight == 2)
 			strcat( bufrdesc, " there is a ceiling just a few levels above this one. ");
 		else
@@ -1153,7 +1159,7 @@ void do_probe ( CHAR_DATA *ch , char *argument )
 
 		strcpy( bufrname, "campsite" );
 
-		strcat( bufrdesc, " humans have created a camp site here. ");
+		strcat( bufrdesc, " someone have created a camp site here. ");
 
 		// noise
 
@@ -1236,7 +1242,7 @@ void do_probe ( CHAR_DATA *ch , char *argument )
 
 		// name
 
-		strcpy( bufrname, "subserver" );
+		strcpy( bufrname, "city" );
 
 		strcat( bufrdesc, " you are in a bustling city in the Metropolis. ");
 
@@ -1329,7 +1335,7 @@ void do_probe ( CHAR_DATA *ch , char *argument )
 		}
 		else if (roomnoise == 2){
 			strcat( bufrdesc, "you can hear water drip from the ceiling. ");
-			SET_BIT( nRoom->room_flags , ROOM_FOUNTAIN );
+			SET_BIT( nRoom->room_flags2 , ROOM_FOUNTAIN );
 		}
 		else {
 			strcat( bufrdesc, "a monotonous hum fills this room. ");
@@ -1596,7 +1602,7 @@ void do_probe ( CHAR_DATA *ch , char *argument )
 
 		if (roomnoise == 1){
 			strcat( bufrdesc, "you hear the rushing of water nearby. ");
-			SET_BIT( nRoom->room_flags , ROOM_FOUNTAIN );
+			SET_BIT( nRoom->room_flags2 , ROOM_FOUNTAIN );
 		}
 		else if (roomnoise == 2){
 			strcat( bufrdesc, "a pool of slime is blubbering. ");
@@ -1927,6 +1933,11 @@ void do_probe ( CHAR_DATA *ch , char *argument )
 			roomlevel = roomlevel + 1;
 			edir = 4;
 		}
+		else if ( roomlevel == 5)
+		{
+			roomlevel = roomlevel - 1;
+			edir = 5;
+		}
 		else {
 			if (number_range(1, 2) == 1){
 				roomlevel = roomlevel + 1;
@@ -1999,6 +2010,7 @@ void do_probe ( CHAR_DATA *ch , char *argument )
 	send_to_char( "> you move to the new area.\n\r", ch );
 	act(AT_GREEN, "> $n moves to a new area.", ch, NULL, NULL, TO_ROOM );
 
+	if (number_range(1, 10) == 10)
 	reset_all();
 
 	char_from_room( ch );
@@ -2070,7 +2082,6 @@ void followconst ( CHAR_DATA *ch , char *argument )
 
 	if ( !IS_NPC(ch) && !ch->pcdata->learned[gsn_spacecraft] )
 	{
-		send_to_char("You do not know how to explore.\n\r", ch );
 		return;
 	}
 
@@ -3356,7 +3367,7 @@ void followconst ( CHAR_DATA *ch , char *argument )
 		}
 		else if (roomnoise == 2){
 			strcat( bufrdesc, "You can hear water drip from the ceiling. ");
-			SET_BIT( nRoom->room_flags , ROOM_FOUNTAIN );
+			SET_BIT( nRoom->room_flags2 , ROOM_FOUNTAIN );
 		}
 		else {
 			strcat( bufrdesc, "A monotonous hum fills this room. ");
@@ -3623,7 +3634,7 @@ void followconst ( CHAR_DATA *ch , char *argument )
 
 		if (roomnoise == 1){
 			strcat( bufrdesc, "You hear the rushing of water nearby. ");
-			SET_BIT( nRoom->room_flags , ROOM_FOUNTAIN );
+			SET_BIT( nRoom->room_flags2 , ROOM_FOUNTAIN );
 		}
 		else if (roomnoise == 2){
 			strcat( bufrdesc, "A pool of slime is blubbering. ");
@@ -4020,7 +4031,7 @@ void followconst ( CHAR_DATA *ch , char *argument )
 	}
 
 	// has another exit
-
+	if (number_range(1, 10) == 10)
 	reset_all();
 
 	SET_BIT( ch->in_room->area->flags , AFLAG_MODIFIED );
