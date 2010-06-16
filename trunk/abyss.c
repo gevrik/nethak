@@ -66,12 +66,13 @@ void do_claim ( CHAR_DATA *ch , char *argument )
 
 	for ( obj = ch->last_carrying; obj; obj = obj->prev_content )
 	{
-		if (obj->item_type == ITEM_TOKEN)
+		if (obj->item_type == ITEM_TOKEN && checktoken == FALSE){
 			checktoken = TRUE;
 			power = obj->level;
 			separate_obj(obj);
 			obj_from_char(obj);
 			extract_obj( obj );
+		}
 	}
 
 	if ( !checktoken )

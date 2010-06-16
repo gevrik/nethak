@@ -15,7 +15,7 @@ extern int top_r_vnum;
 void do_jobs( CHAR_DATA *ch, char *argument )
 {
 
-	// 1 : FEDEX
+	// 1 : FEDEXsh
 	// 2 : RESOURCE HUNT
 
 	ROOM_INDEX_DATA *location;
@@ -293,12 +293,13 @@ void do_completejob( CHAR_DATA *ch, char *argument )
 
 		for ( obj = ch->last_carrying; obj; obj = obj->prev_content )
 		{
-			if ( obj->pIndexData->vnum == tobj->vnum )
+			if ( obj->pIndexData->vnum == tobj->vnum && checkresource == FALSE ){
 			checkresource = TRUE;
 			gain = obj->cost * 50;
 			separate_obj( obj );
 			obj_from_char( obj );
 			extract_obj( obj );
+			}
 		}
 
 		if ( !checkresource )
