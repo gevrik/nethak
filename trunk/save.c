@@ -288,6 +288,16 @@ void fwrite_char( CHAR_DATA *ch, FILE *fp )
            fprintf( fp, "Homesyssize      %d\n",          ch->pcdata->homesyssize );
     if ( ch->pcdata->homesmetro != NULL )
            fprintf( fp, "Homesmetro      %d\n",          ch->pcdata->homesmetro );
+    if ( ch->pcdata->mission_active != NULL )
+               fprintf( fp, "Missionactive      %d\n",          ch->pcdata->mission_active );
+    if ( ch->pcdata->mission_type != NULL )
+               fprintf( fp, "Missiontype      %d\n",          ch->pcdata->mission_type );
+    if ( ch->pcdata->mission_fails != NULL )
+                   fprintf( fp, "Missionfails      %d\n",          ch->pcdata->mission_fails );
+    if ( ch->pcdata->mission_targetid != NULL )
+               fprintf( fp, "Missiontargetid      %ld\n",          ch->pcdata->mission_targetid );
+    if ( ch->pcdata->mission_target && ch->pcdata->mission_target[0] != '\0' )
+      fprintf( fp, "Missiontarget   %s~\n",	ch->pcdata->mission_target	);
     fprintf( fp, "HpManaMove   %d %d 0 0 %d %d\n",
 	ch->hit, ch->max_hit, ch->move, ch->max_move );
     fprintf( fp, "Force        %d %d %d %d\n", ch->perm_frc, ch->mod_frc, ch->mana, ch->max_mana );
@@ -1292,6 +1302,14 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload )
 	    KEY( "Minsnoop",	ch->pcdata->min_snoop,	fread_number( fp ) );
 	    KEY( "Mobinvis",	ch->mobinvis,		fread_number( fp ) );
 	    KEY( "MaxCargo",    ch->pcdata->maxcargo,   fread_number( fp ) );
+
+	    KEY( "Missionactive",	ch->pcdata->mission_active, fread_number( fp ) );
+	    KEY( "Missiontype",	ch->pcdata->mission_type, fread_number( fp ) );
+	    KEY( "Missionfails",	ch->pcdata->mission_fails, fread_number( fp ) );
+	    KEY( "Missiontargetid",	ch->pcdata->mission_targetid, fread_number( fp ) );
+
+	    KEY( "Missiontarget", ch->pcdata->mission_target, fread_string_nohash( fp ) );
+
 	    break;
 
 	case 'N':

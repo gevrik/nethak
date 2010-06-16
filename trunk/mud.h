@@ -2185,6 +2185,12 @@ struct	pc_data
     int         homesystemio;
     sh_int         homesyssize;
     int         homesmetro;
+    sh_int		mission_active;
+    sh_int		mission_type;
+    char *		mission_target;
+    long			mission_targetid;
+    sh_int         mission_fails;
+
 };
 
 
@@ -3496,6 +3502,8 @@ DECLARE_DO_FUN(	do_redit	);
 DECLARE_DO_FUN( do_regoto       );
 DECLARE_DO_FUN(	do_remove	);
 DECLARE_DO_FUN(	do_renamenode );
+DECLARE_DO_FUN(	do_jobs );
+DECLARE_DO_FUN(	do_completejob );
 DECLARE_DO_FUN(	do_repair	);
 DECLARE_DO_FUN(	do_repairset	);
 DECLARE_DO_FUN(	do_repairshops	);

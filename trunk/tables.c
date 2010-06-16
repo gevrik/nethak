@@ -135,6 +135,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_coding" ))		return do_coding;
 	if ( !str_cmp( name, "do_commands" ))		return do_commands;
 	if ( !str_cmp( name, "do_compare" ))		return do_compare;
+	if ( !str_cmp( name, "do_completejob" ))		return do_completejob;
 	#ifdef MCCP
 		if ( !str_cmp( name, "do_compress" ))		return do_compress;
 	#endif
@@ -251,6 +252,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_invis" ))		return do_invis;
 	break;
     case 'j':
+    	if ( !str_cmp( name, "do_jobs" ))		return do_jobs;
         break;
     case 'k':
 	if ( !str_cmp( name, "do_kick" ))		return do_kick;
@@ -978,6 +980,8 @@ char *skill_name( DO_FUN *skill )
     if ( skill == do_regoto )		return "do_regoto";
     if ( skill == do_remove )		return "do_remove";
     if ( skill == do_renamenode )		return "do_renamenode";
+    if ( skill == do_jobs )		return "do_jobs";
+    if ( skill == do_completejob )		return "do_completejob";
     if ( skill == do_repair )		return "do_repair";
     if ( skill == do_repairset )	return "do_repairset";
     if ( skill == do_repairshops )	return "do_repairshops";

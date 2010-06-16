@@ -129,8 +129,8 @@ void reset_all() {
 				vnum = MOB_VNUM_WAITER;
 			if (IS_SET(pRoomIndex->room_flags, ROOM_GARAGE ))
 				vnum = MOB_VNUM_MECHANIC;
-			if (IS_SET(pRoomIndex->room_flags, ROOM_EMPLOYMENT ))
-				vnum = MOB_VNUM_JOB_OFFICER;
+			//if (IS_SET(pRoomIndex->room_flags, ROOM_EMPLOYMENT ))
+			//	vnum = MOB_VNUM_JOB_OFFICER;
 
 			if (vnum > 0) {
 				found = FALSE;
