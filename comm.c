@@ -1744,6 +1744,8 @@ void show_title( DESCRIPTOR_DATA *d )
 void nanny( DESCRIPTOR_DATA *d, char *argument )
 {
 	char buf[MAX_STRING_LENGTH];
+    ROOM_INDEX_DATA	*room;
+    AREA_DATA		*tarea;
 	CHAR_DATA *ch;
 	//CLAN_DATA *clan;
 	char *pwdnew;
@@ -1753,6 +1755,7 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 	BAN_DATA *pban;
 	bool fOld, chk;
 	OBJ_DATA *obj;
+	int metrocount;
 
 	if( d->connected != CON_NOTE_TEXT )
 	{
@@ -2459,6 +2462,36 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 
 				  }
 
+				  if (ch->pcdata->homesmetro != 0)
+				  {
+					  metrocount = 0;
+
+				    for ( tarea = first_area; tarea; tarea = tarea->next )
+				    {
+					if ( !str_cmp( tarea->name, "metropolis" ) )
+					{
+				          for ( room = tarea->first_room; room ; room = room->next_in_area ){
+				        	  if ( !str_cmp( room->owner, ch->name ) )
+				        	  {
+				        		  metrocount += ( room->level + 1 );
+				        	  }
+				          }
+					}
+				    }
+
+				    //ch_printf(ch,"> you own %d levels of Metropolis nodes\n\r", ch->pcdata->homesmetro);
+				    //ch_printf(ch,"> metrocount: %d \n\r", metrocount);
+
+				    if (ch->pcdata->homesmetro > metrocount){
+				    	ch_printf(ch,"> lost %d levels of Metropolis nodes since last login\n\r", (ch->pcdata->homesmetro - metrocount));
+				    	ch->pcdata->homesmetro = metrocount;
+				    }
+				    else
+				    {
+				    	ch_printf(ch,"> you own %d levels of Metropolis nodes\n\r", ch->pcdata->homesmetro);
+				    }
+				  }
+
 					do_look( ch, "auto" );
 
 				//mail_count(ch);
@@ -2500,7 +2533,7 @@ bool check_parse_name( char *name )
 	 */
 	if ( is_name( name, "all auto someone immortal self god supreme demigod dog guard cityguard cat cornholio spock hicaine hithoric death ass fuck shit piss crap quit" ) )
 		return FALSE;
-	if ( is_name( name, "luke darth vader skywalker han solo liea leia emporer palpatine chewie chewbacca lando anakin boba fett obiwan kenobi durga" ) )
+	if ( is_name( name, "durga unknown government" ) )
 		return FALSE;
 
 	/*

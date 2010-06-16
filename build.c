@@ -54,7 +54,7 @@ char *	const	r_flags	[] =
 char * const r_flags2 [] =
 {
 "intrusion", "monitoring", "cyborg", "mutant", "fountain", "shopping",
-"food", "deadend", "homesysio", "r09", "r10", "r11",
+"food", "deadend", "homesysio", "claimed", "r10", "r11",
 "r12", "r13", "r14", "r15", "r16", "r17", "r18", "r19", "r20", "r21", "r22", "r23",
 "r24", "r25", "r26", "r27", "r28", "r29", "r30", "r31"
 };
@@ -99,7 +99,7 @@ char *	const	o_types	[] =
 "utility_class", "blaster_class", "utility_patch", "devkit", "blade_class",
 "compiler", "artefact", "func_var_one", "func_var_two", "comlink",
 "medmod", "def_class", "app_class", "magnet",  "parser",
-"device", "droid_corpse", "resourceb", "snippet", "datacube"
+"device", "droid_corpse", "resourceb", "snippet", "datacube", "token"
 };
 
 char *	const	a_types	[] =
@@ -4805,15 +4805,16 @@ void fold_area( AREA_DATA *tarea, char *filename, bool install )
 	fprintf( fpout, "%s~\n",	room->name			);
 	fprintf( fpout, "%s~\n",	strip_cr( room->description )	);
 	fprintf( fpout, "%s~\n",	room->owner			);
-	if ( (room->tele_delay > 0 && room->tele_vnum > 0) || room->tunnel > 0 || room->seccode > 0 || room->level > 0 )
-	  fprintf( fpout, "0 %d %d %d %d %ld %d %d %d\n",	room->room_flags,
+	if ( (room->tele_delay > 0 && room->tele_vnum > 0) || room->tunnel > 0 || room->seccode > 0 || room->level > 0 || room->claimpower > 0 )
+	  fprintf( fpout, "0 %d %d %d %d %ld %d %d %d %d\n",	room->room_flags,
 						room->sector_type,
 						room->room_flags2,
 						room->tele_delay,
 						room->tele_vnum,
 						room->tunnel,
 						room->seccode,
-						room->level );
+						room->level,
+						room->claimpower);
 	else
 	  fprintf( fpout, "0 %d %d %d\n",	room->room_flags,
 					room->sector_type, room->room_flags2	);
@@ -5162,6 +5163,7 @@ void do_rlist( CHAR_DATA *ch, char *argument )
 	return;
     }
 
+    // loop through all rooms
     for ( tarea = first_area; tarea; tarea = tarea->next )
     {
 	if ( !str_cmp( tarea->name, arg ) )

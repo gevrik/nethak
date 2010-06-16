@@ -85,8 +85,7 @@ void reset_all() {
 							char_to_room(mob, pRoomIndex);
 							mob->hit = 100;
 							mob->max_hit = 100;
-							//if (room_is_dark(pRoomIndex))
-								SET_BIT(mob->affected_by, AFF_INFRARED);
+								SET_BIT(mob->affected_by, AFF_TRUESIGHT);
 							if ((pObjIndex = get_obj_index(OBJ_VNUM_BLASTER))
 									!= NULL) {
 								obj = create_object(pObjIndex, mob->top_level);
@@ -899,7 +898,9 @@ void reset_all() {
 					continue;
 
 				vnum = 50;
-				int randmob = number_range(1, 3);
+
+				int randmob = number_range(1, 5);
+
 				if ( randmob == 1)
 				{
 
@@ -933,7 +934,7 @@ void reset_all() {
 				mob->name	= STRALLOC( "rogue hacker" );
 				STRFREE( mob->short_descr );
 				mob->short_descr	= STRALLOC( "rogue hacker" );
-				mob->gold = number_range(20, 40);
+				mob->gold = ( number_range(100, 200) * (pRoomIndex->level + 1) );
 
 				continue;
 				}
@@ -968,7 +969,7 @@ void reset_all() {
 					mob->short_descr	= STRALLOC( "netWatch scout" );
 					STRFREE( mob->long_descr );
 					mob->long_descr	= STRALLOC( "netWatch scout\n\r" );
-					mob->gold = number_range(10, 20);
+					mob->gold = ( number_range(50, 100) * (pRoomIndex->level + 1) );
 
 					continue;
 				}
@@ -995,7 +996,7 @@ void reset_all() {
 					mob->short_descr	= STRALLOC( "metropolis virus" );
 					STRFREE( mob->long_descr );
 					mob->long_descr	= STRALLOC( "metropolis virus\n\r" );
-					mob->gold = number_range(10, 20);
+					mob->gold = ( number_range(25, 50) * (pRoomIndex->level + 1) );
 
 					if ((pObjIndex = get_obj_index(OBJ_VNUM_BLASTER))
 							!= NULL) {
@@ -1004,6 +1005,43 @@ void reset_all() {
 						equip_char(mob, obj, WEAR_WIELD);
 					}
 					do_setblaster(mob, "full");
+
+					if ((pObjIndex = get_obj_index(OBJ_VNUM_TOKEN))
+							!= NULL) {
+						obj = create_object(pObjIndex, mob->top_level);
+						obj_to_char(obj, mob);
+					}
+
+					continue;
+				}
+				else
+				{
+					if (!(pMobIndex = get_mob_index(vnum))) {
+						bug("Reset_all: Missing mob (%d)", vnum);
+						return;
+					}
+					mob = create_mobile(pMobIndex);
+					SET_BIT(mob->affected_by, AFF_INFRARED);
+					char_to_room(mob, pRoomIndex);
+					mob->top_level = 5 * (pRoomIndex->level + 1);
+					mob->hit = 20 * (pRoomIndex->level + 1);
+					mob->max_hit = 20 * (pRoomIndex->level + 1);
+					mob->damroll = (pRoomIndex->level + 1);
+					mob->hitroll = (pRoomIndex->level + 1);
+
+					STRFREE( mob->name );
+					mob->name	= STRALLOC( "metropolis not" );
+					STRFREE( mob->short_descr );
+					mob->short_descr	= STRALLOC( "metropolis bot" );
+					STRFREE( mob->long_descr );
+					mob->long_descr	= STRALLOC( "metropolis bot\n\r" );
+					mob->gold = ( number_range(5, 10) * (pRoomIndex->level + 1) );
+
+					if ((pObjIndex = get_obj_index(OBJ_VNUM_TOKEN))
+							!= NULL) {
+						obj = create_object(pObjIndex, mob->top_level);
+						obj_to_char(obj, mob);
+					}
 
 					continue;
 				}

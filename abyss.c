@@ -10,6 +10,115 @@ extern int top_r_vnum;
 
 void followconst( CHAR_DATA *ch , char *argument );
 
+void do_claim ( CHAR_DATA *ch , char *argument )
+{
+
+	PLANET_DATA *planet;
+	CHAR_DATA *gch;
+	ROOM_INDEX_DATA * location;
+	bool checktoken;
+	int chance, power;
+	OBJ_DATA *obj;
+
+	location = ch->in_room;
+	planet = ch->in_room->area->planet;
+
+	if (IS_NPC(ch) || !ch->pcdata || !ch->in_room)
+		return;
+
+	/* can only claim nodes in Metropolis */
+	if ( str_cmp(planet->name, "metropolis") )
+	{
+		send_to_char("> &Ryou can only claim nodes in Metropolis&w\n\r", ch );
+		return;
+	}
+
+	if ( IS_SET( location->room_flags , ROOM_NOPEDIT ) )
+	{
+		send_to_char( "> &Ryou can not claim this node&w\n\r", ch );
+		return;
+	}
+
+	/* look for guards */
+	for ( gch = ch->in_room->first_person; gch; gch = gch->next_in_room )
+	{
+		if ( IS_NPC(gch) && IS_AWAKE(gch) )
+		{
+			act( AT_PLAIN, "> can not claim while $N is here",
+					ch, NULL, gch, TO_CHAR );
+			return;
+		}
+	}
+
+	if( !str_cmp(location->owner, ch->name) )
+	{
+		send_to_char( "> &Ythis is already your node&w\n\r", ch );
+		return;
+	}
+
+	if( !str_cmp(location->owner, "Wintermute") )
+	{
+		send_to_char( "> &Ryou can not claim this node&w\n\r", ch );
+		return;
+	}
+
+	checktoken = FALSE;
+
+	for ( obj = ch->last_carrying; obj; obj = obj->prev_content )
+	{
+		if (obj->item_type == ITEM_TOKEN)
+			checktoken = TRUE;
+			power = obj->level;
+			separate_obj(obj);
+			obj_from_char(obj);
+			extract_obj( obj );
+	}
+
+	if ( !checktoken )
+	{
+		send_to_char( "> &Ryou need a token&w\n\r", ch);
+		return;
+	}
+
+	chance = IS_NPC(ch) ? ch->top_level
+			: (int) (ch->pcdata->learned[gsn_spacecraft]);
+
+	if ( number_percent( ) > chance )
+	{
+		send_to_char( "> &Ryou fail to  make your claim&w\n\r", ch);
+		return;
+	}
+
+	location->claimpower += power;
+
+	if ( ( location->claimpower ) >= ( (location->level + 1) * 100 ) ){
+
+		if( !str_cmp(location->owner, "unknown") )
+		{
+			send_to_char( "> &Gyou have claimed the node&w\n\r", ch );
+			STRFREE( ch->in_room->owner );
+			ch->in_room->owner = STRALLOC( ch->name );
+			ch->pcdata->homesmetro = ch->pcdata->homesmetro + ((location->level + 1));
+			location->claimpower = 0;
+			SET_BIT( location->room_flags2 , ROOM_CLAIMED );
+		}
+		else{
+			send_to_char( "> &Gthe node is now neutral&w\n\r", ch );
+			STRFREE( ch->in_room->owner );
+			ch->in_room->owner = STRALLOC( "unknown" );
+			location->claimpower = 0;
+			REMOVE_BIT( location->room_flags2 , ROOM_CLAIMED );
+		}
+
+	}
+	else{
+		ch_printf( ch, "> &Gcurrent claim power: &G[&w+%d&G]&w &p[&w%d/%d&p]&w\n\r", power, location->claimpower, (location->level + 1 * 100) );
+	}
+
+
+		return;
+}
+
 void do_probe ( CHAR_DATA *ch , char *argument )
 {
 	CLAN_DATA * clan;

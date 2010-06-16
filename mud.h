@@ -1402,6 +1402,7 @@ typedef enum { SEX_NEUTRAL, SEX_MALE, SEX_FEMALE } sex_types;
 
 #define OBJ_VNUM_PACKAGE             100
 #define OBJ_VNUM_DATACUBE            103
+#define OBJ_VNUM_TOKEN            114
 
 /*
  * Item types.
@@ -1416,11 +1417,12 @@ typedef enum
   ITEM_CRYSTAL, ITEM_PLASTIC, ITEM_BATTERY, ITEM_TOOLKIT, ITEM_METAL,
   ITEM_OVEN, ITEM_MIRROR, ITEM_CIRCUIT, ITEM_SUPERCONDUCTOR, ITEM_COMLINK,
   ITEM_MEDPAC, ITEM_FABRIC, ITEM_RARE_METAL, ITEM_MAGNET, ITEM_THREAD,
-  ITEM_DEVICE, ITEM_DROID_CORPSE, ITEM_RESOURCE, ITEM_SNIPPET, ITEM_DATACUBE
+  ITEM_DEVICE, ITEM_DROID_CORPSE, ITEM_RESOURCE, ITEM_SNIPPET, ITEM_DATACUBE,
+  ITEM_TOKEN
 } item_types;
 
 
-#define MAX_ITEM_TYPE		     ITEM_DATACUBE
+#define MAX_ITEM_TYPE		     ITEM_TOKEN
 /*
  * Extra flags.
  * Used in #OBJECTS.
@@ -1562,6 +1564,7 @@ typedef enum
 #define ROOM_FOOD		BV06
 #define ROOM_DEADEND	BV07
 #define ROOM_HOMESYSIO 	BV08
+#define ROOM_CLAIMED 	BV09
 
 /*
  * Room flags.           Holy cow!  Talked about stripped away..
@@ -2399,6 +2402,7 @@ struct	room_index_data
     int			seccode;
     char * 		owner;
     sh_int		level;
+    int claimpower;
     int room_flags2;
 };
 
@@ -3218,6 +3222,7 @@ DECLARE_DO_FUN( do_autopilot  );
 DECLARE_DO_FUN( do_allspeeders  );
 DECLARE_DO_FUN( do_slicebank  );
 DECLARE_DO_FUN( do_probe  );
+DECLARE_DO_FUN( do_claim  );
 DECLARE_DO_FUN( do_slicefund  );
 DECLARE_DO_FUN( do_slicesnippets  );
 DECLARE_DO_FUN( do_inquire  );
