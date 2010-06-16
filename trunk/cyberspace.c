@@ -1344,18 +1344,18 @@ void do_foundorg( CHAR_DATA *ch, char *argument )
 	char filename[256];
 	CLAN_DATA *clan;
 	bool found;
-	int cost = 1000000;
+	int cost = 100000;
 
 	if ( !argument || argument[0] == '\0' )
 	{
 		send_to_char( "> &Ysyntax: foundorg <org name>&w\n\r", ch );
-		send_to_char( "> note: you need 1.000.000 credits\n\r", ch );
+		send_to_char( "> note: you need 100.000 credits\n\r", ch );
 		return;
 	}
 
 	if ( ch->gold < cost )
 	{
-		send_to_char( "> &Rinsufficient funds [1.000.000c needed]&w\n\r", ch );
+		send_to_char( "> &Rinsufficient funds [100.000c needed]&w\n\r", ch );
 		return;
 	}
 
