@@ -1030,7 +1030,7 @@ void reset_all() {
 					mob->hitroll = (pRoomIndex->level + 1);
 
 					STRFREE( mob->name );
-					mob->name	= STRALLOC( "metropolis not" );
+					mob->name	= STRALLOC( "metropolis bot" );
 					STRFREE( mob->short_descr );
 					mob->short_descr	= STRALLOC( "metropolis bot" );
 					STRFREE( mob->long_descr );

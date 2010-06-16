@@ -31,10 +31,28 @@
   Thats All....
  */
 
+//#include <stdio.h>
+//#include <stdarg.h>
+//#include <string.h>
+//#include "mud.h"
+
+
+#include <sys/types.h>
+#include <ctype.h>
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
+#include <time.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <dirent.h>
+#if defined(__CYGWIN__)
+#include <io.h>
+#else
+#include <sys/dir.h>
+#endif
 #include "mud.h"
+
 #include "mssp.h"
 
 
@@ -188,6 +206,22 @@ bool load_mssp_data( void )
 
    return found;
 }
+
+/*
+ * Read in a char.
+ */
+
+#if defined(KEY)
+#undef KEY
+#endif
+
+#define KEY( literal, field, value )					\
+				if ( !str_cmp( word, literal ) )	\
+				{					\
+				    field  = value;			\
+				    fMatch = TRUE;			\
+				    break;				\
+				}
 
 void fread_mssp_info( FILE * fp )
 {
@@ -370,7 +404,7 @@ void show_mssp( CHAR_DATA * ch )
 
 void do_setmssp( CHAR_DATA *ch, const char* argument )
 {
-   char arg1[MIL];
+   char arg1[MAX_INPUT_LENGTH];
    char **strptr = NULL;
    bool *ynptr = NULL;
 
@@ -685,7 +719,7 @@ void send_mssp_data( DESCRIPTOR_DATA * d )
    write_to_descriptor( d, "\r\nMSSP-REPLY-START\r\n", 0 );
 
    mssp_reply( d, "HOSTNAME", "%s", mssp_info->hostname );
-   mssp_reply( d, "PORT", "%d", port );
+   //mssp_reply( d, "PORT", "%d", port );
    mssp_reply( d, "UPTIME", "%d", (int)mud_start_time );
    mssp_reply( d, "PLAYERS", "%d", player_count( ) );
    mssp_reply( d, "CODEBASE", "%s", codebase );
@@ -709,12 +743,12 @@ void send_mssp_data( DESCRIPTOR_DATA * d )
    mssp_reply( d, "MOBILES", "%d", top_mob_index );
    mssp_reply( d, "OBJECTS", "%d", top_obj_index );
    mssp_reply( d, "ROOMS", "%d", top_room );
-   mssp_reply( d, "RESETS", "%d", top_reset );
+   //mssp_reply( d, "RESETS", "%d", top_reset );
 //   mssp_reply( d, "MUDPROGS", "%d", top_prog );
-   mssp_reply( d, "CLASSES", "%d", MAX_CLASS );
+   //mssp_reply( d, "CLASSES", "%d", MAX_CLASS );
    mssp_reply( d, "LEVELS", "%d", MAX_LEVEL );
-   mssp_reply( d, "RACES", "%d", MAX_RACE );
-   mssp_reply( d, "SKILLS", "%d", num_skills );
+   //mssp_reply( d, "RACES", "%d", MAX_RACE );
+   //mssp_reply( d, "SKILLS", "%d", num_skills );
    mssp_reply( d, "WORLDS", "%d", mssp_info->worlds );
    mssp_reply( d, "ANSI", "%d", mssp_info->ansi );
    mssp_reply( d, "MCCP", "%d", mssp_info->mccp );

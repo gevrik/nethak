@@ -974,9 +974,9 @@ void do_makeplanet( CHAR_DATA *ch, char *argument )
 	return;
     }
 
-    if ( ch->gold < 500000 )
+    if ( ch->gold < 250000 )
     {
-    	send_to_char( "> it costs 500,000 credits to start system creation code\n\r", ch );
+    	send_to_char( "> it costs 250,000 credits to start system creation code\n\r", ch );
 	return;
     }
 
@@ -1127,9 +1127,9 @@ void do_makeplanet( CHAR_DATA *ch, char *argument )
     }
 
 
-    ch->gold -= 500000;
+    ch->gold -= 250000;
 
-    send_to_char( "> you spend 500,000 credits to start a system creation\n\r", ch );
+    send_to_char( "> you spend 250,000 credits to start a system creation\n\r", ch );
     echo_to_room( AT_WHITE , ch->in_room, "> a new system is created" );
 
 //    if (  number_percent() < 20 )
@@ -1264,10 +1264,6 @@ void do_planets( CHAR_DATA *ch, char *argument )
 		                   planet->governed_by ? planet->governed_by->name : "[none]" );
 		        ch_printf( ch, "%.1f\n\r", planet->pop_support );
 
-//        ch_printf( ch, "&G%-15s %-13s  %s    \n\r",
-//                   planet->name , starsystem->name ,
-//                   planet->governed_by ? planet->governed_by->name : "" );
-        //ch_printf( ch, "%.1f\n\r", planet->pop_support );
         if ( IS_IMMORTAL(ch) && !planet->area )
         {
           ch_printf( ch, "&R> warning - this system is not attached to region!&G");

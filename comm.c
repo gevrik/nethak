@@ -26,6 +26,8 @@
 #include <arpa/telnet.h>
 #include <netdb.h>
 
+//#include "mssp.h"
+
 #define MAX_NEST	100
 static	OBJ_DATA *	rgObjNest	[MAX_NEST];
 
@@ -1793,6 +1795,15 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 			return;
 		}
 
+//	    if( !str_cmp( argument, "MSSP-REQUEST" ) )
+//	    {
+//	        send_mssp_data( d );
+//	      //Uncomment below if you want to know when an MSSP request occurs
+//	      //log_printf( "IP: %s requested MSSP data!", d->host );
+//	        close_socket( d, FALSE );
+//	        return;
+//	    }
+
 		if ( !str_cmp( argument, "New" ) )
 		{
 			if (d->newstate == 0)
@@ -2173,6 +2184,7 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 				{
 
 					ch->gold = 10000;
+					ch->pcdata->bank = 10000;
 
 					ch->perm_lck = number_range(6, 18);
 					ch->perm_frc = URANGE( 0 , ch->perm_frc , 20 );

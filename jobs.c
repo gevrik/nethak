@@ -118,7 +118,7 @@ void do_jobs( CHAR_DATA *ch, char *argument )
 
         		resourceneeded = number_range(28, 38);
 
-        		if (resourceneeded == 23)
+        		if (resourceneeded == 32)
         		{
         	    	send_to_char( "> &Rno missions available currently&w\n\r", ch );
         	    	return;
@@ -295,7 +295,7 @@ void do_completejob( CHAR_DATA *ch, char *argument )
 		{
 			if ( obj->pIndexData->vnum == tobj->vnum && checkresource == FALSE ){
 			checkresource = TRUE;
-			gain = obj->cost * 50;
+			gain = obj->cost * 20;
 			separate_obj( obj );
 			obj_from_char( obj );
 			extract_obj( obj );
