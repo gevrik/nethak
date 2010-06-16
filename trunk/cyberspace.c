@@ -1310,6 +1310,13 @@ void do_examineobject( CHAR_DATA *ch, char *argument )
 
 	}
 	
+	if ( obj->item_type == ITEM_TOKEN )
+	{
+
+		ch_printf( ch, "> &Gpower:&W %d&w\n\r", obj->level );
+
+	}
+
 		if ( obj->item_type == ITEM_MEDPAC )
 	{
 

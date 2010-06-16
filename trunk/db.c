@@ -1097,7 +1097,7 @@ void load_rooms( AREA_DATA *tarea, FILE *fp )
 	int iHash;
 	bool tmpBootDb;
 	bool oldroom;
-	int x1, x2, x3, x4, x5, x6, x7, x8, x9;
+	int x1, x2, x3, x4, x5, x6, x7, x8, x9, x10;
 
 	letter				= fread_letter( fp );
 	if ( letter != '#' )
@@ -1163,9 +1163,9 @@ void load_rooms( AREA_DATA *tarea, FILE *fp )
 
 	/* Area number			  fread_number( fp ); */
 	ln = fread_line( fp );
-	x1=x2=x3=x4=x5=x6=x7=x8=x9=0;
-	sscanf( ln, "%d %d %d %d %d %d %d %d %d",
-	      &x1, &x2, &x3, &x4, &x5, &x6, &x7, &x8, &x9 );
+	x1=x2=x3=x4=x5=x6=x7=x8=x9=x10=0;
+	sscanf( ln, "%d %d %d %d %d %d %d %d %d %d",
+	      &x1, &x2, &x3, &x4, &x5, &x6, &x7, &x8, &x9, &x10 );
 
 	pRoomIndex->room_flags		= x2;
 	pRoomIndex->sector_type		= x3;
@@ -1175,6 +1175,7 @@ void load_rooms( AREA_DATA *tarea, FILE *fp )
 	pRoomIndex->tunnel		= x7;
 	pRoomIndex->seccode		= x8;
 	pRoomIndex->level		= x9;
+	pRoomIndex->claimpower	= x10;
 
 	if (pRoomIndex->sector_type < 0 || pRoomIndex->sector_type == SECT_MAX)
 	{
@@ -1746,6 +1747,7 @@ OBJ_DATA *create_object( OBJ_INDEX_DATA *pObjIndex, int level )
     case ITEM_LIGHT:
     case ITEM_SNIPPET:
     case ITEM_DATACUBE:
+    case ITEM_TOKEN:
     case ITEM_FURNITURE:
     case ITEM_TRASH:
     case ITEM_CONTAINER:

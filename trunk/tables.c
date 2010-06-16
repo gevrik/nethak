@@ -119,6 +119,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_chaff" ))		return do_chaff;
 	if ( !str_cmp( name, "do_channels" ))		return do_channels;
 	if ( !str_cmp( name, "do_circle" ))		return do_circle;
+	if ( !str_cmp( name, "do_claim" ))		return do_claim;
 	if ( !str_cmp( name, "do_clans" ))		return do_clans;
 	if ( !str_cmp( name, "do_clan_donate" ))	return do_clan_donate;
 	if ( !str_cmp( name, "do_clan_withdraw" ))	return do_clan_withdraw;
@@ -634,6 +635,7 @@ char *skill_name( DO_FUN *skill )
     if ( skill == do_adecline )          return "do_adecline";
     if ( skill == do_slicebank )     return "do_slicebank";
     if ( skill == do_probe )     return "do_probe";
+    if ( skill == do_claim )     return "do_claim";
     if ( skill == do_slicefund )     return "do_slicefund";
     if ( skill == do_slicesnippets )     return "do_slicesnippets";
     if ( skill == do_nodeupgrade )     return "do_nodeupgrade";

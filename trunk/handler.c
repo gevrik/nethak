@@ -2133,6 +2133,10 @@ bool can_see( CHAR_DATA *ch, CHAR_DATA *victim )
 	&&   !victim->fighting )
 	  return FALSE;
 
+	if ( IS_AFFECTED(victim, AFF_SNEAK)
+	&&   !IS_AFFECTED(ch, AFF_DETECT_HIDDEN)
+	&&   !victim->fighting )
+	  return FALSE;
 
 	if ( IS_AFFECTED(victim, AFF_INVISIBLE)
 	&&  !IS_AFFECTED(ch, AFF_DETECT_INVIS) )

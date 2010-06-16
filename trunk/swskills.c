@@ -5049,6 +5049,11 @@ void do_survey ( CHAR_DATA *ch , char *argument )
 	ch_printf( ch, "&Wsector:&Y %s\n\r", sector_name[room->sector_type] );
 	ch_printf( ch, "&Wowner:&Y %s\n\r", room->owner );
 
+	if ( !str_cmp(ch->in_room->area->planet->name, "metropolis") )
+	{
+		ch_printf( ch, "&Wclaimpower:&Y %d/%d\n\r", room->claimpower, ((room->level + 1) * 100) );
+	}
+
 
 	if ( IS_SET( room->room_flags , ROOM_DARK) )
 		ch_printf( ch, "&Y   node is always dark\n\r" );

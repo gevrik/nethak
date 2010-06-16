@@ -32,6 +32,7 @@ void	mobile_update	args( ( void ) );
 //void	weather_update	args( ( void ) );
 void	update_taxes	args( ( void ) );
 void	update_taxnodes	args( ( void ) );
+void	update_metronodes	args( ( void ) );
 void	update_threat	args( ( void ) );
 void	char_update	args( ( void ) );
 void    bank_update	args( ( void ) );
@@ -704,6 +705,34 @@ void update_taxnodes( void )
 		och->pcdata->bank += paya;
 
 		ch_printf( ch, "> %d credits received for nodes\n\r" ,
+				paya );
+
+	}
+}
+
+void update_metronodes( void )
+{
+	DESCRIPTOR_DATA *d;
+	CHAR_DATA *ch;
+	CHAR_DATA *och;
+	int paya;
+
+	for ( d = last_descriptor; d; d = d->prev )
+	{
+
+		if ( (d->connected != CON_PLAYING && d->connected != CON_EDITING)
+				|| d->original)
+			continue;
+		ch    = d->character;
+		och   = d->original ? d->original : d->character;
+
+		if ( och->pcdata->homesmetro <= 0 )
+			continue;
+
+		paya = och->pcdata->homesmetro * 25;
+		och->pcdata->bank += paya;
+
+		ch_printf( ch, "> %d credits received for claimed Metropolis nodes\n\r" ,
 				paya );
 
 	}
@@ -2005,6 +2034,7 @@ void update_handler( void )
 		pulse_area	= number_range( PULSE_AREA / 2, 3 * PULSE_AREA / 2 );
 		reset_all( );
 		update_taxnodes();
+		update_metronodes();
 	}
 
 	if ( --pulse_savearea     <= 0 )
