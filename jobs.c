@@ -91,7 +91,12 @@ void do_jobs( CHAR_DATA *ch, char *argument )
         break;
 
         case 2:
-        	obj = get_obj_index( ch->pcdata->mission_targetid );
+
+			if (!(obj = get_obj_index( ch->pcdata->mission_targetid ))) {
+				send_to_char( "> &Rsomething went wrong - contact Wintermute&w\n\r", ch );
+				return;
+			}
+        	//obj = get_obj_index( ch->pcdata->mission_targetid );
         	ch_printf( ch, "> &Gtype:&W %s&w &Gtarget:&W %s&w &Greward:&W %dc&w\n\r", obj->name, ch->pcdata->mission_target, (obj->cost * 50) );
         break;
 
@@ -127,7 +132,13 @@ void do_jobs( CHAR_DATA *ch, char *argument )
         		ch->pcdata->mission_targetid = resourceneeded;
         		ch->pcdata->mission_target = STRALLOC( ch->in_room->area->planet->name );
 
-        		obj = get_obj_index( resourceneeded );
+    			if (!(obj = get_obj_index( resourceneeded ))) {
+    				send_to_char( "> &Rsomething went wrong - contact Wintermute&w\n\r", ch );
+    				return;
+    			}
+
+
+        		//obj = get_obj_index( resourceneeded );
 
         		ch_printf( ch, "> &Gmission:&W resource [%s] to [%s]&w\n\r", obj->name, ch->pcdata->mission_target );
 
@@ -143,7 +154,13 @@ void do_jobs( CHAR_DATA *ch, char *argument )
     		ch->pcdata->mission_targetid = resourceneeded;
     		ch->pcdata->mission_target = STRALLOC( ch->in_room->area->planet->name );
 
-    		obj = get_obj_index( resourceneeded );
+			if (!(obj = get_obj_index( resourceneeded ))) {
+				send_to_char( "> &Rsomething went wrong - contact Wintermute&w\n\r", ch );
+				return;
+			}
+
+
+//    		obj = get_obj_index( resourceneeded );
 
     		ch_printf( ch, "> &Gmission:&W resource [%s] to [%s]&w\n\r", obj->name, ch->pcdata->mission_target );
 
@@ -159,7 +176,13 @@ void do_jobs( CHAR_DATA *ch, char *argument )
     		ch->pcdata->mission_targetid = resourceneeded;
     		ch->pcdata->mission_target = STRALLOC( ch->in_room->area->planet->name );
 
-    		obj = get_obj_index( resourceneeded );
+			if (!(obj = get_obj_index( resourceneeded ))) {
+				send_to_char( "> &Rsomething went wrong - contact Wintermute&w\n\r", ch );
+				return;
+			}
+
+
+    		//obj = get_obj_index( resourceneeded );
 
     		ch_printf( ch, "> &Gmission:&W resource [%s] to [%s]&w\n\r", obj->name, ch->pcdata->mission_target );
 
@@ -289,7 +312,13 @@ void do_completejob( CHAR_DATA *ch, char *argument )
     	}
 
     	checkresource = FALSE;
-    	tobj = get_obj_index( ch->pcdata->mission_targetid );
+
+		if (!(tobj = get_obj_index( ch->pcdata->mission_targetid ))) {
+			send_to_char( "> &Rsomething went wrong - contact Wintermute&w\n\r", ch );
+			return;
+		}
+
+//    	tobj = get_obj_index( ch->pcdata->mission_targetid );
 
 		for ( obj = ch->last_carrying; obj; obj = obj->prev_content )
 		{

@@ -848,35 +848,12 @@ void ShowMap( CHAR_DATA *ch, int min, int max, int size, int center )
 
 void do_mapper( CHAR_DATA *ch, char *argument )
 {
-    int size,center,x,y,min,max,looper;
+    int size,center,x,y,min,max;
     char arg1[MAX_STRING_LENGTH];
-    char catbuf[MAX_STRING_LENGTH];
-    char outbuf[MAX_STRING_LENGTH];
+
 
     one_argument( argument, arg1 );
 
- //   if ( !str_cmp( argument, "legend" ) )
- //   {
-//        sprintf( outbuf, "Map Legend:\n\r" );
-//        for ( looper = 0; looper < SECT_TOP; looper++ )
-//        {
-//            sprintf( catbuf, "%s%s^x&w : %s\n\r" ,
-//                     map_info[looper].display_color,
-//                     map_info[looper].display_code,
-//                     map_info[looper].desc );
-//            safe_strcat( MAX_STRING_LENGTH, outbuf, catbuf );
-//        }
-//        for ( looper = 0; looper < 5; looper++ )
-//        {
-//            sprintf( catbuf, "%s%s^x&w : %s\n\r" ,
-//                     door_info[looper].display_color,
-//                     door_info[looper].display_code,
-//                     door_info[looper].desc );
-//            safe_strcat( MAX_STRING_LENGTH, outbuf, catbuf );
-//        }
-//        send_to_char( outbuf, ch );
-//        return;
- //   }
 
     size = ( is_number(  arg1 ) ) ?
         atoi (arg1) :

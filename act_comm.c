@@ -1632,7 +1632,7 @@ void do_group( CHAR_DATA *ch, char *argument )
 	  send_to_char( "> no eligible group members\n\r", ch );
 	else
 	{
-        act( AT_ACTION, "> $n groups $s followers", ch, NULL, victim, TO_ROOM );
+       act( AT_ACTION, "> $n groups $s followers", ch, NULL, NULL, TO_ROOM );
 	   send_to_char( "> grouping followers\n\r", ch );
 	}
     return;

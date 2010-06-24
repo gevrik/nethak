@@ -133,9 +133,6 @@ void do_makehelp( CHAR_DATA *ch, char *argument )
    OBJ_INDEX_DATA *pObjIndex;
    //OBJ_DATA *pObjIndex;
    int hash;
-   char buf[MAX_INPUT_LENGTH];
-   char buf2[MAX_STRING_LENGTH];
-   char buf3[MAX_STRING_LENGTH*2];
 
    sh_int number = 0; /* Which helpfile we're on, allows me to link up the helpfiles by a number. */
    fclose(fpReserve);
@@ -238,9 +235,6 @@ void do_makehelpmobs( CHAR_DATA *ch, char *argument )
    FILE *fp;
    MOB_INDEX_DATA *mob;
    int hash;
-   char buf[MAX_INPUT_LENGTH];
-   char buf2[MAX_STRING_LENGTH];
-   char buf3[MAX_STRING_LENGTH*2];
 
    sh_int number = 0; /* Which helpfile we're on, allows me to link up the helpfiles by a number. */
    fclose(fpReserve);

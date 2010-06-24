@@ -2986,14 +2986,10 @@ OBJ_DATA *group_object( OBJ_DATA *obj1, OBJ_DATA *obj2 )
 	return obj1;
 
     if ( obj1->pIndexData == obj2->pIndexData
-/*
-    &&	!obj1->pIndexData->mudprogs
-    &&  !obj2->pIndexData->mudprogs
-*/
-    &&   QUICKMATCH( obj1->name,	obj2->name )
-    &&   QUICKMATCH( obj1->short_descr,	obj2->short_descr )
-    &&   QUICKMATCH( obj1->description,	obj2->description )
-    &&   QUICKMATCH( obj1->action_desc,	obj2->action_desc )
+    &&   !str_cmp( obj1->name,	obj2->name )
+    &&   !str_cmp( obj1->short_descr,	obj2->short_descr )
+    &&   !str_cmp( obj1->description,	obj2->description )
+    &&   !str_cmp( obj1->action_desc,	obj2->action_desc )
     &&   obj1->item_type	== obj2->item_type
     &&   obj1->extra_flags	== obj2->extra_flags
     &&   obj1->magic_flags	== obj2->magic_flags

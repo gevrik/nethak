@@ -2183,13 +2183,13 @@ struct	pc_data
     int         cargo;
     int         cargotype;
     int         homesystemio;
-    sh_int         homesyssize;
+    int         homesyssize;
     int         homesmetro;
-    sh_int		mission_active;
-    sh_int		mission_type;
+    int		mission_active;
+    int		mission_type;
     char *		mission_target;
     long			mission_targetid;
-    sh_int         mission_fails;
+    int         mission_fails;
 
 };
 
@@ -2346,7 +2346,6 @@ struct	system_data
     int		alltimemax;		/* Maximum players ever	  */
     char *	time_of_max;		/* Time of max ever */
     char *	officials;		/* Elected Officials */
-    char *	mud_name;		/* Elected Officials */
     bool	NO_NAME_RESOLVING;	/* Hostnames are not resolved  */
     bool    	DENY_NEW_PLAYERS;	/* New players cannot connect  */
     bool	WAIT_FOR_AUTH;		/* New players must be auth'ed */

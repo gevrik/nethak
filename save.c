@@ -253,7 +253,6 @@ void fwrite_char( CHAR_DATA *ch, FILE *fp )
     ALIAS_DATA *pal;
     int sn, track, i;
     SKILLTYPE *skill;
-    int pos;
 
     fprintf( fp, "#%s\n", IS_NPC(ch) ? "MOB" : "PLAYER"		);
 
@@ -278,23 +277,23 @@ void fwrite_char( CHAR_DATA *ch, FILE *fp )
 	    : ch->in_room->vnum );
     if ( ch->plr_home != NULL )
        fprintf( fp, "PlrHome      %ld\n",          ch->plr_home->vnum );
-    if ( ch->pcdata->roomconstruct != NULL )
+    if ( ch->pcdata->roomconstruct != 0 )
        fprintf( fp, "RoomConst      %ld\n",          ch->pcdata->roomconstruct );
-    if ( ch->pcdata->constructlevel != NULL )
+    if ( ch->pcdata->constructlevel != 0 )
        fprintf( fp, "ConstLevel      %d\n",          ch->pcdata->constructlevel );
-    if ( ch->pcdata->homesystemio != NULL )
+    if ( ch->pcdata->homesystemio != 0 )
            fprintf( fp, "Homesystemio      %d\n",          ch->pcdata->homesystemio );
-    if ( ch->pcdata->homesyssize != NULL )
+    if ( ch->pcdata->homesyssize != 0 )
            fprintf( fp, "Homesyssize      %d\n",          ch->pcdata->homesyssize );
-    if ( ch->pcdata->homesmetro != NULL )
+    if ( ch->pcdata->homesmetro != 0 )
            fprintf( fp, "Homesmetro      %d\n",          ch->pcdata->homesmetro );
-    if ( ch->pcdata->mission_active != NULL )
+    if ( ch->pcdata->mission_active != 0 )
                fprintf( fp, "Missionactive      %d\n",          ch->pcdata->mission_active );
-    if ( ch->pcdata->mission_type != NULL )
+    if ( ch->pcdata->mission_type != 0 )
                fprintf( fp, "Missiontype      %d\n",          ch->pcdata->mission_type );
-    if ( ch->pcdata->mission_fails != NULL )
+    if ( ch->pcdata->mission_fails != 0 )
                    fprintf( fp, "Missionfails      %d\n",          ch->pcdata->mission_fails );
-    if ( ch->pcdata->mission_targetid != NULL )
+    if ( ch->pcdata->mission_targetid != 0 )
                fprintf( fp, "Missiontargetid      %ld\n",          ch->pcdata->mission_targetid );
     if ( ch->pcdata->mission_target && ch->pcdata->mission_target[0] != '\0' )
       fprintf( fp, "Missiontarget   %s~\n",	ch->pcdata->mission_target	);
@@ -615,23 +614,40 @@ void fwrite_obj( CHAR_DATA *ch, OBJ_DATA *obj, FILE *fp, int iNest,
 
     if ( iNest )
 	fprintf( fp, "Nest         %d\n",	iNest		     );
+
     if ( obj->count > 1 )
 	fprintf( fp, "Count        %d\n",	obj->count	     );
-    if ( QUICKMATCH( obj->name, obj->pIndexData->name ) == 0 )
-	fprintf( fp, "Name         %s~\n",	obj->name	     );
-    if ( QUICKMATCH( obj->short_descr, obj->pIndexData->short_descr ) == 0 )
-	fprintf( fp, "ShortDescr   %s~\n",	obj->short_descr     );
-    if ( QUICKMATCH( obj->description, obj->pIndexData->description ) == 0 )
-	fprintf( fp, "Description  %s~\n",	obj->description     );
-    if ( QUICKMATCH( obj->action_desc, obj->pIndexData->action_desc ) == 0 )
-	fprintf( fp, "ActionDesc   %s~\n",	obj->action_desc     );
+
+    if( obj->name && ( !obj->pIndexData->name
+  	|| str_cmp( obj->name, obj->pIndexData->name ) ) )
+      fprintf( fp, "Name         %s~\n", obj->name );
+
+    if( obj->short_descr
+        && ( !obj->pIndexData->short_descr
+  	|| str_cmp( obj->short_descr, obj->pIndexData->short_descr ) ) )
+      fprintf( fp, "ShortDescr   %s~\n", obj->short_descr );
+
+    if( obj->description
+        && ( !obj->pIndexData->description
+  	|| str_cmp( obj->description, obj->pIndexData->description ) ) )
+      fprintf( fp, "Description  %s~\n", obj->description );
+
+    if( obj->action_desc
+        && ( !obj->pIndexData->action_desc
+  	|| str_cmp( obj->action_desc, obj->pIndexData->action_desc ) ) )
+      fprintf( fp, "ActionDesc   %s~\n", obj->action_desc );
+
     fprintf( fp, "Vnum         %ld\n",	obj->pIndexData->vnum	     );
+
     if ( os_type == OS_CORPSE && obj->in_room )
       fprintf( fp, "Room         %ld\n",   obj->in_room->vnum         );
+
     if ( obj->extra_flags != obj->pIndexData->extra_flags )
 	fprintf( fp, "ExtraFlags   %d\n",	obj->extra_flags     );
+
     if ( obj->wear_flags != obj->pIndexData->wear_flags )
 	fprintf( fp, "WearFlags    %d\n",	obj->wear_flags	     );
+
     wear_loc = -1;
     for ( wear = 0; wear < MAX_WEAR; wear++ )
 	for ( x = 0; x < MAX_LAYERS; x++ )
@@ -961,7 +977,6 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload )
     int x1, x2, x3, x4, x5, x6, x7;
     sh_int killcnt;
     bool fMatch;
-    int count = 0;
     time_t lastplayed;
     int sn, extra;
 
