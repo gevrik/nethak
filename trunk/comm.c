@@ -26,8 +26,6 @@
 #include <arpa/telnet.h>
 #include <netdb.h>
 
-//#include "mssp.h"
-
 #define MAX_NEST	100
 static	OBJ_DATA *	rgObjNest	[MAX_NEST];
 
@@ -434,7 +432,7 @@ int main( int argc, char **argv )
 	/*
 	 * Get the port number.
 	 */
-	port = 4000;
+	port = 7666;
 	if ( argc > 1 )
 	{
 		if ( !is_number( argv[1] ) )
@@ -1795,15 +1793,6 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 			return;
 		}
 
-//	    if( !str_cmp( argument, "MSSP-REQUEST" ) )
-//	    {
-//	        send_mssp_data( d );
-//	      //Uncomment below if you want to know when an MSSP request occurs
-//	      //log_printf( "IP: %s requested MSSP data!", d->host );
-//	        close_socket( d, FALSE );
-//	        return;
-//	    }
-
 		if ( !str_cmp( argument, "New" ) )
 		{
 			if (d->newstate == 0)
@@ -1937,7 +1926,7 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 			if ( wizlock && !IS_IMMORTAL(ch) )
 			{
 				write_to_buffer( d, "> the game is locked - only admins can connect now\n\r", 0 );
-				write_to_buffer( d, "> please try again later\n\r", 0 );
+				write_to_buffer( d, "> this is most probably for a patch or maintenance\n\r> please try again later\n\r", 0 );
 				close_socket( d, FALSE );
 				return;
 			}
@@ -2432,6 +2421,36 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 
 				ch->pcdata->board = &boards[DEFAULT_BOARD];
 
+				  if (ch->pcdata->homesmetro != 0)
+				  {
+					  metrocount = 0;
+
+				    for ( tarea = first_area; tarea; tarea = tarea->next )
+				    {
+					if ( !str_cmp( tarea->name, "metropolis" ) )
+					{
+				          for ( room = tarea->first_room; room ; room = room->next_in_area ){
+				        	  if ( !str_cmp( room->owner, ch->name ) )
+				        	  {
+				        		  metrocount += ( room->level + 1 );
+				        	  }
+				          }
+					}
+				    }
+
+				    //ch_printf(ch,"> you own %d levels of Metropolis nodes\n\r", ch->pcdata->homesmetro);
+				    //ch_printf(ch,"> metrocount: %d \n\r", metrocount);
+
+				    if (ch->pcdata->homesmetro > metrocount){
+				    	ch_printf(ch,"> lost %d levels of Metropolis nodes since last login\n\r", (ch->pcdata->homesmetro - metrocount));
+				    	ch->pcdata->homesmetro = metrocount;
+				    }
+				    else
+				    {
+				    	ch_printf(ch,"> you own %d levels of Metropolis nodes\n\r", ch->pcdata->homesmetro);
+				    }
+				  }
+
 				  long meantime = (time(NULL) - ch->pcdata->logouttime) / 360;
 				  if (meantime > 0 && meantime != 0) {
 				  sprintf( buf, "> hours since last session: %ld\n\r\n\r", meantime );
@@ -2472,36 +2491,6 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 
 					  }
 
-				  }
-
-				  if (ch->pcdata->homesmetro != 0)
-				  {
-					  metrocount = 0;
-
-				    for ( tarea = first_area; tarea; tarea = tarea->next )
-				    {
-					if ( !str_cmp( tarea->name, "metropolis" ) )
-					{
-				          for ( room = tarea->first_room; room ; room = room->next_in_area ){
-				        	  if ( !str_cmp( room->owner, ch->name ) )
-				        	  {
-				        		  metrocount += ( room->level + 1 );
-				        	  }
-				          }
-					}
-				    }
-
-				    //ch_printf(ch,"> you own %d levels of Metropolis nodes\n\r", ch->pcdata->homesmetro);
-				    //ch_printf(ch,"> metrocount: %d \n\r", metrocount);
-
-				    if (ch->pcdata->homesmetro > metrocount){
-				    	ch_printf(ch,"> lost %d levels of Metropolis nodes since last login\n\r", (ch->pcdata->homesmetro - metrocount));
-				    	ch->pcdata->homesmetro = metrocount;
-				    }
-				    else
-				    {
-				    	ch_printf(ch,"> you own %d levels of Metropolis nodes\n\r", ch->pcdata->homesmetro);
-				    }
 				  }
 
 					do_look( ch, "auto" );

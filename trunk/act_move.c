@@ -133,7 +133,6 @@ char
 int wherehome(CHAR_DATA *ch) {
 	SHIP_DATA *ship;
 	PLANET_DATA * planet;
-	CLAN_DATA *clan;
 	ROOM_INDEX_DATA *room;
 
 	if (ch->plr_home)
@@ -144,7 +143,7 @@ int wherehome(CHAR_DATA *ch) {
 
 	if (ch->pcdata && ch->pcdata->clan)
 		for (planet = first_planet; planet; planet = planet->next)
-			if (planet->governed_by == clan && planet->area)
+			if (planet->governed_by == ch->pcdata->clan && planet->area)
 				for (room = planet->area->first_room; room; room
 						= room->next_in_area)
 					if (IS_SET( room->room_flags, ROOM_HOTEL )

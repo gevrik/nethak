@@ -208,13 +208,13 @@ void violence_update( void )
 	if ( !ch->in_room || !ch->name )
 	{
 	    log_string( "violence_update: bad ch record!  (Shortcutting.)" );
-	    sprintf( buf, "ch: %d  ch->in_room: %d  ch->prev: %d  ch->next: %d",
-	    	(int) ch, (int) ch->in_room, (int) ch->prev, (int) ch->next );
+	    sprintf( buf, "ch: %ld  ch->in_room: %ld  ch->prev: %ld  ch->next: %ld",
+	    	(long) ch, (long) ch->in_room, (long) ch->prev, (long) ch->next );
 	    log_string( buf );
 	    log_string( lastplayercmd );
 	    if ( lst_ch )
-	      sprintf( buf, "lst_ch: %d  lst_ch->prev: %d  lst_ch->next: %d",
-	      		(int) lst_ch, (int) lst_ch->prev, (int) lst_ch->next );
+	      sprintf( buf, "lst_ch: %ld  lst_ch->prev: %ld  lst_ch->next: %ld",
+	      		(long) lst_ch, (long) lst_ch->prev, (long) lst_ch->next );
 	    else
 	      strcpy( buf, "lst_ch: NULL" );
 	    log_string( buf );

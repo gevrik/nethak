@@ -201,9 +201,6 @@ void fread_planet( PLANET_DATA *planet, FILE *fp )
     bool fMatch;
     int nodelevel, baselevel;
 
-    char *line;
-    int x0,x1,x2,x3,x4,x5;
-
     for ( ; ; )
     {
 	word   = feof( fp ) ? "End" : fread_word( fp );
@@ -219,10 +216,8 @@ void fread_planet( PLANET_DATA *planet, FILE *fp )
 	case 'A':
 	    if ( !str_cmp( word, "Area" ) )
 	    {
-	        char aName[MAX_STRING_LENGTH];
-                AREA_DATA *pArea;
-
-	     	sprintf (aName, fread_string(fp));
+	  	  char *aName = fread_string( fp );
+	  	  AREA_DATA *pArea = NULL;
 
 		for( pArea = first_area ; pArea ; pArea = pArea->next )
 	          if (pArea->filename && !str_cmp(pArea->filename , aName ) )
@@ -328,7 +323,7 @@ void fread_planet( PLANET_DATA *planet, FILE *fp )
     case 'G':
        if( !str_cmp( word, "GovernedBy" ) )
        {
-          const char *clan_name = fread_string( fp );
+          char *clan_name = fread_string( fp );
           planet->governed_by = get_clan( clan_name );
           fMatch = TRUE;
           STRFREE( clan_name );
@@ -376,7 +371,7 @@ void fread_planet( PLANET_DATA *planet, FILE *fp )
 	    KEY( "Sector",	planet->sector,		fread_number( fp ) );
         if( !str_cmp( word, "Starsystem" ) )
         {
-           const char *starsystem_name = fread_string( fp );
+           char *starsystem_name = fread_string( fp );
            planet->starsystem = starsystem_from_name( starsystem_name );
            if( planet->starsystem )
            {
@@ -385,7 +380,6 @@ void fread_planet( PLANET_DATA *planet, FILE *fp )
               LINK( planet, starsystem->first_planet, starsystem->last_planet, next_in_system, prev_in_system );
            }
            fMatch = TRUE;
-           STRFREE( starsystem_name );
         }
 	    break;
 
@@ -664,7 +658,7 @@ void do_showplanet( CHAR_DATA *ch, char *argument )
     int pf = 0;
     int pc = 0;
     int pw = 0;
-    int sysnodes, entertainmax, multimediamax, financemax, productmax;
+    int entertainmax, multimediamax, financemax, productmax;
 
     if ( IS_NPC( ch ) )
     {
@@ -1213,11 +1207,7 @@ void do_makeplanet( CHAR_DATA *ch, char *argument )
     planet->filename = str_dup( filename );
 
     send_to_char( "\n\r&Y> your code has created a new system\n\r", ch );
-//    send_to_char( "> the terrain: &W", ch );
-//    send_to_char( sector_name[sector], ch );
-//    send_to_char( "&Y\n\r", ch );
     send_to_char( "\n\r> please enter a description for your system\n\r", ch );
-    //send_to_char( "> It should be a short paragraph of 5 or more lines\n\r", ch );
     send_to_char( "> this will be used as the system's default node descriptions\n\r\n\r", ch );
 
     description = STRALLOC( "" );

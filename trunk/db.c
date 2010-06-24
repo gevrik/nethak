@@ -9,7 +9,6 @@
 #include <dirent.h>
 #include <math.h>
 #include "mud.h"
-//#include "mssp.h"
 
 extern	int	_filbuf		args( (FILE *) );
 
@@ -36,8 +35,6 @@ WIZENT *	first_wiz;
 WIZENT *	last_wiz;
 
 time_t                  last_restore_all_time = 0;
-
-//time_t mud_start_time;
 
 HELP_DATA *		first_help;
 HELP_DATA *		last_help;
@@ -307,8 +304,6 @@ void boot_db( void )
 
     log_string( "Loading commands" );
     load_commands();
-
-    //mud_start_time = current_time;
 
     log_string( "Loading sysdata configuration..." );
 
@@ -580,9 +575,6 @@ void boot_db( void )
         load_planets( );
         log_string( "Resetting areas" );
         reset_all( );
-
-        //log_string( "Loading MSSP Data..." );
-         //load_mssp_data( );
 
         MOBtrigger = TRUE;
     }

@@ -1,4 +1,5 @@
 #include <sys/types.h>
+#include <ctype.h>
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
@@ -353,11 +354,11 @@ void do_buy(CHAR_DATA *ch, char *argument) {
 
 void do_list(CHAR_DATA *ch, char *argument) {
 	char arg[MAX_INPUT_LENGTH];
-	CHAR_DATA *keeper;
-	OBJ_DATA *obj;
-	int cost;
+	CHAR_DATA *keeper = NULL;
+	OBJ_DATA *obj = NULL;
+	int cost = 0;
 	int oref = 0;
-	bool found;
+	bool found = FALSE;
 
 	one_argument(argument, arg);
 

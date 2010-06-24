@@ -1827,7 +1827,7 @@ while ( (apdtmp = mob_act_list) != NULL )
 
 		for ( ch = wch->in_room->first_person; ch; ch = ch_next )
 		{
-			int count;
+			int count = 0;
 
 			ch_next	= ch->next_in_room;
 

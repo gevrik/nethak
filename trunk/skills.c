@@ -1296,6 +1296,12 @@ void do_steal( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
+	if ( get_age(victim) <= 20 )
+	{
+		send_to_char( "> that player is too new to steal from\n\r", ch );
+		return;
+	}
+
 	if ( IS_SET( ch->in_room->room_flags, ROOM_SAFE ) )
 	{
 		set_char_color( AT_MAGIC, ch );

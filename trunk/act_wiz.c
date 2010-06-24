@@ -2161,7 +2161,6 @@ void do_balzhur( CHAR_DATA *ch, char *argument )
 
 void do_aiannounce( CHAR_DATA *ch, char *argument )
 {
-    char arg[MAX_INPUT_LENGTH];
     char buf[MAX_STRING_LENGTH];
 
     if ( argument[0] == '\0' )
