@@ -1435,6 +1435,9 @@ CHAR_DATA *get_char_world( CHAR_DATA *ch, char *argument )
     CHAR_DATA *wch;
     int number, count, vnum;
 
+    ROOM_INDEX_DATA	*room;
+    AREA_DATA		*tarea;
+
     number = number_argument( argument, arg );
     count  = 0;
     if ( !str_cmp( arg, "self" ) )
@@ -1459,6 +1462,25 @@ CHAR_DATA *get_char_world( CHAR_DATA *ch, char *argument )
 	    if ( ++count == number )
 		return wch;
 	}
+
+    count = 0;
+    tarea = ch->in_room->area;
+
+    for ( room = tarea->first_room; room ; room = room->next_in_area )
+    {
+
+        for ( wch = room->first_person; wch; wch = wch->next_in_room )
+    	if ( (nifty_is_name( arg, wch->name )
+    	||  (IS_NPC(wch) && vnum == wch->pIndexData->vnum)) && is_wizvis(ch,wch))
+    	{
+    	    if ( number == 0 && !IS_NPC(wch) )
+    		return wch;
+    	    else
+    	    if ( ++count == number )
+    		return wch;
+    	}
+
+    }
 
     count = 0;
 
