@@ -20,6 +20,7 @@ void    add_reinforcements  args( ( CHAR_DATA *ch ) );
 void    channel_noise       args( ( ) );
 
 void who_html_update (void);
+void orgs_html_update (void);
 
 /*
  * Local functions.
@@ -2063,6 +2064,7 @@ void update_handler( void )
 		//update_space  ( );
 		//update_repos();
 		who_html_update ( );
+		orgs_html_update ( );
 	}
 
 	if ( --pulse_recharge <= 0 )

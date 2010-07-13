@@ -104,6 +104,7 @@ void reset_all() {
 			}
 
 		}
+
 	}
 
 	for (iHash = 0; iHash < MAX_KEY_HASH; iHash++) {
@@ -294,12 +295,12 @@ void reset_all() {
 
 				mob = create_mobile(pMobIndex);
 				char_to_room(mob, pRoomIndex);
-				mob->top_level = 10 * guardlevel;
+				mob->top_level = 20 * guardlevel;
 				mob->hit = 50 * guardlevel;
 				mob->max_hit = 50 * guardlevel;
 				mob->armor = 50;
-				mob->damroll = 0;
-				mob->hitroll = 20;
+				mob->damroll = 5 * guardlevel;
+				mob->hitroll = 5 * guardlevel;
 				if ((pObjIndex = get_obj_index(OBJ_VNUM_BLASTER)) != NULL) {
 					blaster = create_object(pObjIndex, mob->top_level);
 					obj_to_char(blaster, mob);

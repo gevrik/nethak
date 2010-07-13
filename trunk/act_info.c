@@ -2425,7 +2425,7 @@ void do_forget( CHAR_DATA *ch, char *argument )
 	return;
     }
 
-    if ( ch->pcdata->learned[sn] > 50 )
+    if ( ch->pcdata->learned[sn] > 75 )
     {
         send_to_char( "> you cannot forget something you know so well\n\r", ch );
 	return;

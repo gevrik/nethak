@@ -356,6 +356,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_notify" ))		return do_notify;
         if ( !str_cmp( name, "do_notitle" ))            return do_notitle;
 	if ( !str_cmp( name, "do_noteroom" ))		return do_noteroom;
+	if ( !str_cmp( name, "do_npctrack" ))		return do_npctrack;
 	break;
     case 'o':
 	if ( !str_cmp( name, "do_ocreate" ))		return do_ocreate;
@@ -950,6 +951,7 @@ char *skill_name( DO_FUN *skill )
     if ( skill == do_notify )		return "do_notify";
     if ( skill == do_notitle )          return "do_notitle";
     if ( skill == do_noteroom )		return "do_noteroom";
+    if ( skill == do_npctrack )		return "do_npctrack";
     if ( skill == do_ocreate )		return "do_ocreate";
     if ( skill == do_ofind )		return "do_ofind";
     if ( skill == do_oinvoke )		return "do_oinvoke";

@@ -166,6 +166,7 @@ sh_int			gsn_disarm;
 /* other   */
 sh_int			gsn_aid;
 sh_int			gsn_track;
+sh_int			gsn_npctrack;
 sh_int			gsn_mount;
 sh_int			gsn_climb;
 sh_int			gsn_slice;
@@ -503,6 +504,7 @@ void boot_db( void )
 	ASSIGN_GSN( gsn_hitall,		"hitall" );
 	ASSIGN_GSN( gsn_aid,		"aid" );
 	ASSIGN_GSN( gsn_track,		"trace" );
+	ASSIGN_GSN( gsn_npctrack,		"systrace" );
 	ASSIGN_GSN( gsn_mount,		"mount" );
 	ASSIGN_GSN( gsn_climb,		"climb" );
 	ASSIGN_GSN( gsn_slice,		"slice" );

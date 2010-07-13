@@ -26,14 +26,14 @@
  *  Update the makefile to include this code, then compile and you'll be all set.
  */
 
- /*
-  * Converted to work with SWR by Odis
-  *		admin@ew.xidus.net
-  *     huhahua@yahoo.com
-  *     http://ew.xidus.net
-  *		
-  * For more clear instructions, please read the Readme file included with this distribution
-  */
+/*
+ * Converted to work with SWR by Odis
+ *		admin@ew.xidus.net
+ *     huhahua@yahoo.com
+ *     http://ew.xidus.net
+ *
+ * For more clear instructions, please read the Readme file included with this distribution
+ */
 
 #if defined(macintosh)
 #include <types.h>
@@ -46,239 +46,339 @@
 #include <time.h>
 #include <malloc.h>
 #include "mud.h"
- 
+
 #if !defined(macintosh)
-extern  int     _filbuf         args( (FILE *) );
+extern int _filbuf args( (FILE *) );
 #endif
 
 int html_colour args (( char type, char *string ));
 void html_colourconv args (( char *buffer, const char *txt, CHAR_DATA *ch ));
 
-void who_html_update (void)
-{
+void who_html_update(void) {
 
 	/* this code assumes 45-character titles and max color switches (485 bytes).
-	  if title length is increased the buf sizes must be increased */
-  FILE *fp; 
-  DESCRIPTOR_DATA *d;
-  char buf[2*MAX_INPUT_LENGTH]; 
-  char buf2[2*MAX_INPUT_LENGTH];
-  
+	 if title length is increased the buf sizes must be increased */
+	FILE *fp;
+	DESCRIPTOR_DATA *d;
+	char buf[2 * MAX_INPUT_LENGTH];
+	char buf2[2 * MAX_INPUT_LENGTH];
+	int sn, count;
+
 #ifdef DEBUG
-        Debug ("who_html_update");
+	Debug ("who_html_update");
 #endif
 
-  buf[0] = '\0';
-  buf2[0] = '\0';
-  
-  fclose(fpReserve);
-  if ( (fp = fopen("../../public_html/online.html", "w") ) == NULL)
+	buf[0] = '\0';
+	buf2[0] = '\0';
 
-     /*
-	  * change the directory above to the absolute directory and filename
-      * of the page you are going to make.  IMPORTANT:  The file needs to 
-      * exist before you attempt to run this. 
-      *         --Valatar
-      */
-	  /*
-	   * Note: The above path specifies to move up out of the src directory,
-	   * then out of the swr directory, into the public_html directory, and then the destination..
-	   * which is online.html
-	   */
+	fclose(fpReserve);
+	if ((fp = fopen("../../public_html/online.html", "w")) == NULL)
 
-  {
-     bug( "online.html: fopen", 0 );
-     perror( "online.html" );
-  }
-  else
-  {
-  fprintf(fp, "<html>\n");
-  fprintf(fp, "<head>\n");
-  fprintf(fp, "<title>");
-  fprintf(fp, "Players currently jacked-in:");
+	/*
+	 * change the directory above to the absolute directory and filename
+	 * of the page you are going to make.  IMPORTANT:  The file needs to
+	 * exist before you attempt to run this.
+	 *         --Valatar
+	 */
+	/*
+	 * Note: The above path specifies to move up out of the src directory,
+	 * then out of the swr directory, into the public_html directory, and then the destination..
+	 * which is online.html
+	 */
 
-  fprintf(fp, "</title>\n");
-  fprintf(fp, "<META HTTP-EQUIV=REFRESH CONTENT=30>\n");
-  fprintf(fp, "<BODY TEXT=""#C0C0C0"" BGCOLOR=""#000000"" LINK=""#00FFFF""");
-  fprintf(fp, "VLINK=""#FFFFFF"" ALINK=""#008080"">\n\n");
-  fprintf(fp, "<CENTER>\n\n<TABLE BORDER=0 BGCOLOR=""#000000"" >\n");
-  fprintf(fp, "<TR ALIGN=CENTER VALIGN=CENTER>\n");
-  //fprintf(fp, "<TD>Level</TD>\n");
-  fprintf(fp, "<TD><U><B>Title</B></U><P></TD></TR>\n");
-  
-    
-  for ( d = first_descriptor; d != NULL ; d = d->next )
-  {
-    CHAR_DATA *wch;
-    char class[5];
-    
-    if ( d->connected != CON_PLAYING)
-        continue;
-    wch   = ( d->original != NULL ) ? d->original : d->character;
-    class[0] = '\0';
+	{
+		bug("online.html: fopen", 0);
+		perror("online.html");
+	} else {
+		fprintf(fp, "<html>\n");
+		fprintf(fp, "<head>\n");
+		fprintf(fp, "<title>");
+		fprintf(fp, "Players currently jacked-in:");
 
-    if ( !IS_SET(wch->act, PLR_WIZINVIS ) )
-    {
-	fprintf(fp, "<TR ALIGN=CENTER VALIGN=CENTER>\n");
-	//fprintf(fp, "<TD>%d</TD>\n<TD>", wch->top_level);
-	fprintf(fp, "<TD>");
-      buf2[0] = '\0';
-      sprintf(buf2, "%s", (IS_NPC(wch)? "" : wch->pcdata->title));
-      html_colourconv( buf, buf2, wch );
-      fprintf(fp, "%s", buf);
-      fprintf(fp, "</TD></TR>\n");
- 
-    }  /*end if */
-  }    /*end for */
-  
-  fprintf(fp, "</TABLE></CENTER>\n");
-  fprintf(fp, "<BR><BR><BR><BR>\n\n");
-  fprintf(fp, "<font face=""Times New Roman""><center>\n");
-  sprintf(buf, "Last updated at %s GMT\n", ((char *) ctime(&current_time )));
-  fprintf(fp, "%s", buf);
-  fprintf(fp, "</center></font>\n");
+		fprintf(fp, "</title>\n");
+		fprintf(fp, "<META HTTP-EQUIV=REFRESH CONTENT=30>\n");
+		fprintf(
+				fp,
+				"<BODY TEXT=" "#4189c8" " BGCOLOR=" "#FFFFFF" " LINK=" "#00FFFF" "");
+		fprintf(fp, "VLINK=" "#FFFFFF" " ALINK=" "#008080" ">\n\n");
+		fprintf(fp, "<CENTER>\n\n<TABLE BORDER=0 BGCOLOR=" "#FFFFFF" " >\n");
+		fprintf(fp, "<TR ALIGN=CENTER VALIGN=CENTER>\n");
+		//fprintf(fp, "<TD>Level</TD>\n");
+		fprintf(fp,
+				"<TD><U><B><h3>Runner-Title [Skill-Levels]</h3></B></U><P></TD></TR>\n");
 
-  //fprintf(fp, "<br><br>\n");
-  //fprintf(fp, "<CENTER><P><A HREF=\"index.html\">\n");
-  /*
-   * You may need to change the line above, depending on where you want this link to go to
-   */
-  //fprintf(fp, "Return to main page</A> </P></CENTER></Font>\n");
+		for (d = first_descriptor; d != NULL; d = d->next) {
+			CHAR_DATA *wch;
+			char class[5];
 
-  fprintf(fp, "</body>\n");
-  fprintf(fp, "</html>\n");
-  fclose( fp ); 
-  fpReserve = fopen( NULL_FILE, "r" );
-  } /*end if */ 
-  
-  return;
+			if (d->connected != CON_PLAYING)
+				continue;
+			wch = (d->original != NULL) ? d->original : d->character;
+			class[0] = '\0';
+
+			if (!IS_SET(wch->act, PLR_WIZINVIS )) {
+				fprintf(fp, "<TR ALIGN=CENTER VALIGN=CENTER>\n");
+				//fprintf(fp, "<TD>%d</TD>\n<TD>", wch->top_level);
+				fprintf(fp, "<TD>");
+				buf2[0] = '\0';
+				//sprintf(buf2, "%s", (IS_NPC(wch)? "" : wch->pcdata->title));
+
+				count = 0;
+
+				for (sn = 0; sn < top_sn; sn++)
+					if (wch->pcdata->learned[sn] > 0) {
+						count = count + wch->pcdata->learned[sn];
+					}
+
+				sprintf(buf2, "%s  [%d]", (IS_NPC(wch) ? ""
+						: wch->pcdata->title), count);
+
+				html_colourconv(buf, buf2, wch);
+				fprintf(fp, "%s", buf);
+				fprintf(fp, "</TD></TR>\n");
+
+			} /*end if */
+		} /*end for */
+
+		fprintf(fp, "</TABLE></CENTER>\n");
+		fprintf(fp, "<BR><BR><BR><BR>\n\n");
+		fprintf(fp, "<font face=" "Times New Roman" "><center>\n");
+		sprintf(buf, "Last updated at %s GMT\n",
+				((char *) ctime(&current_time)));
+		fprintf(fp, "%s", buf);
+		fprintf(fp, "</center></font>\n");
+
+		//fprintf(fp, "<br><br>\n");
+		//fprintf(fp, "<CENTER><P><A HREF=\"index.html\">\n");
+		/*
+		 * You may need to change the line above, depending on where you want this link to go to
+		 */
+		//fprintf(fp, "Return to main page</A> </P></CENTER></Font>\n");
+
+		fprintf(fp, "</body>\n");
+		fprintf(fp, "</html>\n");
+		fclose(fp);
+		fpReserve = fopen(NULL_FILE, "r");
+	} /*end if */
+
+	return;
 }/* end function */
 
+void orgs_html_update(void) {
 
-int html_colour( char type, char *string )
-{
-    char	code[ 25 ];
-    char	*p = '\0';
+	FILE *fp;
+	char buf[2 * MAX_INPUT_LENGTH];
+	char buf2[2 * MAX_INPUT_LENGTH];
+
+	// might need to change the names of the variables below if you want them to make more sense for the thing you want to do
+	// also need to change the structure that you want to get data from, here it is a CLAN structure and the PLANET structure to get
+	// the score of the clan
+
+	int score;
+	CLAN_DATA *clan;
+	PLANET_DATA *planet;
+
+	// just adjust the first bit of the file name. eg: orgs
 
 #ifdef DEBUG
-        Debug ("html_colour");
+	Debug ("orgs_html_update");
 #endif
-        
-    switch( type )
-    {
+
+	buf[0] = '\0';
+	buf2[0] = '\0'; // If you set this later, why set it here too?
+
+	fclose(fpReserve);
+
+	// change file name of html file. eg: orgs.html
+	if ((fp = fopen("../../public_html/orgs.json", "w")) == NULL)
+	{
+
+		// same here, just change orgs
+		bug("orgs.html: fopen", 0);
+		perror("orgs.html");
+
+	} else {
+
+		// START JSON Array - EightBit
+		fprintf(fp, "{");
+
+		// START JSON CLANS Array - EightBit
+		fprintf(fp, "\"Organizations\":[");
+
+		// now here is the main bit. I look through all organizations in the game
+		for (clan = first_clan; clan; clan = clan->next) {
+
+			// setting score to 0
+			score = 0;
+
+			// looping through all systems to see if it is owned by the organization that is currently checked by the for loop
+			for (planet = first_planet; planet; planet = planet->next) {
+				if (clan == planet->governed_by) {
+					score += get_taxes(planet) / 720;
+				}
+			}
+
+			buf2[0] = '\0'; // not sure why you set it to '\0' ?
+
+			// Start CLAN Specific data
+			fprintf(fp, "{");
+
+			// Add Clan name
+			sprintf(buf2, "\"name\":\"%s\",", clan->name);
+			fprintf(fp, "%s", buf2); // Not sure what this %s is? - EightBit
+
+			// Add Clan score
+			sprintf(buf2, "\"score\":\"%d\",", score);
+			fprintf(fp, "%s", buf2); // Not sure what this %s is? - EightBit
+
+			// End CLAN Specific data
+			fprintf(fp, "}");
+
+
+			/*******************************************************************************
+				This was my origonal idea, but the way above seems more logical for adding *
+				to it in the future...                                                     *
+			                                                                               */
+			// Set data in array: {"name" : "clan->name", "score": "score"}, - EightBit
+			// sprintf(buf2, "{\"name\":\"%s\", \"score\":\"%d\"},", clan->name, score);
+			// fprintf(fp, "%s", buf2); // Not sure what this %s is? - EightBit
+
+		}
+
+		// CLOSE JSON CLANS Array - EightBit
+		fprintf(fp, "],");
+
+		// Add extra info/content - EightBit
+		sprintf(buf, "{\"Updated\":\"%s GMT\"}", ((char *) ctime(&current_time)));
+		fprintf(fp, "%s", buf);
+
+		// CLOSE JSON Array - EightBit
+		fprintf(fp, "}");
+
+		// close the file...
+		fclose(fp);
+		fpReserve = fopen(NULL_FILE, "r");
+	} /*end if */
+
+	return;
+}/* end function */
+
+int html_colour(char type, char *string) {
+	char code[25];
+	char *p = '\0';
+
+#ifdef DEBUG
+	Debug ("html_colour");
+#endif
+
+	switch (type) {
 	default:
 	case '\0':
-	    code[0] = '\0';
-	    break;
+		code[0] = '\0';
+		break;
 	case ' ':
-	    sprintf( code, " " );
-	    break;
+		sprintf(code, " ");
+		break;
 	case 'x':
-	    sprintf( code, "<font color=""#006400"">" );
-	    break;
+		sprintf(code, "<font color=" "#006400" ">");
+		break;
 	case 'b':
-	    sprintf( code, "<font color=""#00008B"">" );
-	    break;
+		sprintf(code, "<font color=" "#00008B" ">");
+		break;
 	case 'c':
-	    sprintf( code, "<font color=""#008B8B"">" );
-	    break;
+		sprintf(code, "<font color=" "#008B8B" ">");
+		break;
 	case 'g':
-	    sprintf( code, "<font color=""#006400"">" );
-	    break;
+		sprintf(code, "<font color=" "#006400" ">");
+		break;
 	case 'm':
-	    sprintf( code, "<font color=""#8B008B"">" );
-	    break;
+		sprintf(code, "<font color=" "#8B008B" ">");
+		break;
 	case 'r':
-	    sprintf( code, "<font color=""#8B0000"">" );
-	    break;
+		sprintf(code, "<font color=" "#8B0000" ">");
+		break;
 	case 'w':
-	    sprintf( code, "<font color=""#808080"">" );
-	    break;
+		sprintf(code, "<font color=" "#808080" ">");
+		break;
 	case 'y':
-	    sprintf( code, "<font color=""#808000"">" );
-	    break;
+		sprintf(code, "<font color=" "#808000" ">");
+		break;
 	case 'B':
-	    sprintf( code, "<font color=""#0000FF"">" );
-	    break;
+		sprintf(code, "<font color=" "#0000FF" ">");
+		break;
 	case 'C':
-	    sprintf( code, "<font color=""#OOFFFF"">" );
-	    break;
+		sprintf(code, "<font color=" "#OOFFFF" ">");
+		break;
 	case 'G':
-	    sprintf( code, "<font color=""#00FF00"">" );
-	    break;
+		sprintf(code, "<font color=" "#00FF00" ">");
+		break;
 	case 'M':
-	    sprintf( code, "<font color=""#FF00FF"">" );
-	    break;
+		sprintf(code, "<font color=" "#FF00FF" ">");
+		break;
 	case 'R':
-	    sprintf( code, "<font color=""#FF0000"">" );
-	    break;
+		sprintf(code, "<font color=" "#FF0000" ">");
+		break;
 	case 'W':
-	    sprintf( code, "<font color=""#FFFFFF"">" );
-	    break;
+		sprintf(code, "<font color=" "#FFFFFF" ">");
+		break;
 	case 'Y':
-	    sprintf( code, "<font color=""#FFFF00"">" );
-	    break;
+		sprintf(code, "<font color=" "#FFFF00" ">");
+		break;
 	case 'D':
-	    sprintf( code, "<font color=""#636363"">" );
-	    break;
+		sprintf(code, "<font color=" "#636363" ">");
+		break;
 	case '{':
-	    sprintf( code, "{" );
-	    break;
-    }
+		sprintf(code, "{");
+		break;
+	}
 
-    p = code;
-    while( *p != '\0' )
-    {
-	*string = *p++;
-	*++string = '\0';
-    }
+	p = code;
+	while (*p != '\0') {
+		*string = *p++;
+		*++string = '\0';
+	}
 
-    return( strlen( code ) );
+	return (strlen(code));
 }
 
 /*
  * Note: Background colors were never tested on here because my mud doesn't use them
  */
-void html_colourconv( char *buffer, const char *txt, CHAR_DATA *ch )
-{
-    const	char	*point;
-		int	skip = 0;
+void html_colourconv(char *buffer, const char *txt, CHAR_DATA *ch) {
+	const char *point;
+	int skip = 0;
 
 #ifdef DEBUG
-        Debug ("html_colourconv");
+	Debug ("html_colourconv");
 #endif
-        
-    for( point = txt ; *point ; point++ )
-    {
-	if( *point == '&' )
-	{
-	    point++;
-	    if( *point == '\0' )
-		point--;
-	    else
-	      skip = html_colour( *point, buffer );
-	    while( skip-- > 0 )
-		++buffer;
-	    continue;
+
+	for (point = txt; *point; point++) {
+		if (*point == '&') {
+			point++;
+			if (*point == '\0')
+				point--;
+			else
+				skip = html_colour(*point, buffer);
+			while (skip-- > 0)
+				++buffer;
+			continue;
+		}
+		/* Following is put in to prevent adding HTML links to titles,
+		 except for IMMS who know what they're doing and can be
+		 punished if they screw it up! */
+		if ((*point == '<') && (!IS_IMMORTAL(ch))) {
+			*buffer = '[';
+			*++buffer = '\0';
+			continue;
+		}
+		if ((*point == '>') && (!IS_IMMORTAL(ch))) {
+			*buffer = ']';
+			*++buffer = '\0';
+			continue;
+		}
+		*buffer = *point;
+		*++buffer = '\0';
 	}
-	/* Following is put in to prevent adding HTML links to titles,
-	   except for IMMS who know what they're doing and can be
-	   punished if they screw it up! */
-	if( (*point == '<') && (!IS_IMMORTAL(ch)) )
-	{
-	    *buffer = '[';
-	    *++buffer = '\0';
-	    continue;
-	}
-	if( (*point == '>') && (!IS_IMMORTAL(ch)) )
-	{
-	    *buffer = ']';
-	    *++buffer = '\0';
-	    continue;
-	}
-	*buffer = *point;
-	*++buffer = '\0';
-    }			
-    *buffer = '\0';
-    return;
+	*buffer = '\0';
+	return;
 }

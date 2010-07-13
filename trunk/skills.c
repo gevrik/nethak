@@ -1105,7 +1105,7 @@ void learn_from_success( CHAR_DATA *ch, int sn )
 		else if ( percent > chance )
 			learn = 1;
 
-
+		// double skillup
 
 		ch->pcdata->learned[sn] = UMIN( adept, ch->pcdata->learned[sn] + learn );
 

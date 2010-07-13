@@ -224,6 +224,59 @@ void do_track( CHAR_DATA *ch, char *argument )
    }
 }
 
+void do_npctrack( CHAR_DATA *ch, char *argument )
+{
+   CHAR_DATA *vict;
+   char arg[MAX_INPUT_LENGTH];
+   char buf[MAX_STRING_LENGTH];
+   int dir, maxdist;
+
+   if ( !IS_NPC(ch) && !ch->pcdata->learned[gsn_npctrack] )
+   {
+	send_to_char("> &Ryou do not know this skillsoft yet&w\n\r", ch );
+	return;
+   }
+
+   one_argument(argument, arg);
+   if ( arg[0]=='\0' ) {
+      send_to_char("> &Rwhom are you trying to trace?&w\n\r", ch);
+      return;
+   }
+
+   WAIT_STATE( ch, skill_table[gsn_npctrack]->beats );
+
+   if (!(vict = get_char_world(ch, arg))) {
+      send_to_char("> &Ryou cannot find a trace of anyone like that&w\n\r", ch);
+      return;
+   }
+
+   maxdist = 100 + ch->top_level * 30;
+
+   if ( !IS_NPC(ch) )
+     maxdist = (maxdist * ch->pcdata->learned[gsn_npctrack]) / 100;
+
+   dir = find_first_step(ch->in_room, vict->in_room, maxdist);
+
+   switch(dir) {
+      case BFS_ERROR:
+         send_to_char("> &Rhmm... something seems to be wrong&w\n\r", ch);
+         break;
+      case BFS_ALREADY_THERE:
+         send_to_char("> &Ryou're already in the same room&w\n\r", ch);
+         break;
+      case BFS_NO_PATH:
+         sprintf(buf, "> &Ryou can't trace them from here\n\r" );
+         send_to_char(buf, ch);
+         learn_from_failure( ch, gsn_npctrack );
+         break;
+      default:
+         ch_printf(ch, "> &Yyou trace them %s from here...&w\n\r", dir_name[dir]);
+	 learn_from_success( ch, gsn_npctrack );
+         break;
+   }
+}
+
+
 
 void found_prey( CHAR_DATA *ch, CHAR_DATA *victim )
 {

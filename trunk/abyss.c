@@ -152,6 +152,13 @@ void do_probe ( CHAR_DATA *ch , char *argument )
 		return;
 	}
 
+	if( !IS_IMMORTAL(ch) )
+		if ( ch->in_room->area->planet->size >= 9999 )
+		{
+			send_to_char( "> Metropolis has been fully probed\n\r", ch );
+			return;
+		}
+
 	cost = ( ch->in_room->level + 1 ) * 10;
 
 	if (ch->gold < cost)

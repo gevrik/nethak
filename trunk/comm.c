@@ -2421,77 +2421,77 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 
 				ch->pcdata->board = &boards[DEFAULT_BOARD];
 
-				  if (ch->pcdata->homesmetro != 0)
-				  {
-					  metrocount = 0;
+//				  if (ch->pcdata->homesmetro != 0)
+//				  {
+//					  metrocount = 0;
+//
+//				    for ( tarea = first_area; tarea; tarea = tarea->next )
+//				    {
+//					if ( !str_cmp( tarea->name, "metropolis" ) )
+//					{
+//				          for ( room = tarea->first_room; room ; room = room->next_in_area ){
+//				        	  if ( !str_cmp( room->owner, ch->name ) )
+//				        	  {
+//				        		  metrocount += ( room->level + 1 );
+//				        	  }
+//				          }
+//					}
+//				    }
+//
+//				    //ch_printf(ch,"> you own %d levels of Metropolis nodes\n\r", ch->pcdata->homesmetro);
+//				    //ch_printf(ch,"> metrocount: %d \n\r", metrocount);
+//
+//				    if (ch->pcdata->homesmetro > metrocount){
+//				    	ch_printf(ch,"> lost %d levels of Metropolis nodes since last login\n\r", (ch->pcdata->homesmetro - metrocount));
+//				    	ch->pcdata->homesmetro = metrocount;
+//				    }
+//				    else
+//				    {
+//				    	ch_printf(ch,"> you own %d levels of Metropolis nodes\n\r", ch->pcdata->homesmetro);
+//				    }
+//				  }
 
-				    for ( tarea = first_area; tarea; tarea = tarea->next )
-				    {
-					if ( !str_cmp( tarea->name, "metropolis" ) )
-					{
-				          for ( room = tarea->first_room; room ; room = room->next_in_area ){
-				        	  if ( !str_cmp( room->owner, ch->name ) )
-				        	  {
-				        		  metrocount += ( room->level + 1 );
-				        	  }
-				          }
-					}
-				    }
-
-				    //ch_printf(ch,"> you own %d levels of Metropolis nodes\n\r", ch->pcdata->homesmetro);
-				    //ch_printf(ch,"> metrocount: %d \n\r", metrocount);
-
-				    if (ch->pcdata->homesmetro > metrocount){
-				    	ch_printf(ch,"> lost %d levels of Metropolis nodes since last login\n\r", (ch->pcdata->homesmetro - metrocount));
-				    	ch->pcdata->homesmetro = metrocount;
-				    }
-				    else
-				    {
-				    	ch_printf(ch,"> you own %d levels of Metropolis nodes\n\r", ch->pcdata->homesmetro);
-				    }
-				  }
-
-				  long meantime = (time(NULL) - ch->pcdata->logouttime) / 360;
-				  if (meantime > 0 && meantime != 0) {
-				  sprintf( buf, "> hours since last session: %ld\n\r\n\r", meantime );
-				  send_to_char( buf, ch );
-
-				  if (meantime > 12)
-					  meantime = 12;
-
-					  while (meantime > 0) {
-
-						  if ( number_range(1, 10) <= ch->pcdata->wm_top_level )
-						  {
-
-							  if (ch->pcdata->wm_command == 0)
-							  {
-							  ch_printf(ch,"> workmate was idle\n\r");
-							  }
-							  else if (ch->pcdata->wm_command == 1)
-							  {
-								  ch_printf(ch,"> workmate has gathered resources\n\r");
-							  }
-							  else if (ch->pcdata->wm_command == 2)
-							  {
-								  int credplus = number_range(1, 10) * ch->pcdata->wm_top_level;
-								  ch->pcdata->bank += credplus;
-								  ch_printf(ch,"> workmate has gathered %d credits\n\r", credplus);
-							  }
-							  else if (ch->pcdata->wm_command == 3)
-							  {
-								  int credplus = number_range(1, 10) * ch->pcdata->wm_top_level;
-								  ch->snippets += credplus;
-								  ch_printf(ch,"> workmate has gathered %d snippets\n\r", credplus);
-							  }
-
-						  }
-
-						  meantime -= 1;
-
-					  }
-
-				  }
+//				  long meantime = (time(NULL) - ch->pcdata->logouttime) / 360;
+//				  if (meantime > 0 && meantime != 0) {
+//				  sprintf( buf, "> hours since last session: %ld\n\r\n\r", meantime );
+//				  send_to_char( buf, ch );
+//
+//				  if (meantime > 12)
+//					  meantime = 12;
+//
+//					  while (meantime > 0) {
+//
+//						  if ( number_range(1, 10) <= ch->pcdata->wm_top_level )
+//						  {
+//
+//							  if (ch->pcdata->wm_command == 0)
+//							  {
+//							  ch_printf(ch,"> workmate was idle\n\r");
+//							  }
+//							  else if (ch->pcdata->wm_command == 1)
+//							  {
+//								  ch_printf(ch,"> workmate has gathered resources\n\r");
+//							  }
+//							  else if (ch->pcdata->wm_command == 2)
+//							  {
+//								  int credplus = number_range(1, 10) * ch->pcdata->wm_top_level;
+//								  ch->pcdata->bank += credplus;
+//								  ch_printf(ch,"> workmate has gathered %d credits\n\r", credplus);
+//							  }
+//							  else if (ch->pcdata->wm_command == 3)
+//							  {
+//								  int credplus = number_range(1, 10) * ch->pcdata->wm_top_level;
+//								  ch->snippets += credplus;
+//								  ch_printf(ch,"> workmate has gathered %d snippets\n\r", credplus);
+//							  }
+//
+//						  }
+//
+//						  meantime -= 1;
+//
+//					  }
+//
+//				  }
 
 					do_look( ch, "auto" );
 
