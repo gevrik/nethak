@@ -1456,6 +1456,14 @@ ch_ret damage( CHAR_DATA *ch, CHAR_DATA *victim, int dam, int dt )
 	   act( AT_HURT, "> that really did hurt", victim, 0, 0, TO_CHAR );
 	   if ( number_bits(3) == 0 )
 		worsen_mental_state( ch, 1 );
+
+		if ( number_percent() == 23 )
+		{
+		send_to_char( "> you feel a little tougher\n\r", ch );
+		ch->perm_con++;
+		ch->perm_con = UMIN( ch->perm_con , 25 );
+		}
+
 	}
 	if ( victim->hit < victim->max_hit / 4 )
 

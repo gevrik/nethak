@@ -250,6 +250,13 @@ void do_npctrack( CHAR_DATA *ch, char *argument )
       return;
    }
 
+   if ( !IS_NPC(vict) ){
+
+	      send_to_char("> &Ryou cannot use systrace on players. only on system entities.&w\n\r", ch);
+	      return;
+
+   }
+
    maxdist = 100 + ch->top_level * 30;
 
    if ( !IS_NPC(ch) )

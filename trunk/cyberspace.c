@@ -281,7 +281,7 @@ void do_layout( CHAR_DATA *ch, char *argument )
 
 
 
-	if( strcmp(location->owner, ch->name) )
+	if( strcmp(location->owner, ch->name) && strcmp(ch->in_room->area->planet->name, "newtutorial") )
 	{
 		send_to_char( "&R> this is not your node&w\n\r", ch );
 		return;
@@ -1115,7 +1115,7 @@ void do_renamenode( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
-	if( strcmp(location->owner, ch->name) )
+	if( strcmp(location->owner, ch->name) && strcmp(ch->in_room->area->planet->name, "newtutorial") )
 	{
 		send_to_char( "&R> this is not your node&w\n\r", ch );
 		return;
@@ -3512,7 +3512,7 @@ void do_inquire( CHAR_DATA * ch, char *argument )
          continue;
       if( IS_IMMORTAL( d->character ) )
          continue;
-      ch_printf( ch, "&z|^g&x         # %s             %-9.9d     ^x&z|\n\r", d->character->name,
+		ch_printf( ch, "&z|^g&x         # %-15.15s %-9.9d     ^x&z|\n\r", d->character->name,
                  d->character->pcdata->bank );
    }
    ch_printf( ch, "&z|+---------------------------------------+|&w\n\r" );

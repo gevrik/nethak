@@ -555,7 +555,7 @@ void do_put( CHAR_DATA *ch, char *argument )
 	if ( !found )
 	{
 	    if ( fAll )
-	      act( AT_PLAIN, "> you are not carrying anything",
+	      act( AT_PLAIN, "> you are not carrying anything or the container is full",
 		    ch, NULL, NULL, TO_CHAR );
 	    else
 	      act( AT_PLAIN, "> you are not carrying any $T",
@@ -732,7 +732,7 @@ void do_drop( CHAR_DATA *ch, char *argument )
 	if ( !found )
 	{
 	    if ( fAll )
-	      act( AT_PLAIN, "> you are not carrying anything",
+	      act( AT_PLAIN, "> you are not carrying anything or the container is full",
 		    ch, NULL, NULL, TO_CHAR );
 	    else
 	      act( AT_PLAIN, "> you are not carrying any $T",
