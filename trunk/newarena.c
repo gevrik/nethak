@@ -931,3 +931,70 @@ void lost_arena(CHAR_DATA *ch)
    ch->opponent = NULL;  // VERSION 1.3 UPGRADE
    return;
 }
+
+void do_astuck( CHAR_DATA *ch, char *argument )
+{
+
+	ROOM_INDEX_DATA	*room;
+    CHAR_DATA *rch;
+
+	if ( ch->position <= POS_SLEEPING )
+	{
+		send_to_char( "> you are hibernating\n\r" , ch );
+		return;
+	}
+
+	if ( ch->fighting )
+	{
+		send_to_char( "> you to try flee from combat\n\r", ch );
+		do_flee( ch, "" );
+		return;
+	}
+
+	if ( !IS_SET( ch->in_room->room_flags, ROOM_ARENA ) )
+	{
+		send_to_char( "> &Ryou do not seem to be stuck in the arena&w\n\r", ch );
+		return;
+	}
+
+	int pcount = 0;
+
+	for ( room = ch->in_room->area->first_room; room ; room = room->next_in_area )
+	{
+
+	    for ( rch = room->first_person; rch; rch = rch->next_in_room )
+	    {
+
+	    	if ( IS_NPC(rch) )
+		    continue;
+
+	    	pcount++;
+
+	    }
+
+	}
+
+	if ( pcount > 1 ){
+		send_to_char( "> &Ryou are not alone in the arena&w\n\r", ch );
+		return;
+	}
+
+	if( !ch->plr_home )
+	{
+		send_to_char( "> you connect to straylight\n\r", ch );
+		act(AT_GREEN, "> $n connects to straylight", ch, NULL, NULL, TO_ROOM );
+		char_from_room( ch );
+		char_to_room( ch, get_room_index( ROOM_VNUM_STRAY ) );
+		do_look( ch, "auto" );
+		return;
+	}
+
+	send_to_char( "> you connect to your home node\n\r", ch );
+	act(AT_GREEN, "> $n connects to their home node", ch, NULL, NULL, TO_ROOM );
+	char_from_room( ch );
+	char_to_room( ch, ch->plr_home );
+	do_look( ch, "auto" );
+
+	return;
+
+}

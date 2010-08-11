@@ -3215,6 +3215,7 @@ DECLARE_DO_FUN( do_aaccept      );
 DECLARE_DO_FUN( do_adecline     );
 DECLARE_DO_FUN( do_ahall        );
 DECLARE_DO_FUN( do_arena        );
+DECLARE_DO_FUN( do_astuck        );
 DECLARE_DO_FUN( do_awho         );
 DECLARE_DO_FUN( do_bet          );
 DECLARE_DO_FUN( do_challenge    );

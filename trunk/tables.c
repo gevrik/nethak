@@ -48,6 +48,7 @@ DO_FUN *skill_function( char *name )
         if ( !str_cmp( name, "do_aaccept" ))            return do_aaccept;
         if ( !str_cmp( name, "do_ahall" ))              return do_ahall;
         if ( !str_cmp( name, "do_arena" ))              return do_arena;
+        if ( !str_cmp( name, "do_astuck" ))              return do_astuck;
         if ( !str_cmp( name, "do_awho" ))               return do_awho;
         //if ( !str_cmp( name, "do_alia" ))               return do_alia;
         if ( !str_cmp( name, "do_alias" ))               return do_alias;
@@ -631,6 +632,7 @@ char *skill_name( DO_FUN *skill )
     if ( skill == do_aaccept )           return "do_aaccept";
     if ( skill == do_ahall )            return "do_ahall";
     if ( skill == do_arena )            return "do_arena";
+    if ( skill == do_astuck )            return "do_astuck";
     if ( skill == do_awho )             return "do_awho";
     if ( skill == do_bet )              return "do_bet";
     if ( skill == do_challenge )        return "do_challenge";
