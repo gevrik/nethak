@@ -156,7 +156,8 @@ void interpret( CHAR_DATA *ch, char *argument )
 
 	timer = get_timerptr( ch, TIMER_DO_FUN );
 
-	if ( IS_AFFECTED(ch, AFF_HIDE) && !IS_NPC(ch) && !nifty_is_name("backstab", argument) ){
+	if ( (IS_AFFECTED(ch, AFF_HIDE) && !IS_NPC(ch) && !nifty_is_name("backstab", argument))
+			&& (IS_AFFECTED(ch, AFF_HIDE) && !IS_NPC(ch) && !nifty_is_name("bs", argument))){
 	affect_strip ( ch, gsn_hide			);
 	REMOVE_BIT( ch->affected_by, AFF_HIDE );
 	send_to_char("> &Ryou are no longer hidden&w\n\r", ch);

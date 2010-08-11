@@ -3292,6 +3292,12 @@ void do_throw( CHAR_DATA *ch, char *argument )
 	return;
     }
 
+    if ( obj->pIndexData->vnum == 3 || obj->pIndexData->vnum == 4 || obj->pIndexData->vnum == 5 )
+    {
+	act( AT_PLAIN, ">You can't throw $p", ch, obj, NULL, TO_CHAR );
+	return;
+    }
+
    if ( ch->position == POS_FIGHTING )
    {
        victim = who_fighting( ch );
@@ -3320,7 +3326,7 @@ void do_throw( CHAR_DATA *ch, char *argument )
 
       if ( IS_SET( pexit->exit_info, EX_CLOSED ) )
       {
-          send_to_char( "> are you expecting to throw it  through a door?\n\r", ch );
+          send_to_char( "> are you expecting to throw it through a door?\n\r", ch );
           return;
       }
 
@@ -3394,6 +3400,15 @@ void do_throw( CHAR_DATA *ch, char *argument )
         }
 
         if ( IS_SET( ch->in_room->room_flags, ROOM_SAFE ) )
+        {
+        	set_char_color( AT_MAGIC, ch );
+        	send_to_char( "> you will have to do that elsewhere\n\r", ch );
+            char_from_room( ch );
+            char_to_room( ch, was_in_room );
+        	return;
+        }
+
+        if ( IS_SET( victim->in_room->room_flags, ROOM_SAFE ) )
         {
         	set_char_color( AT_MAGIC, ch );
         	send_to_char( "> you will have to do that elsewhere\n\r", ch );
@@ -3483,7 +3498,7 @@ void do_throw( CHAR_DATA *ch, char *argument )
        if ( IS_NPC(ch) || number_percent( ) < ch->pcdata->learned[gsn_throw] )
        {
 	 learn_from_success( ch, gsn_throw );
-	 global_retcode = damage( ch, victim, number_range( obj->weight*2 , (obj->weight*2 + ch->perm_str) ), TYPE_HIT );
+	 global_retcode = damage( ch, victim, number_range( obj->weight , (obj->weight + (ch->perm_str / 2)) ), TYPE_HIT );
        }
        else
        {
@@ -3699,7 +3714,7 @@ void do_propaganda ( CHAR_DATA *ch , char *argument )
 
 	   if( IS_SET( planet->flags, PLANET_NOCAP ) )
     {
-       do_say( ch , "> &Rthis system cannot be affected&w" );
+		   send_to_char( "> &Rthis system cannot be affected&w", ch );
        return;
     }
 
@@ -4108,7 +4123,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 
 	}
 
-	if( strcmp(location->owner, ch->name) )
+	if( strcmp(location->owner, ch->name) && strcmp(ch->in_room->area->planet->name, "newtutorial") )
 	{
 		send_to_char( "> &Rthis is not your node&w\n\r", ch );
 		return;
@@ -4116,7 +4131,7 @@ void do_landscape ( CHAR_DATA *ch , char *argument )
 
 	if ( IS_SET( location->room_flags , ROOM_NOPEDIT ) )
 	{
-		send_to_char( "> &Ryou can not create nodes from this node&w\n\r", ch );
+		send_to_char( "> &Ryou can not modify this node&w\n\r", ch );
 		return;
 	}
 
@@ -4542,6 +4557,7 @@ void do_construction ( CHAR_DATA *ch , char *argument )
 			send_to_char("> &Ryou can not construct here\n\r", ch );
 			return;
 		}
+
 		if ( !IS_SET( planet->flags, PLANET_NOCAP ) )
 		{
 
@@ -4593,12 +4609,22 @@ void do_construction ( CHAR_DATA *ch , char *argument )
 				send_to_char( "> you cannot construct in this system\n\r", ch );
 				return;
 			}
+
 			}
 			else if ( !str_cmp(ch->in_room->area->planet->name, "users") ) {
 
 				if ( ch->pcdata->homesyssize > 99 )
 				{
 					send_to_char( "> you may not build any more nodes in your home system\n\r", ch );
+					return;
+				}
+
+			}
+			else if ( !str_cmp(ch->in_room->area->planet->name, "newtutorial") ) {
+
+				if ( str_cmp( ch->pcdata->clan_name, "tutors") )
+				{
+					send_to_char( "> you may not build here. join the tutors first!\n\r", ch );
 					return;
 				}
 
@@ -4798,7 +4824,7 @@ void do_bridge ( CHAR_DATA *ch , char *argument )
 	}
 
 	location = ch->in_room;
-	if( strcmp(location->owner, ch->name) )
+	if( strcmp(location->owner, ch->name) && strcmp(ch->in_room->area->planet->name, "newtutorial") )
 	{
 		send_to_char( "&R> this is not your node&w\n\r", ch );
 		return;

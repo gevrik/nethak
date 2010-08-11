@@ -1498,6 +1498,12 @@ void do_backstab( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
+    if ( IS_NPC(victim) && IS_SET( victim->act, ACT_IMMORTAL )  )
+    {
+	    send_to_char( "> this program cannot be flatlined\n\r", ch );
+	    return;
+    }
+
 	if ( is_safe( ch, victim ) )
 		return;
 
