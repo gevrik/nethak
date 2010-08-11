@@ -1278,6 +1278,12 @@ void do_steal( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
+    if ( IS_NPC(victim) && IS_SET( victim->act, ACT_IMMORTAL )  )
+    {
+	    send_to_char( "> you can not steal from this program\n\r", ch );
+	    return;
+    }
+
 	if ( IS_IMMORTAL(victim) )
 	{
 		send_to_char( "> a strange force prevents you from doing that\n\r", ch );

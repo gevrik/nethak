@@ -774,6 +774,12 @@ void do_sn_shortcut( CHAR_DATA *ch, char *argument )
 			return;
 		}
 
+		if ( IS_SET( ch->in_room->room_flags, ROOM_ARENA ) )
+		{
+			send_to_char( "> &Rfinish the current match first&w\n\r", ch );
+			return;
+		}
+
 
 		if ( arg[0] == '\0' )
 		{
