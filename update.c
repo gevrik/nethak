@@ -21,6 +21,7 @@ void    channel_noise       args( ( ) );
 
 void who_html_update (void);
 void orgs_html_update (void);
+void metro_html_update (void);
 
 /*
  * Local functions.
@@ -2067,6 +2068,7 @@ void update_handler( void )
 		//update_repos();
 		who_html_update ( );
 		orgs_html_update ( );
+		metro_html_update ( );
 	}
 
 	if ( --pulse_recharge <= 0 )
