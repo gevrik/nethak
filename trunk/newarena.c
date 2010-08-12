@@ -144,6 +144,8 @@ void do_bet(CHAR_DATA *ch, char *argument)
       send_to_char("> that doesn't make much sense, does it?\r\n", ch);
    else if(!(IS_SET(ch->betted_on->in_room->room_flags, ROOM_ARENA)))
       send_to_char("> sorry that person is not in the arena\r\n", ch);
+   else if( ch->betted_on == ch->opponent)
+      send_to_char("> sorry that person is your opponent\r\n", ch);
    else
       {
          if(GET_BET_AMT(ch) > 0)

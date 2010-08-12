@@ -301,6 +301,7 @@ void fwrite_char( CHAR_DATA *ch, FILE *fp )
 	ch->hit, ch->max_hit, ch->move, ch->max_move );
     fprintf( fp, "Force        %d %d %d %d\n", ch->perm_frc, ch->mod_frc, ch->mana, ch->max_mana );
     fprintf( fp, "Gold         %d\n",	ch->gold		);
+    fprintf( fp, "Bounty      %ld\n",          ch->pcdata->bounty );
 
     if ( ch->pcdata->cyber )
                fprintf( fp, "Cyber             %d\n",  ch->pcdata->cyber       );
@@ -1119,6 +1120,7 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload )
 	    KEY( "Bestowments", ch->pcdata->bestowments, fread_string_nohash( fp ) );
 	    KEY( "Bio",		ch->pcdata->bio,	fread_string( fp ) );
 	    KEY( "Bank",	ch->pcdata->bank,	fread_number( fp ) );
+	    KEY( "Bounty",	ch->pcdata->bounty,	fread_number( fp ) );
 
         if (!str_cmp(word, "Boards" ))
          {

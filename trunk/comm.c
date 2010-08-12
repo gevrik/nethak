@@ -1984,11 +1984,11 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 		if ( chk == TRUE )
 			return;
 
-		if ( check_multi( d , ch->name  ) )
-		{
-			close_socket( d, FALSE );
-			return;
-		}
+//		if ( check_multi( d , ch->name  ) )
+//		{
+//			close_socket( d, FALSE );
+//			return;
+//		}
 
 		sprintf( buf, "%s", ch->name );
 		d->character->desc = NULL;

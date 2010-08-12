@@ -375,10 +375,11 @@ void talk_channel( CHAR_DATA *ch, char *argument, int channel, const char *verb 
 {
     char buf[MAX_STRING_LENGTH];
     DESCRIPTOR_DATA *d;
-    int position;
+    int position, pos;
     CLAN_DATA *clan = NULL;
     PLANET_DATA * planet;        
     bool  ch_comlink = FALSE;
+    bool found;
     
     if ( channel != CHANNEL_YELL && channel != CHANNEL_IMMTALK && channel != CHANNEL_OOC 
          && channel != CHANNEL_NEWBIE && channel != CHANNEL_WCHAT && channel != CHANNEL_TRADE && channel != CHANNEL_HINT && channel != CHANNEL_SYSTEM && channel != CHANNEL_SHIP )
@@ -609,6 +610,18 @@ void talk_channel( CHAR_DATA *ch, char *argument, int channel, const char *verb 
 	    if ( channel != CHANNEL_YELL )
 		vch->position	= POS_STANDING;
 	    MOBtrigger = FALSE;
+
+	    found = FALSE;
+
+        for (pos = 0; pos < MAX_FORGET; pos++)
+        {
+            if (vch->pcdata->forget[pos] == NULL)
+                break;
+            if (!str_cmp(ch->name, vch->pcdata->forget[pos]))
+                found = TRUE;
+        }
+
+        if (!found){
 	    if ( channel == CHANNEL_IMMTALK )
 	      act( AT_IMMORT , buf, ch, sbuf, vch, TO_VICT );
 	    else if (channel == CHANNEL_OOC || channel == CHANNEL_NEWBIE || channel == CHANNEL_TRADE )
@@ -619,6 +632,7 @@ void talk_channel( CHAR_DATA *ch, char *argument, int channel, const char *verb 
 	      act( AT_CLAN, buf, ch, sbuf, vch, TO_VICT );
 	    else
 	      act( AT_GOSSIP, buf, ch, sbuf, vch, TO_VICT );
+        }
 	    vch->position	= position;
 	}
     }

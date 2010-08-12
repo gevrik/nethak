@@ -1251,6 +1251,11 @@ void do_steal( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
+			if (IS_SET(ch->in_room->room_flags, ROOM_ARENA)){
+				send_to_char( "> &Rnot in the Killing Fields&w\n\r", ch );
+				return;
+			}
+
 	if ( ch->mount )
 	{
 		send_to_char( "> you cannot do that while mounted\n\r", ch );
@@ -1809,6 +1814,11 @@ void do_disarm( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
+	if (IS_SET(ch->in_room->room_flags, ROOM_ARENA)){
+		send_to_char( "> &Rnot in the Killing Fields&w\n\r", ch );
+		return;
+	}
+
 	if ( ( victim = who_fighting( ch ) ) == NULL )
 	{
 		send_to_char( "> you are not fighting anyone\n\r", ch );
@@ -1937,6 +1947,8 @@ void do_pick( CHAR_DATA *ch, char *argument )
 				if ( ch->pcdata->threatlevel > 10 )
 					ch->pcdata->threatlevel = 10;
 
+				ch->pcdata->bounty += ch->pcdata->threatlevel * 100;
+
 			}
 			return;
 		}
@@ -1979,6 +1991,8 @@ void do_pick( CHAR_DATA *ch, char *argument )
 			ch->pcdata->threatlevel += 1;
 			if ( ch->pcdata->threatlevel > 10 )
 				ch->pcdata->threatlevel = 10;
+
+			ch->pcdata->bounty += ch->pcdata->threatlevel * 100;
 
 			ch->pcdata->threataction += 1;
 			learn_from_failure( ch, gsn_pick_lock );

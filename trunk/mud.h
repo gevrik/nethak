@@ -134,6 +134,8 @@ typedef	void	DO_FUN		args( ( CHAR_DATA *ch, char *argument ) );
 typedef bool	SPEC_FUN	args( ( CHAR_DATA *ch ) );
 typedef ch_ret	SPELL_FUN	args( ( int sn, int level, CHAR_DATA *ch, void *vo ) );
 
+#define    MAX_FORGET	5
+
 #define DUR_CONV	23.333333333333333333333333
 #define HIDDEN_TILDE	'*'
 
@@ -2190,6 +2192,8 @@ struct	pc_data
     char *		mission_target;
     long			mission_targetid;
     int         mission_fails;
+    char *		forget[MAX_FORGET];
+    long         bounty;
 
 };
 
@@ -2613,6 +2617,7 @@ extern	sh_int	gsn_poison;
 extern	sh_int	gsn_sleep;
 extern	sh_int	gsn_stun;
 extern  sh_int  gsn_possess;
+extern  sh_int  gsn_detection;
 extern	sh_int	gsn_fireball;
 extern	sh_int	gsn_lightning_bolt;
 
@@ -3146,6 +3151,7 @@ DECLARE_DO_FUN(	do_sn_jackhammer	);
 DECLARE_DO_FUN(	do_sn_krash	);
 DECLARE_DO_FUN(	do_sn_reconstruct	);
 DECLARE_DO_FUN(	do_sn_spun	);
+DECLARE_DO_FUN(	do_sn_nightvision	);
 DECLARE_DO_FUN(	do_sn_dropline	);
 DECLARE_DO_FUN(	do_sn_uninstall	);
 DECLARE_DO_FUN(	do_sn_anchor	);
@@ -3248,6 +3254,11 @@ DECLARE_DO_FUN( do_homehall );
 DECLARE_DO_FUN( do_homestray );
 DECLARE_DO_FUN( do_homesys );
 DECLARE_DO_FUN( do_foundorg );
+DECLARE_DO_FUN( do_pignore );
+DECLARE_DO_FUN( do_sn_nodescanner );
+DECLARE_DO_FUN( do_listnodes );
+DECLARE_DO_FUN( do_unignore );
+DECLARE_DO_FUN( do_bounty );
 DECLARE_DO_FUN( do_allships );
 DECLARE_DO_FUN( do_appoint );
 DECLARE_DO_FUN( do_demote );

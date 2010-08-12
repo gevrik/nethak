@@ -589,6 +589,7 @@ ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
     int chance;
     bool fail;
     AFFECT_DATA af;
+    OBJ_DATA *obj;
 
 
     /*
@@ -884,6 +885,18 @@ ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
      	    dam = 1;
      	    wield->value[4] -= 3;
      	    fail = FALSE;
+
+    		for (obj = victim->last_carrying; obj; obj = obj->prev_content) {
+    			if ( obj->item_type == ITEM_SNIPPET && !strcmp(obj->name,
+    					"bubble") && fail == FALSE ) {
+    				fail = TRUE;
+    				separate_obj(obj);
+    				obj_from_char(obj);
+    				extract_obj( obj );
+    			}
+    		}
+
+
             if ( victim->was_stunned > 0 && !IS_AFFECTED( victim, AFF_PARALYSIS ) )
             {
                fail = TRUE;
@@ -1582,6 +1595,16 @@ ch_ret damage( CHAR_DATA *ch, CHAR_DATA *victim, int dam, int dt )
            loot = FALSE;
 
 	set_cur_char(victim);
+
+	if ( !IS_NPC(victim) &&  !IS_NPC(ch) && victim->pcdata->bounty > 0 && victim != ch && victim->pcdata->clan != ch->pcdata->clan){
+
+		ch->pcdata->bank += victim->pcdata->bounty;
+		ch_printf(ch, "> &pyou have received %ld credits as bounty money&w\n\r", victim->pcdata->bounty);
+		send_to_char( "> &Wthe bounty on your flatline was claimed&w\n\r",        victim );
+		victim->pcdata->bounty = 0;
+
+	}
+
 	raw_kill( ch, victim );
 	victim = NULL;
 

@@ -181,6 +181,7 @@ sh_int			gsn_poison;
 sh_int			gsn_sleep;
 sh_int			gsn_stun;
 sh_int			gsn_possess;
+sh_int			gsn_detection;
 sh_int			gsn_fireball;
 sh_int			gsn_lightning_bolt;
 
@@ -519,6 +520,7 @@ void boot_db( void )
 	ASSIGN_GSN( gsn_sleep,		"sleep" );
 	ASSIGN_GSN( gsn_stun,		"stun" );
 	ASSIGN_GSN( gsn_possess,	"possess" );
+	ASSIGN_GSN( gsn_detection,	"detection" );
     }
 
     /*
