@@ -1596,6 +1596,7 @@ ch_ret damage( CHAR_DATA *ch, CHAR_DATA *victim, int dam, int dt )
 
 	set_cur_char(victim);
 
+	if ( !IS_SET(ch->in_room->room_flags, ROOM_ARENA))
 	if ( !IS_NPC(victim) &&  !IS_NPC(ch) && victim->pcdata->bounty > 0 && victim != ch && victim->pcdata->clan != ch->pcdata->clan){
 
 		ch->pcdata->bank += victim->pcdata->bounty;
