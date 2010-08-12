@@ -3847,6 +3847,8 @@ void do_propaganda ( CHAR_DATA *ch , char *argument )
 					if ( ch->pcdata->threatlevel > 10 )
 						ch->pcdata->threatlevel = 10;
 
+					ch->pcdata->bounty += ch->pcdata->threatlevel * 100;
+
 					return;
 				}
 
@@ -3908,6 +3910,8 @@ void do_propaganda ( CHAR_DATA *ch , char *argument )
 			ch->pcdata->threatlevel += 1;
 			if ( ch->pcdata->threatlevel > 10 )
 				ch->pcdata->threatlevel = 10;
+
+			ch->pcdata->bounty += ch->pcdata->threatlevel * 100;
 
 		sprintf(bufa, "> %s used PROPAGANDA in %s ",
 				ch->name, ch->in_room->area->planet->name);

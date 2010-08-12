@@ -193,6 +193,8 @@ void do_portscan( CHAR_DATA *ch, char *argument )
 	if ( ch->pcdata->threatlevel > 10 )
 		ch->pcdata->threatlevel = 10;
 
+	ch->pcdata->bounty += ch->pcdata->threatlevel * 100;
+
 
 	return;
 
@@ -1610,12 +1612,16 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 				&& str_cmp( arg, "shortcut" )
 				&& str_cmp( arg, "checkout" )
 				&& str_cmp( arg, "emp")
-				&& str_cmp( arg, "annex"))
+				&& str_cmp( arg, "annex")
+				&& str_cmp( arg, "nightvision")
+				&& str_cmp( arg, "bubble")
+				&& str_cmp( arg, "nodescanner"))
 		{
 			send_to_char( "> &Ryou cannot code that app, try:\n\r&w", ch);
 			send_to_char( "> jackhammer, krash, spun, reconstruct\n\r", ch);
 			send_to_char( "> dropline, uninstall, anchor, audit\n\r", ch);
-			send_to_char( "> shortcut, checkout, emp, annex\n\r", ch);
+			send_to_char( "> shortcut, checkout, emp, annex, nightvision\n\r", ch);
+			send_to_char( "> bubble, nodescanner\n\r", ch);
 			return;
 		}
 
@@ -1647,6 +1653,14 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 		{
 			cost = 10;
 		}
+		else if ( !str_cmp( arg, "nodescanner" ) )
+		{
+			cost = 500;
+		}
+		else if ( !str_cmp( arg, "bubble" ) )
+		{
+			cost = 100;
+		}
 		else if ( !str_cmp( arg, "emp" ) )
 		{
 			cost = 100;
@@ -1674,12 +1688,17 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 		{
 			cost = 100;
 		}
+		else if ( !str_cmp( arg, "nightvision" ) )
+		{
+			cost = 250;
+		}
 		else
 		{
 			send_to_char( "> &Ryou cannot code that app, try:\n\r&w", ch);
 			send_to_char( "> jackhammer, krash, spun, reconstruct\n\r", ch);
 			send_to_char( "> dropline, uninstall, anchor, audit\n\r", ch);
-			send_to_char( "> shortcut, checkout, emp, annex\n\r", ch);
+			send_to_char( "> shortcut, checkout, emp, annex, nightvision\n\r", ch);
+			send_to_char( "> bubble, nodescanner\n\r", ch);
 			return;
 		}
 
@@ -1820,9 +1839,21 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 	{
 		cost = 10;
 	}
+	else if ( !str_cmp( arg, "nodescanner" ) )
+	{
+		cost = 500;
+	}
+	else if ( !str_cmp( arg, "bubble" ) )
+	{
+		cost = 100;
+	}
 	else if ( !str_cmp( arg, "shortcut" ) )
 	{
 		cost = 100;
+	}
+	else if ( !str_cmp( arg, "nightvision" ) )
+	{
+		cost = 250;
 	}
 	else
 	{
@@ -1873,6 +1904,11 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 		{
 			obj->value[0] = level / 10;
 			obj->cost = ( level / 10 ) * 10;
+		}
+	if ( !str_cmp( arg, "nodescanner" ) )
+		{
+			obj->value[0] = 50;
+			obj->cost = 500;
 		}
 
 	if ( !str_cmp( arg, "shortcut" ) )
@@ -3491,6 +3527,8 @@ void do_inquire( CHAR_DATA * ch, char *argument )
 		if ( ch->pcdata->threatlevel > 10 )
 			ch->pcdata->threatlevel = 10;
 
+		ch->pcdata->bounty += ch->pcdata->threatlevel * 100;
+
       return;
    }
 
@@ -3680,6 +3718,8 @@ void do_slicebank( CHAR_DATA * ch, char *argument )
 		if ( ch->pcdata->threatlevel > 10 )
 			ch->pcdata->threatlevel = 10;
 
+		ch->pcdata->bounty += ch->pcdata->threatlevel * 100;
+
       return;
    }
 
@@ -3752,6 +3792,8 @@ void do_slicebank( CHAR_DATA * ch, char *argument )
 		ch->pcdata->threatlevel += 1;
 		if ( ch->pcdata->threatlevel > 10 )
 			ch->pcdata->threatlevel = 10;
+
+		ch->pcdata->bounty += ch->pcdata->threatlevel * 100;
 
       return;
    }
@@ -3935,6 +3977,8 @@ void do_slicefund( CHAR_DATA * ch, char *argument )
 		if ( ch->pcdata->threatlevel > 10 )
 			ch->pcdata->threatlevel = 10;
 
+		ch->pcdata->bounty += ch->pcdata->threatlevel * 100;
+
       return;
    }
 
@@ -4009,6 +4053,8 @@ void do_slicefund( CHAR_DATA * ch, char *argument )
 		ch->pcdata->threatlevel += 1;
 		if ( ch->pcdata->threatlevel > 10 )
 			ch->pcdata->threatlevel = 10;
+
+		ch->pcdata->bounty += ch->pcdata->threatlevel * 100;
 
       return;
    }
@@ -5118,6 +5164,8 @@ void do_slicesnippets( CHAR_DATA * ch, char *argument )
 		if ( ch->pcdata->threatlevel > 10 )
 			ch->pcdata->threatlevel = 10;
 
+		ch->pcdata->bounty += ch->pcdata->threatlevel * 100;
+
       return;
    }
 
@@ -5158,6 +5206,8 @@ void do_slicesnippets( CHAR_DATA * ch, char *argument )
 		if ( ch->pcdata->threatlevel > 10 )
 			ch->pcdata->threatlevel = 10;
 
+		ch->pcdata->bounty += ch->pcdata->threatlevel * 100;
+
       return;
    }
 
@@ -5167,5 +5217,269 @@ void do_slicesnippets( CHAR_DATA * ch, char *argument )
    d->character->snippets -= steal;
    learn_from_success( ch, gsn_slicesnippets );
    return;
+
+}
+
+void do_pignore(CHAR_DATA *ch, char *argument)
+{
+    CHAR_DATA *rch;
+    char arg[MAX_INPUT_LENGTH],buf[MAX_STRING_LENGTH];
+    DESCRIPTOR_DATA *d;
+    int pos;
+    bool found = FALSE;
+
+    if (ch->desc == NULL)
+	rch = ch;
+    else
+	rch = ch->desc->original ? ch->desc->original : ch;
+
+    if (IS_NPC(rch))
+	return;
+
+    smash_tilde( argument );
+
+    argument = one_argument(argument,arg);
+
+    if (arg[0] == '\0')
+    {
+	if (rch->pcdata->forget[0] == NULL)
+	{
+	    send_to_char("> you are not ignoring anyone\n\r",ch);
+	    return;
+	}
+	send_to_char("> you are currently ignoring:\n\r",ch);
+
+	for (pos = 0; pos < MAX_FORGET; pos++)
+	{
+	    if (rch->pcdata->forget[pos] == NULL)
+		break;
+
+	    sprintf(buf,"    %s\n\r",rch->pcdata->forget[pos]);
+	    send_to_char(buf,ch);
+	}
+	return;
+    }
+
+    for (pos = 0; pos < MAX_FORGET; pos++)
+    {
+	if (rch->pcdata->forget[pos] == NULL)
+	    break;
+
+	if (!str_cmp(arg,rch->pcdata->forget[pos]))
+	{
+	    send_to_char("> you are already ignoring that person\n\r",ch);
+	    return;
+	}
+    }
+
+    for (d = first_descriptor; d != NULL; d = d->next)
+    {
+	CHAR_DATA *wch;
+
+ 	if (d->connected != CON_PLAYING || !can_see(ch,d->character))
+	    continue;
+
+	wch = ( d->original != NULL ) ? d->original : d->character;
+
+ 	if (!can_see(ch,wch))
+	    continue;
+
+	if (!str_cmp(arg,wch->name))
+	{
+	    found = TRUE;
+	    if (wch == ch)
+	    {
+		send_to_char("> you ignore yourself for a moment - but it passes\n\r",ch);
+		return;
+	    }
+	    if ( IS_IMMORTAL(wch) )
+	    {
+		send_to_char("> that person is very hard to ignore\n\r",ch);
+		return;
+	    }
+	}
+    }
+
+    if (!found)
+    {
+	send_to_char("> no one by that name is online\n\r",ch);
+	return;
+    }
+
+    for (pos = 0; pos < MAX_FORGET; pos++)
+    {
+	if (rch->pcdata->forget[pos] == NULL)
+	    break;
+     }
+
+     if (pos >= MAX_FORGET)
+     {
+	send_to_char("> sorry, you have reached the ignore limit\n\r",ch);
+	return;
+     }
+
+     /* make a new forget */
+     rch->pcdata->forget[pos]		= str_dup(arg);
+     sprintf(buf,"> you are now ingoring %s\n\r",arg);
+     send_to_char(buf,ch);
+}
+
+void do_unignore(CHAR_DATA *ch, char *argument)
+{
+    CHAR_DATA *rch;
+    char arg[MAX_INPUT_LENGTH],buf[MAX_STRING_LENGTH];
+    int pos;
+    bool found = FALSE;
+
+    if (ch->desc == NULL)
+	rch = ch;
+    else
+	rch = ch->desc->original ? ch->desc->original : ch;
+
+    if (IS_NPC(rch))
+	return;
+
+    argument = one_argument(argument,arg);
+
+    if (arg[0] == '\0')
+    {
+	if (rch->pcdata->forget[0] == NULL)
+	{
+	    send_to_char("> you are not ignoring anyone\n\r",ch);
+	    return;
+	}
+	send_to_char("> you are currently ignoring:\n\r",ch);
+
+	for (pos = 0; pos < MAX_FORGET; pos++)
+	{
+	    if (rch->pcdata->forget[pos] == NULL)
+		break;
+
+	    sprintf(buf,"    %s\n\r",rch->pcdata->forget[pos]);
+	    send_to_char(buf,ch);
+	}
+	return;
+    }
+
+    for (pos = 0; pos < MAX_FORGET; pos++)
+    {
+	if (rch->pcdata->forget[pos] == NULL)
+	    break;
+
+	if (found)
+	{
+	    rch->pcdata->forget[pos-1]		= rch->pcdata->forget[pos];
+	    rch->pcdata->forget[pos]		= NULL;
+	    continue;
+	}
+
+	if(!strcmp(arg,rch->pcdata->forget[pos]))
+	{
+	    send_to_char("> ignore removed\n\r",ch);
+	    STRFREE(rch->pcdata->forget[pos]);
+	    rch->pcdata->forget[pos] = NULL;
+	    found = TRUE;
+	}
+    }
+
+    if (!found)
+	send_to_char("> no one by that name is being ignored.\n\r",ch);
+
+}
+
+void do_bounty(CHAR_DATA *ch, char *argument) {
+	DESCRIPTOR_DATA *d;
+	CHAR_DATA *och;
+	char arg[MAX_INPUT_LENGTH];
+	char arg2[MAX_INPUT_LENGTH];
+	bool found;
+
+	if (!argument || argument[0] == '\0') {
+		send_to_char("&pGLOBAL BOUNTIES&w\n\r", ch);
+		send_to_char("&W========================================&w\n\r", ch);
+
+		for (d = last_descriptor; d; d = d->prev) {
+			if ((d->connected != CON_PLAYING && d->connected != CON_EDITING)
+					|| d->original)
+				continue;
+
+			och = d->original ? d->original : d->character;
+
+			if (!och->pcdata)
+				continue;
+
+			if (IS_IMMORTAL(och))
+				continue;
+
+			if (och->pcdata->bounty == 0)
+				continue;
+
+			ch_printf(ch, "&Y%-24s %-10ld\n\r", och->name, och->pcdata->bounty);
+
+		}
+
+		return;
+	}
+
+	argument = one_argument(argument, arg2);
+	strcpy(arg, argument);
+
+	if (arg[0] == '\0' || arg2[0] == '\0') {
+		send_to_char("> &Wsyntax: bounty <player> <amount>&w\n\r", ch);
+		return;
+	}
+
+	if (!str_cmp(arg2, ch->name)) {
+		send_to_char("> &Ryou can not put a bounty on yourself&w\n\r", ch);
+		return;
+	}
+
+	if (atoi(arg) < 5000) {
+		send_to_char("> &Ythe bounty has to be 5,000 credits or more&w\n\r", ch);
+		return;
+	}
+
+	if (ch->gold - atoi(arg) < 0) {
+
+		send_to_char("> &Ryou do not have that many credits&w\n\r", ch);
+		return;
+
+	}
+
+	found = FALSE;
+
+	for (d = first_descriptor; d != NULL; d = d->next) {
+		CHAR_DATA *wch;
+
+		if (d->connected != CON_PLAYING || !can_see(ch, d->character))
+			continue;
+
+		wch = (d->original != NULL) ? d->original : d->character;
+
+		if (!can_see(ch, wch))
+			continue;
+
+		if (!str_cmp(arg2, wch->name)) {
+
+			found = TRUE;
+
+			if (IS_IMMORTAL(wch)) {
+				send_to_char("> you can not put a bounty on that player\n\r",
+						ch);
+				return;
+			}
+
+			wch->pcdata->bounty += atoi(arg);
+			send_to_char("> &Wbounty placed&w\n\r", ch);
+			send_to_char("> &Rsomone placed a bounty on you&w\n\r", wch);
+			ch->gold -= atoi(arg);
+
+		}
+	}
+
+	if (!found)
+	send_to_char("> &Rno such player&w\n\r", ch);
+
+	return;
 
 }

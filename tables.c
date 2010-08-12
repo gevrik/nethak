@@ -100,6 +100,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_boards" ))		return do_boards;
 	if ( !str_cmp( name, "do_bodybag" ))		return do_bodybag;
 	if ( !str_cmp( name, "do_bomb" ))		return do_bomb;
+	if ( !str_cmp( name, "do_bounty" ))		return do_bounty;
 	if ( !str_cmp( name, "do_bridge" ))		return do_bridge;
 	if ( !str_cmp( name, "do_bset" ))		return do_bset;
 	if ( !str_cmp( name, "do_bstat" ))		return do_bstat;
@@ -243,7 +244,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_hyperspace" ))         return do_hyperspace;
 	break;
     case 'i':
-	if ( !str_cmp( name, "do_immortalize" ))	return do_immortalize;
+    if ( !str_cmp( name, "do_immortalize" ))	return do_immortalize;
 	if ( !str_cmp( name, "do_immtalk" ))		return do_immtalk;
 	if ( !str_cmp( name, "do_imports"))             return do_imports;
 	if ( !str_cmp( name, "do_info" ))               return do_info;
@@ -269,6 +270,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_leaveship" ))		return do_leaveship;
 	if ( !str_cmp( name, "do_level" ))		return do_level;
 	if ( !str_cmp( name, "do_list" ))		return do_list;
+	if ( !str_cmp( name, "do_listnodes" ))		return do_listnodes;
 	if ( !str_cmp( name, "do_load_cargo"))          return do_load_cargo;
 	if ( !str_cmp( name, "do_loadup" ))		return do_loadup;
 	if ( !str_cmp( name, "do_lock" ))		return do_lock;
@@ -384,6 +386,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_peace" ))		return do_peace;
 	if ( !str_cmp( name, "do_pick" ))		return do_pick;
 	if ( !str_cmp( name, "do_pickshiplock" ))	return do_pickshiplock;
+    if ( !str_cmp( name, "do_pignore" ))	return do_pignore;
 	if ( !str_cmp( name, "do_planets" ))		return do_planets;
 	if ( !str_cmp( name, "do_pnet" ))		return do_pnet;
 	if ( !str_cmp( name, "do_poison_weapon" ))	return do_poison_weapon;
@@ -498,10 +501,12 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_sn_emp" )) 		return do_sn_emp;
 	if ( !str_cmp( name, "do_sn_jackhammer" )) 		return do_sn_jackhammer;
 	if ( !str_cmp( name, "do_sn_krash" )) 		return do_sn_krash;
+	if ( !str_cmp( name, "do_sn_nodescanner" )) 		return do_sn_nodescanner;
 	if ( !str_cmp( name, "do_sn_randomizer" )) 		return do_sn_randomizer;
 	if ( !str_cmp( name, "do_sn_reconstruct" )) 		return do_sn_reconstruct;
 	if ( !str_cmp( name, "do_sn_shortcut" )) 		return do_sn_shortcut;
 	if ( !str_cmp( name, "do_sn_spun" )) 		return do_sn_spun;
+	if ( !str_cmp( name, "do_sn_nightvision" )) 		return do_sn_nightvision;
 	if ( !str_cmp( name, "do_sn_uninstall" )) 		return do_sn_uninstall;
 	if ( !str_cmp( name, "do_snipe" ))		return do_snipe;
 	if ( !str_cmp( name, "do_sneak" ))		return do_sneak;
@@ -546,6 +551,7 @@ DO_FUN *skill_function( char *name )
     case 'u':
     	//if ( !str_cmp( name, "do_unalias" ))               return do_unalias;
 	if ( !str_cmp( name, "do_unfoldarea" ))		return do_unfoldarea;
+	if ( !str_cmp( name, "do_unignore" ))		return do_unignore;
 	if ( !str_cmp( name, "do_unload_cargo"))        return do_unload_cargo;
 	if ( !str_cmp( name, "do_unlock" ))		return do_unlock;
         if ( !str_cmp( name, "do_unsilence" ))          return do_unsilence;
@@ -606,6 +612,14 @@ char *skill_name( DO_FUN *skill )
 	if ( skill == do_cy_rbuy)           return "do_cy_rbuy";
 	if ( skill == do_cy_resset)           return "do_cy_resset";
 
+	if ( skill == do_pignore)           return "do_pignore";
+	if ( skill == do_unignore)           return "do_unignore";
+
+	if ( skill == do_bounty)           return "do_bounty";
+
+	if ( skill == do_sn_nodescanner)           return "do_sn_nodescanner";
+	if ( skill == do_listnodes)           return "do_listnodes";
+
     if ( skill == do_imports)           return "do_imports";
     if ( skill == do_load_cargo)        return "do_load_cargo";
     if ( skill == do_unload_cargo )     return "do_unload_cargo";
@@ -621,6 +635,7 @@ char *skill_name( DO_FUN *skill )
 	if ( skill == do_sn_randomizer )           return "do_sn_randomizer";
 	if ( skill == do_sn_reconstruct )           return "do_sn_reconstruct";
 	if ( skill == do_sn_spun )           return "do_sn_spun";
+	if ( skill == do_sn_nightvision )           return "do_sn_nightvision";
 	if ( skill == do_sn_uninstall )           return "do_sn_uninstall";
 	if ( skill == do_sn_anchor )           return "do_sn_anchor";
 	if ( skill == do_sn_annex )           return "do_sn_annex";

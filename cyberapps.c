@@ -82,6 +82,8 @@ void do_sn_jackhammer(CHAR_DATA *ch, char *argument) {
 		if ( ch->pcdata->threatlevel > 10 )
 			ch->pcdata->threatlevel = 10;
 
+		ch->pcdata->bounty += ch->pcdata->threatlevel * 100;
+
 		REMOVE_BIT( xit->exit_info , EX_ISDOOR );
 		REMOVE_BIT( xit->exit_info , EX_LOCKED );
 		REMOVE_BIT( xit->exit_info , EX_CLOSED );
@@ -210,6 +212,8 @@ void do_sn_krash(CHAR_DATA *ch, char *argument) {
 		if ( ch->pcdata->threatlevel > 10 )
 			ch->pcdata->threatlevel = 10;
 
+		ch->pcdata->bounty += ch->pcdata->threatlevel * 100;
+
 		   planet->pop_support -= 1;
 
 			if ( planet->pop_support > 100 )
@@ -218,6 +222,69 @@ void do_sn_krash(CHAR_DATA *ch, char *argument) {
 				planet->pop_support = -100;
 
 			return;
+
+}
+
+void do_sn_nightvision(CHAR_DATA *ch, char *argument) {
+
+	OBJ_DATA *obj;
+	AFFECT_DATA af;
+	char buf[MAX_STRING_LENGTH];
+	bool ch_snippet;
+
+	if ( IS_NPC(ch) || !ch->pcdata )
+	   {
+	       send_to_char ( "huh?\n\r" , ch );
+	       return;
+	   }
+
+
+		if ( ch->position <= POS_SLEEPING )
+		{
+			send_to_char( "> you are hibernating\n\r" , ch );
+			return;
+		}
+
+
+
+		ch_snippet = FALSE;
+
+		for (obj = ch->last_carrying; obj; obj = obj->prev_content) {
+			if (obj->item_type == ITEM_SNIPPET && !strcmp(obj->name,
+					"nightvision")) {
+				ch_snippet = TRUE;
+				separate_obj(obj);
+				obj_from_char(obj);
+				extract_obj( obj );
+			}
+		}
+
+		if (!ch_snippet) {
+			send_to_char("> &Rnightvision application needed&w\n\r", ch);
+			return;
+		}
+
+		WAIT_STATE( ch, skill_table[gsn_propaganda]->beats );
+
+		sprintf(buf, "> %s uses a nightvision application",
+				ch->name);
+		echo_to_room(AT_RED, ch->in_room, buf);
+
+		if ( !IS_AFFECTED( ch, AFF_DETECT_HIDDEN ) )
+		{
+	  	   af.type      = gsn_detection;
+	  	   af.location  = 0;
+	  	   af.modifier  = 0;
+	  	   af.duration  = 5;
+	  	   af.bitvector = AFF_DETECT_HIDDEN;
+	  	   affect_to_char( ch, &af );
+		}
+		else{
+			send_to_char( "> nightvision already running\n\r" , ch );
+			return;
+		}
+
+		return;
 
 }
 
@@ -685,6 +752,8 @@ void do_sn_audit( CHAR_DATA *ch, char *argument )
 		if ( ch->pcdata->threatlevel > 10 )
 			ch->pcdata->threatlevel = 10;
 
+		ch->pcdata->bounty += ch->pcdata->threatlevel * 100;
+
 		return;
 	}
 
@@ -979,7 +1048,7 @@ void do_sn_checkout( CHAR_DATA *ch, char *argument )
 
 		for (obj = ch->last_carrying; obj; obj = obj->prev_content) {
 			if (obj->item_type == ITEM_SNIPPET && !strcmp(obj->name,
-					"checkout")) {
+					"checkout") && ch_snippet == FALSE) {
 				ch_snippet = TRUE;
 
 				obj->value[0] -= 1;
@@ -1378,6 +1447,8 @@ void do_sn_annex(CHAR_DATA *ch, char *argument) {
 		ch->pcdata->threatlevel += 1;
 		if ( ch->pcdata->threatlevel > 10 )
 			ch->pcdata->threatlevel = 10;
+
+		ch->pcdata->bounty += ch->pcdata->threatlevel * 100;
 
 		return;
 

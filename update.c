@@ -37,6 +37,7 @@ void	update_metronodes	args( ( void ) );
 void	update_threat	args( ( void ) );
 void	char_update	args( ( void ) );
 void    bank_update	args( ( void ) );
+void    detection_update	args( ( void ) );
 void	obj_update	args( ( void ) );
 void	aggr_update	args( ( void ) );
 void	room_act_update	args( ( void ) );
@@ -2055,6 +2056,7 @@ void update_handler( void )
 	if ( --pulse_mobile   <= 0 )
 	{
 		pulse_mobile	= PULSE_MOBILE;
+		detection_update( );
 		mobile_update  ( );
 	}
 
@@ -2627,6 +2629,49 @@ void bank_update()
 			ch->pcdata->bank += value2;
 			sprintf(buf, "> &C[bank] interest: %d&W\n\r", value2);
 			send_to_char(buf, ch);
+		}
+	}
+}
+
+void detection_update()
+{
+	CHAR_DATA *ch;
+	bool sneaker;
+	CHAR_DATA *rch;
+
+	for ( ch = last_char; ch; ch = gch_prev )
+	{
+		if ( ch == first_char && ch->prev )
+		{
+			bug( "char_update: first_char->prev != NULL... fixed", 0 );
+			ch->prev = NULL;
+		}
+		gch_prev = ch->prev;
+		set_cur_char( ch );
+		if ( gch_prev && gch_prev->next != ch )
+		{
+			bug( "char_update: ch->prev->next != ch", 0 );
+			return;
+		}
+
+
+		if ( !IS_NPC( ch ) && IS_AFFECTED( ch, AFF_DETECT_HIDDEN )){
+
+			sneaker = FALSE;
+
+		    for ( rch = ch->in_room->first_person; rch; rch = rch->next_in_room )
+		    {
+
+		    	if ( IS_AFFECTED( rch, AFF_SNEAK ) && sneaker == FALSE ){
+
+		    		if (rch != ch && !IS_IMMORTAL(rch)){
+		    		send_to_char("> &Ryou feel as if you are being watched&w\n\r", ch);
+		    		sneaker = TRUE;
+		    		}
+		    	}
+
+		    }
+
 		}
 	}
 }

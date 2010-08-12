@@ -283,6 +283,213 @@ void do_npctrack( CHAR_DATA *ch, char *argument )
    }
 }
 
+void do_sn_nodescanner( CHAR_DATA *ch, char *argument )
+{
+   CHAR_DATA *vict;
+   char buf [MAX_STRING_LENGTH];
+   char arg[MAX_INPUT_LENGTH];
+   int dir, maxdist, chance;
+   ROOM_INDEX_DATA *location;
+   bool ch_snippet;
+   OBJ_DATA *obj;
+
+   if ( !IS_NPC(ch) && !ch->pcdata->learned[gsn_spacecraft] )
+   {
+	send_to_char("> &Ryou can not trace nodes without decking&w\n\r", ch );
+	return;
+   }
+
+   one_argument(argument, arg);
+   if ( arg[0]=='\0' ) {
+      send_to_char("> &Yplease specify the id of the target node&w\n\r", ch);
+      return;
+   }
+
+   if (atoi(arg) < 0){
+
+	      send_to_char("> &Rinvalid node id&w\n\r", ch);
+	      return;
+
+   }
+
+	ch_snippet = FALSE;
+
+	for (obj = ch->last_carrying; obj; obj = obj->prev_content) {
+		if (obj->item_type == ITEM_SNIPPET && !strcmp(obj->name,
+				"nodescanner") && ch_snippet == FALSE) {
+			ch_snippet = TRUE;
+
+			obj->value[0] -= 1;
+
+			if (obj->value[0] < 1)
+			{
+			separate_obj(obj);
+			obj_from_char(obj);
+			extract_obj( obj );
+			send_to_char("> &Rnodescanner application has expired&w\n\r", ch);
+			}
+
+		}
+
+	}
+
+if (!ch_snippet) {
+	send_to_char("> &Rnodescanner application needed&w\n\r", ch);
+	return;
+}
+
+sprintf(buf,"> &y%s uses a nodescanner application", ch->name);
+act(AT_WHITE,buf, ch, NULL, NULL, TO_ROOM);
+
+   WAIT_STATE( ch, skill_table[gsn_propaganda]->beats );
+
+	chance = IS_NPC(ch) ? ch->top_level
+			: (int) (ch->pcdata->learned[gsn_spacecraft]);
+
+	if (number_range(1, 100) > chance){
+
+	      send_to_char("> &Ryou fail to use the nodescanner application&w\n\r", ch);
+	      return;
+
+	}
+
+   location = get_room_index( atoi( arg ) );
+
+   if (location == ch->in_room){
+
+	      send_to_char("> &Yyou are already in that node&w\n\r", ch);
+	      return;
+   }
+
+   if (location == NULL){
+
+	      send_to_char("> &Rinvalid node id&w\n\r", ch);
+	      return;
+   }
+
+   if (location->area->planet != ch->in_room->area->planet){
+
+	      send_to_char("> &Rtarget node is not in system&w\n\r", ch);
+	      return;
+   }
+
+   if (!location->area->planet->governed_by){
+
+	      send_to_char("> &Ryou can not trace nodes in this system&w\n\r", ch);
+	      return;
+
+   }
+
+   maxdist = 100 + ch->top_level * 30;
+
+   vict = create_mobile(get_mob_index(9));
+
+   char_to_room(vict, location);
+
+   dir = find_first_step(ch->in_room, vict->in_room, maxdist);
+
+   extract_char( vict, TRUE );
+
+   switch(dir) {
+      case BFS_ERROR:
+         send_to_char("> &Rhmm... something seems to be wrong&w\n\r", ch);
+         break;
+      case BFS_ALREADY_THERE:
+         send_to_char("> &Ryou're already in that node&w\n\r", ch);
+         break;
+      case BFS_NO_PATH:
+         sprintf(buf, "> &Ryou can't trace that node from here\n\r" );
+         send_to_char(buf, ch);
+         learn_from_failure( ch, gsn_spacecraft );
+         break;
+      default:
+         ch_printf(ch, "> &Yyou trace that node %s from here...&w\n\r", dir_name[dir]);
+	 learn_from_success( ch, gsn_spacecraft );
+         break;
+   }
+}
+
+void do_listnodes( CHAR_DATA *ch, char *argument )
+{
+
+	ROOM_INDEX_DATA * room;
+	bool found = FALSE;
+
+   if ( IS_NPC(ch) )
+	   return;
+
+   if ( !IS_NPC(ch) && !ch->pcdata->learned[gsn_spacecraft] )
+   {
+	send_to_char("> &Ryou can not list nodes without decking&w\n\r", ch );
+	return;
+   }
+
+   if ( argument[0]=='\0' ) {
+      send_to_char("> &Yplease specify the security level of the target node&w\n\r", ch);
+      send_to_char("> &Y0 = blue, 1 = green, 2 = orange, 3 = red, 4 = ultra-violet&w\n\r", ch);
+      return;
+   }
+
+   if (atoi(argument) < 0 && atoi(argument) < 4){
+
+	      send_to_char("> &Rinvalid security level&w\n\r", ch);
+	      return;
+
+   }
+
+   if ( !ch->pcdata->clan ){
+
+	      send_to_char("> &Ryou have to be in an organization to list nodes&w\n\r", ch);
+	      return;
+
+   }
+
+   if ( !ch->in_room->area->planet->governed_by ){
+
+	      send_to_char("> &Ryou can not list nodes in this system&w\n\r", ch);
+	      return;
+
+   }
+
+   if ( ch->in_room->area->planet->governed_by != ch->pcdata->clan){
+
+	      send_to_char("> &Ryou can only list nodes in systems that your organization controls&w\n\r", ch);
+	      return;
+
+   }
+
+   send_to_char("&pNODES&w\n\r", ch);
+   send_to_char("&W==========================================&w\n\r", ch);
+
+   int counter = 0;
+
+   for ( room = ch->in_room->area->first_room; room ; room = room->next_in_area ){
+
+	   if (room->level != atoi(argument))
+			   continue;
+
+	  found = TRUE;
+      pager_printf( ch, "%6ld) %s\n\r", room->vnum, room->name);
+
+      counter++;
+
+      if (counter >= 25){
+
+    	  send_to_char("&W==========================================&w\n\r", ch);
+    	  send_to_char("&Wtoo many matches...&w\n\r", ch);
+    	  break;
+      }
+
+   }
+
+   if (!found)
+	   send_to_char("> &Yno matches&w\n\r", ch);
+
+   WAIT_STATE( ch, skill_table[gsn_propaganda]->beats );
+
+   return;
+
+}
 
 
 void found_prey( CHAR_DATA *ch, CHAR_DATA *victim )

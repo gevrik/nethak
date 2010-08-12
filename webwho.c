@@ -185,77 +185,88 @@ void orgs_html_update(void) {
 #endif
 
 	buf[0] = '\0';
-	buf2[0] = '\0'; // If you set this later, why set it here too?
+	buf2[0] = '\0';
 
 	fclose(fpReserve);
 
 	// change file name of html file. eg: orgs.html
-	if ((fp = fopen("../../public_html/orgs.json", "w")) == NULL)
+
+	if ((fp = fopen("../../public_html/orgs.html", "w")) == NULL)
+
+		/*
+		 * change the directory above to the absolute directory and filename
+		 * of the page you are going to make.  IMPORTANT:  The file needs to
+		 * exist before you attempt to run this.
+		 *         --Valatar
+		 */
+		/*
+		 * Note: The above path specifies to move up out of the src directory,
+		 * then out of the swr directory, into the public_html directory, and then the destination..
+		 * which is online.html
+		 */
+
 	{
 
 		// same here, just change orgs
+
 		bug("orgs.html: fopen", 0);
 		perror("orgs.html");
-
 	} else {
+		fprintf(fp, "<html>\n");
+		fprintf(fp, "<head>\n");
+		fprintf(fp, "<title>");
 
-		// START JSON Array - EightBit
-		fprintf(fp, "{");
+		// change name of page
+		fprintf(fp, "Organization Info:");
 
-		// START JSON CLANS Array - EightBit
-		fprintf(fp, "\"Organizations\":[");
+		fprintf(fp, "</title>\n");
+		fprintf(fp, "<META HTTP-EQUIV=REFRESH CONTENT=30>\n");
+		fprintf(
+				fp,
+				"<BODY TEXT=" "#4189c8" " BGCOLOR=" "#FFFFFF" " LINK=" "#00FFFF" "");
+		fprintf(fp, "VLINK=" "#FFFFFF" " ALINK=" "#008080" ">\n\n");
+		fprintf(fp, "<CENTER>\n\n<TABLE BORDER=0 BGCOLOR=" "#FFFFFF" " >\n");
+		fprintf(fp, "<TR ALIGN=CENTER VALIGN=CENTER>\n");
+
+		// change text for header row
+		fprintf(fp,
+				"<TD><U><B><h3>Organization [Score]</h3></B></U><P></TD></TR>\n");
 
 		// now here is the main bit. I look through all organizations in the game
-		for (clan = first_clan; clan; clan = clan->next) {
 
+		for (clan = first_clan; clan; clan = clan->next) {
 			// setting score to 0
 			score = 0;
 
 			// looping through all systems to see if it is owned by the organization that is currently checked by the for loop
-			for (planet = first_planet; planet; planet = planet->next) {
+			for (planet = first_planet; planet; planet = planet->next)
 				if (clan == planet->governed_by) {
 					score += get_taxes(planet) / 720;
 				}
-			}
 
-			buf2[0] = '\0'; // not sure why you set it to '\0' ?
+			fprintf(fp, "<TR ALIGN=CENTER VALIGN=CENTER>\n");
+			fprintf(fp, "<TD>");
+			buf2[0] = '\0';
 
-			// Start CLAN Specific data
-			fprintf(fp, "{");
+			// I am fetching the name of the clan and the score into the string variable buf2
+			// normally just change clan->name and score to what you want to have
+			sprintf(buf2, "%s  [%d]", clan->name, score);
 
-			// Add Clan name
-			sprintf(buf2, "\"name\":\"%s\",", clan->name);
-			fprintf(fp, "%s", buf2); // Not sure what this %s is? - EightBit
-
-			// Add Clan score
-			sprintf(buf2, "\"score\":\"%d\",", score);
-			fprintf(fp, "%s", buf2); // Not sure what this %s is? - EightBit
-
-			// End CLAN Specific data
-			fprintf(fp, "}");
-
-
-			/*******************************************************************************
-				This was my origonal idea, but the way above seems more logical for adding *
-				to it in the future...                                                     *
-			                                                                               */
-			// Set data in array: {"name" : "clan->name", "score": "score"}, - EightBit
-			// sprintf(buf2, "{\"name\":\"%s\", \"score\":\"%d\"},", clan->name, score);
-			// fprintf(fp, "%s", buf2); // Not sure what this %s is? - EightBit
+			fprintf(fp, "%s", buf2);
+			fprintf(fp, "</TD></TR>\n");
 
 		}
 
-		// CLOSE JSON CLANS Array - EightBit
-		fprintf(fp, "],");
-
-		// Add extra info/content - EightBit
-		sprintf(buf, "{\"Updated\":\"%s GMT\"}", ((char *) ctime(&current_time)));
+		fprintf(fp, "</TABLE></CENTER>\n");
+		fprintf(fp, "<BR><BR><BR><BR>\n\n");
+		fprintf(fp, "<font face=" "Times New Roman" "><center>\n");
+		sprintf(buf, "Last updated at %s GMT\n",
+				((char *) ctime(&current_time)));
 		fprintf(fp, "%s", buf);
+		fprintf(fp, "</center></font>\n");
 
-		// CLOSE JSON Array - EightBit
-		fprintf(fp, "}");
-
-		// close the file...
+		fprintf(fp, "</body>\n");
+		fprintf(fp, "</html>\n");
 		fclose(fp);
 		fpReserve = fopen(NULL_FILE, "r");
 	} /*end if */
