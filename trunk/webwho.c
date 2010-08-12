@@ -164,6 +164,107 @@ void who_html_update(void) {
 	return;
 }/* end function */
 
+void metro_html_update(void) {
+
+	/* this code assumes 45-character titles and max color switches (485 bytes).
+	 if title length is increased the buf sizes must be increased */
+	FILE *fp;
+	DESCRIPTOR_DATA *d;
+	char buf[2 * MAX_INPUT_LENGTH];
+	char buf2[2 * MAX_INPUT_LENGTH];
+	int sn, count;
+
+#ifdef DEBUG
+	Debug ("metro_html_update");
+#endif
+
+	buf[0] = '\0';
+	buf2[0] = '\0';
+
+	fclose(fpReserve);
+	if ((fp = fopen("../../public_html/metro.html", "w")) == NULL)
+
+	/*
+	 * change the directory above to the absolute directory and filename
+	 * of the page you are going to make.  IMPORTANT:  The file needs to
+	 * exist before you attempt to run this.
+	 *         --Valatar
+	 */
+	/*
+	 * Note: The above path specifies to move up out of the src directory,
+	 * then out of the swr directory, into the public_html directory, and then the destination..
+	 * which is online.html
+	 */
+
+	{
+		bug("metro.html: fopen", 0);
+		perror("metro.html");
+	} else {
+		fprintf(fp, "<html>\n");
+		fprintf(fp, "<head>\n");
+		fprintf(fp, "<title>");
+		fprintf(fp, "Players currently jacked-in:");
+
+		fprintf(fp, "</title>\n");
+		fprintf(fp, "<META HTTP-EQUIV=REFRESH CONTENT=30>\n");
+		fprintf(
+				fp,
+				"<BODY TEXT=" "#4189c8" " BGCOLOR=" "#FFFFFF" " LINK=" "#00FFFF" "");
+		fprintf(fp, "VLINK=" "#FFFFFF" " ALINK=" "#008080" ">\n\n");
+		fprintf(fp, "<CENTER>\n\n<TABLE BORDER=0 BGCOLOR=" "#FFFFFF" " >\n");
+		fprintf(fp, "<TR ALIGN=CENTER VALIGN=CENTER>\n");
+		//fprintf(fp, "<TD>Level</TD>\n");
+		fprintf(fp,
+				"<TD><U><B><h3>Runner-Title [Metro Score]</h3></B></U><P></TD></TR>\n");
+
+		for (d = first_descriptor; d != NULL; d = d->next) {
+			CHAR_DATA *wch;
+			char class[5];
+
+			if (d->connected != CON_PLAYING)
+				continue;
+			wch = (d->original != NULL) ? d->original : d->character;
+			class[0] = '\0';
+
+			if (!IS_SET(wch->act, PLR_WIZINVIS )) {
+				fprintf(fp, "<TR ALIGN=CENTER VALIGN=CENTER>\n");
+				fprintf(fp, "<TD>");
+				buf2[0] = '\0';
+
+				sprintf(buf2, "%s  [%d]", (IS_NPC(wch) ? ""
+						: wch->pcdata->title), wch->pcdata->homesmetro);
+
+				html_colourconv(buf, buf2, wch);
+				fprintf(fp, "%s", buf);
+				fprintf(fp, "</TD></TR>\n");
+
+			} /*end if */
+		} /*end for */
+
+		fprintf(fp, "</TABLE></CENTER>\n");
+		fprintf(fp, "<BR><BR><BR><BR>\n\n");
+		fprintf(fp, "<font face=" "Times New Roman" "><center>\n");
+		sprintf(buf, "Last updated at %s GMT\n",
+				((char *) ctime(&current_time)));
+		fprintf(fp, "%s", buf);
+		fprintf(fp, "</center></font>\n");
+
+		//fprintf(fp, "<br><br>\n");
+		//fprintf(fp, "<CENTER><P><A HREF=\"index.html\">\n");
+		/*
+		 * You may need to change the line above, depending on where you want this link to go to
+		 */
+		//fprintf(fp, "Return to main page</A> </P></CENTER></Font>\n");
+
+		fprintf(fp, "</body>\n");
+		fprintf(fp, "</html>\n");
+		fclose(fp);
+		fpReserve = fopen(NULL_FILE, "r");
+	} /*end if */
+
+	return;
+}/* end function */
+
 void orgs_html_update(void) {
 
 	FILE *fp;
