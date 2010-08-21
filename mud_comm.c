@@ -235,7 +235,7 @@ void do_mp_offer_agent( CHAR_DATA *ch, char *argument )
        for ( dPlanet = first_planet ; dPlanet ; dPlanet = dPlanet->next )
            if ( ++pCount == rCount )
                break;
-       
+
        if( !dPlanet || dPlanet == ch->in_room->area->planet || dPlanet == first_planet )
        {
           do_say( ch , "I have no jobs to offer you at this time!" );
@@ -259,8 +259,12 @@ void do_mp_offer_agent( CHAR_DATA *ch, char *argument )
 	planet = ch->in_room->area->planet;
 
 
+
+
 	if ( !clan )
 	{
+		tclan = dPlanet->governed_by;
+
 	       sprintf( buf , "virus %s" , dPlanet->name );
 
 	       if ( get_obj_here( ch, buf ) )
@@ -300,14 +304,11 @@ void do_mp_offer_agent( CHAR_DATA *ch, char *argument )
           return;
 		}
 
-		if ( !victim->pcdata->clan )
-		{
 			if( !nifty_is_name( tclan->name, clan->atwar ) )
 			{
 				do_say( ch , "I have no jobs to offer you at this time! [no war]" );
 				return;
 			}
-		}
 
        sprintf( buf , "virus %s" , dPlanet->name );
        

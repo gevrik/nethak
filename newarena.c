@@ -919,6 +919,7 @@ void do_adecline(CHAR_DATA *ch, char *argument)
    sprintf(buf,"> %s has declined %s's challenge\n\r",ch->name,ch->challenged->name);
    sportschan(buf);
    ch->challenged=NULL;
+   ch->opponent = NULL;
    return;
  }
  else 

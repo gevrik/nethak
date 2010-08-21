@@ -890,9 +890,15 @@ ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
     			if ( obj->item_type == ITEM_SNIPPET && !strcmp(obj->name,
     					"bubble") && fail == FALSE ) {
     				fail = TRUE;
+
+    				obj->value[0] -= 1;
+    				if (obj->value[0] < 1)
+    				{
     				separate_obj(obj);
     				obj_from_char(obj);
     				extract_obj( obj );
+    				send_to_char("> &Rbubble application has expired&w\n\r", victim);
+    				}
     			}
     		}
 
@@ -919,11 +925,11 @@ ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
 	  	   af.bitvector = AFF_PARALYSIS;
 	  	   affect_to_char( victim, &af );
 	  	   update_pos( victim );
+	  	   victim->was_stunned = 10;
 	  	   if ( IS_NPC(victim) )
 	  	   {
 	  	       start_hating( victim, ch );
 	  	       start_hunting( victim, ch );
-	  	       victim->was_stunned = 10;
 	  	   }
 		}
     	    }

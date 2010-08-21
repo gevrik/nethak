@@ -1900,6 +1900,12 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 			obj->cost = ( level / 10 ) * 10;
 		}
 
+	if ( !str_cmp( arg, "bubble" ) )
+		{
+			obj->value[0] = level;
+			obj->cost = level;
+		}
+
 	if ( !str_cmp( arg, "checkout" ) )
 		{
 			obj->value[0] = level / 10;
