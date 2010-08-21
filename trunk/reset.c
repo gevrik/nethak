@@ -370,6 +370,10 @@ void reset_all() {
 					STRFREE( mob->long_descr );
 					mob->long_descr = STRALLOC( tmpbuf );
 					mob->mob_clan = pRoomIndex->area->planet->governed_by;
+
+					STRFREE( mob->description );
+					mob->description	=STRALLOC( "You see a Guard ICE.\n Looking akward and built like a tank, he almost seems polygonal.\nResponsible of the security of his affected system, he watches around and he's ready to arrest any spoilsport : you better don't mess with Major Tom.\r");
+
 				}
 
 			}
@@ -937,6 +941,9 @@ void reset_all() {
 				mob->short_descr	= STRALLOC( "rogue hacker" );
 				mob->gold = ( number_range(100, 200) * (pRoomIndex->level + 1) );
 
+				STRFREE( mob->description );
+				mob->description	=STRALLOC( "You see a Rogue Hacker. \nSurvivor of a gone era, he was certainly some kind of traitor, conspiring in the shadows against NetWatch Org. They were taken down in its fall.\n Even if he now looks like an outdated poor thing, never underestimate him : a feral spark still glows in his eyes, watching around for something to pounce with his blade.\n\n\r");
+
 				continue;
 				}
 				else if ( randmob == 2)
@@ -972,6 +979,9 @@ void reset_all() {
 					mob->long_descr	= STRALLOC( "netWatch scout\n\r" );
 					mob->gold = ( number_range(50, 100) * (pRoomIndex->level + 1) );
 
+					STRFREE( mob->description );
+					mob->description	=STRALLOC( "You see a NetWatch Scout. \nBulky and mainly composed of its comlink module and scanner array, it moves systematically through the node scanning for intruders. \nA NetWatch Emblem glows dimly on its side, memory of the past greatness of systems and organization now forgotten.\n\r");
+
 					continue;
 				}
 				else if ( randmob == 3)
@@ -998,6 +1008,10 @@ void reset_all() {
 					STRFREE( mob->long_descr );
 					mob->long_descr	= STRALLOC( "metropolis virus\n\r" );
 					mob->gold = ( number_range(25, 50) * (pRoomIndex->level + 1) );
+
+					STRFREE( mob->description );
+					mob->description	=STRALLOC( "you see a Metro Virus. \nLarge and rough, the Metro Virus glares around the node, daring anyone to challenge it.\n With its experience of Metro, it's a dreadful opponent and it'll not hesitate to take some distance and shoot you if you're too mighty for direct assault.\n\r" );
+
 
 					if ((pObjIndex = get_obj_index(OBJ_VNUM_BLASTER))
 							!= NULL) {
@@ -1037,6 +1051,9 @@ void reset_all() {
 					STRFREE( mob->long_descr );
 					mob->long_descr	= STRALLOC( "metropolis bot\n\r" );
 					mob->gold = ( number_range(5, 10) * (pRoomIndex->level + 1) );
+
+					STRFREE( mob->description );
+					mob->description	=STRALLOC( "You see a Metro bot, a large Cube with a seemingly unbroken surface.\nA small scanner pops out on one of the surfaces and sweeps the node, checking for some ennemy to wipe out.\n Then, it returns and leaves the surface uniform once again, treacherously harmless-looking.\n\r");
 
 					if ((pObjIndex = get_obj_index(OBJ_VNUM_TOKEN))
 							!= NULL) {

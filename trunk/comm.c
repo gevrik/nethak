@@ -1941,7 +1941,7 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 				return;
 			}
 			/* Old player */
-			write_to_buffer( d, "> password: ", 0 );
+			write_to_buffer( d, "> existing account - password: ", 0 );
 			write_to_buffer( d, echo_off_str, 0 );
 			d->connected = CON_GET_OLD_PASSWORD;
 			return;
