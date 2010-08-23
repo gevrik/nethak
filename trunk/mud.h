@@ -2414,6 +2414,7 @@ struct	room_index_data
     sh_int		level;
     int claimpower;
     int room_flags2;
+    int lockdown;
 };
 
 /*
@@ -3152,6 +3153,8 @@ DECLARE_DO_FUN(	do_sn_krash	);
 DECLARE_DO_FUN(	do_sn_reconstruct	);
 DECLARE_DO_FUN(	do_sn_spun	);
 DECLARE_DO_FUN(	do_sn_nightvision	);
+DECLARE_DO_FUN(	do_sn_lockout	);
+DECLARE_DO_FUN(	do_sn_reinit	);
 DECLARE_DO_FUN(	do_sn_dropline	);
 DECLARE_DO_FUN(	do_sn_uninstall	);
 DECLARE_DO_FUN(	do_sn_anchor	);

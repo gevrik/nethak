@@ -507,6 +507,8 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_sn_shortcut" )) 		return do_sn_shortcut;
 	if ( !str_cmp( name, "do_sn_spun" )) 		return do_sn_spun;
 	if ( !str_cmp( name, "do_sn_nightvision" )) 		return do_sn_nightvision;
+	if ( !str_cmp( name, "do_sn_lockout" )) 		return do_sn_lockout;
+	if ( !str_cmp( name, "do_sn_reinit" )) 		return do_sn_reinit;
 	if ( !str_cmp( name, "do_sn_uninstall" )) 		return do_sn_uninstall;
 	if ( !str_cmp( name, "do_snipe" ))		return do_snipe;
 	if ( !str_cmp( name, "do_sneak" ))		return do_sneak;
@@ -636,6 +638,8 @@ char *skill_name( DO_FUN *skill )
 	if ( skill == do_sn_reconstruct )           return "do_sn_reconstruct";
 	if ( skill == do_sn_spun )           return "do_sn_spun";
 	if ( skill == do_sn_nightvision )           return "do_sn_nightvision";
+	if ( skill == do_sn_lockout )           return "do_sn_lockout";
+	if ( skill == do_sn_reinit )           return "do_sn_reinit";
 	if ( skill == do_sn_uninstall )           return "do_sn_uninstall";
 	if ( skill == do_sn_anchor )           return "do_sn_anchor";
 	if ( skill == do_sn_annex )           return "do_sn_annex";
