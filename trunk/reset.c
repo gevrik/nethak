@@ -379,7 +379,7 @@ void reset_all() {
 					mob->mob_clan = pRoomIndex->area->planet->governed_by;
 
 					STRFREE( mob->description );
-					mob->description	=STRALLOC( "You see a Guard ICE.\n Looking akward and built like a tank, he almost seems polygonal.\nResponsible of the security of his affected system, he watches around and he's ready to arrest any spoilsport : you better don't mess with Major Tom.\r");
+					mob->description	=STRALLOC( "You see a Guard ICE.\n Looking awkward and built like a tank, he almost seems polygonal.\nResponsible of the security of his affected system, he watches around and he's ready to arrest any spoilsport : you better don't mess with Major Tom.\r");
 
 				}
 

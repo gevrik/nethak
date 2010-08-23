@@ -322,7 +322,8 @@ void do_buyskill( CHAR_DATA *ch, char *argument )
 		send_to_char( "> cost: 5,000c\n\r",	ch );
 		send_to_char( "> skills: aid, backstab, blades, blasters, circle, codeapp, codeblade, codeblaster, codecontainer, codedef, codemed, codeshield, codeutil,"
 				" damboost, disarm, disguise, dodge, dualwield, firstaid, gouge, hide, kick, parry, peek, picklock, poisonmod, postguard, propaganda, quicktalk,"
-				" reinforcements, rescue, second attack, sneak, steal, throw, trace, inquire, slicebank, slicefund, slicesnippets, portscan, systrace\n\r",	ch );
+				" reinforcements, rescue, second attack, sneak, steal, throw, trace, inquire, slicebank, slicefund, slicesnippets, portscan, systrace, third attack,"
+				" hitall\n\r",	ch );
 		return;
 	}
 
@@ -1074,6 +1075,14 @@ void do_decompile( CHAR_DATA *ch, char *argument )
 
 	obj = create_object(pObjIndex, 1);
 	SET_BIT(obj->extra_flags, ITEM_INVENTORY);
+
+	if ( !str_cmp( arg, "app" ) )
+		{
+		obj->value[0] = number_range(1, 3);
+		obj->value[1] = obj->value[0];
+		obj->cost = obj->value[0] * 10;
+		}
+
 	obj = obj_to_char(obj, ch);
 
 	ch_printf( ch , "%s\n\r\n\r", obj->name);

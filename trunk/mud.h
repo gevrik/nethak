@@ -3288,7 +3288,7 @@ DECLARE_DO_FUN( do_makeconstructupgrade );
 DECLARE_DO_FUN( do_makecontainer );
 DECLARE_DO_FUN( do_reinforcements );
 DECLARE_DO_FUN( do_postguard );
-DECLARE_DO_FUN( do_torture );
+//DECLARE_DO_FUN( do_torture );
 DECLARE_DO_FUN( do_snipe );
 DECLARE_DO_FUN( do_throw );
 DECLARE_DO_FUN( do_disguise );

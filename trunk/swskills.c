@@ -2466,112 +2466,112 @@ void add_reinforcements( CHAR_DATA *ch )
 	}
 }
 
-void do_torture( CHAR_DATA *ch, char *argument )
-{
-	char arg[MAX_INPUT_LENGTH];
-	CHAR_DATA *victim;
-	int chance, dam;
-	bool fail;
-
-	if ( !IS_NPC(ch)
-			&&  ch->pcdata->learned[gsn_torture] <= 0  )
-	{
-		send_to_char(
-				"> your mind races as you realize you have no idea how to do that\n\r", ch );
-		return;
-	}
-
-	if ( IS_NPC(ch) && IS_AFFECTED( ch, AFF_CHARM ) )
-	{
-		send_to_char( "> you cannot do that right now\n\r", ch );
-		return;
-	}
-
-	one_argument( argument, arg );
-
-	if ( ch->mount )
-	{
-		send_to_char( "> you cannot get close enough while mounted\n\r", ch );
-		return;
-	}
-
-	if ( arg[0] == '\0' )
-	{
-		send_to_char( "Torture whom?\n\r", ch );
-		return;
-	}
-
-	if ( ( victim = get_char_room( ch, arg ) ) == NULL )
-	{
-		send_to_char( "> they aren't here\n\r", ch );
-		return;
-	}
-
-	if ( victim == ch )
-	{
-		send_to_char( "> are you masacistic or what\n\r", ch );
-		return;
-	}
-
-	if ( !IS_AWAKE(victim) )
-	{
-		send_to_char( "> you need to wake them first\n\r", ch );
-		return;
-	}
-
-	if ( is_safe( ch, victim ) )
-		return;
-
-	if ( victim->fighting )
-	{
-		send_to_char( "> you cannot torture someone whos in combat\n\r", ch );
-		return;
-	}
-
-	ch->alignment = ch->alignment -= 100;
-	ch->alignment = URANGE( -1000, ch->alignment, 1000 );
-
-	WAIT_STATE( ch, skill_table[gsn_torture]->beats );
-
-	fail = FALSE;
-	chance = ris_save( victim, IS_NPC(ch) ? ch->top_level : ch->pcdata->learned[gsn_torture], RIS_PARALYSIS );
-	if ( chance == 1000 )
-		fail = TRUE;
-	else
-		fail = saves_para_petri( chance, victim );
-
-	chance = 5;
-	if ( !fail
-			&& (  IS_NPC(ch)
-					|| (number_percent( ) + chance) < ch->pcdata->learned[gsn_torture] ) )
-	{
-		learn_from_success( ch, gsn_torture );
-		WAIT_STATE( ch,     2 * PULSE_VIOLENCE );
-		WAIT_STATE( victim, PULSE_VIOLENCE );
-		act( AT_SKILL, "$N slowly tortures you. The pain is excruciating", victim, NULL, ch, TO_CHAR );
-		act( AT_SKILL, "> you torture $N, leaving $M screaming in pain", ch, NULL, victim, TO_CHAR );
-		act( AT_SKILL, "> $n tortures $N, leaving $M screaming in agony!", ch, NULL, victim, TO_NOTVICT );
-
-		dam = dice( (IS_NPC(ch) ? ch->top_level : ch->pcdata->learned[gsn_torture])/10 , 4 );
-		dam = URANGE( 0, victim->max_hit-10, dam );
-		victim->hit -= dam;
-		victim->max_hit -= dam;
-
-		ch_printf( victim, "> you lose %d permanent hit points" ,dam);
-		ch_printf( ch, "> they lose %d permanent hit points" , dam);
-
-	}
-	else
-	{
-		act( AT_SKILL, "$N tries to cut off your finger!", victim, NULL, ch, TO_CHAR );
-		act( AT_SKILL, "> you mess up big time", ch, NULL, victim, TO_CHAR );
-		act( AT_SKILL, "> $n tries to painfully torture $N", ch, NULL, victim, TO_NOTVICT );
-		WAIT_STATE( ch,     2 * PULSE_VIOLENCE );
-		global_retcode = multi_hit( victim, ch, TYPE_UNDEFINED );
-	}
-	return;
-
-}
+//void do_torture( CHAR_DATA *ch, char *argument )
+//{
+//	char arg[MAX_INPUT_LENGTH];
+//	CHAR_DATA *victim;
+//	int chance, dam;
+//	bool fail;
+//
+//	if ( !IS_NPC(ch)
+//			&&  ch->pcdata->learned[gsn_torture] <= 0  )
+//	{
+//		send_to_char(
+//				"> your mind races as you realize you have no idea how to do that\n\r", ch );
+//		return;
+//	}
+//
+//	if ( IS_NPC(ch) && IS_AFFECTED( ch, AFF_CHARM ) )
+//	{
+//		send_to_char( "> you cannot do that right now\n\r", ch );
+//		return;
+//	}
+//
+//	one_argument( argument, arg );
+//
+//	if ( ch->mount )
+//	{
+//		send_to_char( "> you cannot get close enough while mounted\n\r", ch );
+//		return;
+//	}
+//
+//	if ( arg[0] == '\0' )
+//	{
+//		send_to_char( "Torture whom?\n\r", ch );
+//		return;
+//	}
+//
+//	if ( ( victim = get_char_room( ch, arg ) ) == NULL )
+//	{
+//		send_to_char( "> they aren't here\n\r", ch );
+//		return;
+//	}
+//
+//	if ( victim == ch )
+//	{
+//		send_to_char( "> are you masochistic or what\n\r", ch );
+//		return;
+//	}
+//
+//	if ( !IS_AWAKE(victim) )
+//	{
+//		send_to_char( "> you need to wake them first\n\r", ch );
+//		return;
+//	}
+//
+//	if ( is_safe( ch, victim ) )
+//		return;
+//
+//	if ( victim->fighting )
+//	{
+//		send_to_char( "> you cannot torture someone whos in combat\n\r", ch );
+//		return;
+//	}
+//
+//	ch->alignment = ch->alignment -= 100;
+//	ch->alignment = URANGE( -1000, ch->alignment, 1000 );
+//
+//	WAIT_STATE( ch, skill_table[gsn_torture]->beats );
+//
+//	fail = FALSE;
+//	chance = ris_save( victim, IS_NPC(ch) ? ch->top_level : ch->pcdata->learned[gsn_torture], RIS_PARALYSIS );
+//	if ( chance == 1000 )
+//		fail = TRUE;
+//	else
+//		fail = saves_para_petri( chance, victim );
+//
+//	chance = 5;
+//	if ( !fail
+//			&& (  IS_NPC(ch)
+//					|| (number_percent( ) + chance) < ch->pcdata->learned[gsn_torture] ) )
+//	{
+//		learn_from_success( ch, gsn_torture );
+//		WAIT_STATE( ch,     2 * PULSE_VIOLENCE );
+//		WAIT_STATE( victim, PULSE_VIOLENCE );
+//		act( AT_SKILL, "$N slowly tortures you. The pain is excruciating", victim, NULL, ch, TO_CHAR );
+//		act( AT_SKILL, "> you torture $N, leaving $M screaming in pain", ch, NULL, victim, TO_CHAR );
+//		act( AT_SKILL, "> $n tortures $N, leaving $M screaming in agony!", ch, NULL, victim, TO_NOTVICT );
+//
+//		dam = dice( (IS_NPC(ch) ? ch->top_level : ch->pcdata->learned[gsn_torture])/10 , 4 );
+//		dam = URANGE( 0, victim->max_hit-10, dam );
+//		victim->hit -= dam;
+//		victim->max_hit -= dam;
+//
+//		ch_printf( victim, "> you lose %d permanent hit points" ,dam);
+//		ch_printf( ch, "> they lose %d permanent hit points" , dam);
+//
+//	}
+//	else
+//	{
+//		act( AT_SKILL, "$N tries to cut off your finger!", victim, NULL, ch, TO_CHAR );
+//		act( AT_SKILL, "> you mess up big time", ch, NULL, victim, TO_CHAR );
+//		act( AT_SKILL, "> $n tries to painfully torture $N", ch, NULL, victim, TO_NOTVICT );
+//		WAIT_STATE( ch,     2 * PULSE_VIOLENCE );
+//		global_retcode = multi_hit( victim, ch, TYPE_UNDEFINED );
+//	}
+//	return;
+//
+//}
 
 void do_disguise( CHAR_DATA *ch, char *argument )
 {

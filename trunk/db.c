@@ -78,7 +78,7 @@ AUCTION_DATA    * 	auction;	/* auctions */
 FILE		*	fpLOG;
 
 /* criminals */
-sh_int   gsn_torture;
+//sh_int   gsn_torture;
 sh_int   gsn_disguise;
 sh_int   gsn_pickshiplock;
 sh_int   gsn_hijack;
@@ -459,7 +459,7 @@ void boot_db( void )
     	ASSIGN_GSN( gsn_slicesnippets   , "slicesnippets" );
     	ASSIGN_GSN( gsn_inquire   , "inquire" );
     	ASSIGN_GSN( gsn_portscan   , "portscan" );
-        ASSIGN_GSN( gsn_torture   , "torture" );
+        //ASSIGN_GSN( gsn_torture   , "torture" );
         ASSIGN_GSN( gsn_throw   , "throw" );
         ASSIGN_GSN( gsn_disguise   , "disguise" );
         ASSIGN_GSN( gsn_first_aid   , "firstaid" );
