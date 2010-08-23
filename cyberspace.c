@@ -1615,17 +1615,27 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 				&& str_cmp( arg, "annex")
 				&& str_cmp( arg, "nightvision")
 				&& str_cmp( arg, "bubble")
-				&& str_cmp( arg, "nodescanner"))
+				&& str_cmp( arg, "nodescanner")
+				&& str_cmp( arg, "lockout")
+				&& str_cmp( arg, "reinit"))
 		{
 			send_to_char( "> &Ryou cannot code that app, try:\n\r&w", ch);
 			send_to_char( "> jackhammer, krash, spun, reconstruct\n\r", ch);
 			send_to_char( "> dropline, uninstall, anchor, audit\n\r", ch);
 			send_to_char( "> shortcut, checkout, emp, annex, nightvision\n\r", ch);
-			send_to_char( "> bubble, nodescanner\n\r", ch);
+			send_to_char( "> bubble, nodescanner, lockout, reinit\n\r", ch);
 			return;
 		}
 
 		if ( !str_cmp( arg, "jackhammer" ) )
+		{
+			cost = 500;
+		}
+		else if ( !str_cmp( arg, "lockout" ) )
+		{
+			cost = 1000;
+		}
+		else if ( !str_cmp( arg, "reinit" ) )
 		{
 			cost = 500;
 		}
@@ -1698,7 +1708,7 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 			send_to_char( "> jackhammer, krash, spun, reconstruct\n\r", ch);
 			send_to_char( "> dropline, uninstall, anchor, audit\n\r", ch);
 			send_to_char( "> shortcut, checkout, emp, annex, nightvision\n\r", ch);
-			send_to_char( "> bubble, nodescanner\n\r", ch);
+			send_to_char( "> bubble, nodescanner, lockout, reinit\n\r", ch);
 			return;
 		}
 
@@ -1796,6 +1806,14 @@ void do_codeapp( CHAR_DATA *ch, char *argument )
 	}
 
 	if ( !str_cmp( arg, "jackhammer" ) )
+	{
+		cost = 500;
+	}
+	else if ( !str_cmp( arg, "lockout" ) )
+	{
+		cost = 1000;
+	}
+	else if ( !str_cmp( arg, "reinit" ) )
 	{
 		cost = 500;
 	}

@@ -293,6 +293,13 @@ void reset_all() {
 				if (pRoomIndex->area->planet->barracks * 5 <= guard_count)
 					continue;
 
+				if(pRoomIndex->lockdown > 0){
+
+					pRoomIndex->lockdown = 0;
+					continue;
+
+				}
+
 				mob = create_mobile(pMobIndex);
 				char_to_room(mob, pRoomIndex);
 				mob->top_level = 20 * guardlevel;

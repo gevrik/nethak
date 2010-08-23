@@ -5124,8 +5124,14 @@ void do_survey ( CHAR_DATA *ch , char *argument )
 	if ( IS_SET( room->room_flags , ROOM_PAWN ) )
 		ch_printf( ch, "&Y   you can buy and sell useful modules here\n\r" );
 
-	if ( IS_SET( room->room_flags , ROOM_BARRACKS ) )
+	if ( IS_SET( room->room_flags , ROOM_BARRACKS ) ){
+
+		if (room->lockdown == 0)
 		ch_printf( ch, "&Y   this firewall spawns ICE\n\r" );
+		else
+		ch_printf( ch, "&Y   this firewall is LOCKED DOWN\n\r" );
+
+	}
 
 	if ( IS_SET( room->room_flags , ROOM_NOPEDIT ) )
 		ch_printf( ch, "&Wthis node is NOT user editable\n\r" );

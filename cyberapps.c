@@ -180,7 +180,7 @@ void do_sn_krash(CHAR_DATA *ch, char *argument) {
 
 		for (obj = ch->last_carrying; obj; obj = obj->prev_content) {
 			if (obj->item_type == ITEM_SNIPPET && !strcmp(obj->name,
-					"krash")) {
+					"krash") && ch_snippet == FALSE) {
 				ch_snippet = TRUE;
 				separate_obj(obj);
 				obj_from_char(obj);
@@ -222,6 +222,227 @@ void do_sn_krash(CHAR_DATA *ch, char *argument) {
 				planet->pop_support = -100;
 
 			return;
+
+}
+
+void do_sn_lockout(CHAR_DATA *ch, char *argument) {
+
+	CLAN_DATA *clan;
+	OBJ_DATA *obj;
+	char buf[MAX_STRING_LENGTH];
+	char bufa[MAX_STRING_LENGTH];
+	PLANET_DATA *planet;
+	bool ch_snippet;
+
+	planet = ch->in_room->area->planet;
+
+	if (IS_NPC(ch) || !ch->pcdata || !ch->in_room)
+		return;
+
+	if ( IS_NPC(ch) || !ch->pcdata )
+	   {
+	       send_to_char ( "huh?\n\r" , ch );
+	       return;
+	   }
+
+	   clan = ch->pcdata->clan;
+
+	   if ( ( planet = ch->in_room->area->planet ) == NULL )
+	   {
+	       send_to_char ( "> &Ryou cannot do that here&w\n\r" , ch );
+	       return;
+	   }
+
+	   if ( IS_SET( planet->flags, PLANET_NOCAP ) )
+	   {
+	       send_to_char( "> &Ryou cannot do that here&w\n\r", ch );
+	       return;
+	   }
+
+		if ( IS_SET( ch->in_room->room_flags, ROOM_SAFE ) )
+		{
+			set_char_color( AT_MAGIC, ch );
+			send_to_char( "> this is not a good place to do that\n\r", ch );
+			return;
+		}
+
+		if ( !IS_SET( ch->in_room->room_flags, ROOM_BARRACKS ) )
+		{
+			set_char_color( AT_MAGIC, ch );
+			send_to_char( "> this is not a good place to do that\n\r", ch );
+			return;
+		}
+
+		if ( ch->position == POS_FIGHTING )
+		{
+			send_to_char( "> cannot lockout in combat\n\r" , ch );
+			return;
+		}
+
+		if ( ch->position <= POS_SLEEPING )
+		{
+			send_to_char( "> you are sleeping\n\r" , ch );
+			return;
+		}
+
+	   if ( clan == planet->governed_by )
+	   {
+	       send_to_char ( "> &Ryou can not lockout your own firewalls&w\n\r" , ch );
+	       return;
+	   }
+
+	   if (ch->in_room->lockdown > 0){
+
+	       send_to_char ( "> &Rthis firewall is already locked down&w\n\r" , ch );
+	       return;
+
+	   }
+
+
+		ch_snippet = FALSE;
+
+		for (obj = ch->last_carrying; obj; obj = obj->prev_content) {
+			if (obj->item_type == ITEM_SNIPPET && !strcmp(obj->name,
+					"lockout") && ch_snippet == FALSE) {
+				ch_snippet = TRUE;
+				separate_obj(obj);
+				obj_from_char(obj);
+				extract_obj( obj );
+			}
+		}
+
+		if (!ch_snippet) {
+			send_to_char("> &Rlockout application needed&w\n\r", ch);
+			return;
+		}
+
+		WAIT_STATE( ch, skill_table[gsn_propaganda]->beats );
+
+		sprintf(buf, "> %s's applications locks down this firewall.",
+				ch->name);
+		echo_to_room(AT_YELLOW, ch->in_room, buf);
+
+		sprintf(bufa, "> %s used LOCKOUT in %s ",
+				ch->name, ch->in_room->area->planet->name);
+		echo_to_clan(AT_RED, bufa, ECHOTAR_ALL, ch->in_room->area->planet->governed_by);
+
+		if (ch->pcdata->threataction < 1) {
+		send_to_char( "> &Wthreat status changed to: &btraced&w\n\r",        ch );
+		ch->pcdata->threataction = 1;
+		}
+
+		ch->pcdata->threatlevel += 1;
+		if ( ch->pcdata->threatlevel > 10 )
+			ch->pcdata->threatlevel = 10;
+
+		ch->pcdata->bounty += ch->pcdata->threatlevel * 100;
+
+		ch->in_room->lockdown = 1;
+
+		return;
+
+}
+
+void do_sn_reinit(CHAR_DATA *ch, char *argument) {
+
+	CLAN_DATA *clan;
+	OBJ_DATA *obj;
+	char buf[MAX_STRING_LENGTH];
+	char bufa[MAX_STRING_LENGTH];
+	PLANET_DATA *planet;
+	bool ch_snippet;
+
+	planet = ch->in_room->area->planet;
+
+	if (IS_NPC(ch) || !ch->pcdata || !ch->in_room)
+		return;
+
+	if ( IS_NPC(ch) || !ch->pcdata )
+	   {
+	       send_to_char ( "huh?\n\r" , ch );
+	       return;
+	   }
+
+	   clan = ch->pcdata->clan;
+
+	   if ( ( planet = ch->in_room->area->planet ) == NULL )
+	   {
+	       send_to_char ( "> &Ryou cannot do that here&w\n\r" , ch );
+	       return;
+	   }
+
+	   if ( IS_SET( planet->flags, PLANET_NOCAP ) )
+	   {
+	       send_to_char( "> &Ryou cannot do that here&w\n\r", ch );
+	       return;
+	   }
+
+		if ( IS_SET( ch->in_room->room_flags, ROOM_SAFE ) )
+		{
+			set_char_color( AT_MAGIC, ch );
+			send_to_char( "> this is not a good place to do that\n\r", ch );
+			return;
+		}
+
+		if ( !IS_SET( ch->in_room->room_flags, ROOM_BARRACKS ) )
+		{
+			set_char_color( AT_MAGIC, ch );
+			send_to_char( "> this is not a good place to do that\n\r", ch );
+			return;
+		}
+
+		if ( ch->position == POS_FIGHTING )
+		{
+			send_to_char( "> cannot reinit in combat\n\r" , ch );
+			return;
+		}
+
+		if ( ch->position <= POS_SLEEPING )
+		{
+			send_to_char( "> you are sleeping\n\r" , ch );
+			return;
+		}
+
+	   if ( clan != planet->governed_by )
+	   {
+	       send_to_char ( "> &Ryou can only reinit your own firewalls&w\n\r" , ch );
+	       return;
+	   }
+
+	   if (ch->in_room->lockdown == 0){
+
+	       send_to_char ( "> &Rthis firewall is already functional&w\n\r" , ch );
+	       return;
+
+	   }
+
+
+		ch_snippet = FALSE;
+
+		for (obj = ch->last_carrying; obj; obj = obj->prev_content) {
+			if (obj->item_type == ITEM_SNIPPET && !strcmp(obj->name,
+					"reinit") && ch_snippet == FALSE) {
+				ch_snippet = TRUE;
+				separate_obj(obj);
+				obj_from_char(obj);
+				extract_obj( obj );
+			}
+		}
+
+		if (!ch_snippet) {
+			send_to_char("> &Rreinit application needed&w\n\r", ch);
+			return;
+		}
+
+		WAIT_STATE( ch, skill_table[gsn_propaganda]->beats );
+
+		sprintf(buf, "> %s's applications reinitializes this firewall.",
+				ch->name);
+		echo_to_room(AT_YELLOW, ch->in_room, buf);
+
+		ch->in_room->lockdown = 0;
+
+		return;
 
 }
 
