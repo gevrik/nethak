@@ -2494,6 +2494,8 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 //				  }
 
 					do_look( ch, "auto" );
+					do_global_boards( ch, "" );
+				        ch->pcdata->board = &boards[DEFAULT_BOARD];
 
 				//mail_count(ch);
 				break;
