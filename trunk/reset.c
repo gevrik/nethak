@@ -617,7 +617,7 @@ void reset_all() {
 					    sprintf( buf , "%s [alpha]" , obj->name );
 					    obj->short_descr = STRALLOC( buf );
 					    STRFREE( obj->description );
-					    sprintf( buf1 , "%s [alpha]" , obj->name );
+					    sprintf( buf1 , "%s [alpha] : it's a poor resource file, remains of unidentified code.\nYou can decompile it into useful thing, by using DECOMP command. Or maybe you can have a JOB requiring this." , obj->name );
 					    obj->description = STRALLOC( buf1 );
 
 					}
@@ -635,7 +635,7 @@ void reset_all() {
 						    sprintf( buf , "%s [beta]" , obj->name );
 						    obj->short_descr = STRALLOC( buf );
 						    STRFREE( obj->description );
-						    sprintf( buf1 , "%s [beta]" , obj->name );
+						    sprintf( buf1 , "%s [beta] : it's a resource file, remains of unidentified code.\nYou can decompile it into useful thing, by using DECOMP command. Or maybe you can have a JOB requiring this." , obj->name );
 						    obj->description = STRALLOC( buf1 );
 						}
 					else if (nodelevel == 2)
@@ -652,7 +652,7 @@ void reset_all() {
 						    sprintf( buf , "%s [candidate]" , obj->name );
 						    obj->short_descr = STRALLOC( buf );
 						    STRFREE( obj->description );
-						    sprintf( buf1 , "%s [candidate]" , obj->name );
+						    sprintf( buf1 , "%s [candidate] : it's a net resource file, remains of unidentified code.\nYou can decompile it into useful thing, by using DECOMP command. Or maybe you can have a JOB requiring this." , obj->name );
 						    obj->description = STRALLOC( buf1 );
 						}
 					else if (nodelevel == 3)
@@ -669,7 +669,7 @@ void reset_all() {
 						    sprintf( buf , "%s [release]" , obj->name );
 						    obj->short_descr = STRALLOC( buf );
 						    STRFREE( obj->description );
-						    sprintf( buf1 , "%s [release]" , obj->name );
+						    sprintf( buf1 , "%s [release] : it's a good resource file, remains of unidentified code.\nYou can decompile it into useful thing, by using DECOMP command. Or maybe you can have a JOB requiring this." , obj->name );
 						    obj->description = STRALLOC( buf1 );
 						}
 					else if (nodelevel == 4)
@@ -686,7 +686,7 @@ void reset_all() {
 						    sprintf( buf , "%s [prototype]" , obj->name );
 						    obj->short_descr = STRALLOC( buf );
 						    STRFREE( obj->description );
-						    sprintf( buf1 , "%s [prototype]" , obj->name );
+						    sprintf( buf1 , "%s [prototype] : it's a very good resource file, remains of unidentified code.\nYou can decompile it into useful thing, by using DECOMP command. Or maybe you can have a JOB requiring this." , obj->name );
 						    obj->description = STRALLOC( buf1 );
 						}
 					else if (nodelevel == 5)
@@ -703,7 +703,7 @@ void reset_all() {
 						    sprintf( buf , "%s [wilderspace]" , obj->name );
 						    obj->short_descr = STRALLOC( buf );
 						    STRFREE( obj->description );
-						    sprintf( buf1 , "%s [wilderspace]" , obj->name );
+						    sprintf( buf1 , "%s [wilderspace] : it's an excellent resource file, remains of unidentified code.\nYou can decompile it into useful thing, by using DECOMP command. Or maybe you can have a JOB requiring this." , obj->name );
 						    obj->description = STRALLOC( buf1 );
 						}
 					else
@@ -720,7 +720,7 @@ void reset_all() {
 						    sprintf( buf , "%s [buggy]" , obj->name );
 						    obj->short_descr = STRALLOC( buf );
 						    STRFREE( obj->description );
-						    sprintf( buf1 , "%s [buggy]" , obj->name );
+						    sprintf( buf1 , "%s [buggy] : it's a very poor resource file, remains of unidentified code.\nYou can decompile it into useful thing, by using DECOMP command.  Or maybe you can have a JOB requiring this." , obj->name );
 						    obj->description = STRALLOC( buf1 );
 						}
 
@@ -1017,7 +1017,7 @@ void reset_all() {
 					mob->gold = ( number_range(25, 50) * (pRoomIndex->level + 1) );
 
 					STRFREE( mob->description );
-					mob->description	=STRALLOC( "you see a Metro Virus. \nLarge and rough, the Metro Virus glares around the node, daring anyone to challenge it.\n With its experience of Metro, it's a dreadful opponent and it'll not hesitate to take some distance and shoot you if you're too mighty for direct assault.\n\r" );
+					mob->description	=STRALLOC( "You see a Metro Virus.\nLarge and rough, the Metro Virus glares around the node, daring anyone to challenge it.\nWith its experience of Metro, it's a dreadful opponent. If you're too mighty to consider a direct assault, it'll not hesitate to take some distance and snipe you.\n\r" );
 
 
 					if ((pObjIndex = get_obj_index(OBJ_VNUM_BLASTER))
@@ -1060,7 +1060,7 @@ void reset_all() {
 					mob->gold = ( number_range(5, 10) * (pRoomIndex->level + 1) );
 
 					STRFREE( mob->description );
-					mob->description	=STRALLOC( "You see a Metro bot, a large Cube with a seemingly unbroken surface.\nA small scanner pops out on one of the surfaces and sweeps the node, checking for some ennemy to wipe out.\n Then, it returns and leaves the surface uniform once again, treacherously harmless-looking.\n\r");
+					mob->description	=STRALLOC( "You see a Metro bot, a large Cube with a seemingly unbroken surface.\nA small scanner pops out on one of the surfaces and sweeps the node, checking for some ennemy to wipe out. Then, it returns and leaves the surface uniform once again. \nIt appears fairly harmless, but you cannot deny the air of menace about it.\n\r");
 
 					if ((pObjIndex = get_obj_index(OBJ_VNUM_TOKEN))
 							!= NULL) {
@@ -1073,6 +1073,77 @@ void reset_all() {
 			}
 
 				break;
+
+
+			//WILDMATRIX
+//			case SECT_STACK:
+//			case SECT_LINK:
+//			case SECT_WIKI:
+//			case SECT_404:
+//			case SECT_WEBBROWSER:
+//			case SECT_COOKIE:
+//			case SECT_CHATROOM:
+//			case SECT_INDEX:
+//			case SECT_FORUM:
+//			case SECT_BROKENPORT:
+//			case SECT_NEXUS:
+//			case SECT_PROXY:
+//			{
+//				CHAR_DATA * rch;
+//				numguards = 0;
+//				for (rch = pRoomIndex->first_person; rch; rch= rch->next_in_room)
+//
+//					if (IS_NPC(rch) && rch->pIndexData && rch->pIndexData->vnum== 50)
+//						numguards++;
+//
+//				if (numguards >= 2)
+//					continue;
+//
+//				CHAR_DATA * sch;
+//				int numhench = 0;
+//				for (sch = pRoomIndex->first_person; sch; sch= sch->next_in_room)
+//
+//					if (IS_NPC(sch) && sch->pIndexData && sch->pIndexData->vnum== 51)
+//						numhench++;
+//
+//				if (numhench >= 1)
+//					continue;
+//
+//				vnum = 50;
+//
+//				int randmob = number_range(2, 10);
+//
+//				if (randmob)
+//				{
+//					if (!(pMobIndex = get_mob_index(vnum))) {
+//						bug("Reset_all: Missing mob (%d)", vnum);
+//						return;
+//					}
+//					mob = create_mobile(pMobIndex);
+//					SET_BIT(mob->affected_by, AFF_INFRARED);
+//					char_to_room(mob, pRoomIndex);
+//					mob->top_level = (randmob/2) * (pRoomIndex->level + 1);
+//					mob->hit = (randmob*2)* (pRoomIndex->level + 1);
+//					mob->max_hit = (randmob*2) * (pRoomIndex->level + 1);
+//					mob->armor = 0 - ((pRoomIndex->level + 1) * (randmob*2));
+//					mob->damroll = (randmob*2)*(pRoomIndex->level + 1);
+//					mob->hitroll = (randmob*2)*(pRoomIndex->level + 1);
+//
+//					STRFREE( mob->name );
+//					STRFREE( mob->short_descr );
+//					STRFREE( mob->long_descr );
+//					STRFREE( mob->description );
+//
+//					mob->name		= STRALLOC( "animal" );
+//					mob->short_descr	= STRALLOC( "animal" );
+//					mob->long_descr	= STRALLOC( "animal\n\r" );
+//					mob->description	= STRALLOC( "animal\n\r");
+//
+//					continue;
+//				}
+//			}
+//				break;
+
 
 			case SECT_GLACIAL:
 				anumber = number_range(0, 5);
