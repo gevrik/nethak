@@ -126,8 +126,8 @@ void reset_all() {
 				vnum = MOB_VNUM_SUPPLIER;
 			if (IS_SET(pRoomIndex->room_flags, ROOM_PAWN ))
 				vnum = MOB_VNUM_PAWNER;
-			if (IS_SET(pRoomIndex->room_flags, ROOM_HOTEL ))
-				vnum = MOB_VNUM_WAITER;
+//			if (IS_SET(pRoomIndex->room_flags, ROOM_HOTEL ))
+//				vnum = MOB_VNUM_WAITER;
 			if (IS_SET(pRoomIndex->room_flags, ROOM_GARAGE ))
 				vnum = MOB_VNUM_MECHANIC;
 			//if (IS_SET(pRoomIndex->room_flags, ROOM_EMPLOYMENT ))

@@ -100,6 +100,10 @@ void do_jobs( CHAR_DATA *ch, char *argument )
         	ch_printf( ch, "> &Gtype:&W %s&w &Gtarget:&W %s&w &Greward:&W %dc&w\n\r", obj->name, ch->pcdata->mission_target, (obj->cost * 50) );
         break;
 
+        case 3:
+        	ch_printf( ch, "> &Gtype:&W virus&w &Gtarget:&W %s&w &Greward:&W 2000c&w\n\r", ch->pcdata->mission_target );
+        break;
+
         }
 
         return;
@@ -220,25 +224,94 @@ void do_jobs( CHAR_DATA *ch, char *argument )
     	}
 
     }
-    /*
     else if (IS_SET(location->room_flags, ROOM_HOTEL ))
     {
     	chance = number_range(1, 2);
 
     	if (chance == 1){
-    		send_to_char( "> &YVIRUS MISSION&w\n\r", ch );
+
+    		// VIRUS
+
+    		    	       for ( dPlanet = first_planet ; dPlanet ; dPlanet = dPlanet->next )
+    		    	           pCount++;
+
+    		    	       rCount = number_range( 1 , pCount );
+
+    		    	       pCount = 0;
+
+    		    	       for ( dPlanet = first_planet ; dPlanet ; dPlanet = dPlanet->next )
+    		    	           if ( ++pCount == rCount )
+    		    	               break;
+
+    		    	       if( !dPlanet || dPlanet == ch->in_room->area->planet || dPlanet == first_planet || IS_SET( dPlanet->flags, PLANET_HIDDEN)
+    		    	    		   || IS_SET( dPlanet->flags, PLANET_NOCAP ) )
+    		    	       {
+    		    	    	send_to_char( "> &Rno missions available currently&w\n\r", ch );
+    		    	    	return;
+    		    	       }
+
+    		    	       if(dPlanet->governed_by == ch->pcdata->clan){
+
+       		    	    	send_to_char( "> &Rno missions available currently [own]&w\n\r", ch );
+       		    	    	return;
+
+    		    	       }
+
+    		    	       ch->pcdata->mission_active = 1;
+    		    	       ch->pcdata->mission_type = 3;
+    		    	       ch->pcdata->mission_targetid = 0;
+
+    		    	       STRFREE( ch->pcdata->mission_target );
+    		    	       ch->pcdata->mission_target = STRALLOC( dPlanet->name );
+
+    		    	       ch_printf( ch, "> &Gmission:&W virus injection on %s&w\n\r", dPlanet->name );
+
+
     	}
     	else if (chance == 2){
-    		send_to_char( "> &YKILL MISSION&w\n\r", ch );
+    		// VIRUS
+
+    		    	       for ( dPlanet = first_planet ; dPlanet ; dPlanet = dPlanet->next )
+    		    	           pCount++;
+
+    		    	       rCount = number_range( 1 , pCount );
+
+    		    	       pCount = 0;
+
+    		    	       for ( dPlanet = first_planet ; dPlanet ; dPlanet = dPlanet->next )
+    		    	           if ( ++pCount == rCount )
+    		    	               break;
+
+    		    	       if( !dPlanet || dPlanet == ch->in_room->area->planet || dPlanet == first_planet || IS_SET( dPlanet->flags, PLANET_HIDDEN)
+    		    	    		   || IS_SET( dPlanet->flags, PLANET_NOCAP ) )
+    		    	       {
+    		    	    	send_to_char( "> &Rno missions available currently&w\n\r", ch );
+    		    	    	return;
+    		    	       }
+
+    		    	       if(dPlanet->governed_by == ch->pcdata->clan){
+
+       		    	    	send_to_char( "> &Rno missions available currently [own]&w\n\r", ch );
+       		    	    	return;
+
+    		    	       }
+
+    		    	       ch->pcdata->mission_active = 1;
+    		    	       ch->pcdata->mission_type = 3;
+    		    	       ch->pcdata->mission_targetid = 0;
+
+    		    	       STRFREE( ch->pcdata->mission_target );
+    		    	       ch->pcdata->mission_target = STRALLOC( dPlanet->name );
+
+    		    	       ch_printf( ch, "> &Gmission:&W virus injection on %s&w\n\r", dPlanet->name );
     	}
     	else{
     		send_to_char( "> &Rsomething went wrong - contact Wintermute&w\n\r", ch );
     	}
     }
-    */
     else
     {
-    	send_to_char( "> &Rgo to an employment node&w\n\r", ch );
+    	send_to_char( "> &Rgo to an employment or agent node&w\n\r", ch );
     }
 
     return;
@@ -253,6 +326,8 @@ void do_completejob( CHAR_DATA *ch, char *argument )
 	bool checkresource;
 	OBJ_DATA *obj;
 	OBJ_INDEX_DATA	*tobj;
+	CHAR_DATA *gch;
+	PLANET_DATA *planet;
 
     if ( IS_NPC(ch) || !ch->pcdata )
        return;
@@ -318,8 +393,6 @@ void do_completejob( CHAR_DATA *ch, char *argument )
 			return;
 		}
 
-//    	tobj = get_obj_index( ch->pcdata->mission_targetid );
-
 		for ( obj = ch->last_carrying; obj; obj = obj->prev_content )
 		{
 			if ( obj->pIndexData->vnum == tobj->vnum && checkresource == FALSE ){
@@ -348,6 +421,55 @@ void do_completejob( CHAR_DATA *ch, char *argument )
 
     break;
 
+    case 3:
+
+    	if (str_cmp(ch->in_room->area->planet->name, ch->pcdata->mission_target))
+    	{
+        	send_to_char("> &Rwrong destination system&w\n\r", ch );
+        	return;
+    	}
+
+    	checkresource = FALSE;
+
+    	for ( gch = ch->in_room->first_person; gch; gch = gch->next_in_room )
+    	{
+    		if ( IS_NPC(gch) && gch->pIndexData->vnum == MOB_VNUM_DATAMINER && checkresource == FALSE){
+    			checkresource = TRUE;
+    			break;
+    		}
+
+    	}
+
+    	if (!checkresource){
+
+        	send_to_char("> &Rno dataminer program in this node&w\n\r", ch );
+        	return;
+
+    	}
+
+    	send_to_char( "&w> the dataminer program is unloaded from the node\r\n", ch );
+    	extract_char( gch, TRUE );
+
+    	planet = ch->in_room->area->planet;
+
+    			planet->pop_support -= 1;
+
+    		    if ( planet->pop_support < -100 )
+    		        planet->pop_support = -100;
+
+		ch->pcdata->mission_active = 0;
+		ch->pcdata->mission_type = 0;
+		ch->pcdata->mission_targetid = 0;
+		STRFREE( ch->pcdata->mission_target );
+		ch->pcdata->mission_target = STRALLOC( "" );
+		ch->pcdata->mission_fails = 0;
+		ch->gold += 2000;
+		ch_printf( ch, "> &G%dc received for mission&w\n\r", 2000 );
+
+    break;
+
     }
+
+    return;
 
 }
