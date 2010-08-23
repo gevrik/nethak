@@ -101,8 +101,10 @@ char *format_obj_to_char( OBJ_DATA *obj, CHAR_DATA *ch, bool fShort )
     }
     else
     {
-	if ( obj->description )
-	    strcat( buf, obj->description );
+//	if ( obj->description )
+//	    strcat( buf, obj->description );
+    	if ( obj->short_descr )
+    	    strcat( buf, obj->short_descr );
     }
 
     return buf;
@@ -1358,6 +1360,8 @@ void do_examine( CHAR_DATA *ch, char *argument )
 	switch ( obj->item_type )
 	{
 	default:
+		strcpy( buf, obj->description);
+		send_to_char( buf, ch );
 	    break;
 
 	case ITEM_ARMOR:

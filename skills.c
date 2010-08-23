@@ -2880,7 +2880,7 @@ void do_berserk( CHAR_DATA *ch, char *argument )
 
 	if ( !ch->fighting )
 	{
-		send_to_char( "But you are not fighting\n\r", ch );
+		send_to_char( "> you are not fighting\n\r", ch );
 		return;
 	}
 

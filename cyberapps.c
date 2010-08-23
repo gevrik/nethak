@@ -50,7 +50,7 @@ void do_sn_jackhammer(CHAR_DATA *ch, char *argument) {
 
 		for (obj = ch->last_carrying; obj; obj = obj->prev_content) {
 			if ( obj->item_type == ITEM_SNIPPET && !strcmp(obj->name,
-					"jackhammer") ) {
+					"jackhammer") && ch_snippet == FALSE ) {
 				ch_snippet = TRUE;
 				separate_obj(obj);
 				obj_from_char(obj);
@@ -348,7 +348,6 @@ void do_sn_reinit(CHAR_DATA *ch, char *argument) {
 	CLAN_DATA *clan;
 	OBJ_DATA *obj;
 	char buf[MAX_STRING_LENGTH];
-	char bufa[MAX_STRING_LENGTH];
 	PLANET_DATA *planet;
 	bool ch_snippet;
 
@@ -472,7 +471,7 @@ void do_sn_nightvision(CHAR_DATA *ch, char *argument) {
 
 		for (obj = ch->last_carrying; obj; obj = obj->prev_content) {
 			if (obj->item_type == ITEM_SNIPPET && !strcmp(obj->name,
-					"nightvision")) {
+					"nightvision") && ch_snippet == FALSE) {
 				ch_snippet = TRUE;
 				separate_obj(obj);
 				obj_from_char(obj);
@@ -539,7 +538,7 @@ void do_sn_spun(CHAR_DATA *ch, char *argument) {
 
 		for (obj = ch->last_carrying; obj; obj = obj->prev_content) {
 			if (obj->item_type == ITEM_SNIPPET && !strcmp(obj->name,
-					"spun")) {
+					"spun") && ch_snippet == FALSE) {
 				ch_snippet = TRUE;
 				energyplus = obj->value[0];
 				separate_obj(obj);
@@ -602,7 +601,7 @@ void do_sn_reconstruct(CHAR_DATA *ch, char *argument) {
 
 		for (obj = ch->last_carrying; obj; obj = obj->prev_content) {
 			if (obj->item_type == ITEM_SNIPPET && !strcmp(obj->name,
-					"reconstruct")) {
+					"reconstruct") && ch_snippet == FALSE) {
 				ch_snippet = TRUE;
 				energyplus = obj->value[0] / 4;
 				separate_obj(obj);
@@ -676,7 +675,7 @@ void do_sn_dropline(CHAR_DATA *ch, char *argument) {
 
 		for (obj = ch->last_carrying; obj; obj = obj->prev_content) {
 			if (obj->item_type == ITEM_SNIPPET && !strcmp(obj->name,
-					"dropline")) {
+					"dropline") && ch_snippet == FALSE) {
 				ch_snippet = TRUE;
 				separate_obj(obj);
 				obj_from_char(obj);
@@ -730,7 +729,7 @@ void do_sn_uninstall(CHAR_DATA *ch, char *argument) {
 
 		for (obj = ch->last_carrying; obj; obj = obj->prev_content) {
 			if ( obj->item_type == ITEM_SNIPPET && !strcmp(obj->name,
-					"uninstall") ) {
+					"uninstall") && ch_snippet == FALSE) {
 				ch_snippet = TRUE;
 				separate_obj(obj);
 				obj_from_char(obj);
@@ -820,7 +819,7 @@ void do_sn_anchor( CHAR_DATA *ch, char *argument )
 		ch_snippet = FALSE;
 
 		for (obj = ch->last_carrying; obj; obj = obj->prev_content) {
-			if ( obj->item_type == ITEM_SNIPPET && nifty_is_name("anchor", obj->name) ) {
+			if ( obj->item_type == ITEM_SNIPPET && nifty_is_name("anchor", obj->name) && ch_snippet == FALSE ) {
 				ch_snippet = TRUE;
 				targetnode = obj->value[1];
 
@@ -925,7 +924,7 @@ void do_sn_audit( CHAR_DATA *ch, char *argument )
 
 		for (obj = ch->last_carrying; obj; obj = obj->prev_content) {
 			if (obj->item_type == ITEM_SNIPPET && !strcmp(obj->name,
-					"audit")) {
+					"audit") && ch_snippet == FALSE) {
 				ch_snippet = TRUE;
 
 				obj->value[0] -= 1;
@@ -1089,7 +1088,7 @@ void do_sn_shortcut( CHAR_DATA *ch, char *argument )
 
 		for (obj = ch->last_carrying; obj; obj = obj->prev_content) {
 			if (obj->item_type == ITEM_SNIPPET && !strcmp(obj->name,
-					"shortcut")) {
+					"shortcut") && ch_snippet == FALSE) {
 				ch_snippet = TRUE;
 
 				obj->value[0] -= 1;
@@ -1394,7 +1393,7 @@ void do_sn_emp(CHAR_DATA *ch, char *argument) {
 
 		for (obj = ch->last_carrying; obj; obj = obj->prev_content) {
 			if (obj->item_type == ITEM_SNIPPET && !strcmp(obj->name,
-					"emp")) {
+					"emp") && ch_snippet == FALSE) {
 				ch_snippet = TRUE;
 				energyplus = obj->value[0];
 				separate_obj(obj);
@@ -1614,7 +1613,7 @@ void do_sn_annex(CHAR_DATA *ch, char *argument) {
 
 	   if ( clan != planet->governed_by )
 	   {
-	       send_to_char ( "> &Ryour organization does not controls this system&w\n\r" , ch );
+	       send_to_char ( "> &Ryour organization does not control this system&w\n\r" , ch );
 	       return;
 	   }
 
@@ -1628,7 +1627,7 @@ void do_sn_annex(CHAR_DATA *ch, char *argument) {
 
 		for (obj = ch->last_carrying; obj; obj = obj->prev_content) {
 			if (obj->item_type == ITEM_SNIPPET && !strcmp(obj->name,
-					"annex")) {
+					"annex") && ch_snippet == FALSE) {
 				ch_snippet = TRUE;
 				separate_obj(obj);
 				obj_from_char(obj);
