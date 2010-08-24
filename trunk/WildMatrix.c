@@ -15,7 +15,7 @@
 
 extern int top_r_vnum;
 
-void followconst( CHAR_DATA *ch , char *argument );
+void followsurf( CHAR_DATA *ch , char *argument );
 
 void do_surf ( CHAR_DATA *ch , char *argument )
 {
@@ -1974,13 +1974,13 @@ void do_surf ( CHAR_DATA *ch , char *argument )
 		}
 
 		if (edir == 0)
-			followconst(ch, "north");
+			followsurf(ch, "north");
 		else if (edir == 1)
-			followconst(ch, "east");
+			followsurf(ch, "east");
 		else if (edir == 2)
-			followconst(ch, "south");
+			followsurf(ch, "south");
 		else if (edir == 3)
-			followconst(ch, "west");
+			followsurf(ch, "west");
 
 
 
@@ -1993,7 +1993,7 @@ void do_surf ( CHAR_DATA *ch , char *argument )
 
 }
 
-void followconst ( CHAR_DATA *ch , char *argument )
+void followsurf ( CHAR_DATA *ch , char *argument )
 {
 	CLAN_DATA * clan;
 	int chance;
