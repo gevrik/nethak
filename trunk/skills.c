@@ -28,7 +28,6 @@ char * const spell_class[] =
 char * const target_type[] =
 { "ignore", "offensive", "defensive", "self", "objinv" };
 
-
 void show_char_to_char( CHAR_DATA *list, CHAR_DATA *ch );
 void show_list_to_char( OBJ_DATA *list, CHAR_DATA *ch, bool fShort,
 		bool fShowN,  const int iDefaultAction );
@@ -3087,5 +3086,6 @@ void do_scan( CHAR_DATA *ch, char *argument )
 void do_slice( CHAR_DATA *ch, char *argument )
 {
 }
+
 
 //done for Neuro

@@ -23,6 +23,9 @@ void who_html_update (void);
 void orgs_html_update (void);
 void metro_html_update (void);
 
+/*from combat.c*/
+bool is_fighting args( ( CHAR_DATA *) );
+
 /*
  * Local functions.
  */
@@ -46,6 +49,7 @@ void	obj_act_update	args( ( void ) );
 void	char_check	args( ( void ) );
 void    drunk_randoms	args( ( CHAR_DATA *ch ) );
 void    halucinations	args( ( CHAR_DATA *ch ) );
+void 	paranoia	args( ( CHAR_DATA *ch ) );
 void	subtract_times	args( ( struct timeval *etime, struct timeval *stime ) );
 void	update_blackjack args( ( void ) );
 
@@ -405,6 +409,7 @@ void mobile_update( void )
 		{
 			drunk_randoms(ch);
 			halucinations(ch);
+			paranoia(ch);
 			continue;
 		}
 
@@ -1341,6 +1346,7 @@ void char_update( void )
 					send_to_char( "Seekest thou a cleric\n\r", ch );
 					act( AT_ACTION, "Someone should fetch a healer for $n", ch, NULL, NULL, TO_ROOM );
 					break;
+
 				case  7:
 					send_to_char( "> you feel reality slipping away\n\r", ch );
 					act( AT_ACTION, "> $n does not appear to be aware of what is going on", ch, NULL, NULL, TO_ROOM );
@@ -1979,6 +1985,49 @@ void halucinations( CHAR_DATA *ch )
 	return;
 }
 
+void paranoia( CHAR_DATA *ch )
+{
+	PLANET_DATA *planet;
+	planet = ch->in_room->area->planet;
+	
+	if ( !str_cmp(planet->name, "WildMatrix") && !is_fighting(ch))
+	{
+		char *t;
+	
+		if(number_range(1,20)==1)
+		{
+
+			switch( number_range( 1, 20 ))
+			{
+			default:
+			case  1: t = "> &PYou would swear that you saw the shadows move. \n\r";	break;
+			case  2: t = "> Wait ... this isn't your footsteps. Who is here with you?\n\r";	break;
+			case  3: t = "> You fell very incomfortable in this place.\n\r";	break;
+			case  4: t = "> You suddenly feel that somebody is watching you. Or something ...\n\r";	break;
+			case  5: t = "> &PWasn't it a sputter ?\n\r";	break;
+			case  6: t = "> The sound of the CyberSpace wind blowing throught this empty place is getting on your nerves.\n\r";			break;
+			case  7: t = "> &bHave you been here before, or not?  You're not sure, this place is so strange.\n\r";	break;
+			case  8: t = "> &rWhat was that ? Something moved behind you, no ? \n\r"; break;
+			case  9: t = "> &rYou hear someone call your name in the distance... not friendly.\n\r"; break;
+			case 10: t = "> &bYour head is pulsating while your heartbeat increase ... you're really felling oppressed here.\n\r";	break;
+			case 11: t = "> &BThe ground... it seems to be ... squirming ?\n\r";		break;
+			case 12: t = "> You are not quite sure what is real and what's your mind is creating from the shadows.\n\r";		break;
+			case 13: t = "> You fell oppressed, you would like to go home.\n\r";				break;
+			case 14: t = "> &rSomething wicked are coming this way, you could swear it.\n\r";	break;
+			case 15: t = "> This place gives you the heebie jeebies.\n\r";		break;
+			case 16: t = "> Wait, did somebody just groan ?\n\r";	break;
+			case 17: t = "> Something is wrong with this place, it's making you really nervous.\n\r";	break;
+			case 18: t = "> How can any place be that barren and gloomy ?\n\r";	break;
+			case 19: t = "> &rYou can hear ... something... scrawling in the walls ! THERE ARE THINGS IN THE WALLS !\n\r";	break;
+			case 20: t = ">There's a long you didn't think at your mommy... but right now, you would like her to be here with you. This place is scary.\n\r";	break;
+			}
+			send_to_char( t, ch );
+		}
+	}
+	return;
+}
+
+
 void tele_update( void )
 {
 	TELEPORT_DATA *tele, *tele_next;
@@ -2066,9 +2115,9 @@ void update_handler( void )
 		pulse_space    = PULSE_SPACE;
 		//update_space  ( );
 		//update_repos();
-		who_html_update ( );
-		orgs_html_update ( );
-		metro_html_update ( );
+		//who_html_update ( );
+		//orgs_html_update ( );
+		//metro_html_update ( );
 	}
 
 	if ( --pulse_recharge <= 0 )

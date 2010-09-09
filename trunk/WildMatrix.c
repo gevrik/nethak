@@ -145,7 +145,7 @@ void do_surf ( CHAR_DATA *ch , char *argument )
 		// Cookie 5
 		// ChatRoom 5
 		// Index.php 10
-		// ruins 10
+		// Host 10
 		// Proxy 10
 
 		if (newareatype >= 80){
@@ -182,7 +182,7 @@ void do_surf ( CHAR_DATA *ch , char *argument )
 		// Torrent 10
 		// 404 5
 		// Index.php 20
-		// Platform 15
+		// Server 15
 		// Forum 5
 		// Nexus 5
 
@@ -227,8 +227,8 @@ void do_surf ( CHAR_DATA *ch , char *argument )
 		// WebBrowser 5
 		// ChatRoom 5
 		// Index.php 5
-		// Platform 5
-		// ruins 5
+		// Server 5
+		// Host 5
 		// Forum 15
 		// BrokenPort 5
 		// Proxy 5
@@ -288,9 +288,9 @@ void do_surf ( CHAR_DATA *ch , char *argument )
 		// Cookie 5
 		// ChatRoom 5
 		// Index.php 5
-		// Platform 5
-		// ramp 5
-		// ruins 5
+		// Server 5
+		// Hyperlink 5
+		// Host 5
 		// Forum 5
 		// BrokenPort 5
 		// Nexus 5
@@ -333,7 +333,7 @@ void do_surf ( CHAR_DATA *ch , char *argument )
 
 		}
 		else if (newareatype >= 30) {
-			roomtype = 14;
+			roomtype = 7;
 
 		}
 		else if (newareatype >= 25) {
@@ -365,9 +365,9 @@ void do_surf ( CHAR_DATA *ch , char *argument )
 		// WebBrowser 15
 		// ChatRoom 5
 		// Index.php 10
-		// Platform 10
-		// ramp 5
-		// ruins 10
+		// Server 10
+		// Hyperlink 5
+		// Host 10
 		// Forum 5
 		// BrokenPort 5
 		// Link 5
@@ -398,7 +398,7 @@ void do_surf ( CHAR_DATA *ch , char *argument )
 			roomtype = 12;
 		}
 		else if (newareatype >= 35) {
-			roomtype = 14;
+			roomtype = 7;
 		}
 		else if (newareatype >= 25) {
 			roomtype = 15;
@@ -485,8 +485,8 @@ void do_surf ( CHAR_DATA *ch , char *argument )
 		// 404 10
 		// WebBrowser 5
 		// Index.php 10
-		// Platform 10
-		// ruins 10
+		// Server 10
+		// Host 10
 		// Forum 10
 		// BrokenPort 10
 
@@ -527,15 +527,15 @@ void do_surf ( CHAR_DATA *ch , char *argument )
 
 		break;
 
-	case SECT_PLATFORM:
+	case SECT_SERVER:
 		// Link 10
 		// Wiki 5
 		// 404 5
 		// WebBrowser 10
 		// Index.php 10
-		// Platform 15
-		// ramp 5
-		// ruins 10
+		// Server 15
+		// Hyperlink 5
+		// Host 10
 		// Forum 5
 		// BrokenPort 10
 		// Nexus 5
@@ -564,7 +564,7 @@ void do_surf ( CHAR_DATA *ch , char *argument )
 
 		}
 		else if (newareatype >= 40) {
-			roomtype = 14;
+			roomtype = 7;
 
 		}
 		else if (newareatype >= 30) {
@@ -588,44 +588,14 @@ void do_surf ( CHAR_DATA *ch , char *argument )
 		break;
 
 
-	case SECT_RAMP:
-		// ramp 30
-		// elevator 10
-		// 404 10
-		// WebBrowser 25
-		// Platform 25
-
-		if (newareatype >= 70){
-			roomtype = 14;
-
-		}
-
-		else if (newareatype >= 60){
-			roomtype = 7;
-
-		}
-		else if (newareatype >= 50) {
-			roomtype = 5;
-
-		}
-		else if (newareatype >= 25) {
-			roomtype = 6;
-		}
-		else {
-			roomtype = 12;
-
-		}
-
-		break;
-
-	case SECT_RUINS:
+	case SECT_HOST:
 		// Stack 5
 		// Wiki 5
 		// 404 5
 		// WebBrowser 15
 		// Index.php 15
-		// Platform 10
-		// ruins 15
+		// Server 10
+		// Host 15
 		// Forum 5
 		// BrokenPort 5
 		// Link 5
@@ -681,8 +651,8 @@ void do_surf ( CHAR_DATA *ch , char *argument )
 		// WebBrowser 5
 		// ChatRoom 20
 		// Index.php 10
-		// Platform 10
-		// ruins 5
+		// Server 10
+		// Host 5
 		// Forum 20
 		// BrokenPort 10
 		// Proxy 5
@@ -734,8 +704,8 @@ void do_surf ( CHAR_DATA *ch , char *argument )
 		// WebBrowser 10
 		// ChatRoom 20
 		// Index.php 10
-		// Platform 10
-		// ruins 10
+		// Server 10
+		// Host 10
 		// Forum 10
 		// Proxy 10
 
@@ -780,7 +750,7 @@ void do_surf ( CHAR_DATA *ch , char *argument )
 		// 404 5
 		// WebBrowser 5
 		// ChatRoom 5
-		// Platform 5
+		// Server 5
 		// Nexus 65
 
 		if (newareatype >= 95){
@@ -818,8 +788,8 @@ void do_surf ( CHAR_DATA *ch , char *argument )
 		// 404 10
 		// WebBrowser 10
 		// ChatRoom 10
-		// Platform 10
-		// ruins 10
+		// Server 10
+		// Host 10
 		// Forum 10
 		// BrokenPort 10
 		// Proxy 10
@@ -968,9 +938,9 @@ void do_surf ( CHAR_DATA *ch , char *argument )
 		roomheight = number_range(1, 2);
 
 		if (roomheight == 1)
-			strcat( bufrdesc, " the ceiling is low. ");
+			strcat( bufrdesc, " The ceiling is low. ");
 		else
-			strcat( bufrdesc, " the ceiling is high. ");
+			strcat( bufrdesc, " The ceiling is high. ");
 
 		// name
 
@@ -1071,7 +1041,7 @@ void do_surf ( CHAR_DATA *ch , char *argument )
         else if ( randomdescription == 6 ){
             strcat( bufrdesc, "Three human hands with pointing fingers lay there. "); }
         else {
-            strcat( bufrdesc, "On one chain is marked: dead"); }
+            strcat( bufrdesc, "On one chain is marked : dead"); }
 
         // walls
 
@@ -1180,7 +1150,7 @@ void do_surf ( CHAR_DATA *ch , char *argument )
 		roomheight = number_range(1, 3);
 
 		if (roomheight == 1)
-			strcat( bufrdesc, " the ceiling is so high that you can just imagine it. ");
+			strcat( bufrdesc, " The ceiling is so high that you can just imagine it. ");
 		else if (roomheight == 2)
 			strcat( bufrdesc, " there is a ceiling just a few levels above this one. ");
 		else
@@ -1190,63 +1160,49 @@ void do_surf ( CHAR_DATA *ch , char *argument )
 
 		strcpy( bufrname, "404" );
 
-		strcat( bufrdesc, " you are in a bustling 404 of WildMatrix. ");
+		strcat( bufrdesc, " You are in a 404 site of WildMatrix. It is desert. ");
 
 		// noise
 
-		roomnoise = number_range(1, 4);
+		roomnoise = number_range(1, 3);
 
 		if (roomnoise == 1){
-			strcat( bufrdesc, "chatter from all of the people around you fills the street. ");
+			strcat( bufrdesc, "The only sound you can hear is your footstep.");
 		}
 		else if (roomnoise == 2){
-			strcat( bufrdesc, "a dog is barking loudly. ");
-		}
-		else if (roomnoise == 3){
-			strcat( bufrdesc, "you hear the creaking wheels of a large cart. ");
+			strcat( bufrdesc, "You hear the sound of the CyberSpace wind, blowing through this empty site.");
 		}
 		else {
-			strcat( bufrdesc, "a doom-sayer is heralding the coming of a darker age. ");
+			strcat( bufrdesc, "The whole structure is scratching and grinding.");
+		}
+
+		// walls
+
+		roomwalls = number_range(1, 10);
+
+		if (roomwalls <= 3){
+			strcat( bufrdesc, "Walls are made of rusty metal plates, spotted with strange scratches. ");
+		}
+		else if (roomwalls <= 6){
+			strcat( bufrdesc, "All data flows seem to end here and never go out. ");
+		}
+		else if (roomwalls == 7){
+			strcat( bufrdesc, "You would say that something uncivilized happened here. ");
+		}
+		else {
+			strcat( bufrdesc, "Walls are made of smooth metal plates, speckled with rust and maladjusted.");
 		}
 
 		// random detail
 
 		randomdescription = number_range(1, 7);
 
-		if ( randomdescription == 1 ){
-			strcat( bufrdesc, "a make-shift cart stands here, loaded with empty boxes and barrels. "); }
-		else if ( randomdescription == 2 ){
-			strcat( bufrdesc, "small, slightly mutated pets roam the streets. "); }
-		else if ( randomdescription == 3 ){
-			strcat( bufrdesc, "you can see some dried blood on the floor. "); }
-		else if ( randomdescription == 4 ){
-			strcat( bufrdesc, "a fountain stands in the middle of this area. ");
-			SET_BIT( nRoom->room_flags2 , ROOM_FOUNTAIN );
-		}
-		else if ( randomdescription == 5 ){
-			strcat( bufrdesc, "someone is advertising their crafted goods loudly. ");
-			SET_BIT( nRoom->room_flags2 , ROOM_SHOPPING ); }
-		else if ( randomdescription == 6 ){
-			strcat( bufrdesc, "someone has discarded some old machinery here. "); }
+		if ( randomdescription <= 6 ){
+			strcat( bufrdesc, "\"404 error - PAGE NOT FOUND\" is written everywhere here"); }
 		else {
-			strcat( bufrdesc, "some criminals have been hanged here. "); }
+			strcat( bufrdesc, "For some strange reason, somebody painted a \"200 OK\" message on the wall."); }
 
-		// walls
 
-		roomwalls = number_range(1, 4);
-
-		if (roomwalls == 1){
-			strcat( bufrdesc, "a balcony has been built into one of the walls. ");
-		}
-		else if (roomwalls == 2){
-			strcat( bufrdesc, "make-shift living compartments have been attached to or built into the walls. ");
-		}
-		else if (roomwalls == 3){
-			strcat( bufrdesc, "metal railings keep citizens from falling down from this Platform. ");
-		}
-		else {
-			strcat( bufrdesc, "the walls are smooth. ");
-		}
 
 		//SET_BIT( nRoom->room_flags , ROOM_NO_MOB );
 		SET_BIT( nRoom->room_flags , ROOM_NOPEDIT );
@@ -1260,31 +1216,31 @@ void do_surf ( CHAR_DATA *ch , char *argument )
 		roomheight = number_range(1, 3);
 
 		if (roomheight == 1)
-			strcat( bufrdesc, " the ceiling is low. ");
+			strcat( bufrdesc, " The ceiling is low. ");
 		else if (roomheight == 2)
-			strcat( bufrdesc, " the ceiling is high. ");
+			strcat( bufrdesc, " The ceiling is high. ");
 		else
-			strcat( bufrdesc, " the ceiling is massively high. ");
+			strcat( bufrdesc, " The ceiling is massively high. ");
 
 		// name
 
 		strcpy( bufrname, "WebBrowser" );
 
-		strcat( bufrdesc, " One of the thousands of WebBrowsers that connected sites of WildMatrix. ");
+		strcat( bufrdesc, " One of the thousands of WebBrowsers that allow you to surf between sites of WildMatrix. ");
 
 		// noise
 
 		roomnoise = number_range(1, 3);
 
 		if (roomnoise == 1){
-			strcat( bufrdesc, "you think you hear some footsteps in the distance. ");
+			strcat( bufrdesc, "You think you hear some footsteps in the distance. ");
 		}
 		else if (roomnoise == 2){
-			strcat( bufrdesc, "you can hear water drip from the ceiling. ");
+			strcat( bufrdesc, "You can hear water drip from the ceiling. ");
 			SET_BIT( nRoom->room_flags2 , ROOM_FOUNTAIN );
 		}
 		else {
-			strcat( bufrdesc, "a monotonous hum fills this room. ");
+			strcat( bufrdesc, "The whistle of the CyberSpace wind fills this empty room. ");
 		}
 
 		// random detail
@@ -1317,16 +1273,16 @@ void do_surf ( CHAR_DATA *ch , char *argument )
 		nRoom->sector_type = SECT_WEBBROWSER;
 		break;
 
-	case 7: // elevator
+	case 7: // Hyperlink
 
-		strcpy( bufrname, "elevator" );
+		strcpy( bufrname, "Hyperlink" );
 
-		strcpy( bufrdesc, "a large service elevator that is attached and runs on the rails in the wall behind it. ");
+		strcpy( bufrdesc, "You can follow this Hyperlink until the next level. ");
 
 		islevelchange = TRUE;
 		SET_BIT( nRoom->room_flags , ROOM_NOPEDIT );
 
-		nRoom->sector_type = SECT_ELEVATOR;
+		nRoom->sector_type = SECT_HYPERLINK;
 
 		break;
 
@@ -1337,57 +1293,44 @@ void do_surf ( CHAR_DATA *ch , char *argument )
 		roomheight = number_range(1, 3);
 
 		if (roomheight == 1)
-			strcat( bufrdesc, " the ceiling is low. ");
+			strcat( bufrdesc, " The ceiling is low. ");
 		else if (roomheight == 2)
-			strcat( bufrdesc, " the ceiling is high. ");
+			strcat( bufrdesc, " The ceiling is high. ");
 		else
-			strcat( bufrdesc, " the ceiling is massively high. ");
+			strcat( bufrdesc, " The ceiling is massively high. ");
 
 		// name
 
 		strcpy( bufrname, "Cookie" );
 
-		strcat( bufrdesc, " this is an ancient Cookie building with lots of useful devices and machinery. ");
+		strcat( bufrdesc, " This is an ancient Cookie. ");
 
 		// noise
 
 		roomnoise = number_range(1, 3);
 
 		if (roomnoise == 1){
-			strcat( bufrdesc, "you can hear a grinding noise. ");
+			strcat( bufrdesc, "You can hear a grinding noise. ");
 		}
 		else if (roomnoise == 2){
-			strcat( bufrdesc, "a constant whirring noise sounds through the room. ");
+			strcat( bufrdesc, "A constant whirring noise sounds through the room. ");
 		}
 		else {
-			strcat( bufrdesc, "you can hear the sound of metal banging against metal. ");
+			strcat( bufrdesc, "You can hear the sound of metal rubbing against metal. ");
 		}
 
 		// random detail
 
 		randomdescription = number_range(1, 10);
 
-		if ( randomdescription == 1 ){
-			strcat( bufrdesc, "a semi-intact workbench is here. "); }
-		else if ( randomdescription == 2 ){
-			strcat( bufrdesc, "a large fan has been grafted into one of the walls. "); }
+		if ( randomdescription <= 2 ){
+			strcat( bufrdesc, "The cookie is full of lines and lines of encrypted connexions. "); }
+		else if ( randomdescription <= 4 ){
+			strcat( bufrdesc, "You would say that there's at least an hundred of identifiers contained here. "); }
 		else if ( randomdescription == 3 ){
-			strcat( bufrdesc, "long, colourful trunks of wires run along the walls of this rooms. "); }
-		else if ( randomdescription == 4 ){
-			strcat( bufrdesc, "big and small pipes run across the middle of the walls. ");
-		}
-		else if ( randomdescription == 5 ){
-			strcat( bufrdesc, "a massive metal press is in this room. ");}
-		else if ( randomdescription == 6 ){
-			strcat( bufrdesc, "sewing and cloth presses occupy most of the space in this room. "); }
-		else if ( randomdescription == 7 ){
-			strcat( bufrdesc, "scientific devices sit on top large tables. "); }
-		else if ( randomdescription == 8 ){
-			strcat( bufrdesc, "a furnace is in this room. "); }
-		else if ( randomdescription == 9 ){
-			strcat( bufrdesc, "lots of boxes are stacked in the corners of this room. "); }
+			strcat( bufrdesc, "Wait ... you can read this code ... but it wasn't a real cookie, it was a spyware ! "); }
 		else {
-			strcat( bufrdesc, "large crates are stacked in this storage area of the Cookie. "); }
+			strcat( bufrdesc, "Walls are covered with lines of code almost unreadable, rub out by the time. "); }
 
 		SET_BIT( nRoom->room_flags , ROOM_NOPEDIT );
 		nRoom->sector_type = SECT_COOKIE;
@@ -1403,9 +1346,9 @@ void do_surf ( CHAR_DATA *ch , char *argument )
 		roomheight = number_range(1, 2);
 
 		if (roomheight == 1)
-			strcat( bufrdesc, " the ceiling is low. ");
+			strcat( bufrdesc, " The ceiling is low. ");
 		else
-			strcat( bufrdesc, " the ceiling is high. ");
+			strcat( bufrdesc, " The ceiling is high. ");
 
 		// name
 
@@ -1425,37 +1368,38 @@ void do_surf ( CHAR_DATA *ch , char *argument )
 		if (roomnoise == 1)
 			strcat( bufrdesc, " You can still hear old echos of conversations which stand here long time ago. ");
 		else if (roomnoise == 2){
-			strcat( bufrdesc, " water is dropping from a grate in one of the walls. ");
+			strcat( bufrdesc, "Chattering shut up a long long time ago");
 			SET_BIT( nRoom->room_flags2 , ROOM_FOUNTAIN );
 		}
 		else
 			strcat( bufrdesc, " It is very quiet. For the moment. ");
-
-		// random detail
-
-		randomdescription = number_range(1, 5);
-
-		if ( randomdescription == 1 ){
-			strcat( bufrdesc, "The whole area is well preserved. "); }
-		else if ( randomdescription == 2 ){
-			strcat( bufrdesc, "small and large pipes run along the walls of the room. "); }
-		else if ( randomdescription == 3 ){
-			strcat( bufrdesc, "some broken devices are lying on the floor. "); }
-		else if ( randomdescription == 4 ){
-			strcat( bufrdesc, "several boxes are stacked in one corner of the room. "); }
-		else {
-			strcat( bufrdesc, "some barrels have been left in this room. "); }
 
 		// walls
 
 		roomwalls = number_range(1, 2);
 
 		if (roomwalls == 1){
-			strcat( bufrdesc, "the walls are smooth and dry. ");
+			strcat( bufrdesc, "The walls are covered with billions of old conversation lines. ");
 		}
 		else {
-			strcat( bufrdesc, "the walls are rough and wet. ");
+			strcat( bufrdesc, "The walls are covered with very odds caracters that you cannot read. ");
 		}
+
+		// random detail
+
+		randomdescription = number_range(1, 10);
+
+		if ( randomdescription == 1 ){
+			strcat( bufrdesc, "On a wall is written : \"WELCOME NEWFAG !\" "); }
+		else if ( randomdescription == 2 ){
+			strcat( bufrdesc, "Scribbled on the bottom of one of the walls, you can read \"I was here\""); }
+		else if ( randomdescription == 3 ){
+			strcat( bufrdesc, "Written is almost unreadable font, you think decipher the sentence \"He comes\". "); }
+		else if ( randomdescription == 4 ){
+			strcat( bufrdesc, "You realize that, apparently, all the users of this chat was nammed John or Dave. "); }
+		else {
+			strcat( bufrdesc, "some barrels have been left in this room. "); }
+
 
 		SET_BIT( nRoom->room_flags2 , ROOM_FOOD );
 		SET_BIT( nRoom->room_flags , ROOM_NOPEDIT );
@@ -1470,11 +1414,11 @@ void do_surf ( CHAR_DATA *ch , char *argument )
 		roomheight = number_range(1, 3);
 
 		if (roomheight == 1)
-			strcat( bufrdesc, " the ceiling is high. ");
+			strcat( bufrdesc, " The ceiling is high. ");
 		else if (roomheight == 2)
-			strcat( bufrdesc, " the ceiling is very high. ");
+			strcat( bufrdesc, " The ceiling is very high. ");
 		else
-			strcat( bufrdesc, " the ceiling is massively high. ");
+			strcat( bufrdesc, " The ceiling is massively high. ");
 
 		// name
 
@@ -1483,17 +1427,7 @@ void do_surf ( CHAR_DATA *ch , char *argument )
 		strcat( bufrdesc, " An Index.php site, a kind of site that invaded the place during its golden years. ");
 
 		// noise
-			strcat( bufrdesc, " the ceiling is massively high. ");
-
-		// name
-
-		strcpy( bufrname, "Index.phpway" );
-
-		strcat( bufrdesc, " An Index.php site, a kind of site that invaded the place during its golden years. ");
-
-		// noise
-
-		strcat( bufrdesc, "All noises echo through the whole area. ");
+			strcat( bufrdesc, " The ceiling is massively high. ");
 
 		// random detail
 
@@ -1530,24 +1464,24 @@ void do_surf ( CHAR_DATA *ch , char *argument )
 
 		break;
 
-	case 12: // Platform
+	case 12: // Server
 
 		// height
 
 		roomheight = number_range(1, 3);
 
 		if (roomheight == 1)
-			strcat( bufrdesc, " the open sky is far, far above you. ");
+			strcat( bufrdesc, " The open sky is far, far above you. ");
 		else if (roomheight == 2)
-			strcat( bufrdesc, " there is a ceiling just a few levels above this one. ");
+			strcat( bufrdesc, " There is a ceiling just a few levels above this one. ");
 		else
-			strcat( bufrdesc, " there is a ceiling many levels above this one. ");
+			strcat( bufrdesc, " There is a ceiling many levels above this one. ");
 
 		// name
 
-		strcpy( bufrname, "Platform" );
+		strcpy( bufrname, "Server" );
 
-		strcat( bufrdesc, " this room is a Platform, open to some of its sides. ");
+		strcat( bufrdesc, " This room was a Server, a wide and accessible storage for everything and everybody. ");
 
 		// noise
 
@@ -1556,14 +1490,10 @@ void do_surf ( CHAR_DATA *ch , char *argument )
 		roomnoise = number_range(1, 3);
 
 		if (roomnoise == 1){
-			strcat( bufrdesc, "you hear the rushing of water nearby. ");
-			SET_BIT( nRoom->room_flags2 , ROOM_FOUNTAIN );
-		}
-		else if (roomnoise == 2){
-			strcat( bufrdesc, "a pool of slime is blubbering. ");
+			strcat( bufrdesc, "A pool of slime is blubbering in the center of the site. ");
 		}
 		else {
-			strcat( bufrdesc, "you can hear a weird buzzing noise. ");
+			strcat( bufrdesc, "You can hear a weird buzzing noise but cannot localize the source. ");
 		}
 
 		// random detail
@@ -1579,51 +1509,33 @@ void do_surf ( CHAR_DATA *ch , char *argument )
 		else if ( randomdescription == 3 ){
 			strcat( bufrdesc, "a metal grate has been grafted into one of the walls. "); }
 		else if ( randomdescription == 4 ){
-			strcat( bufrdesc, "the scattered remains of creatures litter the floor. ");
+			strcat( bufrdesc, "The floor is marked with deep scratches.");
 		}
 		else {
 			strcat( bufrdesc, "a large ventilation pipe is in one of the walls. "); }
 
 		SET_BIT( nRoom->room_flags , ROOM_NOPEDIT );
-		nRoom->sector_type = SECT_PLATFORM;
+		nRoom->sector_type = SECT_SERVER;
 
 		break;
 
 
-	case 14: // ramp
-
-		strcpy( bufrname, "ramp" );
-
-		randomdescription = number_range(1, 3);
-
-		if ( randomdescription == 1 ){
-			strcat( bufrdesc, "lots of wires and tubes run along the walls of this ramp. "); }
-		else if ( randomdescription == 2 ){
-			strcat( bufrdesc, "there are circuit boxes mounted on the walls of this ramp. "); }
-		else if ( randomdescription == 3 ){
-			strcat( bufrdesc, "the rails in the walls of this ramp could mean that an elevator is close. "); }
-
-		nRoom->sector_type = SECT_RAMP;
-		SET_BIT( nRoom->room_flags , ROOM_NOPEDIT );
-
-		break;
-
-	case 15: // ruins
+	case 15: // Host
 
 		// height
 
 		roomheight = number_range(1, 3);
 
 		if (roomheight == 1)
-			strcat( bufrdesc, " the open sky is far, far above you. ");
+			strcat( bufrdesc, " The open sky is far, far above you. ");
 		else if (roomheight == 2)
-			strcat( bufrdesc, " there is a ceiling just a few levels above this one. ");
+			strcat( bufrdesc, " There is a ceiling just a few levels above this one. ");
 		else
-			strcat( bufrdesc, " there is a ceiling many levels above this one. ");
+			strcat( bufrdesc, " There is a ceiling many levels above this one. ");
 
 		// name
 
-		strcpy( bufrname, "ruins" );
+		strcpy( bufrname, "Host" );
 
 		strcat( bufrdesc, " this area either has not withstood the trials of time or some catastrophe has happened here. Whichever it is, the builder seem to have abandoned this section of WildMatrix. ");
 
@@ -1649,7 +1561,7 @@ void do_surf ( CHAR_DATA *ch , char *argument )
 		else if ( randomdescription == 5 ){
 			strcat( bufrdesc, "big heaps of rubble block block some parts of this room. ");}
 		else if ( randomdescription == 6 ){
-			strcat( bufrdesc, "wire frames pop out of the ruins of the walls. "); }
+			strcat( bufrdesc, "wire frames pop out of the Host of the walls. "); }
 		else if ( randomdescription == 7 ){
 			strcat( bufrdesc, "a rusty metal grate hangs from one of the walls in this room. "); }
 		else if ( randomdescription == 8 ){
@@ -1662,7 +1574,7 @@ void do_surf ( CHAR_DATA *ch , char *argument )
 			strcat( bufrdesc, "the ancient remains of some creatures litter the floor. "); }
 
 		SET_BIT( nRoom->room_flags , ROOM_NOPEDIT );
-		nRoom->sector_type = SECT_RUINS;
+		nRoom->sector_type = SECT_HOST;
 
 		break;
 
@@ -1673,7 +1585,7 @@ void do_surf ( CHAR_DATA *ch , char *argument )
 		roomheight = number_range(1, 3);
 
 		if (roomheight == 1)
-			strcat( bufrdesc, " the open sky is far, far above you. ");
+			strcat( bufrdesc, " The ceiling is so high that you can just imagine it. ");
 		else if (roomheight == 2)
 			strcat( bufrdesc, " there is a ceiling just a few levels above this one. ");
 		else
@@ -1728,7 +1640,7 @@ void do_surf ( CHAR_DATA *ch , char *argument )
 			strcat( bufrdesc, "make-shift living compartments have been attached to or built into the walls. ");
 		}
 		else if (roomwalls == 3){
-			strcat( bufrdesc, "metal railings keep citizens from falling down from this Platform. ");
+			strcat( bufrdesc, "metal railings keep citizens from falling down from this Server. ");
 		}
 		else {
 			strcat( bufrdesc, "the walls are smooth. ");
@@ -1855,7 +1767,7 @@ void do_surf ( CHAR_DATA *ch , char *argument )
 		ch->perm_int = UMIN( ch->perm_int , 25 );
 	}
 
-	// stairway, elevator or Nexus
+	// stairway, Hyperlink or Nexus
 
 	if (islevelchange){
 
@@ -2100,7 +2012,7 @@ void followsurf ( CHAR_DATA *ch , char *argument )
 		// Cookie 5
 		// ChatRoom 5
 		// Index.php 10
-		// ruins 10
+		// Host 10
 		// Proxy 10
 
 		if (newareatype >= 80){
@@ -2137,7 +2049,7 @@ void followsurf ( CHAR_DATA *ch , char *argument )
 		// Torrent 10
 		// 404 5
 		// Index.php 20
-		// Platform 15
+		// Server 15
 		// Forum 5
 		// Nexus 5
 
@@ -2182,8 +2094,8 @@ void followsurf ( CHAR_DATA *ch , char *argument )
 		// WebBrowser 5
 		// ChatRoom 5
 		// Index.php 5
-		// Platform 5
-		// ruins 5
+		// Server 5
+		// Host 5
 		// Forum 15
 		// BrokenPort 5
 		// Proxy 5
@@ -2243,9 +2155,9 @@ void followsurf ( CHAR_DATA *ch , char *argument )
 		// Cookie 5
 		// ChatRoom 5
 		// Index.php 5
-		// Platform 5
-		// ramp 5
-		// ruins 5
+		// Server 5
+		// Hyperlink 5
+		// Host 5
 		// Forum 5
 		// BrokenPort 5
 		// Nexus 5
@@ -2288,7 +2200,7 @@ void followsurf ( CHAR_DATA *ch , char *argument )
 
 		}
 		else if (newareatype >= 30) {
-			roomtype = 14;
+			roomtype = 7;
 
 		}
 		else if (newareatype >= 25) {
@@ -2320,9 +2232,9 @@ void followsurf ( CHAR_DATA *ch , char *argument )
 		// WebBrowser 15
 		// ChatRoom 5
 		// Index.php 10
-		// Platform 10
-		// ramp 5
-		// ruins 10
+		// Server 10
+		// Hyperlink 5
+		// Host 10
 		// Forum 5
 		// BrokenPort 5
 		// Link 5
@@ -2353,7 +2265,7 @@ void followsurf ( CHAR_DATA *ch , char *argument )
 			roomtype = 12;
 		}
 		else if (newareatype >= 35) {
-			roomtype = 14;
+			roomtype = 7;
 		}
 		else if (newareatype >= 25) {
 			roomtype = 15;
@@ -2439,8 +2351,8 @@ void followsurf ( CHAR_DATA *ch , char *argument )
 		// 404 10
 		// WebBrowser 5
 		// Index.php 10
-		// Platform 10
-		// ruins 10
+		// Server 10
+		// Host 10
 		// Forum 10
 		// BrokenPort 10
 		// Link10
@@ -2482,15 +2394,15 @@ void followsurf ( CHAR_DATA *ch , char *argument )
 
 		break;
 
-	case SECT_PLATFORM:
+	case SECT_SERVER:
 		// Link 10
 		// Wiki 5
 		// 404 5
 		// WebBrowser 10
 		// Index.php 10
-		// Platform 15
-		// ramp 5
-		// ruins 10
+		// Server 15
+		// Hyperlink 5
+		// Host 10
 		// Forum 5
 		// BrokenPort 10
 		// Nexus 5
@@ -2519,7 +2431,7 @@ void followsurf ( CHAR_DATA *ch , char *argument )
 
 		}
 		else if (newareatype >= 40) {
-			roomtype = 14;
+			roomtype = 7;
 
 		}
 		else if (newareatype >= 30) {
@@ -2543,44 +2455,15 @@ void followsurf ( CHAR_DATA *ch , char *argument )
 		break;
 
 
-	case SECT_RAMP:
-		// ramp 30
-		// elevator 10
-		// 404 10
-		// WebBrowser 25
-		// Platform 25
 
-		if (newareatype >= 70){
-			roomtype = 14;
-
-		}
-
-		else if (newareatype >= 60){
-			roomtype = 7;
-
-		}
-		else if (newareatype >= 50) {
-			roomtype = 5;
-
-		}
-		else if (newareatype >= 25) {
-			roomtype = 6;
-		}
-		else {
-			roomtype = 12;
-
-		}
-
-		break;
-
-	case SECT_RUINS:
+	case SECT_HOST:
 		// Stack 5
 		// Wiki 5
 		// 404 5
 		// WebBrowser 15
 		// Index.php 15
-		// Platform 10
-		// ruins 15
+		// Server 10
+		// Host 15
 		// Forum 5
 		// BrokenPort 5
 		// Link 5
@@ -2636,8 +2519,8 @@ void followsurf ( CHAR_DATA *ch , char *argument )
 		// WebBrowser 5
 		// ChatRoom 20
 		// Index.php 10
-		// Platform 10
-		// ruins 5
+		// Server 10
+		// Host 5
 		// Forum 20
 		// BrokenPort 10
 		// Proxy 5
@@ -2689,8 +2572,8 @@ void followsurf ( CHAR_DATA *ch , char *argument )
 		// WebBrowser 10
 		// ChatRoom 20
 		// Index.php 10
-		// Platform 10
-		// ruins 10
+		// Server 10
+		// Host 10
 		// Forum 10
 		// Proxy 10
 
@@ -2735,8 +2618,8 @@ void followsurf ( CHAR_DATA *ch , char *argument )
 		// 404 5
 		// WebBrowser 5
 		// ChatRoom 5
-		// Platform 5
-		// ruins 5
+		// Server 5
+		// Host 5
 		// Nexus 65
 
 		if (newareatype >= 95){
@@ -2774,8 +2657,8 @@ void followsurf ( CHAR_DATA *ch , char *argument )
 		// 404 10
 		// WebBrowser 10
 		// ChatRoom 10
-		// Platform 10
-		// ruins 10
+		// Server 10
+		// Host 10
 		// Forum 10
 		// BrokenPort 10
 		// Proxy 10
@@ -2924,9 +2807,9 @@ void followsurf ( CHAR_DATA *ch , char *argument )
 		roomheight = number_range(1, 2);
 
 		if (roomheight == 1)
-			strcat( bufrdesc, " the ceiling is low. ");
+			strcat( bufrdesc, " The ceiling is low. ");
 		else
-			strcat( bufrdesc, " the ceiling is high. ");
+			strcat( bufrdesc, " The ceiling is high. ");
 
 		// name
 
@@ -3135,7 +3018,7 @@ void followsurf ( CHAR_DATA *ch , char *argument )
 		roomheight = number_range(1, 3);
 
 		if (roomheight == 1)
-			strcat( bufrdesc, " the open sky is far, far above you. ");
+			strcat( bufrdesc, " The ceiling is so high that you can just imagine it. ");
 		else if (roomheight == 2)
 			strcat( bufrdesc, " there is a ceiling just a few levels above this one. ");
 		else
@@ -3143,65 +3026,51 @@ void followsurf ( CHAR_DATA *ch , char *argument )
 
 		// name
 
-		strcpy( bufrname, "404 Area" );
+		strcpy( bufrname, "404" );
 
-		strcat( bufrdesc, " You are in a bustling 404 in the Metropolis. ");
+		strcat( bufrdesc, " You are in a 404 site of WildMatrix. It is desert. ");
 
 		// noise
 
-		roomnoise = number_range(1, 4);
+		roomnoise = number_range(1, 3);
 
 		if (roomnoise == 1){
-			strcat( bufrdesc, "Chatter from all of the people around you fills the street. ");
+			strcat( bufrdesc, "The only sound you can hear is your footstep.");
 		}
 		else if (roomnoise == 2){
-			strcat( bufrdesc, "A dog is barking loudly. ");
-		}
-		else if (roomnoise == 3){
-			strcat( bufrdesc, "You hear the creaking wheels of a large cart. ");
+			strcat( bufrdesc, "You hear the sound of the CyberSpace wind, blowing through this empty site.");
 		}
 		else {
-			strcat( bufrdesc, "A doom-sayer is heralding the coming of a darker age. ");
+			strcat( bufrdesc, "The whole structure is scratching and grinding.");
+		}
+
+		// walls
+
+		roomwalls = number_range(1, 10);
+
+		if (roomwalls <= 3){
+			strcat( bufrdesc, "Walls are made of rusty metal plates, spotted with strange scratches. ");
+		}
+		else if (roomwalls <= 6){
+			strcat( bufrdesc, "All data flows seem to end here and never go out. ");
+		}
+		else if (roomwalls == 7){
+			strcat( bufrdesc, "You would say that something uncivilized happened here. ");
+		}
+		else {
+			strcat( bufrdesc, "Walls are made of smooth metal plates, speckled with rust and maladjusted.");
 		}
 
 		// random detail
 
 		randomdescription = number_range(1, 7);
 
-		if ( randomdescription == 1 ){
-			strcat( bufrdesc, "A make-shift cart stands here, loaded with empty boxes and barrels. "); }
-		else if ( randomdescription == 2 ){
-			strcat( bufrdesc, "Small, slightly mutated pets roam the streets. "); }
-		else if ( randomdescription == 3 ){
-			strcat( bufrdesc, "You can see some dried blood on the floor. "); }
-		else if ( randomdescription == 4 ){
-			strcat( bufrdesc, "A fountain stands in the middle of this area. ");
-			SET_BIT( nRoom->room_flags2 , ROOM_FOUNTAIN );
-		}
-		else if ( randomdescription == 5 ){
-			strcat( bufrdesc, "Someone is advertising their crafted goods loudly. ");
-			SET_BIT( nRoom->room_flags2 , ROOM_SHOPPING ); }
-		else if ( randomdescription == 6 ){
-			strcat( bufrdesc, "Someone has discarded some old machinery here. "); }
+		if ( randomdescription <= 6 ){
+			strcat( bufrdesc, "\"404 error - PAGE NOT FOUND\" is written everywhere here"); }
 		else {
-			strcat( bufrdesc, "Some criminals have been hanged here. "); }
+			strcat( bufrdesc, "For some strange reason, somebody painted a \"200 OK\" message on the wall."); }
 
-		// walls
 
-		roomwalls = number_range(1, 4);
-
-		if (roomwalls == 1){
-			strcat( bufrdesc, "A balcony has been built into one of the walls. ");
-		}
-		else if (roomwalls == 2){
-			strcat( bufrdesc, "Make-shift living compartments have been attached to or built into the walls. ");
-		}
-		else if (roomwalls == 3){
-			strcat( bufrdesc, "Metal railings keep citizens from falling down from this Platform. ");
-		}
-		else {
-			strcat( bufrdesc, "The walls are smooth. ");
-		}
 
 		//SET_BIT( nRoom->room_flags , ROOM_NO_MOB );
 		SET_BIT( nRoom->room_flags , ROOM_NOPEDIT );
@@ -3215,11 +3084,11 @@ void followsurf ( CHAR_DATA *ch , char *argument )
 		roomheight = number_range(1, 3);
 
 		if (roomheight == 1)
-			strcat( bufrdesc, " the ceiling is low. ");
+			strcat( bufrdesc, " The ceiling is low. ");
 		else if (roomheight == 2)
-			strcat( bufrdesc, " the ceiling is high. ");
+			strcat( bufrdesc, " The ceiling is high. ");
 		else
-			strcat( bufrdesc, " the ceiling is massively high. ");
+			strcat( bufrdesc, " The ceiling is massively high. ");
 
 		// name
 
@@ -3272,16 +3141,16 @@ void followsurf ( CHAR_DATA *ch , char *argument )
 		nRoom->sector_type = SECT_WEBBROWSER;
 		break;
 
-	case 7: // elevator
+	case 7: // Hyperlink
 
-		strcpy( bufrname, "Elevator" );
+		strcpy( bufrname, "Hyperlink" );
 
-		strcpy( bufrdesc, "A large service elevator that is attached and runs on the rails in the wall behind it. ");
+		strcpy( bufrdesc, "You can follow this Hyperlink until the next level. ");
 
 		islevelchange = TRUE;
 
 		SET_BIT( nRoom->room_flags , ROOM_NOPEDIT );
-		nRoom->sector_type = SECT_ELEVATOR;
+		nRoom->sector_type = SECT_HYPERLINK;
 
 		break;
 
@@ -3292,11 +3161,11 @@ void followsurf ( CHAR_DATA *ch , char *argument )
 		roomheight = number_range(1, 3);
 
 		if (roomheight == 1)
-			strcat( bufrdesc, " the ceiling is low. ");
+			strcat( bufrdesc, " The ceiling is low. ");
 		else if (roomheight == 2)
-			strcat( bufrdesc, " the ceiling is high. ");
+			strcat( bufrdesc, " The ceiling is high. ");
 		else
-			strcat( bufrdesc, " the ceiling is massively high. ");
+			strcat( bufrdesc, " The ceiling is massively high. ");
 
 		// name
 
@@ -3315,7 +3184,7 @@ void followsurf ( CHAR_DATA *ch , char *argument )
 			strcat( bufrdesc, "A constant whirring noise sounds through the room. ");
 		}
 		else {
-			strcat( bufrdesc, "You can hear the sound of metal banging against metal. ");
+			strcat( bufrdesc, "You can hear the sound of metal rubbing against metal. ");
 		}
 
 		// random detail
@@ -3358,9 +3227,9 @@ void followsurf ( CHAR_DATA *ch , char *argument )
 		roomheight = number_range(1, 2);
 
 		if (roomheight == 1)
-			strcat( bufrdesc, " the ceiling is low. ");
+			strcat( bufrdesc, " The ceiling is low. ");
 		else
-			strcat( bufrdesc, " the ceiling is high. ");
+			strcat( bufrdesc, " The ceiling is high. ");
 
 		// name
 
@@ -3429,11 +3298,11 @@ void followsurf ( CHAR_DATA *ch , char *argument )
 		roomheight = number_range(1, 3);
 
 		if (roomheight == 1)
-			strcat( bufrdesc, " the ceiling is high. ");
+			strcat( bufrdesc, " The ceiling is high. ");
 		else if (roomheight == 2)
-			strcat( bufrdesc, " the ceiling is very high. ");
+			strcat( bufrdesc, " The ceiling is very high. ");
 		else
-			strcat( bufrdesc, " the ceiling is massively high. ");
+			strcat( bufrdesc, " The ceiling is massively high. ");
 
 		// name
 
@@ -3480,24 +3349,24 @@ void followsurf ( CHAR_DATA *ch , char *argument )
 
 		break;
 
-	case 12: // Platform
+	case 12: // Server
 
 		// height
 
 		roomheight = number_range(1, 3);
 
 		if (roomheight == 1)
-			strcat( bufrdesc, " the open sky is far, far above you. ");
+			strcat( bufrdesc, " The open sky is far, far above you. ");
 		else if (roomheight == 2)
-			strcat( bufrdesc, " there is a ceiling just a few levels above this one. ");
+			strcat( bufrdesc, " There is a ceiling just a few levels above this one. ");
 		else
-			strcat( bufrdesc, " there is a ceiling many levels above this one. ");
+			strcat( bufrdesc, " There is a ceiling many levels above this one. ");
 
 		// name
 
-		strcpy( bufrname, "Open Platform" );
+		strcpy( bufrname, "Server" );
 
-		strcat( bufrdesc, " This room is a Platform, open to some of its sides. ");
+		strcat( bufrdesc, " This room was a Server, a wide and accessible storage for everything and everybody. ");
 
 		// noise
 
@@ -3506,14 +3375,10 @@ void followsurf ( CHAR_DATA *ch , char *argument )
 		roomnoise = number_range(1, 3);
 
 		if (roomnoise == 1){
-			strcat( bufrdesc, "You hear the rushing of water nearby. ");
-			SET_BIT( nRoom->room_flags2 , ROOM_FOUNTAIN );
-		}
-		else if (roomnoise == 2){
-			strcat( bufrdesc, "A pool of slime is blubbering. ");
+			strcat( bufrdesc, "A pool of slime is blubbering in the center of the site. ");
 		}
 		else {
-			strcat( bufrdesc, "You can hear a weird buzzing noise. ");
+			strcat( bufrdesc, "You can hear a weird buzzing noise but cannot localize the source. ");
 		}
 
 		// random detail
@@ -3529,35 +3394,18 @@ void followsurf ( CHAR_DATA *ch , char *argument )
 		else if ( randomdescription == 3 ){
 			strcat( bufrdesc, "A metal grate has been grafted into one of the walls. "); }
 		else if ( randomdescription == 4 ){
-			strcat( bufrdesc, "The scattered remains of creatures litter the floor. ");
+			strcat( bufrdesc, "The floor is marked with deep scratches. ");
 		}
 		else {
 			strcat( bufrdesc, "A large ventilation pipe is in one of the walls. "); }
 
 		SET_BIT( nRoom->room_flags , ROOM_NOPEDIT );
-		nRoom->sector_type = SECT_PLATFORM;
+		nRoom->sector_type = SECT_SERVER;
 
 		break;
 
-	case 14: // ramp
 
-		strcpy( bufrname, "Ramp" );
-
-		randomdescription = number_range(1, 3);
-
-		if ( randomdescription == 1 ){
-			strcat( bufrdesc, "Lots of wires and tubes run along the walls of this ramp. "); }
-		else if ( randomdescription == 2 ){
-			strcat( bufrdesc, "There are circuit boxes mounted on the walls of this ramp. "); }
-		else if ( randomdescription == 3 ){
-			strcat( bufrdesc, "The rails in the walls of this ramp could mean that an elevator is close. "); }
-
-		nRoom->sector_type = SECT_RAMP;
-		SET_BIT( nRoom->room_flags , ROOM_NOPEDIT );
-
-		break;
-
-	case 15: // ruins
+	case 15: // Host
 
 		// height
 
@@ -3598,7 +3446,7 @@ void followsurf ( CHAR_DATA *ch , char *argument )
 		else if ( randomdescription == 5 ){
 			strcat( bufrdesc, "Big heaps of rubble block block some parts of this room. ");}
 		else if ( randomdescription == 6 ){
-			strcat( bufrdesc, "Wire frames pop out of the ruins of the walls. "); }
+			strcat( bufrdesc, "Wire frames pop out of the Host of the walls. "); }
 		else if ( randomdescription == 7 ){
 			strcat( bufrdesc, "A rusty metal grate hangs from one of the walls in this room. "); }
 		else if ( randomdescription == 8 ){
@@ -3611,7 +3459,7 @@ void followsurf ( CHAR_DATA *ch , char *argument )
 			strcat( bufrdesc, "The ancient remains of some creatures litter the floor. "); }
 
 		SET_BIT( nRoom->room_flags , ROOM_NOPEDIT );
-		nRoom->sector_type = SECT_RUINS;
+		nRoom->sector_type = SECT_HOST;
 
 		break;
 
@@ -3622,7 +3470,7 @@ void followsurf ( CHAR_DATA *ch , char *argument )
 		roomheight = number_range(1, 3);
 
 		if (roomheight == 1)
-			strcat( bufrdesc, " the open sky is far, far above you. ");
+			strcat( bufrdesc, " The ceiling is so high that you can just imagine it. ");
 		else if (roomheight == 2)
 			strcat( bufrdesc, " there is a ceiling just a few levels above this one. ");
 		else
@@ -3677,7 +3525,7 @@ void followsurf ( CHAR_DATA *ch , char *argument )
 			strcat( bufrdesc, "Make-shift living compartments have been attached to or built into the walls. ");
 		}
 		else if (roomwalls == 3){
-			strcat( bufrdesc, "Metal railings keep citizens from falling down from this Platform. ");
+			strcat( bufrdesc, "Metal railings keep citizens from falling down from this Server. ");
 		}
 		else {
 			strcat( bufrdesc, "The walls are smooth. ");
@@ -3803,7 +3651,7 @@ void followsurf ( CHAR_DATA *ch , char *argument )
 		ch->perm_int = UMIN( ch->perm_int , 25 );
 	}
 
-	// stairway, elevator or Nexus
+	// stairway, Hyperlink or Nexus
 
 	if (islevelchange){
 
