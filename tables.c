@@ -135,6 +135,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_codeapp" ))		return do_codeapp;
 	if ( !str_cmp( name, "do_codemed" ))		return do_codemed;
 	if ( !str_cmp( name, "do_coding" ))		return do_coding;
+	//if ( !str_cmp( name, "do_nawak" ))		return do_nawak;
 	if ( !str_cmp( name, "do_commands" ))		return do_commands;
 	if ( !str_cmp( name, "do_compare" ))		return do_compare;
 	if ( !str_cmp( name, "do_completejob" ))		return do_completejob;
@@ -520,6 +521,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_southwest" ))		return do_southwest;
 	if ( !str_cmp( name, "do_speeders" ))		return do_speeders;
 	if ( !str_cmp( name, "do_split" ))		return do_split;
+	if ( !str_cmp( name, "do_surf" ))		return do_surf;
 	if ( !str_cmp( name, "do_sset" ))		return do_sset;
 	if ( !str_cmp( name, "do_stand" ))		return do_stand;
 	if ( !str_cmp( name, "do_starsystems" ))        return do_starsystems;
@@ -659,10 +661,12 @@ char *skill_name( DO_FUN *skill )
     if ( skill == do_adecline )          return "do_adecline";
     if ( skill == do_slicebank )     return "do_slicebank";
     if ( skill == do_probe )     return "do_probe";
+    if ( skill == do_surf )     return "do_surf";
     if ( skill == do_claim )     return "do_claim";
     if ( skill == do_slicefund )     return "do_slicefund";
     if ( skill == do_slicesnippets )     return "do_slicesnippets";
     if ( skill == do_nodeupgrade )     return "do_nodeupgrade";
+    //if ( skill == do_nawak )     return "do_nawak";
     if ( skill == do_inquire )     return "do_inquire";
     if ( skill == do_arrest )     return "do_arrest";
     if ( skill == do_buyskill )     return "do_buyskill";

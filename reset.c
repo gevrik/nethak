@@ -108,17 +108,18 @@ void reset_all() {
 	}
 
 	for (iHash = 0; iHash < MAX_KEY_HASH; iHash++) {
-		for (pRoomIndex = room_index_hash[iHash]; pRoomIndex; pRoomIndex
-				= pRoomIndex->next) {
+		for (pRoomIndex = room_index_hash[iHash]; pRoomIndex; pRoomIndex= pRoomIndex->next) 
+		{
 			vnum = 0;
 			onum = 0;
 
 			for (xit = pRoomIndex->first_exit; xit; xit = xit->next)
-				if (IS_SET(xit->exit_info , EX_ISDOOR )) {
+				if (IS_SET(xit->exit_info , EX_ISDOOR )) 
+					{
 					SET_BIT( xit->exit_info , EX_CLOSED );
 					if (xit->key >= 0)
 						SET_BIT( xit->exit_info , EX_LOCKED );
-				}
+					}
 
 			if (IS_SET(pRoomIndex->room_flags, ROOM_TRADE ))
 				vnum = MOB_VNUM_TRADER;
@@ -126,8 +127,8 @@ void reset_all() {
 				vnum = MOB_VNUM_SUPPLIER;
 			if (IS_SET(pRoomIndex->room_flags, ROOM_PAWN ))
 				vnum = MOB_VNUM_PAWNER;
-//			if (IS_SET(pRoomIndex->room_flags, ROOM_HOTEL ))
-//				vnum = MOB_VNUM_WAITER;
+			if (IS_SET(pRoomIndex->room_flags, ROOM_HOTEL ))
+				vnum = MOB_VNUM_WAITER;
 			if (IS_SET(pRoomIndex->room_flags, ROOM_GARAGE ))
 				vnum = MOB_VNUM_MECHANIC;
 			//if (IS_SET(pRoomIndex->room_flags, ROOM_EMPLOYMENT ))
@@ -136,8 +137,8 @@ void reset_all() {
 			if (vnum > 0) {
 				found = FALSE;
 
-				for (mob = pRoomIndex->first_person; mob; mob
-						= mob->next_in_room) {
+				for (mob = pRoomIndex->first_person; mob; mob = mob->next_in_room) 
+				{
 					if (IS_NPC( mob ) && mob->pIndexData
 							&& mob->pIndexData->vnum == vnum)
 						found = TRUE;
@@ -145,7 +146,8 @@ void reset_all() {
 
 				if (!found) {
 
-					if (!(pMobIndex = get_mob_index(vnum))) {
+					if (!(pMobIndex = get_mob_index(vnum))) 
+					{
 						bug("Reset_all: Missing mob (%d)", vnum);
 						return;
 					}
@@ -157,12 +159,15 @@ void reset_all() {
 					char_to_room(mob, pRoomIndex);
 					if (pRoomIndex->area && pRoomIndex->area->planet)
 						pRoomIndex->area->planet->population++;
-					if ((IS_SET(pRoomIndex->room_flags, ROOM_NOPEDIT) && vnum
-							== MOB_VNUM_TRADER) || vnum == MOB_VNUM_SUPPLIER) {
+					
+					if ((IS_SET(pRoomIndex->room_flags, ROOM_NOPEDIT) && vnum== MOB_VNUM_TRADER) || vnum == MOB_VNUM_SUPPLIER) 
+					{
 
-						if (vnum != MOB_VNUM_SUPPLIER || number_bits(1) == 0) {
+						if (vnum != MOB_VNUM_SUPPLIER || number_bits(1) == 0) 
+						{
 
-							if (!(pObjIndex = get_obj_index(OBJ_VNUM_COMPILER))) {
+							if (!(pObjIndex = get_obj_index(OBJ_VNUM_COMPILER))) 
+							{
 								bug("Reset_all: Missing default compiler (%d)",
 										OBJ_VNUM_COMPILER );
 								return;
@@ -175,9 +180,9 @@ void reset_all() {
 
 						if (vnum != MOB_VNUM_SUPPLIER || number_bits(1) == 0) {
 
-							if (!(pObjIndex = get_obj_index(OBJ_VNUM_DEVKIT))) {
-								bug("Reset_all: Missing default devkit (%d)",
-										OBJ_VNUM_DEVKIT );
+							if (!(pObjIndex = get_obj_index(OBJ_VNUM_DEVKIT))) 
+							{
+								bug("Reset_all: Missing default devkit (%d)",OBJ_VNUM_DEVKIT );
 								return;
 							}
 
@@ -187,9 +192,21 @@ void reset_all() {
 						}
 
 						if (vnum != MOB_VNUM_SUPPLIER || number_bits(1) == 0) {
-							if (!(pObjIndex = get_obj_index(OBJ_VNUM_COMLINK))) {
-								bug("Reset_all: Missing default comlink (%d)",
-										OBJ_VNUM_COMLINK );
+							if (!(pObjIndex = get_obj_index(OBJ_VNUM_COMLINK))) 
+							{
+								bug("Reset_all: Missing default comlink (%d)",OBJ_VNUM_COMLINK );
+								return;
+							}
+							obj = create_object(pObjIndex, 1);
+							SET_BIT(obj->extra_flags, ITEM_INVENTORY);
+							obj = obj_to_char(obj, mob);
+						}
+
+						if (vnum != MOB_VNUM_SUPPLIER || number_bits(1) == 0) 
+						{
+							if (!(pObjIndex = get_obj_index(OBJ_VNUM_SEWKIT))) 
+							{
+								bug("Reset_all: Missing default parser (%d)",OBJ_VNUM_SEWKIT );
 								return;
 							}
 							obj = create_object(pObjIndex, 1);
@@ -198,20 +215,9 @@ void reset_all() {
 						}
 
 						if (vnum != MOB_VNUM_SUPPLIER || number_bits(1) == 0) {
-							if (!(pObjIndex = get_obj_index(OBJ_VNUM_SEWKIT))) {
-								bug("Reset_all: Missing default parser (%d)",
-										OBJ_VNUM_SEWKIT );
-								return;
-							}
-							obj = create_object(pObjIndex, 1);
-							SET_BIT(obj->extra_flags, ITEM_INVENTORY);
-							obj = obj_to_char(obj, mob);
-						}
-
-						if (vnum != MOB_VNUM_SUPPLIER || number_bits(1) == 0) {
-							if (!(pObjIndex = get_obj_index(OBJ_VNUM_SHOVEL))) {
-								bug("Reset_all: Missing default shovel (%d)",
-										OBJ_VNUM_SHOVEL );
+							if (!(pObjIndex = get_obj_index(OBJ_VNUM_SHOVEL))) 
+							{
+								bug("Reset_all: Missing default shovel (%d)",OBJ_VNUM_SHOVEL );
 								return;
 							}
 							obj = create_object(pObjIndex, 1);
@@ -221,22 +227,28 @@ void reset_all() {
 					}
 
 					if (vnum == MOB_VNUM_SUPPLIER) {
-						if (number_bits(1) == 0) {
-							if ((pObjIndex = get_obj_index(OBJ_VNUM_BATTERY))) {
+						if (number_bits(1) == 0) 
+						{
+							if ((pObjIndex = get_obj_index(OBJ_VNUM_BATTERY))) 
+							{
 								obj = create_object(pObjIndex, 1);
 								SET_BIT(obj->extra_flags, ITEM_INVENTORY);
 								obj = obj_to_char(obj, mob);
 							}
 						}
-						if (number_bits(1) == 0) {
-							if (!(pObjIndex = get_obj_index(OBJ_VNUM_BACKPACK))) {
+						if (number_bits(1) == 0) 
+						{
+							if (!(pObjIndex = get_obj_index(OBJ_VNUM_BACKPACK))) 
+							{
 								obj = create_object(pObjIndex, 1);
 								SET_BIT(obj->extra_flags, ITEM_INVENTORY);
 								obj = obj_to_char(obj, mob);
 							}
 						}
-						if (number_bits(1) == 0) {
-							if ((pObjIndex = get_obj_index(OBJ_VNUM_AMMO))) {
+						if (number_bits(1) == 0) 
+						{
+							if ((pObjIndex = get_obj_index(OBJ_VNUM_AMMO))) 
+							{
 								obj = create_object(pObjIndex, 1);
 								SET_BIT(obj->extra_flags, ITEM_INVENTORY);
 								obj = obj_to_char(obj, mob);
@@ -273,8 +285,8 @@ void reset_all() {
 
 			// firewalls
 
-			if (IS_SET( pRoomIndex->room_flags, ROOM_BARRACKS )
-					&& pRoomIndex->area && pRoomIndex->area->planet) {
+			if (IS_SET( pRoomIndex->room_flags, ROOM_BARRACKS )	&& pRoomIndex->area && pRoomIndex->area->planet) 
+			{
 				int guard_count = 0;
 				int guardlevel = pRoomIndex->level + 1;
 				OBJ_DATA * blaster;
@@ -292,13 +304,6 @@ void reset_all() {
 
 				if (pRoomIndex->area->planet->barracks * 5 <= guard_count)
 					continue;
-
-				if(pRoomIndex->lockdown > 0){
-
-					pRoomIndex->lockdown = 0;
-					continue;
-
-				}
 
 				mob = create_mobile(pMobIndex);
 				char_to_room(mob, pRoomIndex);
@@ -336,8 +341,8 @@ void reset_all() {
 				continue;
 			}
 
-			if (IS_SET( pRoomIndex->room_flags, ROOM_CAN_LAND )
-					&& pRoomIndex->area && pRoomIndex->area->planet) {
+			if (IS_SET( pRoomIndex->room_flags, ROOM_CAN_LAND )&& pRoomIndex->area && pRoomIndex->area->planet) 
+			{
 
 				 if (!IS_SET( pRoomIndex->room_flags2, ROOM_HOMESYSIO ) )
 				    {
@@ -379,7 +384,7 @@ void reset_all() {
 					mob->mob_clan = pRoomIndex->area->planet->governed_by;
 
 					STRFREE( mob->description );
-					mob->description	=STRALLOC( "You see a Guard ICE.\n Looking awkward and built like a tank, he almost seems polygonal.\nResponsible of the security of his affected system, he watches around and he's ready to arrest any spoilsport : you better don't mess with Major Tom.\r");
+					mob->description	=STRALLOC( "You see a Guard ICE.\nLooking awkward and built like a tank, he almost seems polygonal.\nResponsible of the security of his affected system, he watches around and he's ready to arrest any spoilsport : you better don't mess with Major Tom.\r");
 
 				}
 
@@ -389,121 +394,120 @@ void reset_all() {
 
 			// repos
 
-			if (pRoomIndex->sector_type == SECT_FIELD
-					|| pRoomIndex->sector_type == SECT_FOREST
-					|| pRoomIndex->sector_type == SECT_HILLS
-					|| pRoomIndex->sector_type == SECT_SCRUB ) {
+			if (pRoomIndex->sector_type == SECT_FIELD || pRoomIndex->sector_type == SECT_FOREST || pRoomIndex->sector_type == SECT_HILLS || pRoomIndex->sector_type == SECT_SCRUB ) 
+			{
 
-			baselevel = pRoomIndex->level;
+				baselevel = pRoomIndex->level;
 
-			if ( baselevel == 0 )
-			nodelevel = 1;
-			else if ( baselevel == 1 )
-			nodelevel = 2;
-			else if ( baselevel == 2 )
-			nodelevel = 4;
-			else if ( baselevel == 3 )
-			nodelevel = 8;
-			else if ( baselevel == 4 )
-			nodelevel = 16;
-			else if ( baselevel == 5 )
-			nodelevel = 32;
+				if ( baselevel == 0 )
+				nodelevel = 1;
+				else if ( baselevel == 1 )
+				nodelevel = 2;
+				else if ( baselevel == 2 )
+				nodelevel = 4;
+				else if ( baselevel == 3 )
+				nodelevel = 8;
+				else if ( baselevel == 4 )
+				nodelevel = 16;
+				else if ( baselevel == 5 )
+				nodelevel = 32;
 
-			if (baselevel < 1)
-				baselevel = 1;
+				if (baselevel < 1)
+					baselevel = 1;
 
-			entertainmax = pRoomIndex->area->planet->entertain_plus - pRoomIndex->area->planet->entertain_minus;
-			multimediamax = pRoomIndex->area->planet->multimedia_plus - pRoomIndex->area->planet->multimedia_minus;
-			financemax = pRoomIndex->area->planet->finance_plus - pRoomIndex->area->planet->finance_minus;
-			productmax = pRoomIndex->area->planet->product_plus - pRoomIndex->area->planet->product_minus;
+				entertainmax = pRoomIndex->area->planet->entertain_plus - pRoomIndex->area->planet->entertain_minus;
+				multimediamax = pRoomIndex->area->planet->multimedia_plus - pRoomIndex->area->planet->multimedia_minus;
+				financemax = pRoomIndex->area->planet->finance_plus - pRoomIndex->area->planet->finance_minus;
+				productmax = pRoomIndex->area->planet->product_plus - pRoomIndex->area->planet->product_minus;
 
-			numguards = 0;
-			CHAR_DATA * rch;
+				numguards = 0;
+				CHAR_DATA * rch;
 
-			switch (pRoomIndex->sector_type) {
+				switch (pRoomIndex->sector_type) {
 
-			default:
-				continue;
+				default:
+					continue;
+					break;
+
+				case SECT_FIELD:
+
+					if ( pRoomIndex->area->planet->entertain_count + baselevel > entertainmax )
+						continue;
+
+					vnum = 56;
+
+					for (rch = pRoomIndex->first_person; rch; rch
+							= rch->next_in_room)
+						if (IS_NPC(rch) && rch->pIndexData && rch->pIndexData->vnum
+								== vnum)
+							numguards++;
+
+					if (numguards >= 1)
+						continue;
+
+					pRoomIndex->area->planet->entertain_count += baselevel;
 				break;
 
-			case SECT_FIELD:
+				case SECT_FOREST:
 
-				if ( pRoomIndex->area->planet->entertain_count + baselevel > entertainmax )
-					continue;
+					if ( pRoomIndex->area->planet->multimedia_count + baselevel > multimediamax )
+						continue;
 
-				vnum = 56;
+					vnum = 57;
 
-				for (rch = pRoomIndex->first_person; rch; rch
-						= rch->next_in_room)
-					if (IS_NPC(rch) && rch->pIndexData && rch->pIndexData->vnum
-							== vnum)
-						numguards++;
+					for (rch = pRoomIndex->first_person; rch; rch
+							= rch->next_in_room)
+						if (IS_NPC(rch) && rch->pIndexData && rch->pIndexData->vnum
+								== vnum)
+							numguards++;
 
-				if (numguards >= 1)
-					continue;
+					if (numguards >= 1)
+						continue;
 
-				pRoomIndex->area->planet->entertain_count += baselevel;
-			break;
+					pRoomIndex->area->planet->multimedia_count += baselevel;
+				break;
+				case SECT_HILLS:
 
-			case SECT_FOREST:
+					if ( pRoomIndex->area->planet->finance_count + baselevel > financemax )
+						continue;
 
-				if ( pRoomIndex->area->planet->multimedia_count + baselevel > multimediamax )
-					continue;
+					vnum = 58;
 
-				vnum = 57;
+					for (rch = pRoomIndex->first_person; rch; rch
+							= rch->next_in_room)
+						if (IS_NPC(rch) && rch->pIndexData && rch->pIndexData->vnum
+								== vnum)
+							numguards++;
 
-				for (rch = pRoomIndex->first_person; rch; rch
-						= rch->next_in_room)
-					if (IS_NPC(rch) && rch->pIndexData && rch->pIndexData->vnum
-							== vnum)
-						numguards++;
+					if (numguards >= 1)
+						continue;
 
-				if (numguards >= 1)
-					continue;
+					pRoomIndex->area->planet->finance_count += baselevel;
+				break;
+				case SECT_SCRUB:
 
-				pRoomIndex->area->planet->multimedia_count += baselevel;
-			break;
-			case SECT_HILLS:
+					if ( pRoomIndex->area->planet->product_count + baselevel > productmax )
+						continue;
 
-				if ( pRoomIndex->area->planet->finance_count + baselevel > financemax )
-					continue;
+					vnum = 59;
 
-				vnum = 58;
+					for (rch = pRoomIndex->first_person; rch; rch
+							= rch->next_in_room)
+						if (IS_NPC(rch) && rch->pIndexData && rch->pIndexData->vnum
+								== vnum)
+							numguards++;
 
-				for (rch = pRoomIndex->first_person; rch; rch
-						= rch->next_in_room)
-					if (IS_NPC(rch) && rch->pIndexData && rch->pIndexData->vnum
-							== vnum)
-						numguards++;
+					if (numguards >= 1)
+						continue;
+					pRoomIndex->area->planet->product_count += baselevel;
+				break;
+				}
 
-				if (numguards >= 1)
-					continue;
-
-				pRoomIndex->area->planet->finance_count += baselevel;
-			break;
-			case SECT_SCRUB:
-
-				if ( pRoomIndex->area->planet->product_count + baselevel > productmax )
-					continue;
-
-				vnum = 59;
-
-				for (rch = pRoomIndex->first_person; rch; rch
-						= rch->next_in_room)
-					if (IS_NPC(rch) && rch->pIndexData && rch->pIndexData->vnum
-							== vnum)
-						numguards++;
-
-				if (numguards >= 1)
-					continue;
-				pRoomIndex->area->planet->product_count += baselevel;
-			break;
-			}
-
-			if (!(pMobIndex = get_mob_index(vnum))) {
-				bug("Reset_all: Missing mob (%d)", vnum);
-				return;
-			}
+				if (!(pMobIndex = get_mob_index(vnum))) 
+				{
+					bug("Reset_all: Missing mob (%d)", vnum);
+					return;
+				}
 
 				mob = create_mobile(pMobIndex);
 				//if (room_is_dark(pRoomIndex))
@@ -617,7 +621,7 @@ void reset_all() {
 					    sprintf( buf , "%s [alpha]" , obj->name );
 					    obj->short_descr = STRALLOC( buf );
 					    STRFREE( obj->description );
-					    sprintf( buf1 , "%s [alpha] : it's a poor resource file, remains of unidentified code.\nYou can decompile it into useful thing, by using DECOMP command. Or maybe you can have a JOB requiring this." , obj->name );
+					    sprintf( buf1 , "%s [alpha] : it's a poor resource file, remains of unidentified code.\nYou can decompile it into useful thing, by using DECOMP command. \nOr maybe you can have a JOB requiring this." , obj->name );
 					    obj->description = STRALLOC( buf1 );
 
 					}
@@ -635,7 +639,7 @@ void reset_all() {
 						    sprintf( buf , "%s [beta]" , obj->name );
 						    obj->short_descr = STRALLOC( buf );
 						    STRFREE( obj->description );
-						    sprintf( buf1 , "%s [beta] : it's a resource file, remains of unidentified code.\nYou can decompile it into useful thing, by using DECOMP command. Or maybe you can have a JOB requiring this." , obj->name );
+						    sprintf( buf1 , "%s [beta] : it's a resource file, remains of unidentified code.\nYou can decompile it into useful thing, by using DECOMP command. \nOr maybe you can have a JOB requiring this." , obj->name );
 						    obj->description = STRALLOC( buf1 );
 						}
 					else if (nodelevel == 2)
@@ -652,7 +656,7 @@ void reset_all() {
 						    sprintf( buf , "%s [candidate]" , obj->name );
 						    obj->short_descr = STRALLOC( buf );
 						    STRFREE( obj->description );
-						    sprintf( buf1 , "%s [candidate] : it's a net resource file, remains of unidentified code.\nYou can decompile it into useful thing, by using DECOMP command. Or maybe you can have a JOB requiring this." , obj->name );
+						    sprintf( buf1 , "%s [candidate] : it's a net resource file, remains of unidentified code.\nYou can decompile it into useful thing, by using DECOMP command. \nOr maybe you can have a JOB requiring this." , obj->name );
 						    obj->description = STRALLOC( buf1 );
 						}
 					else if (nodelevel == 3)
@@ -669,7 +673,7 @@ void reset_all() {
 						    sprintf( buf , "%s [release]" , obj->name );
 						    obj->short_descr = STRALLOC( buf );
 						    STRFREE( obj->description );
-						    sprintf( buf1 , "%s [release] : it's a good resource file, remains of unidentified code.\nYou can decompile it into useful thing, by using DECOMP command. Or maybe you can have a JOB requiring this." , obj->name );
+						    sprintf( buf1 , "%s [release] : it's a good resource file, remains of unidentified code.\nYou can decompile it into useful thing, by using DECOMP command. \nOr maybe you can have a JOB requiring this." , obj->name );
 						    obj->description = STRALLOC( buf1 );
 						}
 					else if (nodelevel == 4)
@@ -686,7 +690,7 @@ void reset_all() {
 						    sprintf( buf , "%s [prototype]" , obj->name );
 						    obj->short_descr = STRALLOC( buf );
 						    STRFREE( obj->description );
-						    sprintf( buf1 , "%s [prototype] : it's a very good resource file, remains of unidentified code.\nYou can decompile it into useful thing, by using DECOMP command. Or maybe you can have a JOB requiring this." , obj->name );
+						    sprintf( buf1 , "%s [prototype] : it's a very good resource file, remains of unidentified code.\nYou can decompile it into useful thing, by using DECOMP command. \nOr maybe you can have a JOB requiring this." , obj->name );
 						    obj->description = STRALLOC( buf1 );
 						}
 					else if (nodelevel == 5)
@@ -703,7 +707,7 @@ void reset_all() {
 						    sprintf( buf , "%s [wilderspace]" , obj->name );
 						    obj->short_descr = STRALLOC( buf );
 						    STRFREE( obj->description );
-						    sprintf( buf1 , "%s [wilderspace] : it's an excellent resource file, remains of unidentified code.\nYou can decompile it into useful thing, by using DECOMP command. Or maybe you can have a JOB requiring this." , obj->name );
+						    sprintf( buf1 , "%s [wilderspace] : it's an excellent resource file, remains of unidentified code.\nYou can decompile it into useful thing, by using DECOMP command. \nOr maybe you can have a JOB requiring this." , obj->name );
 						    obj->description = STRALLOC( buf1 );
 						}
 					else
@@ -720,7 +724,7 @@ void reset_all() {
 						    sprintf( buf , "%s [buggy]" , obj->name );
 						    obj->short_descr = STRALLOC( buf );
 						    STRFREE( obj->description );
-						    sprintf( buf1 , "%s [buggy] : it's a very poor resource file, remains of unidentified code.\nYou can decompile it into useful thing, by using DECOMP command.  Or maybe you can have a JOB requiring this." , obj->name );
+						    sprintf( buf1 , "%s [buggy] : it's a very poor resource file, remains of unidentified code.\nYou can decompile it into useful thing, by using DECOMP command.  \nOr maybe you can have a JOB requiring this." , obj->name );
 						    obj->description = STRALLOC( buf1 );
 						}
 
@@ -949,7 +953,7 @@ void reset_all() {
 				mob->gold = ( number_range(100, 200) * (pRoomIndex->level + 1) );
 
 				STRFREE( mob->description );
-				mob->description	=STRALLOC( "You see a Rogue Hacker. \nSurvivor of a gone era, he was certainly some kind of traitor, conspiring in the shadows against NetWatch Org. They were taken down in its fall.\n Even if he now looks like an outdated poor thing, never underestimate him : a feral spark still glows in his eyes, watching around for something to pounce with his blade.\n\n\r");
+				mob->description	=STRALLOC( "You see a Rogue Hacker.\nSurvivor of a gone era, he was certainly some kind of traitor, \nconspiring in the shadows against NetWatch Org. \nThey were taken down in its fall.\nEven if he now looks like an outdated poor thing, never underestimate him : \na feral spark still glows in his eyes, watching around for something to pounce with his blade.\n\n\r");
 
 				continue;
 				}
@@ -987,7 +991,7 @@ void reset_all() {
 					mob->gold = ( number_range(50, 100) * (pRoomIndex->level + 1) );
 
 					STRFREE( mob->description );
-					mob->description	=STRALLOC( "You see a NetWatch Scout. \nBulky and mainly composed of its comlink module and scanner array, it moves systematically through the node scanning for intruders. \nA NetWatch Emblem glows dimly on its side, memory of the past greatness of systems and organization now forgotten.\n\r");
+					mob->description	=STRALLOC( "You see a NetWatch Scout.\nBulky and mainly composed of its comlink module and scanner array, \nit moves systematically through the node scanning for intruders.\nA NetWatch Emblem glows dimly on its side, memory of the past greatness of systems and organization now forgotten.\n\r");
 
 					continue;
 				}
@@ -1060,7 +1064,7 @@ void reset_all() {
 					mob->gold = ( number_range(5, 10) * (pRoomIndex->level + 1) );
 
 					STRFREE( mob->description );
-					mob->description	=STRALLOC( "You see a Metro bot, a large Cube with a seemingly unbroken surface.\nA small scanner pops out on one of the surfaces and sweeps the node, checking for some ennemy to wipe out. Then, it returns and leaves the surface uniform once again. \nIt appears fairly harmless, but you cannot deny the air of menace about it.\n\r");
+					mob->description	=STRALLOC( "You see a Metro bot, a large Cube with a seemingly unbroken surface.\nA small scanner pops out on one of the surfaces and sweeps the node, \nchecking for some ennemy to wipe out. \nThen, it returns and leaves the surface uniform once again. \nIt appears fairly harmless, but you cannot deny the air of menace about it.\n\r");
 
 					if ((pObjIndex = get_obj_index(OBJ_VNUM_TOKEN))
 							!= NULL) {
@@ -1076,73 +1080,375 @@ void reset_all() {
 
 
 			//WILDMATRIX
-//			case SECT_STACK:
-//			case SECT_LINK:
-//			case SECT_WIKI:
-//			case SECT_404:
-//			case SECT_WEBBROWSER:
-//			case SECT_COOKIE:
-//			case SECT_CHATROOM:
-//			case SECT_INDEX:
-//			case SECT_FORUM:
-//			case SECT_BROKENPORT:
-//			case SECT_NEXUS:
-//			case SECT_PROXY:
-//			{
-//				CHAR_DATA * rch;
-//				numguards = 0;
-//				for (rch = pRoomIndex->first_person; rch; rch= rch->next_in_room)
-//
-//					if (IS_NPC(rch) && rch->pIndexData && rch->pIndexData->vnum== 50)
-//						numguards++;
-//
-//				if (numguards >= 2)
-//					continue;
-//
-//				CHAR_DATA * sch;
-//				int numhench = 0;
-//				for (sch = pRoomIndex->first_person; sch; sch= sch->next_in_room)
-//
-//					if (IS_NPC(sch) && sch->pIndexData && sch->pIndexData->vnum== 51)
-//						numhench++;
-//
-//				if (numhench >= 1)
-//					continue;
-//
-//				vnum = 50;
-//
-//				int randmob = number_range(2, 10);
-//
-//				if (randmob)
-//				{
-//					if (!(pMobIndex = get_mob_index(vnum))) {
-//						bug("Reset_all: Missing mob (%d)", vnum);
-//						return;
-//					}
-//					mob = create_mobile(pMobIndex);
-//					SET_BIT(mob->affected_by, AFF_INFRARED);
-//					char_to_room(mob, pRoomIndex);
-//					mob->top_level = (randmob/2) * (pRoomIndex->level + 1);
-//					mob->hit = (randmob*2)* (pRoomIndex->level + 1);
-//					mob->max_hit = (randmob*2) * (pRoomIndex->level + 1);
-//					mob->armor = 0 - ((pRoomIndex->level + 1) * (randmob*2));
-//					mob->damroll = (randmob*2)*(pRoomIndex->level + 1);
-//					mob->hitroll = (randmob*2)*(pRoomIndex->level + 1);
-//
-//					STRFREE( mob->name );
-//					STRFREE( mob->short_descr );
-//					STRFREE( mob->long_descr );
-//					STRFREE( mob->description );
-//
-//					mob->name		= STRALLOC( "animal" );
-//					mob->short_descr	= STRALLOC( "animal" );
-//					mob->long_descr	= STRALLOC( "animal\n\r" );
-//					mob->description	= STRALLOC( "animal\n\r");
-//
-//					continue;
-//				}
-//			}
-//				break;
+			case SECT_STACK:
+			case SECT_HOST:
+			case SECT_SERVER:
+			case SECT_HYPERLINK:
+			case SECT_LINK:
+			case SECT_WIKI:
+			case SECT_404:
+			case SECT_WEBBROWSER:
+			case SECT_COOKIE:
+			case SECT_CHATROOM:	
+			case SECT_INDEX:
+			case SECT_FORUM:	
+			case SECT_BROKENPORT:
+			case SECT_TORRENT:
+			case SECT_NEXUS:
+			case SECT_PROXY:
+			{
+				//create items
+				int randitem_count = number_range(0, 2);
+				int randitem = number_range(1,8);
+				char name[255]; 
+				char short_descr[10000]; 
+				char long_descr[10000]; 
+				char description[10000];
+				
+				while(randitem_count!=0)
+				{
+					//STRFREE( name );
+					//STRFREE( short_descr );
+					//STRFREE( long_descr );
+					//STRFREE( description );	
+					randitem = number_range(0,8);
+					
+					switch(randitem){
+						case 0 : //slag
+							strcpy(name,"a slag");
+							strcpy(short_descr,"a slag");
+							strcpy(long_descr,"a slag\n\r");
+							if(number_range(0,1)==0)
+								strcpy(description,"a slag, uncomplete remains of something ... but you would say that it was a kind of video\n\r");
+							else
+								strcpy(description,"a slag, uncomplete remains of something ... but you would say that it was a kind of picture\n\r");
+							randitem=115;
+						break;
+						case 1 : //file
+
+							strcpy(name,"a wiki article");
+							strcpy(short_descr,"a wiki article");
+							strcpy(long_descr,"a wiki article\n\r");
+							strcpy(description,"a wiki article\n\r");
+							randitem=115;
+						break;
+						case 2 : //password, if you want more, just take a number and add description
+							
+							randitem=number_range(1,100);
+							strcpy(name,"a password");
+							strcpy(short_descr,"a password");
+							strcpy(long_descr,"a password");
+							strcpy(description,"a password, but attached to who ?\n It says : ");
+							switch (randitem)
+							{
+								case 1 : strcat(description, "\"batman\"");break;
+								case 2 : strcat(description, "\"MaTRiXX\"");break;
+								case 3 : strcat(description, "\"PasSwOrD\"");break;
+								case 4 : strcat(description, "\"1337\"");break;
+								case 5 : strcat(description, "\"12345\"");break;
+								case 6 : strcat(description, "\"qwerty\"");break;
+								case 7 : strcat(description, "\"BaDBoY\"");break;
+								case 8 : strcat(description, "\"ilovEyOu\"");break;
+								case 9 : strcat(description, "\"Pterodactyl\"");break;
+								default :
+									strcat(description, "\"");
+									for(randitem=number_range(5,8); randitem=0; randitem--)
+									{
+										strcat(description,(number_range(65,90)+number_range(0,1)*32));
+									}
+									strcat(description, "\"");
+									break;
+							}
+							strcat(description,"\n\r");
+							randitem=118;
+
+						break;
+						case 3 : //login, if you want more, just add a number and a description	
+							strcpy(name,"a login");
+							strcpy(short_descr,"a login");
+							strcpy(long_descr,"a login");
+							strcpy(description,"a login, but you'll need its password.\n It says : ");
+							randitem=number_range(1,30);
+							switch (randitem)
+							{
+								case 1 : strcat(description, "\"Batman\"");break;
+								case 2 : strcat(description, "\"Neo\"");break;
+								case 3 : strcat(description, "\"WinterMute\"");break;
+								case 4 : strcat(description, "\"Johnny\"");break;
+								case 5 : strcat(description, "\"Armitage\"");break;
+								case 6 : strcat(description, "\"Norman\"");break;
+								case 7 : strcat(description, "\"Taker\"");break;
+								case 8 : strcat(description, "\"Edge\"");break;
+								case 9 : strcat(description, "\"Alastar\"");break;
+								case 10 : strcat(description, "\"7ven\"");break;
+								case 11 : strcat(description, "\"Blackhawk\"");break;
+								case 12 : strcat(description, "\"Boomer\"");break;
+								case 13 : strcat(description, "\"Messiah\"");break;
+								case 14 : strcat(description, "\"Scooter\"");break;
+								case 15 : strcat(description, "\"TomCat\"");break;
+								case 16 : strcat(description, "\"Bishop\"");break;
+								case 17 : strcat(description, "\"Anubis\"");break;
+								case 18 : strcat(description, "\"Alice\"");break;
+								case 19 : strcat(description, "\"WhiteRabbit\"");break;
+								case 20 : strcat(description, "\"Spirit\"");break;
+								case 21 : strcat(description, "\"Steve\"");break;
+								case 22 : strcat(description, "\"Keiko\"");break;
+								case 23 : strcat(description, "\"HokutoNoKen\"");break;
+								case 24 : strcat(description, "\"TheWizard\"");break;
+								case 25 : strcat(description, "\"Pterodactyl\"");break;
+								case 26 : strcat(description, "\"Maegara\"");break;
+								case 27 : strcat(description, "\"GWWI\"");break;
+								case 28 : strcat(description, "\"GHost\"");break;
+								case 29 : strcat(description, "\"Case\"");break;
+								case 30 : strcat(description, "\"Joshua\"");break;
+								
+								default :
+									strcat(description, "\"");
+									for(randitem=number_range(5,8); randitem=0; randitem--)
+									{
+										strcat(description, (number_range(65,90)+number_range(0,1)*32));
+									}
+									strcat(description, "\"");
+									break;
+							}
+							strcat(description,"\n\r");
+							randitem=119;
+						break;
+						case 4 : //blob
+							randitem=number_range(1,100);
+							switch (randitem)
+							{
+								case 1 :
+									strcpy(name,"A dead blue bird");
+									strcpy(short_descr,"A dead blue bird");
+									strcpy(long_descr,"A dead blue bird\n\r");
+									strcpy(description,"A dead blue bird\n\r");
+								break;
+
+								case 2 :
+									strcpy(name,"A dead red panda");
+									strcpy(short_descr,"A dead red panda");
+									strcpy(long_descr,"A dead red panda\n\r");
+									strcpy(description,"A dead red panda\n\r");
+									break;
+
+								default :
+									strcpy(name,"A slimy and unidentified thing");
+									strcpy(short_descr,"A slimy and unidentified thing");
+									strcpy(long_descr,"A slimy and unidentified thing\n\r");
+									strcpy(description,"A slimy and unidentified thing\n\r");
+									break;
+							}
+							randitem=121;
+
+						break;
+						case 5 : //dust
+							randitem=122;
+							strcpy(name,"Some dust of bits");
+							strcpy(short_descr,"Some dust of bits");
+							strcpy(long_descr,"Some dust of bits\n\r");
+							strcpy(description,"Some dust of bits\n\r");
+						break;
+						case 6 : //box
+							randitem=123;
+							strcpy(name,"A mysterious box ");
+							strcpy(short_descr,"A mysterious box ");
+							strcpy(long_descr,"A mysterious box\n\r");
+							strcpy(description,"A mysterious box\n\r");
+						break;
+						case 7 : //pill
+							randitem=number_range(0,3);
+							strcpy(name,"A pill");
+							strcpy(short_descr,"A pill");
+							strcpy(long_descr,"A pill");
+							switch (randitem)
+							{
+								case 0 : strcpy(description, "A blue Pill\n\r");break;
+								case 1 : strcpy(description, "A red Pill\n\r");break;
+								case 2 : strcpy(description, "A green Pill\n\r");break;
+								case 3 : strcpy(description, "A yellow Pill\n\r");break;
+							}
+
+							randitem=124;
+						break;
+						case 8 : //protocol
+							randitem=number_range(1,8);
+							switch (randitem)
+							{
+								case 1 :
+									strcpy(name,"An HTTP protocol");
+									strcpy(short_descr,"An HTTP protocol");
+									strcpy(long_descr,"An HTTP protocol");
+									strcpy(description,"An HTTP protocol, the foundation of data communication\n\r");
+									break;
+								case 2 :
+									strcpy(name,"An HTTPS protocol");
+									strcpy(short_descr,"An HTTPS protocol");
+									strcpy(long_descr,"An HTTPS protocol");
+									strcpy(description,"An HTTPS protocol, providing encrypted communication and secure identification\n\r");
+									break;
+								case 3 :
+									strcpy(name,"A RTSP protocol");
+									strcpy(short_descr,"A RTSP protocol");
+									strcpy(long_descr,"A RTSP protocol");
+									strcpy(description,"A RTSP protocol, a protocol designed for network control in communications systems\n\r");
+									break;
+								case 4 :
+									strcpy(name,"A SOAP protocol");
+									strcpy(short_descr,"A SOAP protocol");
+									strcpy(long_descr,"A SOAP protocol");
+									strcpy(description,"A SOAP protocol, specifying exchanges of structured information over networks\n\r");
+									break;
+								case 5 :
+									strcpy(name,"An UDP protocol");
+									strcpy(short_descr,"An UDP protocol");
+									strcpy(long_descr,"An UDP protocol");
+									strcpy(description,"An UDP protocol, an old way to tranfer data streams, not very secure but fast\n\r");
+									break;
+								case 6 :
+									strcpy(name,"A TCP protocol");
+									strcpy(short_descr,"A TCP protocol");
+									strcpy(long_descr,"A TCP protocol");
+									strcpy(description,"A TCP protocol, an old way to tranfer data streams, not very fast but secure\n\r");
+									break;
+								case 7 :
+									strcpy(name,"A FTP protocol");
+									strcpy(short_descr,"A FTP protocol");
+									strcpy(long_descr,"A FTP protocol");
+									strcpy(description,"A FTP protocol, an old standard for copying file from an host to another over the Old Internet network\n\r");
+									break;
+								default :
+									strcpy(name,"A RTP protocol");
+									strcpy(short_descr,"A RTP protocol");
+									strcpy(long_descr,"A RTP protocol");
+									strcpy(description,"A RTP protocol, a standardized packet format for delivering audio and video over the Old Internet\n\r");
+									break;
+							}
+							randitem=125;
+						break;
+					}
+					
+					pObjIndex = get_obj_index(randitem);
+					obj = create_object(pObjIndex, 1);		
+					STRFREE( obj->name );
+					STRFREE( obj->short_descr );
+					//STRFREE( obj->long_descr );
+					STRFREE( obj->description );		
+					obj->name			= STRALLOC(name);
+					obj->short_descr	= STRALLOC(short_descr);
+					//obj->long_descr		= STRALLOC(long_descr);
+					obj->description	= STRALLOC(description);
+					randitem_count--;
+				}
+				
+				//create creatures
+				CHAR_DATA * rch;
+				numguards = 0;
+				for (rch = pRoomIndex->first_person; rch; rch= rch->next_in_room)
+				
+					if (IS_NPC(rch) && rch->pIndexData && rch->pIndexData->vnum== 50)
+						numguards++;
+
+				if (numguards >= 2)
+					continue;
+
+				CHAR_DATA * sch;
+				int numhench = 0;
+				for (sch = pRoomIndex->first_person; sch; sch= sch->next_in_room)
+					
+					if (IS_NPC(sch) && sch->pIndexData && sch->pIndexData->vnum== 51)
+						numhench++;
+
+				if (numhench >= 1)
+					continue;
+
+				vnum = 50;
+
+				int randmob = number_range(2, 10);
+
+				if (randmob)
+				{
+					if (!(pMobIndex = get_mob_index(vnum))) {
+						bug("Reset_all: Missing mob (%d)", vnum);
+						return;
+					}
+					mob = create_mobile(pMobIndex);
+					SET_BIT(mob->affected_by, AFF_INFRARED);
+					char_to_room(mob, pRoomIndex);
+					mob->top_level = (randmob/2) * (pRoomIndex->level + 1);
+					mob->hit = (randmob*2)* (pRoomIndex->level + 1);
+					mob->max_hit = (randmob*2) * (pRoomIndex->level + 1);
+					mob->armor = 0 - ((pRoomIndex->level + 1) * (randmob*2));
+					mob->damroll = (randmob*2)*(pRoomIndex->level + 1);
+					mob->hitroll = (randmob*2)*(pRoomIndex->level + 1);
+
+					STRFREE( mob->name );
+					STRFREE( mob->short_descr );
+					STRFREE( mob->long_descr );
+					STRFREE( mob->description );
+
+					switch (randmob)
+					{
+						case 2 :
+							mob->name			= STRALLOC( "BootVirus" );
+							mob->short_descr	= STRALLOC( "BootVirus" );
+							mob->long_descr		= STRALLOC( "BootVirus\n\r");
+							mob->description	= STRALLOC( "You see a BootVirus, a poor little thing seeking for some code to invade.\n You would say that a kick could obliterate this parasite, but who knows ?\n\r");
+							break;
+						case 3 :
+							mob->name			= STRALLOC( "Trojan" );
+							mob->short_descr	= STRALLOC( "Trojan" );
+							mob->long_descr		= STRALLOC( "Trojan\n\r");
+							mob->description	= STRALLOC( "You see a Trojan, lurking for a soft to hide in.\n It's groaning and drooling, and you can see its sharped teeth.\n\r");
+							break;
+						case 4 :
+							mob->name			= STRALLOC( "InfectedRootKit" );
+							mob->short_descr	= STRALLOC( "InfectedRootKit" );
+							mob->long_descr		= STRALLOC( "InfectedRootKit\n\r");
+							mob->description	= STRALLOC( "You see an InfectedRootKit, decaying piece of programs, moaning again and again \"Access granted !\"\nIt looks like a ball of claws and fangs, will you dare to refuse it the access ? \n\r");
+							break;
+						case 5 :
+							mob->name			= STRALLOC( "Macrovirus" );
+							mob->short_descr	= STRALLOC( "Macrovirus" );
+							mob->long_descr		= STRALLOC( "Macrovirus\n\r");
+							mob->description	= STRALLOC( "You see a Macrovirus.\nAll made of independent parts moving around each other with little *click* and *snip* while they snap and detach.\n It don't seem very friendly\n\r");
+							break;
+						case 6 :
+							mob->name			= STRALLOC( "Worm" );
+							mob->short_descr	= STRALLOC( "Worm" );
+							mob->long_descr		= STRALLOC( "Worm\n\r");
+							mob->description	= STRALLOC( "You see a Worm.\nSwarming and slimming, its peeking at your equipment, seeking for a break to intrude.\n You have no idea of what such a thing can do, but it really looks disgusting.\n\r");
+							break;
+						case 7 :
+							mob->name			= STRALLOC( "Malware" );
+							mob->short_descr	= STRALLOC( "Malware" );
+							mob->long_descr		= STRALLOC( "Malware\n\r");
+							mob->description	= STRALLOC( "You see a Malware, a malicious little punk wich will harm you if you let it enough of time.\n Don't turn your back ! \n\r");
+							break;
+						case 8 :
+							mob->name			= STRALLOC( "PolymorphVirus" );
+							mob->short_descr	= STRALLOC( "PolymorphVirus" );
+							mob->long_descr		= STRALLOC( "PolymorphVirus\n\r");
+							mob->description	= STRALLOC( "You see a PolymorphVirus.\nThe minute you watch it, you see at least three parts of it evolve then disappear to be merged into the next mutation.\n This strange entity is dangerous enough to be considered twice before any attack.\n\r");
+							break;
+						case 9 :
+							mob->name			= STRALLOC( "LogicBomb" );
+							mob->short_descr	= STRALLOC( "LogicBomb" );
+							mob->long_descr		= STRALLOC( "LogicBomb\n\r");
+							mob->description	= STRALLOC( "You see a LogicBomb.\nHow knows what will happen if it suddenly turns on ?\n\r");
+							break;
+						case 10 :
+							mob->name			= STRALLOC( "CorruptedAIvatar" );
+							mob->short_descr	= STRALLOC( "CorruptedAIvatar" );
+							mob->long_descr		= STRALLOC( "CorruptedAIvatar\n\r");
+							mob->description	= STRALLOC( "You see a CorruptedAIvatar.\nHaughty and contemptuous, it licks pensively its lips while considering you and thinking about the way it'll massacre you.\n Run away !\n\r");
+							break;
+					}
+
+					continue;
+				}
+			}
+				break;
 
 
 			case SECT_GLACIAL:

@@ -331,7 +331,7 @@ const	struct	liq_type	liq_table	[LIQ_MAX]	=
 char *	const	attack_table	[13] =
 {
     "attack",
-    "attack",  "attack",  "attack", "attack", "attack",
+    "bite",  "claw",  "onslaught", "attack", "attack",
     "attack",  "attack", "attack", "attack", "attack",
     "attack", "attack"
 };
