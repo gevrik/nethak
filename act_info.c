@@ -2549,7 +2549,7 @@ void do_teach( CHAR_DATA *ch, char *argument )
 	{
 	    if ( victim->pcdata->learned[sn] <= 0 )
                   victim->pcdata->num_skills++;
-	    victim->pcdata->learned[sn] += int_app[get_curr_int(ch)].learn;
+	    victim->pcdata->learned[sn] += (int_app[get_curr_int(ch)].learn)-24;
 	    sprintf( buf, "> you teach %s $T", victim->name );
 	    act( AT_ACTION, buf,
 		    ch, NULL, skill_table[sn]->name, TO_CHAR );
