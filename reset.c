@@ -32,6 +32,7 @@ void reset_all() {
 	char buf[MAX_STRING_LENGTH];
 	char buf1[MAX_STRING_LENGTH];
 
+	
 	/* natural disasters */
 	{
 		PLANET_DATA * dPlanet = NULL;
@@ -110,6 +111,27 @@ void reset_all() {
 	for (iHash = 0; iHash < MAX_KEY_HASH; iHash++) {
 		for (pRoomIndex = room_index_hash[iHash]; pRoomIndex; pRoomIndex= pRoomIndex->next) 
 		{
+			
+			///creation of Byte (newbie helpers)
+			if(!!pRoomIndex->owner && !str_cmp(pRoomIndex->owner, "Tutor"))
+			{
+				for ( mob = pRoomIndex->first_person; mob; mob = mob->next_in_room )
+				{
+					if (mob->pIndexData->vnum==42)
+						break;
+				}
+				
+				if(!mob)
+				{
+				mob = create_mobile(get_mob_index(MOB_VNUM_BYTE));
+				char_to_room(mob, pRoomIndex);
+				STRFREE( mob->description );
+				mob->description	=STRALLOC( "You see a Byte : flying around you, \nthis strange green octaedra seems quite peaceful.\nIt've got many brothers and all of them have \nmission to help you.\r\n");
+				SET_BIT(ch->act, ACT_NOKILL);
+				SET_BIT(ch->act, ACT_SENTINEL);
+				}
+			}
+			
 			vnum = 0;
 			onum = 0;
 
@@ -2339,6 +2361,10 @@ void reset_all() {
 
 			}
 			}
+			
+			
+
+			
 }
 
 SHIP_DATA * make_mob_ship(PLANET_DATA *planet, int model) {

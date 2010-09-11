@@ -2222,8 +2222,7 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 
 					obj = obj_to_char( obj, ch );
 
-					ch->pcdata->serverrevision = 2;
-
+					ch->pcdata->serverrevision = 3;
 					//obj = create_object( get_obj_index(OBJ_VNUM_LIGHT), 0 );
 					//obj_to_char( obj, ch );
 
@@ -2253,7 +2252,7 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 					/* Display_prompt interprets blank as default */
 					ch->pcdata->prompt = STRALLOC("");
 				}
-				else if ( ch->in_room && !IS_IMMORTAL( ch ) )
+				else if ( ch->in_room && !IS_IMMORTAL( ch ) )d ..
 				{
 					char_to_room( ch, ch->in_room );
 				}
@@ -2295,7 +2294,15 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 
 				// server revisions
 
-				if ( ch->pcdata->serverrevision < 2)
+				if ( ch->pcdata->serverrevision < 3)
+				{
+					int *create_lesson=(int*)malloc(sizeof (int));
+					ch->lesson=create_lesson;
+					ch->lesson=0;
+					ch->pcdata->serverrevision = 3;
+				}
+				
+				/*if ( ch->pcdata->serverrevision < 2)
 				{
 					int currqtaxnodes = ch->pcdata->qtaxnodes;
 					int revcompensation = (500 * currqtaxnodes) + 25000;
@@ -2332,7 +2339,7 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 
 					save_char_obj( ch );
 
-				}
+				}*/
 
 				if ( ch->plr_home != NULL )
 				{

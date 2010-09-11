@@ -1056,6 +1056,7 @@ struct	smaug_affect
 #define MOB_VNUM_JOB_OFFICER	30
 #define MOB_VNUM_DATAMINER		33
 #define MOB_VNUM_WORKMATE		41
+#define MOB_VNUM_BYTE			42
 
 /*
  * ACT bits for mobs.
@@ -1402,9 +1403,23 @@ typedef enum { SEX_NEUTRAL, SEX_MALE, SEX_FEMALE } sex_types;
 #define OBJ_VNUM_FIRST_FABRIC        75
 #define OBJ_VNUM_LAST_FABRIC         99
 
-#define OBJ_VNUM_PACKAGE             100
-#define OBJ_VNUM_DATACUBE            103
-#define OBJ_VNUM_TOKEN            114
+#define OBJ_VNUM_PACKAGE            100
+#define OBJ_VNUM_DATACUBE          103
+#define OBJ_VNUM_TOKEN            	114
+
+#define OBJ_VNUM_SLAG			115 
+#define OBJ_VNUM_FRAGMENT		116
+#define OBJ_VNUM_FILE			117
+#define OBJ_VNUM_PWD			118
+#define OBJ_VNUM_LOGIN		119
+#define OBJ_VNUM_ID			120
+#define OBJ_VNUM_BLOB			121
+#define OBJ_VNUM_DUST			122
+#define OBJ_VNUM_BOX			123
+#define OBJ_VNUM_PILL			124
+#define OBJ_VNUM_PROTOCOL		125
+
+
 
 /*
  * Item types.
@@ -2090,6 +2105,8 @@ struct	char_data
     int                         count;
     bool                        dealout;
     int                         blackjack_bet;
+    int 			lesson;
+ 
 };
 
 
@@ -2196,6 +2213,7 @@ struct	pc_data
     int         mission_fails;
     char *		forget[MAX_FORGET];
     long         bounty;
+    sh_int 		lessons;
 
 };
 
