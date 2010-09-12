@@ -273,6 +273,13 @@ void do_sn_lockout(CHAR_DATA *ch, char *argument) {
 			return;
 		}
 
+		if ( ch->in_room->area->planet->pop_support > 0 )
+		{
+			set_char_color( AT_MAGIC, ch );
+			send_to_char( "> the cpu of this system is too strong\n\r", ch );
+			return;
+		}
+
 		if ( ch->position == POS_FIGHTING )
 		{
 			send_to_char( "> cannot lockout in combat\n\r" , ch );
@@ -387,6 +394,13 @@ void do_sn_reinit(CHAR_DATA *ch, char *argument) {
 		{
 			set_char_color( AT_MAGIC, ch );
 			send_to_char( "> this is not a good place to do that\n\r", ch );
+			return;
+		}
+
+		if ( ch->in_room->area->planet->pop_support > 0 )
+		{
+			set_char_color( AT_MAGIC, ch );
+			send_to_char( "> the cpu of this system does not need that\n\r", ch );
 			return;
 		}
 
@@ -696,9 +710,20 @@ void do_sn_dropline(CHAR_DATA *ch, char *argument) {
 
 		if( !ch->plr_home )
 		{
+
+			if (ch->in_room == get_room_index( ROOM_VNUM_STRAY )){
+				send_to_char( "> &Ryou are already there&w\n\r", ch );
+				return;
+			}
+
 			char_from_room( ch );
 			char_to_room( ch, get_room_index( ROOM_VNUM_STRAY ) );
 			do_look( ch, "auto" );
+			return;
+		}
+
+		if (ch->in_room == get_room_index( ch->plr_home )){
+			send_to_char( "> &Ryou are already there&w\n\r", ch );
 			return;
 		}
 
@@ -1181,6 +1206,12 @@ void do_sn_shortcut( CHAR_DATA *ch, char *argument )
 	    }
 	    else
 	    {
+
+	    	if (ch->in_room == get_room_index( destinationid )){
+	    		send_to_char( "> &Ryou are already there&w\n\r", ch );
+	    		return;
+	    	}
+
 	    	send_to_char( "> &Gyou connect to the destination node&w\n\r", ch );
 			char_from_room( ch );
 			char_to_room( ch, get_room_index( destinationid ) );
