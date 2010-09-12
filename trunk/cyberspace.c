@@ -423,6 +423,12 @@ void do_homerecall( CHAR_DATA *ch, char *argument )
 
 	if( !ch->plr_home )
 	{
+
+		if (ch->in_room == get_room_index( ROOM_VNUM_STRAY )){
+			send_to_char( "> &Ryou are already there&w\n\r", ch );
+			return;
+		}
+
 		send_to_char( "> you connect to straylight\n\r", ch );
 		act(AT_GREEN, "> $n connects to straylight", ch, NULL, NULL, TO_ROOM );
 		char_from_room( ch );
@@ -430,6 +436,12 @@ void do_homerecall( CHAR_DATA *ch, char *argument )
 		do_look( ch, "auto" );
 		return;
 	}
+
+	if (ch->plr_home == ch->in_room){
+		send_to_char( "> &Ryou are already there&w\n\r", ch );
+		return;
+	}
+
 
 	send_to_char( "> you connect to your home node\n\r", ch );
 	act(AT_GREEN, "> $n connects to their home node", ch, NULL, NULL, TO_ROOM );
@@ -478,6 +490,11 @@ void do_homehall( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
+	if (ch->in_room == get_room_index( 11498 )){
+		send_to_char( "> &Ryou are already there&w\n\r", ch );
+		return;
+	}
+
 	send_to_char( "> you connect to Metropolis\n\r", ch );
 	act(AT_GREEN, "> $n connects to Metropolis", ch, NULL, NULL, TO_ROOM );
 	char_from_room( ch );
@@ -494,6 +511,11 @@ void do_homestray( CHAR_DATA *ch, char *argument )
 	if ( ch->position <= POS_SLEEPING )
 	{
 		send_to_char( "> you are hibernating\n\r" , ch );
+		return;
+	}
+
+	if (ch->in_room == get_room_index( ROOM_VNUM_STRAY )){
+		send_to_char( "> &Ryou are already there&w\n\r", ch );
 		return;
 	}
 
@@ -579,6 +601,12 @@ void do_homesys( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
+	if (ch->in_room == get_room_index( ch->pcdata->homesystemio )){
+		send_to_char( "> &Ryou are already there&w\n\r", ch );
+		return;
+	}
+
+
 	send_to_char( "> you connect to their home system\n\r", ch );
 	act(AT_GREEN, "> $n connects to their home system", ch, NULL, NULL, TO_ROOM );
 	char_from_room( ch );
@@ -629,6 +657,11 @@ void do_constructportal( CHAR_DATA *ch, char *argument )
 	{
 		send_to_char( "> &Ryou do not have a construct yet&w\n\r", ch );
 		send_to_char( "> &Rcreate one for 5,000c with MAKECONSTRUCT&w\n\r", ch );
+		return;
+	}
+
+	if (ch->in_room == get_room_index( ch->pcdata->roomconstruct )){
+		send_to_char( "> &Ryou are already there&w\n\r", ch );
 		return;
 	}
 
