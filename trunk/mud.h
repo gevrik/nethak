@@ -4109,6 +4109,9 @@ int	get_wflag	args( ( char *flag ) );
 void    save_mobs	args(( ));
 void    save_objects	args(( ));
 
+/* dialog.c */
+void	dialog	args( ( CHAR_DATA *ch , bool help));
+
 /* fight.c */
 int	max_fight	args( ( CHAR_DATA *ch ) );
 void	violence_update	args( ( void ) );
@@ -4414,6 +4417,9 @@ char *	hash_stats	args( ( void ) );
 char *	check_hash	args( ( char *str ) );
 void	hash_dump	args( ( int hash ) );
 void	show_high_hash	args( ( int top ) );
+
+
+
 
 /* newscore.c */
 

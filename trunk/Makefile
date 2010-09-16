@@ -10,7 +10,7 @@ L_FLAGS = $(PROF) -lz
 
 MCCP = 1
 
-O_FILES = combine.o act_comm.o act_info.o act_move.o act_obj.o act_wiz.o boards.o \
+O_FILES = act_comm.o act_info.o act_move.o act_obj.o act_wiz.o boards.o \
 	  build.o clans.o comm.o const.o db.o fight.o \
 	  handler.o hashstr.o id.o interp.o magic.o makeobjs.o \
 	  misc.o mud_comm.o mud_prog.o player.o requests.o \
@@ -18,9 +18,9 @@ O_FILES = combine.o act_comm.o act_info.o act_move.o act_obj.o act_wiz.o boards.
 	  space.o morespace.o swskills.o planets.o vote.o gboard.o webwho.o \
 	  webhelp.o cyberspace.o mpxset.o newarena.o realmail.o cyberapps.o \
 	  alias.o ackmapper.o sudoku.o freelancing.o constructs.o abyss.o \
-	  jobs.o WildMatrix.o
+	  jobs.o wildmatrix.o dialog.o
 
-C_FILES = combine.c act_comm.c act_info.c act_move.c act_obj.c act_wiz.c boards.c \
+C_FILES = act_comm.c act_info.c act_move.c act_obj.c act_wiz.c boards.c \
 	  build.c clans.c comm.c const.c db.c fight.c \
 	  handler.c hashstr.c id.c interp.c magic.c makeobjs.c \
 	  misc.c mud_comm.c mud_prog.c player.c requests.c \
@@ -28,7 +28,7 @@ C_FILES = combine.c act_comm.c act_info.c act_move.c act_obj.c act_wiz.c boards.
 	  space.c morespace.c swskills.c planets.c vote.c gboard.c webwho.c \
 	  webhelp.c cyberspace.c mpxset.c newarena.c realmail.c cyberapps.c \
 	  alias.c ackmapper.c sudoku.c freelancing.c constructs.c abyss.c \
-	  jobs.c WildMatrix.c
+	  jobs.c wildmatrix.c dialog.c
 
 H_FILES = mud.h bet.h gboard.h alias.h ackmapper.h
 

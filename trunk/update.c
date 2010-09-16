@@ -24,7 +24,7 @@ void orgs_html_update (void);
 void metro_html_update (void);
 
 /*from combat.c*/
-bool is_fighting args( ( CHAR_DATA *) );
+//bool is_fighting args( ( CHAR_DATA *) );
 
 /*
  * Local functions.
@@ -1990,7 +1990,8 @@ void paranoia( CHAR_DATA *ch )
 	PLANET_DATA *planet;
 	planet = ch->in_room->area->planet;
 	
-	if ( !str_cmp(planet->name, "WildMatrix") && !is_fighting(ch))
+	//if ( !str_cmp(planet->name, "WildMatrix") && (ch->in_battle == NULL))
+	if ( !str_cmp(planet->name, "WildMatrix"))
 	{
 		char *t;
 	
