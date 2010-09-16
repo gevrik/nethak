@@ -824,6 +824,10 @@ void do_say( CHAR_DATA *ch, char *argument )
     if ( char_died(ch) )
       return;
     rprog_speech_trigger( argument, ch ); 
+    
+    if(!str_cmp(argument, "help"))
+    	dialog(ch, TRUE);
+    
     return;
 }
 
@@ -1182,6 +1186,7 @@ void do_quit( CHAR_DATA *ch, char *argument )
     act( AT_SAY, "> come back soon, $n...'", ch, NULL, NULL, TO_CHAR );
     act( AT_BYE, "> $n has left cyberspace", ch, NULL, NULL, TO_ROOM );
     set_char_color( AT_GREY, ch);
+    //ch->lesson=0;
 
     if ( ch->challenged )
     {

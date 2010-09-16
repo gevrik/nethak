@@ -5,6 +5,8 @@
 #include <time.h>
 #include "mud.h"
 
+
+
 const sh_int movement_loss[SECT_MAX] = { 1, 2, 2, 3, 4, 6, 4, 1, 6, 10, 6, 5,
 		7, 4, 6, 4, 2, 3, 6, 3, 3, 5, 4, 3, 2, 3, 7 };
 
@@ -889,6 +891,20 @@ ch_ret move_char(CHAR_DATA *ch, EXIT_DATA *pexit, int fall) {
 			send_to_char("> you lightly float down to the ground\n\r", ch);
 		}
 	}
+	
+	if(!IS_NPC(ch))
+	{
+		CHAR_DATA *locut;
+		for ( locut = ch->in_room->first_person; locut; locut = locut->next_in_room )
+		{
+			if (locut->pIndexData->vnum==42)
+				break;
+		}
+		if(!locut);
+		else
+			dialog(ch, FALSE);
+	}
+	
 	return retcode;
 }
 

@@ -127,8 +127,8 @@ void reset_all() {
 				char_to_room(mob, pRoomIndex);
 				STRFREE( mob->description );
 				mob->description	=STRALLOC( "You see a Byte : flying around you, \nthis strange green octaedra seems quite peaceful.\nIt've got many brothers and all of them have \nmission to help you.\r\n");
-				SET_BIT(ch->act, ACT_NOKILL);
-				SET_BIT(ch->act, ACT_SENTINEL);
+				SET_BIT(mob->act, ACT_NOKILL);
+				SET_BIT(mob->act, ACT_SENTINEL);
 				}
 			}
 			
