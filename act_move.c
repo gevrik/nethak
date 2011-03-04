@@ -897,8 +897,11 @@ ch_ret move_char(CHAR_DATA *ch, EXIT_DATA *pexit, int fall) {
 		CHAR_DATA *locut;
 		for ( locut = ch->in_room->first_person; locut; locut = locut->next_in_room )
 		{
-			if (locut->pIndexData->vnum==42)
-				break;
+			if(IS_NPC(locut))
+			{
+				if (locut->pIndexData->vnum==42)
+					break;
+			}
 		}
 		if(!locut);
 		else

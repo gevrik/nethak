@@ -3088,4 +3088,20 @@ void do_slice( CHAR_DATA *ch, char *argument )
 }
 
 
+void do_bite( CHAR_DATA *ch, char *argument )
+{
+	CHAR_DATA *victim;
+	victim = who_fighting( ch );
+	global_retcode = damage( ch, victim, number_range( 1, IS_NPC(ch) ? ch->top_level/10 : ch->pcdata->learned[gsn_bite]/10 ) , gsn_bite );
+	return;
+
+}
+void do_claw( CHAR_DATA *ch, char *argument )
+{
+	CHAR_DATA *victim;
+	victim = who_fighting( ch );
+	global_retcode = damage( ch, victim, number_range( 1, IS_NPC(ch) ? ch->top_level/10 : ch->pcdata->learned[gsn_claw]/10 ) , gsn_claw);
+	return;
+}
+
 //done for Neuro

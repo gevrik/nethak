@@ -1,0 +1,51 @@
+v0.1
+
+- updated do_codeblaster
+- buyskill command added (skills cost 5k per skill - start on 20)
+- added skills command
+- connect <system> <lobby> command added
+- removed dark rooms
+
+v0.2
+
+- all new systems now generated equally
+- adjusted system generation code
+- adjusted reset code to support change sin system generation
+- added iscarrying and mobinarea mobprog checks
+- changed object and mob names
+
+v0.3
+
+- new job: upload virus in enemy system
+- changed combat system messages
+- changed loot on some database viruses
+- fixed sneak skill
+
+v 0.4
+
+- agents now only give jobs to players in their organization
+- added more commands for mprogs
+- flat-file based quest system added
+- player now notified of skill advancements
+- added new field in room_index_data: seccode for connect command
+- persistent mission system added
+- new skill added: coding - generates defensive classes
+
+- flat-file based achievement system for web (idea)
+
+v 0.5
+
+- lots of bug fixes
+
+v 0.6
+
+- fixed server crash bug
+- fixed agents and jobs
+- added time command
+- no more perma-kill from npc
+- added GBOARD (see HELP GNOTE)
+
+v 0.7
+
+- bug with gboard fixed (fread)
+- player login/logout announced

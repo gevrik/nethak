@@ -20,14 +20,16 @@ bool	check_parse_name	args( ( char *name ) );
 extern int      top_affect;
 extern int top_r_vnum;
 
-const	char *	sector_name	[SECT_MAX]	=
+const	char *	sector_name	[SECT_MAX+16]	=
 {
 		"system", "terminal", "entertainment", "multimedia", "finance", "unknown", "unknown", "unknown",
 		"unknown", "unknown", "database", "unknown", "unknown", "unknown",
 		"productivity", "unknown", "shopping", "unknown", "database", "graveyard", "unknown",
 		"firewall", "unknown", "unknown", "unknown", "subserver", "unknown", "breeding", "bridge",
 		"hall", "camp", "stairway", "elevator", "tunnel", "ramp", "corridor", "ruins", "settlement",
-		"platform", "chasm", "tower", "shelter", "prison", "factory", "farm", "unknown"
+		"platform", "chasm", "tower", "shelter", "prison", "factory", "farm", "unknown","stack","host",
+		"server","hyperlink","link","wiki","404","webbrowser","cookie", "chatroom", "index","forum",
+		"brokenport","torrent","nexus","proxy"
 };
 
 char *acctname( CHAR_DATA * ch )

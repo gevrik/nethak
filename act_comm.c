@@ -1182,8 +1182,9 @@ void do_quit( CHAR_DATA *ch, char *argument )
 */
     
     set_char_color( AT_WHITE, ch );
-    send_to_char( "> cyberspace begins to fade as you are pushed through a vortex of colors\n\rYou find yourself back in the meat of your body\n\r\n\r", ch );
-    act( AT_SAY, "> come back soon, $n...'", ch, NULL, NULL, TO_CHAR );
+    /*send_to_char( "> cyberspace begins to fade as you are pushed through a vortex of colors\n\rYou find yourself back in the meat of your body\n\r\n\r", ch );
+    act( AT_SAY, "> come back soon, $n...'", ch, NULL, NULL, TO_CHAR );*/
+	call_lua (ch, "con_quit", NULL);
     act( AT_BYE, "> $n has left cyberspace", ch, NULL, NULL, TO_ROOM );
     set_char_color( AT_GREY, ch);
     //ch->lesson=0;

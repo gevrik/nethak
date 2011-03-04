@@ -16,15 +16,7 @@
 #define IFIGNORED    8
 #define ORIGNORED    9
 
-/* Ifstate defines, used to create and access ifstate array
-   in mprog_driver. */
-#define MAX_IFS     20		/* should always be generous */
-#define IN_IF        0
-#define IN_ELSE      1
-#define DO_IF        2
-#define DO_ELSE      3
 
-#define MAX_PROG_NEST   20
 
 int mprog_do_command( char *cmnd, CHAR_DATA *mob, CHAR_DATA *actor, 
                       OBJ_DATA *obj, void *vo, CHAR_DATA *rndm, 
@@ -37,6 +29,14 @@ CHAR_DATA *supermob;
 struct act_prog_data *room_act_list;
 struct act_prog_data *obj_act_list;
 struct act_prog_data *mob_act_list;
+
+
+/*
+ Global variables to handle sleeping mud progs.
+ */
+MPSLEEP_DATA *first_mpsleep = NULL;
+MPSLEEP_DATA *last_mpsleep = NULL;
+MPSLEEP_DATA *current_mpsleep = NULL;
 
 /*
  * Local function prototypes
@@ -1311,11 +1311,14 @@ void mprog_driver ( char *com_list, CHAR_DATA *mob, CHAR_DATA *actor,
   CHAR_DATA *rndm  = NULL;
   CHAR_DATA *vch   = NULL;
   int count        = 0;
+  int count2 	= 0;
   int ignorelevel  = 0;
   int iflevel, result;
   bool ifstate[MAX_IFS][ DO_ELSE + 1 ];
   static int prog_nest;
-  
+  MPSLEEP_DATA *mpsleep = NULL;
+  char arg[MAX_INPUT_LENGTH];
+
   if IS_AFFECTED( mob, AFF_CHARM )
     return;
     
@@ -1372,11 +1375,33 @@ void mprog_driver ( char *com_list, CHAR_DATA *mob, CHAR_DATA *actor,
   
   strcpy( tmpcmndlst, com_list );
   command_list = tmpcmndlst;
-  if ( single_step )
-  {
-    if ( mob->mpscriptpos > strlen( tmpcmndlst ) )
-       mob->mpscriptpos = 0;
-    else
+  
+
+/* mpsleep - Restore the environment -rkb */
+
+ if (current_mpsleep)
+ {
+	 ignorelevel = current_mpsleep->ignorelevel;
+	 iflevel = current_mpsleep->iflevel;
+	
+	 if (single_step)
+	 	mob->mpscriptpos = 0;
+	
+	 for (count = 0; count <= MAX_IFS; count++)
+	 {
+		 for (count2 = 0; count2 < DO_ELSE; count2++)
+		 	ifstate[count][count2] = current_mpsleep->ifstate[count][count2];
+	 }
+	
+	 current_mpsleep = NULL;
+ }
+ 
+  
+ if ( single_step )
+ {
+   if ( mob->mpscriptpos > strlen( tmpcmndlst ) )
+      mob->mpscriptpos = 0;
+   else
        command_list += mob->mpscriptpos;
     if ( *command_list == '\0' )
     {
@@ -1408,6 +1433,69 @@ void mprog_driver ( char *com_list, CHAR_DATA *mob, CHAR_DATA *actor,
       --prog_nest;
       return;
     }
+
+
+ /* mpsleep - Check if we should sleep -rkb */
+	one_argument( cmnd, arg );
+	if (!str_prefix("mpsleep", cmnd) )
+	{
+		 if ( (ifstate[iflevel][IN_IF] == ifstate[iflevel][DO_IF]) && (ifstate[iflevel][IN_ELSE] == ifstate[iflevel][DO_ELSE]) )
+		 {
+			 CREATE(mpsleep, MPSLEEP_DATA, 1);
+			
+			 /* State variables */
+			 mpsleep->ignorelevel = ignorelevel;
+			 mpsleep->iflevel = iflevel;
+			 for (count = 0; count < MAX_IFS; count++)
+			 {
+				 for (count2 = 0; count2 < DO_ELSE; count2++)
+			 	{
+				 mpsleep->ifstate[count][count2] = ifstate[count][count2];
+				}
+		 	 }
+	 	 }
+	
+		 /* Driver arguments */
+		 mpsleep->com_list = STRALLOC(command_list);
+		 mpsleep->mob = mob;
+		 mpsleep->actor = actor;
+		 mpsleep->obj = obj;
+		 mpsleep->vo = vo;
+		 mpsleep->single_step = single_step;
+		
+		 /* Time to sleep */
+		 cmnd = one_argument( cmnd, arg);
+		 if (cmnd[0] == '\0')
+		 mpsleep->timer = 4;
+		 else
+		 mpsleep->timer = atoi(cmnd);;
+		
+		 if (mpsleep->timer < 1)
+		 {
+			 progbug("mpsleep - bad arg, using default", mob);
+			 mpsleep->timer = 4;
+		 }
+		
+		 /* Save type of prog, room, object or mob */
+		 if (mpsleep->mob->pIndexData->vnum == 3)
+		 {
+		 	if (!str_prefix("Room", mpsleep->mob->description))
+		 	{
+		 		mpsleep->type = MP_ROOM;
+		 		mpsleep->room = mpsleep->mob->in_room;
+			}
+			 else if (!str_prefix("Object", mpsleep->mob->description))
+		 		mpsleep->type = MP_OBJ;
+		 }
+		 else
+		 mpsleep->type = MP_MOB;
+		
+		 LINK(mpsleep, first_mpsleep, last_mpsleep, next, prev);
+		
+		 --prog_nest;
+		 return;
+	 }
+
 
     /* Evaluate/execute the command, check what happened. */
     result = mprog_do_command( cmnd, mob, actor, obj, vo, rndm, 
@@ -1727,6 +1815,78 @@ int mprog_do_command( char *cmnd, CHAR_DATA *mob, CHAR_DATA *actor,
 /***************************************************************************
  * Global function code and brief comments.
  */
+
+
+/* See if there's any mud programs waiting to be continued -rkb */
+
+void mpsleep_update()
+{
+	 MPSLEEP_DATA *mpsleep;
+	 MPSLEEP_DATA *tmpMpsleep;
+	 bool delete_it;
+	
+	 mpsleep = first_mpsleep;
+	 while (mpsleep)
+	 {
+		 delete_it = FALSE;
+		
+		 if (mpsleep->mob)
+		 	delete_it = char_died(mpsleep->mob);
+		
+		 if (mpsleep->actor && !delete_it)
+			 delete_it = char_died(mpsleep->actor);
+		
+		 if (mpsleep->obj && !delete_it)
+		 	delete_it = obj_extracted(mpsleep->obj);
+		
+		 if (delete_it)
+		 {
+			 log_string("mpsleep_update - Deleting expired prog.");
+			
+			 tmpMpsleep = mpsleep;
+			 mpsleep = mpsleep->next;
+			 STRFREE(tmpMpsleep->com_list);
+			 UNLINK(tmpMpsleep, first_mpsleep, last_mpsleep, next, prev);
+			 DISPOSE(tmpMpsleep);
+			
+			 continue;
+		 }
+		
+		 mpsleep = mpsleep->next;
+	}
+		
+	 mpsleep = first_mpsleep;
+	 
+	 while (mpsleep) /* Find progs to continue */
+	{
+		 if (--mpsleep->timer <= 0)
+		 {
+			 current_mpsleep = mpsleep;
+			
+			 if (mpsleep->type == MP_ROOM)
+			 rset_supermob(mpsleep->room);
+			 else if (mpsleep->type == MP_OBJ)
+			 set_supermob(mpsleep->obj);
+			
+			 mprog_driver(mpsleep->com_list, mpsleep->mob, mpsleep->actor,
+			 mpsleep->obj, mpsleep->vo, mpsleep->single_step);
+			
+			 release_supermob();
+			
+			 tmpMpsleep = mpsleep;
+			 mpsleep = mpsleep->next;
+			 STRFREE(tmpMpsleep->com_list);
+			 UNLINK(tmpMpsleep, first_mpsleep, last_mpsleep, next, prev);
+			 DISPOSE(tmpMpsleep);
+			
+			 continue;
+		 }
+		
+		 mpsleep = mpsleep->next;
+	}
+	
+}
+
 
 bool mprog_keyword_check( const char *argu, const char *argl )
 {

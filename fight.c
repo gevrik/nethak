@@ -173,6 +173,7 @@ void violence_update( void )
     for ( ch = last_char; ch; lst_ch = ch, ch = gch_prev )
     {
 	set_cur_char( ch );
+			
 
 	if ( ch == first_char && ch->prev )
 	{
@@ -646,6 +647,14 @@ ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
 	    break;
 	  case ATCK_KICK:
 	    do_kick( ch, "" );
+	    retcode = global_retcode;
+	    break;
+	   case ATCK_BITE:
+	    do_bite( ch, "" );
+	    retcode = global_retcode;
+	    break;
+	   case ATCK_CLAWS:
+	    do_bite( ch, "" );
 	    retcode = global_retcode;
 	    break;
 	  case ATCK_TRIP:
@@ -2386,6 +2395,12 @@ void dam_message( CHAR_DATA *ch, CHAR_DATA *victim, int dam, int dt )
 	    dt  = TYPE_HIT;
 	    attack  = attack_table[0];
 	}
+
+	if(strcmp(attack,""))
+		if(IS_SET(ch->attacks, ATCK_CLAWS))
+			strcpy(attack, "claw");
+		else if(IS_SET(ch->attacks, ATCK_BITE))
+			strcpy(attack, "bite");
 
 	sprintf( buf1, "> $n's %s %s $N%c [dam: %d]",  attack, vp, punct, dam );
 	sprintf( buf2, "> your %s %s $N%c [dam: %d]",  attack, vp, punct, dam );

@@ -95,6 +95,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_bestow" ))		return do_bestow;
 	if ( !str_cmp( name, "do_bestowarea" ))		return do_bestowarea;
 	if ( !str_cmp( name, "do_bio" ))		return do_bio;
+	if ( !str_cmp( name, "do_bite" ))		return do_bite;
 	if ( !str_cmp( name, "do_blackjack" ))		return do_blackjack;
 	if ( !str_cmp( name, "do_board" ))              return do_board;
 	if ( !str_cmp( name, "do_boards" ))		return do_boards;
@@ -127,6 +128,7 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_clan_withdraw" ))	return do_clan_withdraw;
 	if ( !str_cmp( name, "do_clantalk" ))		return do_clantalk;
 	if ( !str_cmp( name, "do_clanbuyship" ))        return do_clanbuyship;
+	if ( !str_cmp( name, "do_claw" ))		return do_claw;
 	if ( !str_cmp( name, "do_climb" ))		return do_climb;
 	if ( !str_cmp( name, "do_close" ))		return do_close;
 	if ( !str_cmp( name, "do_closebay" ))  		return do_closebay;
@@ -135,10 +137,10 @@ DO_FUN *skill_function( char *name )
 	if ( !str_cmp( name, "do_codeapp" ))		return do_codeapp;
 	if ( !str_cmp( name, "do_codemed" ))		return do_codemed;
 	if ( !str_cmp( name, "do_coding" ))		return do_coding;
-	//if ( !str_cmp( name, "do_nawak" ))		return do_nawak;
 	if ( !str_cmp( name, "do_commands" ))		return do_commands;
 	if ( !str_cmp( name, "do_compare" ))		return do_compare;
 	if ( !str_cmp( name, "do_completejob" ))		return do_completejob;
+	if ( !str_cmp( name, "do_combine" ))		return do_combine;
 	#ifdef MCCP
 		if ( !str_cmp( name, "do_compress" ))		return do_compress;
 	#endif
@@ -666,7 +668,7 @@ char *skill_name( DO_FUN *skill )
     if ( skill == do_slicefund )     return "do_slicefund";
     if ( skill == do_slicesnippets )     return "do_slicesnippets";
     if ( skill == do_nodeupgrade )     return "do_nodeupgrade";
-    //if ( skill == do_nawak )     return "do_nawak";
+    if ( skill == do_combine )     return "do_combine";
     if ( skill == do_inquire )     return "do_inquire";
     if ( skill == do_arrest )     return "do_arrest";
     if ( skill == do_buyskill )     return "do_buyskill";
@@ -887,6 +889,8 @@ char *skill_name( DO_FUN *skill )
     if ( skill == do_inventory )	return "do_inventory";
     if ( skill == do_invis )		return "do_invis";
     if ( skill == do_kick )		return "do_kick";
+    if ( skill == do_bite )		return "do_bite";
+    if ( skill == do_claw )		return "do_claw";
     if ( skill == do_kill )		return "do_kill";
     if ( skill == do_last )		return "do_last";
     if ( skill == do_land )             return "do_land";

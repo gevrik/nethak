@@ -16,7 +16,9 @@
 
 void dialog(CHAR_DATA* ch, bool help)
 {
-	CHAR_DATA *locut;
+/*	CHAR_DATA *locut;
+
+	char buf[512]="";
 
 	for ( locut = ch->in_room->first_person; locut; locut = locut->next_in_room )
 	{
@@ -35,13 +37,23 @@ void dialog(CHAR_DATA* ch, bool help)
 			case 31911 : //newtuto connexion
 			if( help || (ch->lesson&BV00) !=BV00)
 			{
-				//(social) Byte chortles.
-				send_to_char( "&c>The Byte flies in front of you and says :\n\r", ch);
-				send_to_char( "&BByte : Welcome human.\nYou're now connected in Newtutorial,\na system dedicated to help people starting.\nYou're free to leave as soon as you want,\nbut you'll certainly need to know everything\nwe can teach you here. And it's free.\n\n\r", ch);
-				send_to_char( "&BByte : If you want to leave, you can use the\ncommand SYSTEM (or SYS) and see\n-almost- the whole CyberSpace : it displays\nthe list of systems you can connect, the\nregion of the CyberSpace where they are,\nhe owner of the system and its CPU load.\n\n\r", ch);
-				send_to_char( "&BByte : At the moment, you only needs to know\nthe name of the system you want, and type\nCONNECT (or CONN) followed by the choosen\none. This will display the list of accessible\nlobbies, with their dedicated node number.\nYou generally would connect IO lobby.\nTo proceed, type CONNECT name_system number_lobby.\n\n\r", ch);
-				send_to_char( "&BByte : You will learn everything you need to know\nabout owners of system and CPU load if you\nchoose to follow the tutorial. To do that, please\nfollow the path and go north (NORTH, or N).\n\n\r", ch);
-				send_to_char( "&BByte : Have a good uptime in the CyberSpace, human.\n\n\r", ch);				
+			
+				send_to_char( "&c>The Byte flies in front of you and says :\n\r", ch);				
+				strcat(strcat(buf, ch->name), " Welcome human.\nYou're now connected in Newtutorial,\na system dedicated to help people starting.\nYou're free to leave as soon as you want,\nbut you'll certainly need to know everything\nwe can teach you here. And it's free.");
+				do_tell(locut, STRALLOC(buf));
+				do_say(locut, "map");
+				//WAIT_STATE(locut, 2);
+				WAIT_STATE( locut, 2*skill_table[gsn_propaganda]->beats );
+				WAIT_STATE(locut, 100*PULSE_TICK );
+				do_say(locut, "after map");
+				strcpy(buf, ch->name);
+				strcat(buf, "  If you want to leave, you can use the\ncommand SYSTEM (or SYS) and see\n-almost- the whole CyberSpace : it displays\nthe list of systems you can connect, the\nregion of the CyberSpace where they are,\nhe owner of the system and its CPU load.");
+				do_tell(locut, STRALLOC(buf));
+				//send_to_char( "&BByte : Welcome human.\nYou're now connected in Newtutorial,\na system dedicated to help people starting.\nYou're free to leave as soon as you want,\nbut you'll certainly need to know everything\nwe can teach you here. And it's free.\n\n\r", ch);
+				//send_to_char( "&BByte : If you want to leave, you can use the\ncommand SYSTEM (or SYS) and see\n-almost- the whole CyberSpace : it displays\nthe list of systems you can connect, the\nregion of the CyberSpace where they are,\nhe owner of the system and its CPU load.\n\n\r", ch);
+				//send_to_char( "&BByte : At the moment, you only needs to know\nthe name of the system you want, and type\nCONNECT (or CONN) followed by the choosen\none. This will display the list of accessible\nlobbies, with their dedicated node number.\nYou generally would connect IO lobby.\nTo proceed, type CONNECT name_system number_lobby.\n\n\r", ch);
+				//send_to_char( "&BByte : You will learn everything you need to know\nabout owners of system and CPU load if you\nchoose to follow the tutorial. To do that, please\nfollow the path and go north (NORTH, or N).\n\n\r", ch);
+				//send_to_char( "&BByte : Have a good uptime in the CyberSpace, human.\n\n\r", ch);				
 				ch->lesson= ch->lesson|BV00;
 			}
 			break;
@@ -297,6 +309,6 @@ void dialog(CHAR_DATA* ch, bool help)
 				break;
 
 		}
-	}
+	}*/
 	
 }
