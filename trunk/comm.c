@@ -12,8 +12,8 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-#include "mud.h"
-
+//#include "mud.h"
+#include "lua_scripting.c"
 /*
  * Socket and TCP/IP stuff.
  */
@@ -1833,11 +1833,11 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 						return;
 					}
 				}
-				sprintf( buf, "\n\r> choosing a name is one of the most important parts of this game\n\r"
-						"> make sure to pick a name appropriate to the character you are going\n\r"
+				sprintf( buf, "\n\r> Choosing a name is one of the most important parts of this game\n\r"
+						"> Make sure to pick a name appropriate to the character you are going\n\r"
 						"> to role-play, and be sure that it suits our theme\n\r"
-						"> if the name you select is not acceptable, you will be asked to choose\n\r"
-						"> another one\n\r\n\r>please choose a nickname for your character: ");
+						"> If the name you select is not acceptable, you will be asked to choose\n\r"
+						"> another one\n\r\n\r>Please choose a nickname for your character: ");
 
 				write_to_buffer( d, buf, 0 );
 				d->newstate++;
@@ -1862,7 +1862,7 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 		{
 			sprintf( log_buf, "Bad player file %s@%s", argument, d->host );
 			log_string( log_buf );
-			write_to_buffer( d, "> your user file is corrupt >>> please notify gevrik@gmail.com\n\r", 0 );
+			write_to_buffer( d, "> your user file is corrupt >>> please notify foxadpatres@gmail.com\n\r", 0 );
 			close_socket( d, FALSE );
 			return;
 		}
@@ -1995,10 +1995,28 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 		free_char( d->character );
 		fOld = load_char_obj( d, buf, FALSE );
 		ch = d->character;
+
+		/*lua_getglobal(state,"connections");
+		lua_pushstring(state,"new_in");
+		call_lua (state, 1,0);//"connections", "new_in";*/
+		//call_lua (ch, "connections", NULL);
+		
+		open_lua (ch);  /* fire up Lua state */
+		call_lua (ch, "con_old_in", NULL);
+
+		
+		
 		sprintf( log_buf, "%s@%s(%s) has connected", ch->name, d->host,
 				d->user );
 		log_string_plus( log_buf, LOG_COMM );
+		
+		
+		
 		show_title(d);
+
+		
+		
+		
 		//ch->pcdata->quest_curr = ch->pcdata->queststatus;
 		if ( ch->pcdata->area )
 			do_loadarea (ch , "" );
@@ -2113,7 +2131,15 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 			ch->perm_con = 10;
 			ch->perm_cha = 10;
 
+		
+			open_lua (ch);  /* fire up Lua state */
+			//call_lua (ch, "connections", "new_in");
 
+			//SE SERVIR DE LA SUITE POUR RENDRE LE TUTO BLOQUANT POUR LE PLAYER!!! 
+			// d->connected = call_lua(ch, "connections", "new_in");  ??
+			// case CON_WELCOME_DONE :
+			
+			
 			//d->connected = CON_GET_WANT_RIPANSI;
 			//break;
 
@@ -2139,6 +2165,7 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 			break;
 
 			case CON_PRESS_ENTER:
+				
 				write_to_buffer( d, "\n\r> message of the day:\n\r", 0 );
 				do_help( ch, "motd" );
 
@@ -2167,11 +2194,12 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 				write_to_buffer( d, "> logged into cyberspace\n\r\n\r", 0 );
 				add_char( ch );
 				d->connected	= CON_PLAYING;
-
-
-				if ( ch->top_level == 0 )
+				
+			
+				if ( ch->top_level == 0 ) // Making the basic character for a new player
 				{
-
+					call_lua (ch, "con_new_in", NULL);
+					
 					ch->gold = 10000;
 					ch->pcdata->bank = 10000;
 
@@ -2223,6 +2251,9 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 					obj = obj_to_char( obj, ch );
 
 					ch->pcdata->serverrevision = 3;
+
+
+
 					//obj = create_object( get_obj_index(OBJ_VNUM_LIGHT), 0 );
 					//obj_to_char( obj, ch );
 
@@ -2259,6 +2290,7 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 				else
 				{
 					char_to_room( ch, get_room_index( wherehome(ch) ) );
+					call_lua (ch, "con_old_in", NULL);
 				}
 
 				if ( get_timer( ch, TIMER_SHOVEDRAG ) > 0 )
@@ -2293,8 +2325,6 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 			    }
 
 				// server revisions
-
-
 				
 				if ( ch->pcdata->serverrevision < 2)
 				{

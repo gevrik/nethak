@@ -138,7 +138,25 @@ const struct map_info_type map_info[] =
 	{ SECT_SHELTER,  	 "^g&W", "S^x&w", "",   "shelter" },
 	{ SECT_STAIRWAY, 	 "^x&W", "=^x&w", "",   "stairway" },
 	{ SECT_TOWER,  	     "^w&z", "T^x&w", "",   "tower" },
-    { SECT_TOP,          "^x&Y", "~^x&w", "",   "bad sector type" }
+    { SECT_TOP,          "^x&Y", "~^x&w", "",   "bad sector type" },
+
+//wildmatrix
+    { SECT_STACK,          "^x&Y", "~^x&w", "",   "stack" },
+    { SECT_HOST,          "^x&Y", "~^x&w", "",   "host" },
+    { SECT_SERVER,          "^x&Y", "~^x&w", "",   "server" },
+    { SECT_HYPERLINK,          "^x&Y", "~^x&w", "",   "hyperlink" },
+    { SECT_LINK,          "^x&Y", "~^x&w", "",   "link" },
+    { SECT_WIKI,          "^x&Y", "~^x&w", "",   "wiki" },
+    { SECT_404,          "^x&Y", "~^x&w", "",   "404" },
+    { SECT_WEBBROWSER,          "^x&Y", "~^x&w", "",   "webbrowser" },
+    { SECT_COOKIE,          "^x&Y", "~^x&w", "",   "cookie" },
+    { SECT_CHATROOM,          "^x&Y", "~^x&w", "",   "chatroom" }	,
+    { SECT_INDEX,          "^x&Y", "~^x&w", "",   "index" },
+    { SECT_FORUM,          "^x&Y", "~^x&w", "",   "forum" }	,
+    { SECT_BROKENPORT,          "^x&Y", "~^x&w", "",   "brokenport" },
+    { SECT_TORRENT,          "^x&Y", "~^x&w", "",   "torrent" },
+    { SECT_NEXUS,          "^x&Y", "~^x&w", "",   "nexus" },
+    { SECT_PROXY,          "^x&Y", "~^x&w", "",   "proxy" }
 };
 
 char * get_sector_display( int sector )

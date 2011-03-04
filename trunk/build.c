@@ -110,7 +110,7 @@ char *	const	a_types	[] =
 "save_para", "save_breath", "save_spell", "charisma", "affected", "resistant",
 "immune", "susceptible", "weaponspell", "luck", "backstab", "pick", "track",
 "steal", "sneak", "hide", "palm", "detrap", "dodge", "peek", "scan", "gouge",
-"search", "mount", "disarm", "kick", "parry", "bash", "stun", "punch", "climb",
+"search", "mount", "disarm", "kick", "bite", "claw" "parry", "bash", "stun", "punch", "climb",
 "grip", "scribe", "brew", "wearspell", "removespell", "mentalstate", "emotion",
 "stripsn", "remove", "dig", "full", "thirst", "drunk", "blood"
 };
@@ -197,8 +197,8 @@ char *	const	part_flags [] =
 
 char *	const	attack_flags [] =
 {
-"bite", "claws", "tail", "sting", "punch", "kick",
-"r6", "r7", "r8", "r9", "r10", "r11", "r12", "r13", "r14", "r15", "r16", "r17",
+"bite", "claws", "tail", "sting", "punch", "kick", "bite", "claw",
+ "r8", "r9", "r10", "r11", "r12", "r13", "r14", "r15", "r16", "r17",
 "r18", "r19", "r20", "r21", "r22", "r23", "r24", "r25", "r26", "r27", "r28", "r29",
 "r30", "r31"
 };
@@ -1994,7 +1994,8 @@ void do_mset( CHAR_DATA *ch, char *argument )
 	{
 	    send_to_char( "Usage: mset <victim> attack <flag> [flag]...\n\r", ch );
 	    send_to_char( "bite          claws        tail        sting      punch        kick\n\r", ch );
-	    send_to_char( "trip          bash         stun        gouge      backstab\n\r", ch );
+	    send_to_char( "trip          bash         stun        gouge      backstab	  bite\n\r", ch );
+	    send_to_char( "claw\n\r", ch );
 	    return;
 	}
 	while ( argument[0] != '\0' )

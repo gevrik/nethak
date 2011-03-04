@@ -10,6 +10,11 @@
 #include <math.h>
 #include "mud.h"
 
+/*from lua_scripting.c*/
+void open_lua  ( CHAR_DATA * ch);
+void close_lua  ( CHAR_DATA * ch);
+void call_lua (CHAR_DATA * ch, const char * fname, const char * argument);
+
 extern	int	_filbuf		args( (FILE *) );
 
 #if defined(KEY)
@@ -156,14 +161,17 @@ sh_int			gsn_rescue;
 sh_int			gsn_second_attack;
 sh_int			gsn_third_attack;
 sh_int			gsn_dual_wield;
-sh_int                  gsn_bashdoor;
+sh_int          gsn_bashdoor;
 sh_int			gsn_grip;
 sh_int			gsn_berserk;
 sh_int			gsn_hitall;
 sh_int			gsn_disarm;
+sh_int			gsn_bite;
+sh_int			gsn_claw;
 
 
 /* other   */
+sh_int			gsn_combine;
 sh_int			gsn_aid;
 sh_int			gsn_track;
 sh_int			gsn_npctrack;
@@ -494,6 +502,9 @@ void boot_db( void )
 	ASSIGN_GSN( gsn_disarm,		"disarm" );
 	ASSIGN_GSN( gsn_enhanced_damage, "damboost" );
 	ASSIGN_GSN( gsn_kick,		"kick" );
+	ASSIGN_GSN( gsn_claw,		"claw" );
+	ASSIGN_GSN( gsn_bite,		"bite" );
+	ASSIGN_GSN( gsn_combine,		"combine" );
 	ASSIGN_GSN( gsn_parry,		"parry" );
 	ASSIGN_GSN( gsn_rescue,		"rescue" );
 	ASSIGN_GSN( gsn_second_attack, 	"secondattack" );
@@ -2000,6 +2011,8 @@ void free_char( CHAR_DATA *ch )
 	DISPOSE( mpact->buf );
 	DISPOSE( mpact	    );
     }
+
+	close_lua (ch);  /* close down Lua state */
 
     DISPOSE( ch );
     return;

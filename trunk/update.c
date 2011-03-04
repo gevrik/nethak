@@ -26,6 +26,11 @@ void metro_html_update (void);
 /*from combat.c*/
 //bool is_fighting args( ( CHAR_DATA *) );
 
+/*from lua_scripting.c*/
+//void open_lua  ( CHAR_DATA * ch);
+//void close_lua  ( CHAR_DATA * ch);
+//void call_lua (CHAR_DATA * ch, const char * fname, const char * argument);
+
 /*
  * Local functions.
  */
@@ -52,6 +57,7 @@ void    halucinations	args( ( CHAR_DATA *ch ) );
 void 	paranoia	args( ( CHAR_DATA *ch ) );
 void	subtract_times	args( ( struct timeval *etime, struct timeval *stime ) );
 void	update_blackjack args( ( void ) );
+void	update_lua args( ( void ) );
 
 /*
  * Global Variables
@@ -707,6 +713,7 @@ void update_taxnodes( void )
 
 		clan = och->pcdata->clan;
 
+
 		paya = UMIN(  och->pcdata->qtaxnodes , clan->funds );
 		paya = UMAX(  paya , 0 );
 		clan->funds -= paya;
@@ -1187,6 +1194,7 @@ void char_update( void )
 		}
 		gch_prev = ch->prev;
 		set_cur_char( ch );
+
 		if ( gch_prev && gch_prev->next != ch )
 		{
 			bug( "char_update: ch->prev->next != ch", 0 );
@@ -2072,6 +2080,7 @@ void update_handler( void )
 	static  int     pulse_ship;
 	static  int     pulse_recharge;
 	static  int     pulse_threat = PULSE_THREAT;
+	static  int		pulse_pause_lua;
 	struct timeval stime;
 	struct timeval etime;
 
@@ -2183,12 +2192,15 @@ void update_handler( void )
 		reboot_check(0);
 	}
 
+
+	
 	if ( auction->item && --auction->pulse <= 0 )
 	{
 		auction->pulse = PULSE_AUCTION;
 		auction_update( );
 	}
 
+	mpsleep_update();
 	tele_update( );
 	aggr_update( );
 	obj_act_update ( );
@@ -2206,6 +2218,13 @@ void update_handler( void )
 		timechar = NULL;
 	}
 	tail_chain( );
+	
+	//if (--pulse_pause_lua <=0)
+	//{
+	//	pulse_pause_lua = PULSE_PAUSE_LUA;
+		update_lua();
+	//}
+	
 	return;
 }
 
@@ -3099,4 +3118,30 @@ void update_blackjack( )
 	}
 }
 
+void update_lua( )
+{
+CHAR_DATA *ch;
+	CHAR_DATA *ch_save;
+	sh_int save_count = 0;
+
+	ch_save	= NULL;
+	for ( ch = last_char; ch; ch = gch_prev )
+	{
+		if ( ch == first_char && ch->prev )
+		{
+			bug( "update_lua: first_char->prev != NULL... fixed", 0 );
+			ch->prev = NULL;
+		}
+		gch_prev = ch->prev;
+		set_cur_char( ch );
+
+		if ( gch_prev && gch_prev->next != ch )
+		{
+			bug( "update_lua: ch->prev->next != ch", 0 );
+			return;
+		}
+	
+		call_lua(ch, "wait_update", NULL);
+	}
+}
 //done for Neuro

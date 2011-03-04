@@ -129,6 +129,7 @@ void reset_all() {
 				mob->description	=STRALLOC( "You see a Byte : flying around you, \nthis strange green octaedra seems quite peaceful.\nIt've got many brothers and all of them have \nmission to help you.\r\n");
 				SET_BIT(mob->act, ACT_NOKILL);
 				SET_BIT(mob->act, ACT_SENTINEL);
+				SET_BIT(mob->act, ACT_POLYMORPHED);
 				}
 			}
 			
@@ -1127,6 +1128,12 @@ void reset_all() {
 				char long_descr[10000]; 
 				char description[10000];
 				
+				for(obj= pRoomIndex->first_content; obj; obj= obj->next_content)
+					{
+					if(randitem_count>0)
+						randitem_count--;
+					}
+				
 				while(randitem_count!=0)
 				{
 					//STRFREE( name );
@@ -1168,7 +1175,7 @@ void reset_all() {
 								case 3 : strcat(description, "\"PasSwOrD\"");break;
 								case 4 : strcat(description, "\"1337\"");break;
 								case 5 : strcat(description, "\"12345\"");break;
-								case 6 : strcat(description, "\"qwerty\"");break;
+								case 6 : strcat(description, "\"qwsurf serty\"");break;
 								case 7 : strcat(description, "\"BaDBoY\"");break;
 								case 8 : strcat(description, "\"ilovEyOu\"");break;
 								case 9 : strcat(description, "\"Pterodactyl\"");break;
@@ -1278,18 +1285,19 @@ void reset_all() {
 							strcpy(long_descr,"A mysterious box\n\r");
 							strcpy(description,"A mysterious box\n\r");
 						break;
-						case 7 : //pill
+						case 7 : //flashcard
 							randitem=number_range(0,3);
-							strcpy(name,"A pill");
-							strcpy(short_descr,"A pill");
-							strcpy(long_descr,"A pill");
+							strcpy(name,"A flashcard");
+							strcpy(short_descr,"A flashcard");
+							strcpy(long_descr,"A flashcard");
 							switch (randitem)
 							{
-								case 0 : strcpy(description, "A blue Pill\n\r");break;
-								case 1 : strcpy(description, "A red Pill\n\r");break;
-								case 2 : strcpy(description, "A green Pill\n\r");break;
-								case 3 : strcpy(description, "A yellow Pill\n\r");break;
+								case 0 : strcpy(description, "A blue flashcard\n\r");break;
+								case 1 : strcpy(description, "A red flashcard\n\r");break;
+								case 2 : strcpy(description, "A green flashcard\n\r");break;
+								default : strcpy(description, "A yellow flashcard\n\r");break;
 							}
+							 strcat(description, " \nWhat kind of data could be written on it ?\n\r");
 
 							randitem=124;
 						break;
@@ -1307,43 +1315,43 @@ void reset_all() {
 									strcpy(name,"An HTTPS protocol");
 									strcpy(short_descr,"An HTTPS protocol");
 									strcpy(long_descr,"An HTTPS protocol");
-									strcpy(description,"An HTTPS protocol, providing encrypted communication and secure identification\n\r");
+									strcpy(description,"An HTTPS protocol, providing encrypted \ncommunication and secure identification\n\r");
 									break;
 								case 3 :
 									strcpy(name,"A RTSP protocol");
 									strcpy(short_descr,"A RTSP protocol");
 									strcpy(long_descr,"A RTSP protocol");
-									strcpy(description,"A RTSP protocol, a protocol designed for network control in communications systems\n\r");
+									strcpy(description,"A RTSP protocol, a protocol designed for \nnetwork control in communications systems\n\r");
 									break;
 								case 4 :
 									strcpy(name,"A SOAP protocol");
 									strcpy(short_descr,"A SOAP protocol");
 									strcpy(long_descr,"A SOAP protocol");
-									strcpy(description,"A SOAP protocol, specifying exchanges of structured information over networks\n\r");
+									strcpy(description,"A SOAP protocol, specifying exchanges of \nstructured information over networks\n\r");
 									break;
 								case 5 :
 									strcpy(name,"An UDP protocol");
 									strcpy(short_descr,"An UDP protocol");
 									strcpy(long_descr,"An UDP protocol");
-									strcpy(description,"An UDP protocol, an old way to tranfer data streams, not very secure but fast\n\r");
+									strcpy(description,"An UDP protocol, an old way to tranfer \ndata streams, not very secure but fast\n\r");
 									break;
 								case 6 :
 									strcpy(name,"A TCP protocol");
 									strcpy(short_descr,"A TCP protocol");
 									strcpy(long_descr,"A TCP protocol");
-									strcpy(description,"A TCP protocol, an old way to tranfer data streams, not very fast but secure\n\r");
+									strcpy(description,"A TCP protocol, an old way to tranfer \ndata streams, not very fast but secure\n\r");
 									break;
 								case 7 :
 									strcpy(name,"A FTP protocol");
 									strcpy(short_descr,"A FTP protocol");
 									strcpy(long_descr,"A FTP protocol");
-									strcpy(description,"A FTP protocol, an old standard for copying file from an host to another over the Old Internet network\n\r");
+									strcpy(description,"A FTP protocol, an old standard for copying \nfile from an host to another over \nthe Old Internet network\n\r");
 									break;
 								default :
 									strcpy(name,"A RTP protocol");
 									strcpy(short_descr,"A RTP protocol");
 									strcpy(long_descr,"A RTP protocol");
-									strcpy(description,"A RTP protocol, a standardized packet format for delivering audio and video over the Old Internet\n\r");
+									strcpy(description,"A RTP protocol, a standardized packet format \nfor delivering audio and video over \nthe Old Internet\n\r");
 									break;
 							}
 							randitem=125;
@@ -1360,6 +1368,9 @@ void reset_all() {
 					obj->short_descr	= STRALLOC(short_descr);
 					//obj->long_descr		= STRALLOC(long_descr);
 					obj->description	= STRALLOC(description);
+					if (number_range(1, 5) == 1)
+						SET_BIT ( obj->extra_flags , ITEM_BURRIED );
+					obj_to_room(obj, pRoomIndex);
 					randitem_count--;
 				}
 				
@@ -1367,10 +1378,10 @@ void reset_all() {
 				CHAR_DATA * rch;
 				numguards = 0;
 				for (rch = pRoomIndex->first_person; rch; rch= rch->next_in_room)
-				
-					if (IS_NPC(rch) && rch->pIndexData && rch->pIndexData->vnum== 50)
-						numguards++;
-
+					{
+						if (IS_NPC(rch) && rch->pIndexData && rch->pIndexData->vnum== 50)
+							numguards++;
+					}
 				if (numguards >= 2)
 					continue;
 
@@ -1396,13 +1407,17 @@ void reset_all() {
 					}
 					mob = create_mobile(pMobIndex);
 					SET_BIT(mob->affected_by, AFF_INFRARED);
+					if(randmob>=8)
+						SET_BIT(mob-> act, ACT_META_AGGR);
+					else
+						SET_BIT(mob-> act, ACT_AGGRESSIVE);
 					char_to_room(mob, pRoomIndex);
-					mob->top_level = (randmob/2) * (pRoomIndex->level + 1);
-					mob->hit = (randmob*2)* (pRoomIndex->level + 1);
-					mob->max_hit = (randmob*2) * (pRoomIndex->level + 1);
-					mob->armor = 0 - ((pRoomIndex->level + 1) * (randmob*2));
-					mob->damroll = (randmob*2)*(pRoomIndex->level + 1);
-					mob->hitroll = (randmob*2)*(pRoomIndex->level + 1);
+					mob->top_level = 2*randmob*(randmob/2) * (pRoomIndex->level + 1);
+					mob->hit = 2*randmob*(randmob*2)* (pRoomIndex->level + 1);
+					mob->max_hit = 2*randmob*(randmob*2) * (pRoomIndex->level + 1);
+					mob->armor = randmob*(0 - ((pRoomIndex->level + 1) * (randmob*2)));
+					mob->damroll = 2*randmob*(randmob*2)*(pRoomIndex->level + 1);
+					mob->hitroll = 2*randmob*(randmob*2)*(pRoomIndex->level + 1);
 
 					STRFREE( mob->name );
 					STRFREE( mob->short_descr );
@@ -1416,24 +1431,29 @@ void reset_all() {
 							mob->short_descr	= STRALLOC( "BootVirus" );
 							mob->long_descr		= STRALLOC( "BootVirus\n\r");
 							mob->description	= STRALLOC( "You see a BootVirus, a poor little thing seeking for some code to invade.\n You would say that a kick could obliterate this parasite, but who knows ?\n\r");
+							SET_BIT(mob->attacks, ATCK_BITE);
 							break;
 						case 3 :
 							mob->name			= STRALLOC( "Trojan" );
 							mob->short_descr	= STRALLOC( "Trojan" );
 							mob->long_descr		= STRALLOC( "Trojan\n\r");
 							mob->description	= STRALLOC( "You see a Trojan, lurking for a soft to hide in.\n It's groaning and drooling, and you can see its sharped teeth.\n\r");
+							SET_BIT(mob->attacks, ATCK_BITE);
 							break;
 						case 4 :
 							mob->name			= STRALLOC( "InfectedRootKit" );
 							mob->short_descr	= STRALLOC( "InfectedRootKit" );
 							mob->long_descr		= STRALLOC( "InfectedRootKit\n\r");
 							mob->description	= STRALLOC( "You see an InfectedRootKit, decaying piece of programs, moaning again and again \"Access granted !\"\nIt looks like a ball of claws and fangs, will you dare to refuse it the access ? \n\r");
+							SET_BIT(mob->attacks, ATCK_CLAWS);
 							break;
 						case 5 :
 							mob->name			= STRALLOC( "Macrovirus" );
 							mob->short_descr	= STRALLOC( "Macrovirus" );
 							mob->long_descr		= STRALLOC( "Macrovirus\n\r");
 							mob->description	= STRALLOC( "You see a Macrovirus.\nAll made of independent parts moving around each other with little *click* and *snip* while they snap and detach.\n It don't seem very friendly\n\r");
+							SET_BIT(mob->attacks, ATCK_BITE);
+							SET_BIT(mob->attacks, ATCK_CLAWS);
 							break;
 						case 6 :
 							mob->name			= STRALLOC( "Worm" );
@@ -1452,6 +1472,7 @@ void reset_all() {
 							mob->short_descr	= STRALLOC( "PolymorphVirus" );
 							mob->long_descr		= STRALLOC( "PolymorphVirus\n\r");
 							mob->description	= STRALLOC( "You see a PolymorphVirus.\nThe minute you watch it, you see at least three parts of it evolve then disappear to be merged into the next mutation.\n This strange entity is dangerous enough to be considered twice before any attack.\n\r");
+							SET_BIT(mob->defenses, DFND_DODGE);
 							break;
 						case 9 :
 							mob->name			= STRALLOC( "LogicBomb" );
@@ -1464,12 +1485,43 @@ void reset_all() {
 							mob->short_descr	= STRALLOC( "CorruptedAIvatar" );
 							mob->long_descr		= STRALLOC( "CorruptedAIvatar\n\r");
 							mob->description	= STRALLOC( "You see a CorruptedAIvatar.\nHaughty and contemptuous, it licks pensively its lips while considering you and thinking about the way it'll massacre you.\n Run away !\n\r");
+							SET_BIT(mob->defenses, DFND_DODGE);
+							SET_BIT(mob->defenses, DFND_DISARM);
+							
 							break;
 					}
+
+					int i=0;
+					CHAR_DATA *rch;
+					for (rch = pRoomIndex->first_person; rch; rch= rch->next_in_room)
+						{
+							if (IS_NPC(rch) && rch->pIndexData && rch->pIndexData->vnum== 10)
+								i++;
+						}
+						
+					for(i;i>=number_range(20,30);i++)//bunch of microbugs everywhere
+						{
+							mob = create_mobile(10);
+							SET_BIT(mob->affected_by, AFF_INFRARED);
+							SET_BIT(mob->affected_by, AFF_SNEAK);
+							char_to_room(mob, pRoomIndex);
+							STRFREE( mob->name );
+							STRFREE( mob->short_descr );
+							STRFREE( mob->long_descr );
+							STRFREE( mob->description );
+							mob->name			= STRALLOC( "MicroBug" );
+							mob->short_descr	= STRALLOC( "MicroBug" );
+							mob->long_descr		= STRALLOC( "MicroBug\n\r");
+							mob->description	= STRALLOC( "Walls are covered of microscopic bugs !\n\r");
+							
+				}
 
 					continue;
 				}
 			}
+			
+			
+			
 				break;
 
 

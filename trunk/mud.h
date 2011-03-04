@@ -8,8 +8,19 @@
 #include <zlib.h>
 #endif
 
+
+
+#include "lua.h"
+#include "luaconf.h"
+#include "lualib.h"
+#include "lauxlib.h"
+
 typedef	int				ch_ret;
 typedef	int				obj_ret;
+
+#define LUA_DIR         "../lua/"
+#define LUA_STARTUP   LUA_DIR "startup.lua"  /* script initialization */
+
 
 /*
  * Accommodate old non-Ansi compilers.
@@ -26,6 +37,7 @@ typedef	int				obj_ret;
 #define DECLARE_SPEC_FUN( fun )		SPEC_FUN  fun
 #define DECLARE_SPELL_FUN( fun )	SPELL_FUN fun
 #endif
+
 
 /* Stuff from newarena.c */
 void show_jack_pot();
@@ -111,6 +123,7 @@ typedef struct  missile_data            MISSILE_DATA;
 typedef struct  tourney_data            TOURNEY_DATA;
 typedef struct	mob_prog_data		MPROG_DATA;
 typedef struct	mob_prog_act_list	MPROG_ACT_LIST;
+typedef struct mpsleep_data MPSLEEP_DATA;
 typedef	struct	editor_data		EDITOR_DATA;
 typedef struct	teleport_data		TELEPORT_DATA;
 typedef struct	timer_data		TIMER;
@@ -229,6 +242,8 @@ typedef ch_ret	SPELL_FUN	args( ( int sn, int level, CHAR_DATA *ch, void *vo ) );
 #define PULSE_TAXES               ( 60 * PULSE_MINUTE)
 #define PULSE_ARENA               ( 30 * PULSE_PER_SECOND)
 #define PULSE_AREA		  ( 15 * PULSE_MINUTE)
+#define PULSE_PAUSE_LUA		1
+
 /*
  * Command logging types.
  */
@@ -340,7 +355,8 @@ typedef enum
   CON_ROLL_STATS,	CON_STATS_OK,		CON_ADD_SKILLS,
   CON_READ_NMOTD,	CON_PICK_CLAN,
   CON_NOTE_TO, 		CON_NOTE_SUBJECT, 	CON_NOTE_EXPIRE,
-  CON_NOTE_TEXT,	CON_NOTE_FINISH, 	CON_BLACKJACK
+  CON_NOTE_TEXT,	CON_NOTE_FINISH, 	CON_BLACKJACK,
+  CON_WELCOME_DONE
 } connection_types;
 
 
@@ -622,12 +638,24 @@ struct	repairshop_data
 };
 
 
-/* Mob program structures */
+/* Mob program structures and defines */
+/* Moved these defines here from mud_prog.c as I need them -rkb */
+#define MAX_IFS 20 /* should always be generous */
+#define IN_IF 0
+#define IN_ELSE 1
+#define DO_IF 2
+#define DO_ELSE 3
+#define MAX_PROG_NEST 20
+
+
+
 struct  act_prog_data
 {
     struct act_prog_data *next;
     void *vo;
 };
+
+
 
 struct	mob_prog_act_list
 {
@@ -647,6 +675,38 @@ struct	mob_prog_data
     char *	 arglist;
     char *	 comlist;
 };
+
+
+
+/* Used to store sleeping mud progs. -rkb */
+
+typedef enum {MP_MOB, MP_ROOM, MP_OBJ} mp_types;
+
+struct mpsleep_data
+{
+ MPSLEEP_DATA * next;
+ MPSLEEP_DATA * prev;
+
+ int timer; /* Pulses to sleep */
+ mp_types type; /* Mob, Room or Obj prog */
+ ROOM_INDEX_DATA*room; /* Room when type is MP_ROOM */
+
+ /* mprog_driver state variables */
+ int ignorelevel;
+ int iflevel;
+ bool ifstate[MAX_IFS][DO_ELSE+1];
+
+ /* mprog_driver arguments */
+ char * com_list;
+ CHAR_DATA * mob;
+ CHAR_DATA * actor;
+ OBJ_DATA * obj;
+ void * vo;
+ bool single_step;
+
+};
+
+
 
 bool	MOBtrigger;
 
@@ -934,6 +994,7 @@ struct missile_data
 {
     MISSILE_DATA * next;
     MISSILE_DATA * prev;
+
     MISSILE_DATA * next_in_starsystem;
     MISSILE_DATA * prev_in_starsystem;
     SPACE_DATA * starsystem;
@@ -1403,15 +1464,15 @@ typedef enum { SEX_NEUTRAL, SEX_MALE, SEX_FEMALE } sex_types;
 #define OBJ_VNUM_FIRST_FABRIC        75
 #define OBJ_VNUM_LAST_FABRIC         99
 
-#define OBJ_VNUM_PACKAGE            100
-#define OBJ_VNUM_DATACUBE          103
+#define OBJ_VNUM_PACKAGE           	100
+#define OBJ_VNUM_DATACUBE          	103
 #define OBJ_VNUM_TOKEN            	114
 
 #define OBJ_VNUM_SLAG			115 
 #define OBJ_VNUM_FRAGMENT		116
 #define OBJ_VNUM_FILE			117
 #define OBJ_VNUM_PWD			118
-#define OBJ_VNUM_LOGIN		119
+#define OBJ_VNUM_LOGIN			119
 #define OBJ_VNUM_ID			120
 #define OBJ_VNUM_BLOB			121
 #define OBJ_VNUM_DUST			122
@@ -1637,7 +1698,7 @@ typedef enum
 #define PLANET_NOCAP		BV00
 #define PLANET_HIDDEN		BV01
 #define PLANET_EXPLORABLE	BV02
-#define PLANET_SHUT			BV03
+#define PLANET_SHUT		BV03
 #define PLANET_NOPEDIT		BV04
 #define PLANET_NOINVADE		BV05
 #define PLANET_NOTARGET		BV06
@@ -1833,22 +1894,22 @@ struct timer_data
 #define	CHANNEL_IMMTALK		   BV01
 #define	CHANNEL_YELL		   BV02
 #define CHANNEL_MONITOR		   BV03
-#define CHANNEL_LOG		   BV04
+#define CHANNEL_LOG		   	   BV04
 #define CHANNEL_CLAN		   BV05
 #define CHANNEL_BUILD		   BV06
 #define CHANNEL_COMM		   BV07
 #define CHANNEL_TELLS		   BV08
-#define CHANNEL_NEWBIE             BV09
-#define CHANNEL_OOC                BV10
-#define CHANNEL_SHIP               BV11
-#define CHANNEL_SYSTEM             BV12
-#define CHANNEL_GNET               BV13
-#define CHANNEL_PNET               BV14
-#define CHANNEL_HINT               BV20
+#define CHANNEL_NEWBIE         BV09
+#define CHANNEL_OOC            BV10
+#define CHANNEL_SHIP           BV11
+#define CHANNEL_SYSTEM         BV12
+#define CHANNEL_GNET           BV13
+#define CHANNEL_PNET           BV14
+#define CHANNEL_HINT           BV20
 #define CHANNEL_CLANTALK	   CHANNEL_CLAN
-#define CHANNEL_TRADE             BV27
-#define CHANNEL_SPORTS             BV28
-#define CHANNEL_WCHAT             BV29
+#define CHANNEL_TRADE          BV27
+#define CHANNEL_SPORTS         BV28
+#define CHANNEL_WCHAT          BV29
 
 /* Area defines - Scryn 8/11
  *
@@ -2106,7 +2167,7 @@ struct	char_data
     bool                        dealout;
     int                         blackjack_bet;
     int 			lesson;
- 
+	lua_State *L;
 };
 
 
@@ -2607,6 +2668,9 @@ extern	sh_int	gsn_hijack;
 extern	sh_int	gsn_disarm;
 extern	sh_int	gsn_enhanced_damage;
 extern	sh_int	gsn_kick;
+extern	sh_int	gsn_bite;
+extern	sh_int	gsn_claw;
+extern	sh_int	gsn_combine;
 extern	sh_int	gsn_parry;
 extern	sh_int	gsn_rescue;
 extern	sh_int	gsn_second_attack;
@@ -3064,6 +3128,13 @@ extern  char *  const   p_flags	 	[];
 /*
  * Global variables.
  */
+ 
+
+extern MPSLEEP_DATA * first_mpwait; /* Storing sleeping mud progs */
+extern MPSLEEP_DATA * last_mpwait; /* - */
+extern MPSLEEP_DATA * current_mpwait; /* - */
+ 
+ 
 extern	int	numobjsloaded;
 extern	int	nummobsloaded;
 extern	int	physicalobjects;
@@ -3265,7 +3336,7 @@ DECLARE_DO_FUN( do_slicefund  );
 DECLARE_DO_FUN( do_slicesnippets  );
 DECLARE_DO_FUN( do_inquire  );
 DECLARE_DO_FUN( do_nodeupgrade  );
-//DECLARE_DO_FUN( do_nawak  );
+DECLARE_DO_FUN( do_combine  );
 DECLARE_DO_FUN( do_speeders  );
 DECLARE_DO_FUN( do_suicide  );
 DECLARE_DO_FUN( do_bank  );
@@ -3468,6 +3539,8 @@ DECLARE_DO_FUN(	do_induct	);
 DECLARE_DO_FUN(	do_inventory	);
 DECLARE_DO_FUN(	do_invis	);
 DECLARE_DO_FUN(	do_kick		);
+DECLARE_DO_FUN(	do_bite		);
+DECLARE_DO_FUN(	do_claw		);
 DECLARE_DO_FUN(	do_kill		);
 DECLARE_DO_FUN( do_last		);
 DECLARE_DO_FUN(	do_leave	);
@@ -4192,6 +4265,7 @@ void    mprog_time_trigger      args ( ( CHAR_DATA *mob ) );
 void    progbug                 args( ( char *str, CHAR_DATA *mob ) );
 void	rset_supermob		args( ( ROOM_INDEX_DATA *room) );
 void	release_supermob	args( ( ) );
+void mpsleep_update args( ( ) );
 
 /* player.c */
 void	set_title	args( ( CHAR_DATA *ch, char *title ) );
